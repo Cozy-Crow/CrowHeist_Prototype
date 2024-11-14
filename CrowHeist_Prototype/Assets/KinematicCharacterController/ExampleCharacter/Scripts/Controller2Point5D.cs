@@ -11,7 +11,11 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 5f;
-        [SerializeField] private float _gravityMultiplier = 2f;
+        [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
+
+        [Header("PickUP")]
+        [SerializeField] private Transform _pickUpPoint;
+        [SerializeField] private Transform _dropPoint;
 
         private CharacterController _characterController;
         private Vector2 _input;
@@ -20,6 +24,8 @@ namespace KinematicCharacterController.Examples
         private float _dampingVelocity;
         private float _velocitY;
         private float _gravity = 10F;
+
+        private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         public bool IsGrounded => _characterController.isGrounded;
 
@@ -31,6 +37,7 @@ namespace KinematicCharacterController.Examples
         void Update()
         {
             // Handle movement
+            HandlePickUP();
             HandleGravity();
             HandleMove();
             HandleRotation();
@@ -41,7 +48,6 @@ namespace KinematicCharacterController.Examples
             // Get horizontal input (e.g., A/D keys or arrow keys)
             _input = new Vector2(Input.GetAxis("Horizontal") ,Input.GetAxis("Vertical"));
             _direction = new Vector3(_input.x, _direction.y, _input.y);
-            //_velocity = _direction * _moveSpeed;
 
             if (Input.GetButtonDown("Jump") && IsGrounded)
             {
@@ -78,11 +84,11 @@ namespace KinematicCharacterController.Examples
                 // Reset the y velocity if grounded
                 _velocitY = -1f;
             }
-            else if (!IsGrounded && _velocitY < 0)
-            {
-                // Apply extra gravity when not grounded and falling
-                _velocitY -= _gravity * _gravityMultiplier * Time.deltaTime;
-            }
+            //else if (!IsGrounded && _velocitY < 0)
+            //{
+            //    // Apply extra gravity when not grounded and falling
+            //    _velocitY -= _gravity * _gravityMultiplier * Time.deltaTime;
+            //}
             else
             {
                 // Apply gravity to the CharacterController
@@ -101,6 +107,39 @@ namespace KinematicCharacterController.Examples
 
             // Apply an upward force to the Rigidbody for jumping
             _velocitY += _jumpForce;
+        }
+
+        private void HandlePickUP()
+        {
+            if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count <= 0)
+            {
+
+                LayerMask pickupMask = LayerMask.GetMask("PickUp");
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2, pickupMask);
+
+                foreach (Collider hitCollider in hitColliders)
+                {
+                    Debug.Log(hitCollider.name);
+                    if (hitCollider.TryGetComponent(out IPickupable pickUp))
+                    {
+                        pickUp.PickUP(_pickUpPoint);
+                        _pickUpsList.Add(pickUp);
+                    }
+                }
+            }else if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count > 0)
+            {
+                foreach (IPickupable pickUp in _pickUpsList)
+                {
+                    pickUp.Drop(_dropPoint.position);
+                }
+                _pickUpsList.Clear();
+            }
+        }
+
+        void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawWireSphere(transform.position, 2);
         }
     }
 }
