@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
-        [SerializeField] private float _jumpForce = 5f;
+        [SerializeField] private float _jumpForce = 25f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
 
         [Header("PickUP")]
@@ -25,10 +25,10 @@ namespace KinematicCharacterController.Examples
 
         private Vector2 _input;
         private Vector3 _direction;
-        //private Vector3 _velocity;            //Todo: Use to access the velocity of the character controller
+        private Vector3 _velocity;            //Todo: Use to access the velocity of the character controller
         private float _dampingVelocity;
         private float _velocitY;
-        private float _gravity = 10F;
+        private float _gravity = 10f;
 
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
@@ -43,7 +43,7 @@ namespace KinematicCharacterController.Examples
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
-            _animator = GetComponent<Animator>();
+            _animator = GetComponentInChildren<Animator>();
         }
 
         void Update()
@@ -70,20 +70,23 @@ namespace KinematicCharacterController.Examples
             //Handles Cancel movement
             if(_input == Vector2.zero)
             {
-                Vector3 moveDir = new Vector3(0, _direction.y * _moveSpeed, 0);
-                _characterController.Move(moveDir * Time.deltaTime);
+                Vector3 moveDir = new Vector3(0, _direction.y, 0);
+                _velocity = moveDir;
+                _characterController.Move(_velocity * Time.deltaTime);
             }   
 
             //Handles Move the character and apply sprint speed
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
-                _characterController.Move(moveDir * Time.deltaTime);
+                _velocity = moveDir;
+                _characterController.Move(_velocity * Time.deltaTime);
             }
             else
             {
                 Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
-                _characterController.Move(moveDir * Time.deltaTime);
+                _velocity = moveDir;
+                _characterController.Move(_velocity * Time.deltaTime);
             }
         }
 
@@ -165,15 +168,38 @@ namespace KinematicCharacterController.Examples
 
         private void HandleAnimation()
         {
-            if (_direction.x > 0)
+            if(_velocitY > -1)
             {
-                ChangeAnimation("RunRight");
+                if (_isFacingRight)
+                {
+                    ChangeAnimation("JumpRight");
+                }
+                else
+                {
+                    ChangeAnimation("JumpLeft");
+                }
             }
-            else if (_direction.x < 0)
+
+            else if(_velocity.x != 0 || _velocity.z != 0)
             {
-                ChangeAnimation("RunLeft");
+                if (Input.GetKey(KeyCode.LeftShift))
+                {
+                    _animator.speed = 2f;
+                }else
+                {
+                    _animator.speed = 1f;
+                }
+
+                if (_isFacingRight)
+                {
+                    ChangeAnimation("RunRight");
+                }
+                else
+                {
+                    ChangeAnimation("RunLeft");
+                }
             }
-            else
+            else if(_velocity.x == 0 && _velocity.z == 0)
             {
                 if (_isFacingRight)
                 {
