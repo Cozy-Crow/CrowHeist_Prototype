@@ -18,6 +18,11 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private Transform _dropPoint;
 
         private CharacterController _characterController;
+        private EnumPlayerAnimState _playerAnimState;
+        private string _currentAnim;
+        private bool _isFacingRight = true;
+        private bool _isFlipped = true;
+
         private Vector2 _input;
         private Vector3 _direction;
         //private Vector3 _velocity;            //Todo: Use to access the velocity of the character controller
@@ -27,16 +32,24 @@ namespace KinematicCharacterController.Examples
 
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
+        private Animator _animator;
+
+        #region Properties
         public bool IsGrounded => _characterController.isGrounded;
+        public bool IsFlipped => _isFlipped;
+        public bool IsFacingRight => _isFacingRight;
+        #endregion
 
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
+            _animator = GetComponent<Animator>();
         }
 
         void Update()
         {
             // Handle movement
+            HandleAnimation();
             HandlePickUP();
             HandleGravity();
             HandleMove();
@@ -54,6 +67,14 @@ namespace KinematicCharacterController.Examples
                 Jump();
             }
 
+            //Handles Cancel movement
+            if(_input == Vector2.zero)
+            {
+                Vector3 moveDir = new Vector3(0, _direction.y * _moveSpeed, 0);
+                _characterController.Move(moveDir * Time.deltaTime);
+            }   
+
+            //Handles Move the character and apply sprint speed
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
@@ -68,13 +89,19 @@ namespace KinematicCharacterController.Examples
 
         private void HandleRotation()
         {
-            if(_input != Vector2.zero)
+            // Handle rotation
+            if (_input.x > 0 && !_isFlipped)
             {
-                // Rotate the character to face the direction of movement
-                float targetAngle = Mathf.Atan2(_direction.x, _direction.z) * Mathf.Rad2Deg;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref _dampingVelocity, _smoothTime);
-                transform.rotation = Quaternion.Euler(0, angle, 0);
+                _isFlipped = true;
+                _isFacingRight = true;
             }
+            else if (_input.x < 0 && _isFlipped)
+            {
+                _isFlipped = false;
+                _isFacingRight = false;
+            }
+
+            Flip(_isFlipped);
         }
 
         private void HandleGravity()
@@ -133,6 +160,52 @@ namespace KinematicCharacterController.Examples
                     pickUp.Drop(_dropPoint.position);
                 }
                 _pickUpsList.Clear();
+            }
+        }
+
+        private void HandleAnimation()
+        {
+            if (_direction.x > 0)
+            {
+                ChangeAnimation("RunRight");
+            }
+            else if (_direction.x < 0)
+            {
+                ChangeAnimation("RunLeft");
+            }
+            else
+            {
+                if (_isFacingRight)
+                {
+                    ChangeAnimation("IdleRight");
+                }
+                else
+                {
+                    ChangeAnimation("IdleLeft");
+                }
+            }
+        }
+
+        private void ChangeAnimation(string animation, float crossfade = 0.2f)
+        {
+            if (_currentAnim == animation)
+            {
+                return;
+            }
+
+            _currentAnim = animation;
+            _animator.CrossFade(animation, crossfade);
+        }
+
+        private void Flip(bool doFlip)
+        {
+            if (doFlip)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+            }
+            else if (!doFlip)
+            {
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
             }
         }
 
