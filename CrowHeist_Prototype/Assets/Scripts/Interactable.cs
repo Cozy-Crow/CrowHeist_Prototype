@@ -2,22 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour, IInteractable
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    private Outline _outline;
+    private Collider _collider;
 
-    // Update is called once per frame
-    void Update()
+    private void Awake()
     {
-        
+        _outline = GetComponentInParent<Outline>();
+        _collider = GetComponent<Collider>();
     }
-
     public virtual void Interact()
     {
         Debug.Log("Interacting with " + transform.name);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            _outline.enabled = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            _outline.enabled = false;
+        }
     }
 }

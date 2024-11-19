@@ -15,6 +15,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("PickUP")]
         [SerializeField] private Transform _pickUpPoint;
+        [SerializeField] private Transform _handPoint;
         [SerializeField] private Transform _dropPoint;
 
         private CharacterController _characterController;
@@ -144,12 +145,22 @@ namespace KinematicCharacterController.Examples
             if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count <= 0)
             {
 
-                LayerMask pickupMask = LayerMask.GetMask("PickUp");
+                LayerMask pickupMask = LayerMask.GetMask("Interactable");
                 Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2, pickupMask);
 
                 foreach (Collider hitCollider in hitColliders)
                 {
                     Debug.Log(hitCollider.name);
+
+                    if (hitCollider.gameObject.CompareTag("ScrewDriver"))
+                    {
+                        hitCollider.transform.parent = _handPoint;
+                        hitCollider.transform.localPosition = Vector3.zero;
+                        hitCollider.transform.localRotation = Quaternion.Euler(0, 0, -70);
+                        hitCollider.GetComponent<Rigidbody>().isKinematic = true;
+                        continue;
+                    }
+
                     if (hitCollider.TryGetComponent(out IPickupable pickUp))
                     {
                         pickUp.PickUP(_pickUpPoint);
