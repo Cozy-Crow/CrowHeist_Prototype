@@ -3,15 +3,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class InteractableRoomba : Interactable
+public class InteractableExit : Interactable
 {
-    private NavMeshAgent _navMeshAgent;
-    private ScriptMachine _scriptMachine;
+    private Collider _collider;
     protected override void Awake()
     {
         base.Awake();
-        _navMeshAgent = GetComponentInParent<NavMeshAgent>();
-        _scriptMachine = GetComponentInParent<ScriptMachine>();
+        _collider = transform.parent.GetComponent<Collider>();
     }
 
     private void Update()
@@ -20,8 +18,14 @@ public class InteractableRoomba : Interactable
         {
             if (Input.GetKeyDown(KeyCode.F))
             {
-                _navMeshAgent.enabled = !_navMeshAgent.enabled;
-                _scriptMachine.enabled = !_scriptMachine.enabled;
+                _collider.enabled = false;
+                GameManager.ChangeCamera("Exit");
+
+                var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Controller2Point5D>();
+                player.StartThrow();
+
+                _outline.enabled = false;
+                _canvas.SetActive(false);
             }
         }
     }
@@ -30,17 +34,12 @@ public class InteractableRoomba : Interactable
     {
         if (other.CompareTag("Player"))
         {
-            string itemHeld = other.GetComponent<Controller2Point5D>().Equipped;
-
-            if (itemHeld == "ScrewDriver")
+            if (_canvas is not null)
             {
-                if (_canvas is not null)
-                {
-                    _canvas.SetActive(true);
-                }
-                _outline.enabled = true;
-                _interact = true;
+                _canvas.SetActive(true);
             }
+            _outline.enabled = true;
+            _interact = true;
         }
     }
 
