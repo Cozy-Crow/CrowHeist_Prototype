@@ -7,14 +7,14 @@ using UnityEngine;
 public class Interactable : MonoBehaviour, IInteractable
 {
     protected Outline _outline;
+    protected bool _interact;
+
+    public Outline Outline => _outline;
+    public bool Interact => _interact;
 
     protected virtual void Awake()
     {
         _outline = GetComponentInParent<Outline>();
-    }
-    public virtual void Interact()
-    {
-        Debug.Log("Interacting with " + transform.name);
     }
 
     public virtual void OnTriggerEnter(Collider other)
@@ -22,6 +22,7 @@ public class Interactable : MonoBehaviour, IInteractable
         if (other.CompareTag("Player"))
         {
             _outline.enabled = true;
+            _interact = true;
         }
     }
 
@@ -30,6 +31,7 @@ public class Interactable : MonoBehaviour, IInteractable
         if (other.CompareTag("Player"))
         {
             _outline.enabled = false;
+            _interact = false;
         }
     }
 }

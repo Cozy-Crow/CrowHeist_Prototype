@@ -142,36 +142,35 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUP()
         {
-            if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count <= 0)
+            if (Input.GetKeyDown(KeyCode.E))
             {
 
                 LayerMask interactable = LayerMask.GetMask("Interactable");
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2, interactable);
+                Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
+                Collider equipColliders = Physics.OverlapSphere(transform.position, 2, interactable)[0];
 
-                foreach (Collider hitCollider in hitColliders)
+                if (equipColliders.TryGetComponent(out Equipable equipable))
                 {
-                    Debug.Log(hitCollider.name);
-
-                    if (hitCollider.TryGetComponent(out Equipable equipable))
+                    if (_equipped != null)
                     {
-                        if (_equipped != null && equipable == _equipped)
-                        {
-                            _equipped.UnEquip(_dropPoint.position);
-                            _equipped = null;
-                        }
-
-                        equipable.Equip(_handPoint);
-                        _equipped = equipable;
-                        continue;
+                        _equipped.UnEquip(_dropPoint.position);
                     }
 
+                    equipable.Equip(_handPoint);
+                    _equipped = equipable;
+                }
+
+                foreach (Collider hitCollider in interactableColliders)
+                {
                     if (hitCollider.TryGetComponent(out IPickupable pickUp))
                     {
                         pickUp.PickUP(_pickUpPoint);
                         _pickUpsList.Add(pickUp);
                     }
                 }
-            }else if (Input.GetKeyDown(KeyCode.E) && Input.GetKey(KeyCode.LeftShift) && _pickUpsList.Count > 0)
+            }
+            
+            if (Input.GetKeyDown(KeyCode.E) && Input.GetKey(KeyCode.LeftShift) && _pickUpsList.Count > 0)
             {
                 foreach (IPickupable pickUp in _pickUpsList)
                 {

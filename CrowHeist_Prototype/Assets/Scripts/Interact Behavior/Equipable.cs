@@ -3,54 +3,45 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class Equipable : Interactable
+public class Equipable : MonoBehaviour
 {
     private bool _isEquipped = false;
+    private Interactable _interactable;
     private Rigidbody _rigidbody;
 
-    protected override void Awake()
+    protected virtual void Awake()
     {
-        base.Awake();
         _rigidbody = GetComponentInParent<Rigidbody>();
+        _interactable = GetComponentInChildren<Interactable>();
     }
 
-    public override void Interact()
+    public virtual void Interact()
     {
         Debug.Log("Using " + transform.name);
     }
 
-    public override void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player") && !_isEquipped)
-        {
-            _outline.enabled = true;
-        }
-    }
-
-    public override void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player") && !_isEquipped)
-        {
-            _outline.enabled = false;
-        }
-    }
-
-    public void Equip(Transform parent)
+    public virtual void Equip(Transform parent)
     {
         Debug.Log("Equipping " + transform.name);
         _isEquipped = true;
-        _outline.enabled = false;
-        transform.parent.parent = parent;
-        transform.parent.localPosition = Vector3.zero;
-        transform.parent.localRotation = Quaternion.Euler(0, 0, -70);
-        GetComponent<Rigidbody>().isKinematic = true;
+        _interactable.Outline.enabled = false;
+        transform.parent = parent;
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.Euler(0, 0, -70);
+        _rigidbody.isKinematic = true;
+
+        // Set the layer to ignore interactable objects
+        gameObject.layer = 7;
     }
 
-    public void UnEquip(Vector3 position)
+    public virtual void UnEquip(Vector3 position)
     {
         _isEquipped = false;
-        transform.parent.SetParent(null);
-        transform.parent.position = position;
+        transform.SetParent(null);
+        transform.position = position;
         _rigidbody.isKinematic = false;
+
+        // Set the layer back to interactable objects
+        gameObject.layer = 3;
     }
 }
