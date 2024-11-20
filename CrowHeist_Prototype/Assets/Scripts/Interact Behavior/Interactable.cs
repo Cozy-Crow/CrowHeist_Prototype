@@ -1,24 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour, IInteractable
 {
-    private Outline _outline;
-    private Collider _collider;
+    protected Outline _outline;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         _outline = GetComponentInParent<Outline>();
-        _collider = GetComponent<Collider>();
     }
     public virtual void Interact()
     {
         Debug.Log("Interacting with " + transform.name);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
@@ -26,7 +25,7 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    public virtual void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {

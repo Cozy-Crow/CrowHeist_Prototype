@@ -19,7 +19,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private Transform _dropPoint;
 
         private CharacterController _characterController;
-        private EnumPlayerAnimState _playerAnimState;
         private string _currentAnim;
         private bool _isFacingRight = true;
         private bool _isFlipped = true;
@@ -32,6 +31,7 @@ namespace KinematicCharacterController.Examples
         private float _gravity = 10f;
 
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
+        private Equipable _equipped;
 
         private Animator _animator;
 
@@ -145,19 +145,23 @@ namespace KinematicCharacterController.Examples
             if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count <= 0)
             {
 
-                LayerMask pickupMask = LayerMask.GetMask("Interactable");
-                Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2, pickupMask);
+                LayerMask interactable = LayerMask.GetMask("Interactable");
+                Collider[] hitColliders = Physics.OverlapSphere(transform.position, 2, interactable);
 
                 foreach (Collider hitCollider in hitColliders)
                 {
                     Debug.Log(hitCollider.name);
 
-                    if (hitCollider.gameObject.CompareTag("ScrewDriver"))
+                    if (hitCollider.TryGetComponent(out Equipable equipable))
                     {
-                        hitCollider.transform.parent = _handPoint;
-                        hitCollider.transform.localPosition = Vector3.zero;
-                        hitCollider.transform.localRotation = Quaternion.Euler(0, 0, -70);
-                        hitCollider.GetComponent<Rigidbody>().isKinematic = true;
+                        if (_equipped != null && equipable == _equipped)
+                        {
+                            _equipped.UnEquip(_dropPoint.position);
+                            _equipped = null;
+                        }
+
+                        equipable.Equip(_handPoint);
+                        _equipped = equipable;
                         continue;
                     }
 
@@ -167,13 +171,18 @@ namespace KinematicCharacterController.Examples
                         _pickUpsList.Add(pickUp);
                     }
                 }
-            }else if (Input.GetKeyDown(KeyCode.E) && _pickUpsList.Count > 0)
+            }else if (Input.GetKeyDown(KeyCode.E) && Input.GetKey(KeyCode.LeftShift) && _pickUpsList.Count > 0)
             {
                 foreach (IPickupable pickUp in _pickUpsList)
                 {
                     pickUp.Drop(_dropPoint.position);
                 }
                 _pickUpsList.Clear();
+            }
+
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                _equipped?.Interact();
             }
         }
 

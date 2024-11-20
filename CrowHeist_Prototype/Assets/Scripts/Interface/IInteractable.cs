@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IInteractable
 {
     public void Interact(){}
+    public virtual void OnTriggerEnter(Collider other){}
+    public virtual void OnTriggerExit(Collider other) { }
 }
