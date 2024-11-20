@@ -12,10 +12,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<CameraObject> _cameras;
 
     private static Dictionary<string, CinemachineVirtualCamera> _cameraDictionary = new Dictionary<string, CinemachineVirtualCamera>();
-    private int _score;
-
-
-    public int Score { get => _score;   set => _score = value; }
+    private static int _score = 0;
+    public static int Score { get => _score;   set => _score = value; }
 
     private void Awake()
     {
