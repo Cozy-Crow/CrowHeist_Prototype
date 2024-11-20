@@ -25,8 +25,7 @@ namespace KinematicCharacterController.Examples
 
         private Vector2 _input;
         private Vector3 _direction;
-        private Vector3 _velocity;            //Todo: Use to access the velocity of the character controller
-        private float _dampingVelocity;
+        private Vector3 _velocity;
         private float _velocitY;
         private float _gravity = 10f;
 
@@ -39,6 +38,16 @@ namespace KinematicCharacterController.Examples
         public bool IsGrounded => _characterController.isGrounded;
         public bool IsFlipped => _isFlipped;
         public bool IsFacingRight => _isFacingRight;
+        public string Equipped {
+            get
+            {
+                if (_equipped != null)
+                {
+                    return _equipped.name;
+                }
+                return "null";
+            }
+        }
         #endregion
 
         private void Awake()
