@@ -306,6 +306,7 @@ namespace KinematicCharacterController.Examples
             }
             _pickUpsList.Clear();
             _isThrowing = false;
+            GameManager.ChangeCamera("Player");
         }
 
         void OnDrawGizmos()

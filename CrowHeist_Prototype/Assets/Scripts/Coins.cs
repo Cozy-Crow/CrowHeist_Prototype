@@ -17,7 +17,8 @@ public class Coins : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.Instance.Score += _coinValue;
+            GameManager.Score += _coinValue;
+            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
             SoundManager.instance.PlaySFXByClip(_coinSound);
             SoundManager.instance.PlaySFX();
             Destroy(gameObject);
