@@ -9,7 +9,11 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [SerializeField] private List<CameraObject> _cameras;
+
+    private static Dictionary<string, CinemachineVirtualCamera> _cameraDictionary = new Dictionary<string, CinemachineVirtualCamera>();
     private int _score;
+
 
     public int Score { get => _score;   set => _score = value; }
 
@@ -22,5 +26,39 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        foreach (var camera in _cameras)
+        {
+            _cameraDictionary.Add(camera.Name, camera.Camera);
+        }
     }
+
+    public static void ChangeCamera(string cameraName)
+    {
+        switch (cameraName)
+        {
+            case "Player":
+                _cameraDictionary.TryGetValue("Player", out CinemachineVirtualCamera camera1);
+                var playerCam = camera1;
+                playerCam.enabled = false;
+                playerCam.enabled = true;
+                break;
+            case "Exit":
+                _cameraDictionary.TryGetValue("Exit", out CinemachineVirtualCamera camera2);
+                var exitCam = camera2;
+                exitCam.enabled = false;
+                exitCam.enabled = true;
+                break;
+        }
+    }
+}
+
+[System.Serializable]
+public class CameraObject
+{
+    [SerializeField] private string _name;
+    [SerializeField] private CinemachineVirtualCamera _camera;
+
+    public string Name { get => _name; }
+    public CinemachineVirtualCamera Camera { get => _camera; }
 }

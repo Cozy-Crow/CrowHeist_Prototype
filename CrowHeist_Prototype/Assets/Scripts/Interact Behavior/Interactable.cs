@@ -8,7 +8,7 @@ public class Interactable : MonoBehaviour, IInteractable
 {
     protected Outline _outline;
     protected bool _interact;
-    protected Canvas _canvas;
+    protected GameObject _canvas;
 
     public Outline Outline => _outline;
     public bool Interact => _interact;
@@ -18,8 +18,8 @@ public class Interactable : MonoBehaviour, IInteractable
         _outline = GetComponentInParent<Outline>();
         if (transform.parent.Find("KeyBind") is not null)
         {
-            _canvas = transform.parent.Find("KeyBind").GetComponent<Canvas>();
-            _canvas.enabled = false;
+            _canvas = transform.parent.Find("KeyBind").gameObject;
+            _canvas.SetActive(false);
         }
     }
 
@@ -29,7 +29,7 @@ public class Interactable : MonoBehaviour, IInteractable
         {
             if (_canvas is not null)
             {
-                _canvas.enabled = true;
+                _canvas.SetActive(true);
             }
             _outline.enabled = true;
             _interact = true;
@@ -42,7 +42,7 @@ public class Interactable : MonoBehaviour, IInteractable
         {
             if (_canvas is not null)
             {
-                _canvas.enabled = false;
+                _canvas.SetActive(false);
             }
 
             _outline.enabled = false;

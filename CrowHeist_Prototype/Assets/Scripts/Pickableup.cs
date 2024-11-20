@@ -7,9 +7,13 @@ using UnityEngine;
 public class Pickable : MonoBehaviour, IPickupable
 {
     private Rigidbody _rigidbody;
+    private GameObject _item;
+
+    public GameObject Item => _item;
 
     private void Awake()
     {
+        _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
     }
     public void PickUP(Transform parent)

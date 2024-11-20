@@ -17,7 +17,7 @@ public class InteractableScrewDriver : Interactable
             {
                 if (_canvas is not null)
                 {
-                    _canvas.enabled = true;
+                    _canvas.SetActive(true);
                 }
                 _outline.enabled = true;
                 _interact = true;
@@ -31,7 +31,7 @@ public class InteractableScrewDriver : Interactable
         {
             if (_canvas is not null)
             {
-                _canvas.enabled = false;
+                _canvas.SetActive(false);
             }
 
             _outline.enabled = false;

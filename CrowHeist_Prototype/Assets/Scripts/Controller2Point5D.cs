@@ -22,6 +22,7 @@ namespace KinematicCharacterController.Examples
         private string _currentAnim;
         private bool _isFacingRight = true;
         private bool _isFlipped = true;
+        private bool _isThrowing = false;
 
         private Vector2 _input;
         private Vector3 _direction;
@@ -196,6 +197,21 @@ namespace KinematicCharacterController.Examples
 
         private void HandleAnimation()
         {
+            if (_isThrowing)
+            {
+                if (_isFacingRight)
+                {
+                    Debug.Log("ThrowRight");
+                    ChangeAnimation("ThrowRight");
+                }
+                else
+                {
+                    Debug.Log("ThrowLeft");
+                    ChangeAnimation("ThrowLeft");
+                }
+                return;
+            }
+
             if(_velocitY > -1)
             {
                 if (_isFacingRight)
@@ -261,6 +277,35 @@ namespace KinematicCharacterController.Examples
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
             }
+        }
+
+        public void StartThrow()
+        {
+            _isThrowing = true;
+            StartCoroutine(ThrowSequence());
+        }
+
+        private void Throw(GameObject item)
+        {
+            item.TryGetComponent(out Rigidbody rigidbody);
+
+            if (rigidbody != null)
+            {
+                rigidbody.isKinematic = false;
+                Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+                rigidbody.AddForce(throwDirection * 10, ForceMode.Impulse);
+            }
+        }
+
+        IEnumerator ThrowSequence()
+        {
+            foreach (IPickupable pickUp in _pickUpsList)
+            {
+                Throw(pickUp.Item);
+                yield return new WaitForSeconds(.73f);
+            }
+            _pickUpsList.Clear();
+            _isThrowing = false;
         }
 
         void OnDrawGizmos()
