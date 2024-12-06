@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class InteractableCouch : MonoBehaviour
+public class DecalVisibility : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public override void OnTriggerEnter(Collider other)
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        if (other.CompareTag("Player"))
+        {
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                GameObject.SetActive(true);
+            }
+        }
     }
 }
