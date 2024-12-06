@@ -5,14 +5,26 @@ using UnityEngine;
 
 public class DecalVisibility : MonoBehaviour
 {
-    public override void OnTriggerEnter(Collider other)
+    [SerializeField] private List<GameObject> decalLists;
+
+    public void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             if (Input.GetKeyDown(KeyCode.F))
             {
-                GameObject.SetActive(true);
+                ActiveDecal();
             }
         }
     }
+
+    private void ActiveDecal()
+    {
+        foreach(GameObject decal in decalLists )
+        {
+            decal.SetActive(true);
+        }
+    }
 }
+
+
