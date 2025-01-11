@@ -6,7 +6,7 @@ using UnityEngine.AI;
 public class CatAI : MonoBehaviour
 {
     NavMeshAgent agent;
-    public Transform[] waypoints;
+    [SerializeField] public Transform[] waypoints;
     int waypointIndex;
     Vector3 target;
 
@@ -20,7 +20,7 @@ public class CatAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Vector3.Distance(tranform.position, target) < 1)
+        if(Vector3.Distance(transform.position, target) < 1)
         {
             IterateWaypointIndex();
             UpdateDestination();
@@ -33,7 +33,7 @@ public class CatAI : MonoBehaviour
     }
     void IterateWaypointIndex()
     {
-        waypointIndex++ =;
+        waypointIndex++;
         if(waypointIndex== waypoints.Length)
         {
             waypointIndex = 0;
