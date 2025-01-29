@@ -10,6 +10,10 @@ public class UIManager : MonoBehaviour
 
     public CoinsUI CoinsUI { get => _coinsUI;}
 
+    [SerializeField] private NoiseMeterUI _noiseUI;
+
+    public NoiseMeterUI NoiseMeterUI { get => _noiseUI;}
+
     private void Awake()
     {
         if (Instance == null)
@@ -22,5 +26,7 @@ public class UIManager : MonoBehaviour
         }
 
         _coinsUI = GameObject.Find("CoinsUI").GetComponent<CoinsUI>();
+
+        _noiseUI = GameObject.Find("NoiseUI").GetComponent<NoiseMeterUI>();
     }
 }
