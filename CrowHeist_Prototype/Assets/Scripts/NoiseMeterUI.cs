@@ -3,28 +3,42 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NoiseMeter : MonoBehaviour
+public class NoiseMeterUI : MonoBehaviour
 {
     [SerializeField] private List<Sprite> _sound = new List<Sprite>();
 
-    private Image _image;
+    private int _noiseLevel = 0;
+    private Image _noiseMeterImage;
     private void Awake()
     {
-        _image = GetComponent<Image>();
+        _noiseMeterImage = GetComponent<Image>();
     }
     private void Start()
     {
-        UpdateCoins(0);
+        UpdateNoise(0);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.UpArrow)) // Press the Up Arrow key to increase noise
+        {
+            _noiseLevel++;
+            UpdateNoise(_noiseLevel);
+        }
+        else if (Input.GetKeyDown(KeyCode.DownArrow)) // Press the Down Arrow key to decrease noise
+        {
+            _noiseLevel = _noiseLevel - 1;
+            UpdateNoise(_noiseLevel);
+        }
     }
 
-    public void UpdateCoins(int coins)
+    public void UpdateNoise(int noise)
     {
-        if (coins > _coins.Count)
+        if (noise > _sound.Count)
         {
-            Debug.LogError("Not enough coin sprites in the list");
+            Debug.LogError("Not enough noise sprites in the list");
             return;
         }
 
-        _image.sprite = _coins[GameManager.Score];
+        _noiseMeterImage.sprite = _sound[_noiseLevel];
     }
 }
