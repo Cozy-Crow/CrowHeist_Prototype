@@ -3590,6 +3590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2116831f02cce1e4792a2fbbd687da21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  agent: {fileID: 0}
   target:
   - {fileID: 341590740}
   - {fileID: 1446519643}
@@ -3598,7 +3599,7 @@ MonoBehaviour:
   - {fileID: 826634157}
   - {fileID: 1052155178}
   - {fileID: 781461014}
-  agent: {fileID: 0}
+  pathing: 1
   bufferDistance: 0.1
 --- !u!1 &577117822
 GameObject:
@@ -11101,10 +11102,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerCamera
       objectReference: {fileID: 0}
+    - target: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_Follow
       value: 
       objectReference: {fileID: 6505057340831361182}
+    - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9192850426392321633, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.9313049
@@ -11238,10 +11247,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 1477484567}
   - {fileID: 20388760}
+  - {fileID: 524046553}
   - {fileID: 5672783914524484631}
   - {fileID: 1019126254}
   - {fileID: 658139267}
-  - {fileID: 524046553}
   - {fileID: 1974201725}
   - {fileID: 210097183}
   - {fileID: 821006766}
