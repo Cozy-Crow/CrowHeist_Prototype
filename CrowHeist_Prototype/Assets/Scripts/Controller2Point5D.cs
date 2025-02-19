@@ -29,11 +29,20 @@ namespace KinematicCharacterController.Examples
         private Vector3 _velocity;
         private float _velocitY;
         private float _gravity = 10f;
-
+        
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Equipable _equipped;
 
         private Animator _animator;
+
+        public Transform throwPoint; 
+        public float maxThrowForce = 20f;
+        public float chargeTime = 2f;
+        private float throwForce = 0f;
+        private bool isCharging = false;
+        private float chargeStartTime;
+        private Rigidbody heldObject;
+
 
         #region Properties
         public bool IsGrounded => _characterController.isGrounded;
@@ -65,6 +74,8 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleMove();
             HandleRotation();
+
+
         }
 
         private void HandleMove()
@@ -154,39 +165,83 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-
                 LayerMask interactable = LayerMask.GetMask("Interactable");
                 Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
-                Collider equipColliders = Physics.OverlapSphere(transform.position, 2, interactable)[0];
 
-                if (equipColliders.TryGetComponent(out Equipable equipable))
+                if (interactableColliders.Length > 0)
                 {
-                    if (_equipped != null)
+                    Collider equipCollider = interactableColliders[0];
+
+                    if (equipCollider.TryGetComponent(out Equipable equipable))
                     {
-                        _equipped.UnEquip(_dropPoint.position);
+                        if (_equipped != null)
+                        {
+                            _equipped.UnEquip(_dropPoint.position);
+                        }
+
+                        equipable.Equip(_handPoint);
+                        _equipped = equipable;
                     }
 
-                    equipable.Equip(_handPoint);
-                    _equipped = equipable;
-                }
-
-                foreach (Collider hitCollider in interactableColliders)
-                {
-                    if (hitCollider.TryGetComponent(out IPickupable pickUp))
+                    foreach (Collider hitCollider in interactableColliders)
                     {
-                        pickUp.PickUP(_pickUpPoint);
-                        _pickUpsList.Add(pickUp);
+                        if (hitCollider.TryGetComponent(out IPickupable pickUp))
+                        {
+                            pickUp.PickUP(_pickUpPoint);
+                            _pickUpsList.Add(pickUp);
+                            heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
+                        }
                     }
                 }
             }
-            
-            if (Input.GetKeyDown(KeyCode.E) && Input.GetKey(KeyCode.LeftShift) && _pickUpsList.Count > 0)
+
+            // Drop objects
+            //if (Input.GetKeyDown(KeyCode.G) && _pickUpsList.Count > 0)
+            //{
+            //    foreach (IPickupable pickUp in _pickUpsList)
+            //    {
+            //        pickUp.Drop(_dropPoint.position);
+            //    }
+            //    _pickUpsList.Clear();
+            //    heldObject = null; // Reset held object
+            //}
+
+            // Throwing mechanism
+            if (heldObject != null)
             {
-                foreach (IPickupable pickUp in _pickUpsList)
+                if (Input.GetKeyDown(KeyCode.G))
                 {
-                    pickUp.Drop(_dropPoint.position);
+                    isCharging = true;
+                    chargeStartTime = Time.time;
                 }
-                _pickUpsList.Clear();
+
+                if (Input.GetKey(KeyCode.G))
+                {
+                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+                }
+
+                if (Input.GetKeyUp(KeyCode.G))
+                {
+                    isCharging = false;
+
+                    // Throw object
+                    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+                    if (rigidbody != null)
+                    {
+                        rigidbody.isKinematic = false;
+                        //Arc 
+                        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+                        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+                    }
+                    foreach (IPickupable pickUp in _pickUpsList)
+                    {
+                        pickUp.Drop(_dropPoint.position);
+                    }
+                    _pickUpsList.Clear();
+                    heldObject = null;
+                    throwForce = 0f;
+                }
+                
             }
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -194,6 +249,7 @@ namespace KinematicCharacterController.Examples
                 _equipped?.Interact();
             }
         }
+
 
         private void HandleAnimation()
         {
@@ -278,36 +334,59 @@ namespace KinematicCharacterController.Examples
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
             }
         }
+        
 
-        public void StartThrow()
-        {
-            _isThrowing = true;
-            StartCoroutine(ThrowSequence());
-        }
 
-        private void Throw(GameObject item)
-        {
-            item.TryGetComponent(out Rigidbody rigidbody);
+        //These Throw functions below do not function
+        //public void StartThrow()
+        //{
+        //    _isThrowing = true;
+        //    StartCoroutine(ThrowSequence());
+        //}
 
-            if (rigidbody != null)
-            {
-                rigidbody.isKinematic = false;
-                Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-                rigidbody.AddForce(throwDirection * 10, ForceMode.Impulse);
-            }
-        }
+        //private void Throw(GameObject item)
+        //{
+        //    item.TryGetComponent(out Rigidbody rigidbody);
 
-        IEnumerator ThrowSequence()
-        {
-            foreach (IPickupable pickUp in _pickUpsList)
-            {
-                Throw(pickUp.Item);
-                yield return new WaitForSeconds(.73f);
-            }
-            _pickUpsList.Clear();
-            _isThrowing = false;
-            GameManager.ChangeCamera("Player");
-        }
+        //    if (rigidbody != null && Input.GetKeyDown(KeyCode.F))
+        //    {
+        //        rigidbody.isKinematic = false;
+        //        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+        //        rigidbody.AddForce(throwDirection * 10, ForceMode.Impulse);
+        //    }
+        //}
+
+        //IEnumerator ThrowSequence()
+        //{
+        //    foreach (IPickupable pickUp in _pickUpsList)
+        //    {
+        //        Throw(pickUp.Item);
+        //        yield return new WaitForSeconds(.73f);
+        //    }
+        //    _pickUpsList.Clear();
+        //    _isThrowing = false;
+        //    GameManager.ChangeCamera("Player");
+        //}
+
+        //void ThrowObject()
+        //{
+        //    if (heldObject == null) return;
+
+        //    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+        //    if (rigidbody != null)
+        //    {
+                
+        //        rigidbody.isKinematic = false;
+        //        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0); // Adjusted for direction
+        //        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+        //    }
+
+        //    heldObject = null;
+        //    throwForce = 0f; // Reset force
+        //}
+
+
+
 
         void OnDrawGizmos()
         {
