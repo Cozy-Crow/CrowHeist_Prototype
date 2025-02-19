@@ -22,7 +22,7 @@ public class InteractableExit : Interactable
                 GameManager.ChangeCamera("Exit");
 
                 var player = GameObject.FindGameObjectWithTag("Player").GetComponent<Controller2Point5D>();
-                player.StartThrow();
+                //player.StartThrow();
 
                 _outline.enabled = false;
                 _canvas.SetActive(false);
