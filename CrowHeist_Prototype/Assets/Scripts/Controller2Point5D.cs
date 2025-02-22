@@ -162,6 +162,7 @@ namespace KinematicCharacterController.Examples
 
             _direction.y = _velocitY;
         }
+        
 
         private void Jump()
         {

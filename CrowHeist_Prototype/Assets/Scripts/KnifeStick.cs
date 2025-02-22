@@ -15,7 +15,7 @@ public class KnifeStick : MonoBehaviour
     private Coroutine resetCoroutine;
 
 
-    void OnTriggerEnter(Collider other)
+    void OnTriggerStay(Collider other)
     {
         if (!isStuck && other.CompareTag("Wall"))
         {
@@ -24,7 +24,7 @@ public class KnifeStick : MonoBehaviour
             isStuck = true;
         }
 
-        if (isStuck && other.CompareTag("Player"))
+        if (isStuck && other.CompareTag("Player") && Input.GetButton("Jump"))
         {
             Controller2Point5D playerController = other.GetComponent<Controller2Point5D>();
 
