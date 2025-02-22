@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
-        [SerializeField] private float _jumpForce = 25f;
+        [SerializeField] private float _jumpForce = 12f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
 
         [Header("PickUP")]
@@ -23,19 +23,21 @@ namespace KinematicCharacterController.Examples
         private bool _isFacingRight = true;
         private bool _isFlipped = true;
         private bool _isThrowing = false;
+        private bool _canJump = true;
+
 
         private Vector2 _input;
         private Vector3 _direction;
         private Vector3 _velocity;
         private float _velocitY;
         private float _gravity = 10f;
-        
+
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Equipable _equipped;
 
         private Animator _animator;
 
-        public Transform throwPoint; 
+        public Transform throwPoint;
         public float maxThrowForce = 20f;
         public float chargeTime = 2f;
         private float throwForce = 0f;
@@ -48,7 +50,8 @@ namespace KinematicCharacterController.Examples
         public bool IsGrounded => _characterController.isGrounded;
         public bool IsFlipped => _isFlipped;
         public bool IsFacingRight => _isFacingRight;
-        public string Equipped {
+        public string Equipped
+        {
             get
             {
                 if (_equipped != null)
@@ -81,23 +84,26 @@ namespace KinematicCharacterController.Examples
         private void HandleMove()
         {
             // Get horizontal input (e.g., A/D keys or arrow keys)
-            _input = new Vector2(Input.GetAxis("Horizontal") ,Input.GetAxis("Vertical"));
+            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             _direction = new Vector3(_input.x, _direction.y, _input.y);
 
-            if (Input.GetButtonDown("Jump") && IsGrounded)
+            // Jump automatically if the player is grounded and still holding jump, but only if they are allowed to jump
+            if (IsGrounded && Input.GetButton("Jump") && _canJump)
             {
                 Jump();
+                _canJump = false; // Prevent instant repeated jumps
+                StartCoroutine(JumpCooldown()); // Start cooldown
             }
 
-            //Handles Cancel movement
-            if(_input == Vector2.zero)
+            // Handles Cancel movement
+            if (_input == Vector2.zero)
             {
                 Vector3 moveDir = new Vector3(0, _direction.y, 0);
                 _velocity = moveDir;
                 _characterController.Move(_velocity * Time.deltaTime);
-            }   
+            }
 
-            //Handles Move the character and apply sprint speed
+            // Handles Move the character and apply sprint speed
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
@@ -111,6 +117,13 @@ namespace KinematicCharacterController.Examples
                 _characterController.Move(_velocity * Time.deltaTime);
             }
         }
+
+        private IEnumerator JumpCooldown()
+        {
+            yield return new WaitForSeconds(0.1f); // Small delay before allowing another jump
+            _canJump = true;
+        }
+
 
         private void HandleRotation()
         {
@@ -161,6 +174,16 @@ namespace KinematicCharacterController.Examples
             _velocitY += _jumpForce;
         }
 
+        public void ApplyBounce(float bounceStrength)
+        {
+            if (IsGrounded)
+            {
+                _velocitY = bounceStrength; // Directly set Y velocity to create a clean bounce
+                Debug.Log("Bounce applied: " + bounceStrength);
+            }
+        }
+
+
         private void HandlePickUP()
         {
             if (Input.GetKeyDown(KeyCode.E))
@@ -195,16 +218,6 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            // Drop objects
-            //if (Input.GetKeyDown(KeyCode.G) && _pickUpsList.Count > 0)
-            //{
-            //    foreach (IPickupable pickUp in _pickUpsList)
-            //    {
-            //        pickUp.Drop(_dropPoint.position);
-            //    }
-            //    _pickUpsList.Clear();
-            //    heldObject = null; // Reset held object
-            //}
 
             // Throwing mechanism
             if (heldObject != null)
@@ -229,7 +242,7 @@ namespace KinematicCharacterController.Examples
                     if (rigidbody != null)
                     {
                         rigidbody.isKinematic = false;
-                        //Arc 
+                        //Arc
                         Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
                         rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
                     }
@@ -241,7 +254,7 @@ namespace KinematicCharacterController.Examples
                     heldObject = null;
                     throwForce = 0f;
                 }
-                
+
             }
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -268,7 +281,7 @@ namespace KinematicCharacterController.Examples
                 return;
             }
 
-            if(_velocitY > -1)
+            if (_velocitY > -1)
             {
                 if (_isFacingRight)
                 {
@@ -280,12 +293,13 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            else if(_velocity.x != 0 || _velocity.z != 0)
+            else if (_velocity.x != 0 || _velocity.z != 0)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
                     _animator.speed = 2f;
-                }else
+                }
+                else
                 {
                     _animator.speed = 1f;
                 }
@@ -299,7 +313,7 @@ namespace KinematicCharacterController.Examples
                     ChangeAnimation("RunLeft");
                 }
             }
-            else if(_velocity.x == 0 && _velocity.z == 0)
+            else if (_velocity.x == 0 && _velocity.z == 0)
             {
                 if (_isFacingRight)
                 {
@@ -334,59 +348,6 @@ namespace KinematicCharacterController.Examples
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
             }
         }
-        
-
-
-        //These Throw functions below do not function
-        //public void StartThrow()
-        //{
-        //    _isThrowing = true;
-        //    StartCoroutine(ThrowSequence());
-        //}
-
-        //private void Throw(GameObject item)
-        //{
-        //    item.TryGetComponent(out Rigidbody rigidbody);
-
-        //    if (rigidbody != null && Input.GetKeyDown(KeyCode.F))
-        //    {
-        //        rigidbody.isKinematic = false;
-        //        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-        //        rigidbody.AddForce(throwDirection * 10, ForceMode.Impulse);
-        //    }
-        //}
-
-        //IEnumerator ThrowSequence()
-        //{
-        //    foreach (IPickupable pickUp in _pickUpsList)
-        //    {
-        //        Throw(pickUp.Item);
-        //        yield return new WaitForSeconds(.73f);
-        //    }
-        //    _pickUpsList.Clear();
-        //    _isThrowing = false;
-        //    GameManager.ChangeCamera("Player");
-        //}
-
-        //void ThrowObject()
-        //{
-        //    if (heldObject == null) return;
-
-        //    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-        //    if (rigidbody != null)
-        //    {
-                
-        //        rigidbody.isKinematic = false;
-        //        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0); // Adjusted for direction
-        //        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-        //    }
-
-        //    heldObject = null;
-        //    throwForce = 0f; // Reset force
-        //}
-
-
-
 
         void OnDrawGizmos()
         {
