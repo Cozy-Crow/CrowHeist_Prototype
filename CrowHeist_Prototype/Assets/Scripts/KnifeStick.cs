@@ -24,11 +24,11 @@ public class KnifeStick : MonoBehaviour
             isStuck = true;
         }
 
-        if (isStuck && other.CompareTag("Player") && Input.GetButton("Jump"))
+        if (isStuck && other.CompareTag("Player"))
         {
             Controller2Point5D playerController = other.GetComponent<Controller2Point5D>();
 
-            if (playerController != null && playerController.IsGrounded)
+            if (playerController != null && playerController.IsGrounded && Input.GetButton("Jump"))
             {
                 Debug.Log("Player Bounced on Knife!");
                 playerController.ApplyBounce(bounceForce);
