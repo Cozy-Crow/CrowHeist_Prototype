@@ -43,6 +43,7 @@ namespace KinematicCharacterController.Examples
         private float throwForce = 0f;
         private bool isCharging = false;
         private float chargeStartTime;
+        private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
         private Rigidbody heldObject;
 
 
@@ -63,10 +64,17 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
+        
+
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponentInChildren<Animator>();
+        }
+        void Start()
+        {
+            lineRenderer = GetComponent<LineRenderer>();
+            lineRenderer.positionCount = 0; // Initial no line
         }
 
         void Update()
@@ -80,6 +88,7 @@ namespace KinematicCharacterController.Examples
 
 
         }
+        
 
         private void HandleMove()
         {
@@ -186,83 +195,112 @@ namespace KinematicCharacterController.Examples
 
 
         private void HandlePickUP()
+{
+    if (Input.GetKeyDown(KeyCode.E))
+    {
+        LayerMask interactable = LayerMask.GetMask("Interactable");
+        Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
+
+        if (interactableColliders.Length > 0)
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            Collider equipCollider = interactableColliders[0];
+
+            if (equipCollider.TryGetComponent(out Equipable equipable))
             {
-                LayerMask interactable = LayerMask.GetMask("Interactable");
-                Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
-
-                if (interactableColliders.Length > 0)
+                if (_equipped != null)
                 {
-                    Collider equipCollider = interactableColliders[0];
-
-                    if (equipCollider.TryGetComponent(out Equipable equipable))
-                    {
-                        if (_equipped != null)
-                        {
-                            _equipped.UnEquip(_dropPoint.position);
-                        }
-
-                        equipable.Equip(_handPoint);
-                        _equipped = equipable;
-                    }
-
-                    foreach (Collider hitCollider in interactableColliders)
-                    {
-                        if (hitCollider.TryGetComponent(out IPickupable pickUp))
-                        {
-                            pickUp.PickUP(_pickUpPoint);
-                            _pickUpsList.Add(pickUp);
-                            heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
-                        }
-                    }
+                    _equipped.UnEquip(_dropPoint.position);
                 }
+
+                equipable.Equip(_handPoint);
+                _equipped = equipable;
             }
 
-
-            // Throwing mechanism
-            if (heldObject != null)
+            foreach (Collider hitCollider in interactableColliders)
             {
-                if (Input.GetKeyDown(KeyCode.G))
+                if (hitCollider.TryGetComponent(out IPickupable pickUp))
                 {
-                    isCharging = true;
-                    chargeStartTime = Time.time;
+                    pickUp.PickUP(_pickUpPoint);
+                    _pickUpsList.Add(pickUp);
+                    heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
                 }
-
-                if (Input.GetKey(KeyCode.G))
-                {
-                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
-                }
-
-                if (Input.GetKeyUp(KeyCode.G))
-                {
-                    isCharging = false;
-
-                    // Throw object
-                    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-                    if (rigidbody != null)
-                    {
-                        rigidbody.isKinematic = false;
-                        //Arc
-                        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-                        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-                    }
-                    foreach (IPickupable pickUp in _pickUpsList)
-                    {
-                        pickUp.Drop(_dropPoint.position);
-                    }
-                    _pickUpsList.Clear();
-                    heldObject = null;
-                    throwForce = 0f;
-                }
-
-            }
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                _equipped?.Interact();
             }
         }
+    }
+
+    // Throwing mechanism
+    if (heldObject != null)
+    {
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            isCharging = true;
+            chargeStartTime = Time.time;
+        }
+
+        if (Input.GetKey(KeyCode.G))
+        {
+            throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+            DrawThrowTrajectory();  // Draw the trajectory while charging
+        }
+
+        if (Input.GetKeyUp(KeyCode.G))
+        {
+            isCharging = false;
+
+            // Throw object
+            Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+            if (rigidbody != null)
+            {
+                rigidbody.isKinematic = false;
+                //Arc
+                Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+                rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+            }
+
+            foreach (IPickupable pickUp in _pickUpsList)
+            {
+                pickUp.Drop(_dropPoint.position);
+            }
+            _pickUpsList.Clear();
+            heldObject = null;
+            throwForce = 0f;
+
+            // Clear the line renderer after throw
+            lineRenderer.positionCount = 0;
+        }
+    }
+
+    if (Input.GetKeyDown(KeyCode.F))
+    {
+        _equipped?.Interact();
+    }
+}
+
+void DrawThrowTrajectory()
+{
+    if (heldObject == null) return;
+
+    // Set the number of points in the trajectory
+    int trajectoryPoints = 30;
+    lineRenderer.positionCount = trajectoryPoints;
+
+    // Initial position of the throw (held object's current position)
+    Vector3 startPos = heldObject.transform.position;
+
+    // Initial velocity based on the charge and direction
+    Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+    Vector3 velocity = throwDirection.normalized * throwForce;
+
+    // Calculate the trajectory
+    for (int i = 0; i < trajectoryPoints; i++)
+    {
+        float t = i * 0.1f;  // Time increment for each trajectory point
+        Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
+
+        lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
+    }
+}
+
 
 
         private void HandleAnimation()
@@ -355,5 +393,7 @@ namespace KinematicCharacterController.Examples
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, 2);
         }
+        
+
     }
 }
