@@ -16,6 +16,10 @@ public class KnifeStick : MonoBehaviour
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private Vector3 originalScale;
+    private float rotationSpeed = 0f;
+    private Rigidbody rb;
+
+
 
     void Start()
     {
@@ -23,17 +27,35 @@ public class KnifeStick : MonoBehaviour
         originalPosition = transform.position;
         originalRotation = transform.rotation;
         originalScale = transform.localScale;
+        rb = GetComponent<Rigidbody>();
+    }
+    void Update()
+    {
+        if (!isStuck && rb != null)
+        {
+            // Rotate the knife while it's moving
+            transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
+        }
     }
 
+
+    public void SetRotationSpeed(float speed)
+    {
+        rotationSpeed = speed;
+    }
 
     void OnTriggerStay(Collider other)
     {
         if (!isStuck && other.CompareTag("Wall"))
         {
-            Rigidbody rb = GetComponent<Rigidbody>();
+            rb = GetComponent<Rigidbody>();
+
             if (rb != null)
             {
                 rb.isKinematic = true; // Stops physics interactions
+                rb.velocity = Vector3.zero;
+                rotationSpeed = 0f; // Stop spinning
+
             }
 
             // Store world position and rotation before disabling physics
@@ -73,13 +95,32 @@ public class KnifeStick : MonoBehaviour
             }
         }
     }
-    void OnTriggerExit(Collider other)
+
+    void OnCollisionEnter(Collision collision)
     {
-        if (isStuck && other.CompareTag("Wall"))
+        // Stop the knife if it hits a wall or the ground
+        if (!isStuck && collision.gameObject.CompareTag("Ground"))
         {
-            isStuck = false;
+            if (rb != null)
+            {
+                rb.isKinematic = true;
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero; // Stop spinning
+            }
+
+            rotationSpeed = 0f; // Ensure rotation stops
+
         }
     }
+
+
+    void OnTriggerExit(Collider other)
+        {
+            if (isStuck && other.CompareTag("Wall"))
+            {
+                isStuck = false;
+            }
+        }
 
 
 

@@ -228,55 +228,55 @@ namespace KinematicCharacterController.Examples
         }
     }
 
-    // Throwing mechanism
-    if (heldObject != null)
-    {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            isCharging = true;
-            chargeStartTime = Time.time;
-        }
-
-        if (Input.GetKey(KeyCode.G))
-        {
-            throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
-            DrawThrowTrajectory();  // Draw the trajectory while charging
-        }
-
-            if (Input.GetKeyUp(KeyCode.G))
+            // Throwing mechanism
+            if (heldObject != null)
             {
-                isCharging = false;
-
-                // Throw object
-                Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-                if (rigidbody != null)
+                if (Input.GetKeyDown(KeyCode.G))
                 {
-                    rigidbody.isKinematic = false;
-                    Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-                    rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+                    isCharging = true;
+                    chargeStartTime = Time.time;
+                }
 
-                    // If the object is a knife, set its spin speed
-                    KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                    if (knife != null)
+                if (Input.GetKey(KeyCode.G))
+                {
+                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+                    DrawThrowTrajectory();  // Draw the trajectory while charging
+                }
+
+                if (Input.GetKeyUp(KeyCode.G))
+                {
+                    isCharging = false;
+
+                    // Throw object
+                    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+                    if (rigidbody != null)
                     {
-                        float spinSpeed = throwForce * 100f; // Adjust multiplier for desired effect
-                        //knife.SetRotationSpeed(spinSpeed);
+                        rigidbody.isKinematic = false;
+                        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+                        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+
+                        // If the object is a knife, set its spin speed
+                        KnifeStick knife = heldObject.GetComponent<KnifeStick>();
+                        if (knife != null)
+                        {
+                            float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+                            knife.SetRotationSpeed(spinSpeed);
+                        }
                     }
-                }
 
-                foreach (IPickupable pickUp in _pickUpsList)
-                {
-                    pickUp.Drop(_dropPoint.position);
-                }
-                _pickUpsList.Clear();
-                heldObject = null;
-                throwForce = 0f;
+                    foreach (IPickupable pickUp in _pickUpsList)
+                    {
+                        pickUp.Drop(_dropPoint.position);
+                    }
+                    _pickUpsList.Clear();
+                    heldObject = null;
+                    throwForce = 0f;
 
-                // Clear the line renderer after throw
-                lineRenderer.positionCount = 0;
+                    // Clear the line renderer after throw
+                    lineRenderer.positionCount = 0;
+                }
             }
 
-            }
 
             if (Input.GetKeyDown(KeyCode.F))
     {
