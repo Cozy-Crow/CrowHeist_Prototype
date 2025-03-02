@@ -18,6 +18,9 @@ public class KnifeStick : MonoBehaviour
     private Vector3 originalScale;
     private float rotationSpeed = 0f;
     private Rigidbody rb;
+    private BoxCollider[] childColliders;
+    private Pickable pickableup;
+
 
 
 
@@ -28,6 +31,8 @@ public class KnifeStick : MonoBehaviour
         originalRotation = transform.rotation;
         originalScale = transform.localScale;
         rb = GetComponent<Rigidbody>();
+        childColliders = GetComponentsInChildren<BoxCollider>();
+        pickableup = GetComponent<Pickable>();
     }
     void Update()
     {
@@ -35,6 +40,18 @@ public class KnifeStick : MonoBehaviour
         {
             // Rotate the knife while it's moving
             transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
+        }
+    }
+    
+    void SetColliderActive(int index, bool isActive)
+    {
+        if (index >= 0 && index < childColliders.Length) // Ensure valid index
+        {
+            childColliders[index].enabled = isActive;
+        }
+        else
+        {
+            Debug.LogWarning("Invalid index for child colliders.");
         }
     }
 
@@ -46,7 +63,7 @@ public class KnifeStick : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (!isStuck && other.CompareTag("Wall"))
+        if (!isStuck && other.CompareTag("Wall") && !pickableup.pickedUp)
         {
             rb = GetComponent<Rigidbody>();
 
@@ -72,9 +89,9 @@ public class KnifeStick : MonoBehaviour
             transform.localScale = originalScale;
 
             isStuck = true;
+            
+
         }
-
-
 
         if (isStuck && other.CompareTag("Player"))
         {
@@ -94,6 +111,7 @@ public class KnifeStick : MonoBehaviour
                 resetCoroutine = StartCoroutine(ResetBounceForce());
             }
         }
+       
     }
 
     void OnCollisionEnter(Collision collision)

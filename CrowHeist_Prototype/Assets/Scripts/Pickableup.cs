@@ -8,6 +8,7 @@ public class Pickable : MonoBehaviour, IPickupable
 {
     private Rigidbody _rigidbody;
     private GameObject _item;
+    public bool pickedUp = false;
 
     public GameObject Item => _item;
 
@@ -25,6 +26,7 @@ public class Pickable : MonoBehaviour, IPickupable
         transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
 
         _rigidbody.isKinematic = true;
+        pickedUp = true;
     }
 
 
@@ -33,6 +35,7 @@ public class Pickable : MonoBehaviour, IPickupable
         transform.SetParent(null);
         transform.position = position;
         _rigidbody.isKinematic = false;
+        pickedUp = false;
     }
 
     public void Use()
