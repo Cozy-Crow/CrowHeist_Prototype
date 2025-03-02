@@ -27,7 +27,6 @@ public class KnifeStick : MonoBehaviour
 
     void Start()
     {
-        // Store the original transform values
         originalPosition = transform.position;
         originalRotation = transform.rotation;
         originalScale = transform.localScale;
@@ -35,6 +34,10 @@ public class KnifeStick : MonoBehaviour
         childColliders = GetComponentsInChildren<BoxCollider>();
         pickableup = GetComponent<Pickable>();
         bouncer.isTrigger = false;
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.isKinematic = false;
+
     }
     void Update()
     {
@@ -69,7 +72,7 @@ public class KnifeStick : MonoBehaviour
     {
         if (!isStuck && other.CompareTag("Wall") && !pickableup.pickedUp)
         {
-            rb = GetComponent<Rigidbody>();
+            //rb = GetComponent<Rigidbody>();
 
             if (rb != null)
             {
