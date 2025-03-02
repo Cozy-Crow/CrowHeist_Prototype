@@ -10,7 +10,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _moveSpeed = 5f;
         [SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
-        [SerializeField] private float _jumpForce = 12f;
+        [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
 
         [Header("PickUP")]
@@ -151,27 +151,46 @@ namespace KinematicCharacterController.Examples
             Flip(_isFlipped);
         }
 
+        //private void HandleGravity()
+        //{
+        //    if (IsGrounded && _velocitY < 0)
+        //    {
+        //        // Reset the y velocity if grounded
+        //        _velocitY = -1f;
+        //    }
+        //    //else if (!IsGrounded && _velocitY < 0)
+        //    //{
+        //    //    // Apply extra gravity when not grounded and falling
+        //    //    _velocitY -= _gravity * _gravityMultiplier * Time.deltaTime;
+        //    //}
+        //    else
+        //    {
+        //        // Apply gravity to the CharacterController
+        //        _velocitY -= _gravity * Time.deltaTime;
+        //    }
+
+        //    _direction.y = _velocitY;
+        //}
         private void HandleGravity()
         {
             if (IsGrounded && _velocitY < 0)
             {
-                // Reset the y velocity if grounded
-                _velocitY = -1f;
+                // Apply a small downward force to stay grounded
+                _velocitY = -2f;
             }
-            //else if (!IsGrounded && _velocitY < 0)
-            //{
-            //    // Apply extra gravity when not grounded and falling
-            //    _velocitY -= _gravity * _gravityMultiplier * Time.deltaTime;
-            //}
             else
             {
-                // Apply gravity to the CharacterController
+                // Apply gravity normally
                 _velocitY -= _gravity * Time.deltaTime;
+
+                // Clamp max fall speed to avoid missing ground detection
+                _velocitY = Mathf.Clamp(_velocitY, -50f, float.MaxValue);
             }
 
             _direction.y = _velocitY;
         }
-        
+
+
 
         private void Jump()
         {
