@@ -716,6 +716,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1047169029}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &155442298 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 288962713544032870, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+  m_PrefabInstance: {fileID: 577088486}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &205986018
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,6 +1649,11 @@ Transform:
   - {fileID: 633811825}
   m_Father: {fileID: 20388760}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
+--- !u!65 &330768621 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 6534701834818254657, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+  m_PrefabInstance: {fileID: 577088486}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &332196907
 GameObject:
   m_ObjectHideFlags: 0
@@ -3614,6 +3624,14 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 982814702963266294, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: blade
+      value: 
+      objectReference: {fileID: 330768621}
+    - target: {fileID: 982814702963266294, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: bouncer
+      value: 
+      objectReference: {fileID: 155442298}
+    - target: {fileID: 982814702963266294, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -3628,6 +3646,10 @@ PrefabInstance:
     - target: {fileID: 6476383176361823772, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_TagString
       value: Knife
+      objectReference: {fileID: 0}
+    - target: {fileID: 6534701834818254657, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7585570212549434009, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_Enabled
@@ -7917,6 +7939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickedUp: 0
 --- !u!54 &1466896845
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9392,6 +9415,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pickedUp: 0
 --- !u!54 &1662772860
 Rigidbody:
   m_ObjectHideFlags: 0
