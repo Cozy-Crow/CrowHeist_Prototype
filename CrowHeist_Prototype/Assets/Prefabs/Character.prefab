@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5843309656202178542}
   - component: {fileID: 1042615545658782635}
   - component: {fileID: 8784716332313436473}
-  - component: {fileID: 3945560056234728303}
   m_Layer: 9
   m_Name: Sprite
   m_TagString: Untagged
@@ -107,27 +106,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3945560056234728303
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 61817540364832675}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adcf88cb42a8d2545b63eb2e0375d594, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _sfx:
-  - {fileID: 11400000, guid: 2116ec28670216e45bb6ffd7b4ba59d2, type: 2}
-  - {fileID: 11400000, guid: 0be77dcab31c67b4aaab0fa228b73faa, type: 2}
-  - {fileID: 11400000, guid: 568c8886aecde1e4099c7f213781d075, type: 2}
-  - {fileID: 11400000, guid: 7b8b20cde86fe3c499824ab310c72c78, type: 2}
-  - {fileID: 11400000, guid: 9522cc944c6dffd4faf9b06a841f33d8, type: 2}
-  - {fileID: 11400000, guid: ecff368caa167d5448f7e04726714b2d, type: 2}
-  - {fileID: 11400000, guid: dddb5048f1caf724081890afbbf5b916, type: 2}
-  - {fileID: 11400000, guid: 1eefa623f089d02478f187d19821d762, type: 2}
 --- !u!1 &192802651981614571
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +209,6 @@ GameObject:
   m_Component:
   - component: {fileID: 631451988467006383}
   - component: {fileID: 8497120387790676754}
-  - component: {fileID: 386937311284259112}
   - component: {fileID: 1629801011090452496}
   m_Layer: 9
   m_Name: Character
@@ -285,102 +262,6 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: -0.2, z: 0}
---- !u!82 &386937311284259112
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8830650885409167177}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 0.3
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!114 &1629801011090452496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -401,3 +282,6 @@ MonoBehaviour:
   _pickUpPoint: {fileID: 7843053465694190917}
   _handPoint: {fileID: 2564438339915437367}
   _dropPoint: {fileID: 5167104243750956226}
+  throwPoint: {fileID: 0}
+  maxThrowForce: 20
+  chargeTime: 2

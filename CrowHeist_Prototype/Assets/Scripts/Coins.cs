@@ -6,7 +6,7 @@ public class Coins : MonoBehaviour
 {
     [SerializeField] private int _coinValue = 1;
     [SerializeField] private float _rotateSpeed = 1.0f;
-    [SerializeField] private AudioClip _coinSound;
+    //[SerializeField] private AudioClip _coinSound;
     // Update is called once per frame
     void Update()
     {
@@ -19,8 +19,8 @@ public class Coins : MonoBehaviour
         {
             GameManager.Score += _coinValue;
             UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-            SoundManager.instance.PlaySFXByClip(_coinSound);
-            SoundManager.instance.PlaySFX();
+            //SoundManager.instance.PlaySFXByClip(_coinSound);
+            //SoundManager.instance.PlaySFX();
             Destroy(gameObject);
         }
     }
