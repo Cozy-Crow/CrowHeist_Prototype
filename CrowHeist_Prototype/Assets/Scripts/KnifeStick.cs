@@ -13,16 +13,46 @@ public class KnifeStick : MonoBehaviour
     private float bounceIncrease = 0.125f;
     private float resetTime = 1.5f;
     private Coroutine resetCoroutine;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+    private Vector3 originalScale;
+
+    void Start()
+    {
+        // Store the original transform values
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+        originalScale = transform.localScale;
+    }
 
 
     void OnTriggerStay(Collider other)
     {
         if (!isStuck && other.CompareTag("Wall"))
         {
-            GetComponent<Rigidbody>().isKinematic = true;
-            transform.parent = other.transform;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.isKinematic = true; // Stops physics interactions
+            }
+
+            // Store world position and rotation before disabling physics
+            Vector3 worldPosition = transform.position;
+            Quaternion worldRotation = transform.rotation;
+
+            transform.SetParent(null); // Unparent to prevent scaling issues
+
+            // Restore position and rotation so the knife doesn't move unexpectedly
+            transform.position = worldPosition;
+            transform.rotation = worldRotation;
+
+            // Ensure scale remains unchanged
+            transform.localScale = originalScale;
+
             isStuck = true;
         }
+
+
 
         if (isStuck && other.CompareTag("Player"))
         {
