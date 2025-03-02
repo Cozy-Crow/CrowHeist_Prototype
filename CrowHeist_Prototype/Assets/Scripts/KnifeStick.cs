@@ -23,6 +23,7 @@ public class KnifeStick : MonoBehaviour
 
     public BoxCollider blade;
     public BoxCollider bouncer;
+    public BoxCollider butt;
 
     void Start()
     {
@@ -41,7 +42,7 @@ public class KnifeStick : MonoBehaviour
         {
             // Rotate the knife while it's moving
             transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
-            bouncer.isTrigger = false;
+            
         }
         
     }
