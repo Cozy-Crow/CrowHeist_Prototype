@@ -20,9 +20,13 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+
+        // Adjust rotation to lay flat and face forward
+        transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+
         _rigidbody.isKinematic = true;
     }
+
 
     public void Drop(Vector3 position)
     {
