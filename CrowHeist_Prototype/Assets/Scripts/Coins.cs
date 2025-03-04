@@ -6,6 +6,9 @@ public class Coins : MonoBehaviour
 {
     [SerializeField] private int _coinValue = 1;
     [SerializeField] private float _rotateSpeed = 1.0f;
+
+    public int CoinValue { get => _coinValue; set => _coinValue = value; }
+
     //[SerializeField] private AudioClip _coinSound;
     // Update is called once per frame
     void Update()

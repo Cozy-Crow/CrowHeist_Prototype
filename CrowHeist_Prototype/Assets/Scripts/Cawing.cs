@@ -6,12 +6,25 @@ using FMODUnity;
 
 public class Cawing : MonoBehaviour
 {
+    [SerializeField] private EventReference _cawingSfx;
     // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            RuntimeManager.PlayOneShot("event:/Crow");
+            AudioManager.PlayOneShot(_cawingSfx);
+            //RuntimeManager.PlayOneShot("event:/Crow");
         }
+    }
+
+    public void PlaySFX(string audioname)
+    {
+        switch (audioname)
+        {
+            case "caw":
+                AudioManager.PlayOneShot(_cawingSfx);
+                break;
+        }
+
     }
 }
