@@ -35,6 +35,7 @@ public class BreakableCube : MonoBehaviour
 
         Vector3 max = Vector3.zero;
 
+        // Gets the max velocity of the unbroken object of the last three frames
         foreach(Vector3 x in velocities){
             if(x.magnitude > max.magnitude)
             {
@@ -42,7 +43,7 @@ public class BreakableCube : MonoBehaviour
             }
         }
 
-        // Get all Rigidbody components and add force for explosion effect
+        // Get all Rigidbody components, sets velocity to original unbroken object, and add force for explosion effect
         foreach (Rigidbody rb in broken.GetComponentsInChildren<Rigidbody>())
         {
             rb.velocity = max;
