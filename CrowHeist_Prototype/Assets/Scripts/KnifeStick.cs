@@ -22,7 +22,7 @@ public class KnifeStick : MonoBehaviour
     private Pickable pickableup;
 
     public BoxCollider blade;
-    public BoxCollider bouncer;
+    //public BoxCollider bouncer;
     public BoxCollider butt;
 
     void Start()
@@ -33,7 +33,7 @@ public class KnifeStick : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         childColliders = GetComponentsInChildren<BoxCollider>();
         pickableup = GetComponent<Pickable>();
-        bouncer.isTrigger = false;
+        //bouncer.isTrigger = false;
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.isKinematic = false;
@@ -45,6 +45,8 @@ public class KnifeStick : MonoBehaviour
         {
             // Rotate the knife while it's moving
             transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
+            blade.isTrigger = true;
+           
             
         }
         
@@ -94,7 +96,7 @@ public class KnifeStick : MonoBehaviour
 
             // Ensure scale remains unchanged
             transform.localScale = originalScale;
-            bouncer.isTrigger = true;
+            //bouncer.isTrigger = true;
             isStuck = true;
             
 
@@ -102,7 +104,7 @@ public class KnifeStick : MonoBehaviour
 
         if (isStuck && other.CompareTag("Player"))
         {
-            bouncer.isTrigger = true;
+            //bouncer.isTrigger = true;
             Controller2Point5D playerController = other.GetComponent<Controller2Point5D>();
 
             if (playerController != null && playerController.IsGrounded && Input.GetButton("Jump"))
@@ -145,7 +147,7 @@ public class KnifeStick : MonoBehaviour
             if (isStuck && other.CompareTag("Wall"))
             {
                 isStuck = false;
-                bouncer.isTrigger = false;
+                //bouncer.isTrigger = false;
             }
         }
 
