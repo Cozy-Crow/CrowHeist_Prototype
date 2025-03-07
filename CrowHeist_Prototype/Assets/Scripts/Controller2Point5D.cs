@@ -7,8 +7,8 @@ namespace KinematicCharacterController.Examples
     [RequireComponent(typeof(CharacterController))]
     public class Controller2Point5D : MonoBehaviour
     {
-        [SerializeField] private float _moveSpeed = 5f;
-        [SerializeField] private float _sprintSpeed = 10f;
+        [SerializeField] private float _moveSpeed = 50f;
+        //[SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
@@ -17,6 +17,15 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private Transform _pickUpPoint;
         [SerializeField] private Transform _handPoint;
         [SerializeField] private Transform _dropPoint;
+
+
+        [Header("Dash")]
+        [SerializeField] private float _dashSpeed = 40f;
+        [SerializeField] private float _dashDuration = 0.2f;
+        public float _dashCooldown = 1f;
+        private bool _canDash = true;
+        private bool _isDashing = false;
+
 
         private CharacterController _characterController;
         private string _currentAnim;
@@ -30,7 +39,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 _direction;
         private Vector3 _velocity;
         private float _velocitY;
-        private float _gravity = 10f;
+        private float _gravity = 7f;
 
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Equipable _equipped;
@@ -64,7 +73,7 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
-        
+
 
         private void Awake()
         {
@@ -80,6 +89,7 @@ namespace KinematicCharacterController.Examples
         void Update()
         {
             // Handle movement
+            HandleDash();
             HandleAnimation();
             HandlePickUP();
             HandleGravity();
@@ -88,49 +98,99 @@ namespace KinematicCharacterController.Examples
 
 
         }
-        
 
+
+        //private void HandleMove()
+        //{
+        //    // Get horizontal input (e.g., A/D keys or arrow keys)
+        //    _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+        //    _direction = new Vector3(_input.x, _direction.y, _input.y);
+
+        //    // Jump automatically if the player is grounded and still holding jump, but only if they are allowed to jump
+        //    if (IsGrounded && Input.GetButton("Jump") && _canJump)
+        //    {
+        //        Jump();
+        //        _canJump = false; // Prevent instant repeated jumps
+        //        StartCoroutine(JumpCooldown()); // Start cooldown
+        //    }
+
+        //    // Handles Cancel movement
+        //    if (_input == Vector2.zero)
+        //    {
+        //        Vector3 moveDir = new Vector3(0, _direction.y, 0);
+        //        _velocity = moveDir;
+        //        _characterController.Move(_velocity * Time.deltaTime);
+        //    }
+
+        //    // Handles Move the character and apply sprint speed
+        //    if (Input.GetKey(KeyCode.LeftShift))
+        //    {
+        //        Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
+        //        _velocity = moveDir;
+        //        _characterController.Move(_velocity * Time.deltaTime);
+        //    }
+        //    else
+        //    {
+        //        Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
+        //        _velocity = moveDir;
+        //        _characterController.Move(_velocity * Time.deltaTime);
+        //    }
+        //}
         private void HandleMove()
         {
-            // Get horizontal input (e.g., A/D keys or arrow keys)
+            if (_isDashing) return; // Don't allow movement input during dash
+
             _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             _direction = new Vector3(_input.x, _direction.y, _input.y);
 
-            // Jump automatically if the player is grounded and still holding jump, but only if they are allowed to jump
             if (IsGrounded && Input.GetButton("Jump") && _canJump)
             {
                 Jump();
-                _canJump = false; // Prevent instant repeated jumps
-                StartCoroutine(JumpCooldown()); // Start cooldown
+                _canJump = false;
+                StartCoroutine(JumpCooldown());
             }
 
-            // Handles Cancel movement
-            if (_input == Vector2.zero)
-            {
-                Vector3 moveDir = new Vector3(0, _direction.y, 0);
-                _velocity = moveDir;
-                _characterController.Move(_velocity * Time.deltaTime);
-            }
-
-            // Handles Move the character and apply sprint speed
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
-                _velocity = moveDir;
-                _characterController.Move(_velocity * Time.deltaTime);
-            }
-            else
-            {
-                Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
-                _velocity = moveDir;
-                _characterController.Move(_velocity * Time.deltaTime);
-            }
+            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
+            _velocity = moveDir;
+            _characterController.Move(_velocity * Time.deltaTime);
         }
+
 
         private IEnumerator JumpCooldown()
         {
             yield return new WaitForSeconds(0.1f); // Small delay before allowing another jump
             _canJump = true;
+        }
+
+        private void HandleDash()
+        {
+            if (_canDash && Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                StartCoroutine(Dash());
+            }
+        }
+
+
+        private IEnumerator Dash()
+        {
+            _canDash = false;
+            _isDashing = true;
+
+            // Get dash direction (only horizontal movement)
+            float dashDirection = _isFacingRight ? 1f : -1f;
+            Vector3 dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
+
+            float dashTime = 0f;
+            while (dashTime < _dashDuration)
+            {
+                _characterController.Move(dashVelocity * Time.deltaTime);
+                dashTime += Time.deltaTime;
+                yield return null;
+            }
+
+            _isDashing = false;
+            yield return new WaitForSeconds(_dashCooldown);
+            _canDash = true;
         }
 
 
@@ -214,38 +274,38 @@ namespace KinematicCharacterController.Examples
 
 
         private void HandlePickUP()
-{
-    if (Input.GetKeyDown(KeyCode.E))
-    {
-        LayerMask interactable = LayerMask.GetMask("Interactable");
-        Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
-
-        if (interactableColliders.Length > 0)
         {
-            Collider equipCollider = interactableColliders[0];
-
-            if (equipCollider.TryGetComponent(out Equipable equipable))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (_equipped != null)
-                {
-                    _equipped.UnEquip(_dropPoint.position);
-                }
+                LayerMask interactable = LayerMask.GetMask("Interactable");
+                Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
 
-                equipable.Equip(_handPoint);
-                _equipped = equipable;
-            }
-
-            foreach (Collider hitCollider in interactableColliders)
-            {
-                if (hitCollider.TryGetComponent(out IPickupable pickUp))
+                if (interactableColliders.Length > 0)
                 {
-                    pickUp.PickUP(_pickUpPoint);
-                    _pickUpsList.Add(pickUp);
-                    heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
+                    Collider equipCollider = interactableColliders[0];
+
+                    if (equipCollider.TryGetComponent(out Equipable equipable))
+                    {
+                        if (_equipped != null)
+                        {
+                            _equipped.UnEquip(_dropPoint.position);
+                        }
+
+                        equipable.Equip(_handPoint);
+                        _equipped = equipable;
+                    }
+
+                    foreach (Collider hitCollider in interactableColliders)
+                    {
+                        if (hitCollider.TryGetComponent(out IPickupable pickUp))
+                        {
+                            pickUp.PickUP(_pickUpPoint);
+                            _pickUpsList.Add(pickUp);
+                            heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
+                        }
+                    }
                 }
             }
-        }
-    }
 
             // Throwing mechanism
             if (heldObject != null)
@@ -298,35 +358,35 @@ namespace KinematicCharacterController.Examples
 
 
             if (Input.GetKeyDown(KeyCode.F))
-    {
-        _equipped?.Interact();
-    }
-}
+            {
+                _equipped?.Interact();
+            }
+        }
 
-void DrawThrowTrajectory()
-{
-    if (heldObject == null) return;
+        void DrawThrowTrajectory()
+        {
+            if (heldObject == null) return;
 
-    // Set the number of points in the trajectory
-    int trajectoryPoints = 30;
-    lineRenderer.positionCount = trajectoryPoints;
+            // Set the number of points in the trajectory
+            int trajectoryPoints = 30;
+            lineRenderer.positionCount = trajectoryPoints;
 
-    // Initial position of the throw (held object's current position)
-    Vector3 startPos = heldObject.transform.position;
+            // Initial position of the throw (held object's current position)
+            Vector3 startPos = heldObject.transform.position;
 
-    // Initial velocity based on the charge and direction
-    Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-    Vector3 velocity = throwDirection.normalized * throwForce;
+            // Initial velocity based on the charge and direction
+            Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+            Vector3 velocity = throwDirection.normalized * throwForce;
 
-    // Calculate the trajectory
-    for (int i = 0; i < trajectoryPoints; i++)
-    {
-        float t = i * 0.1f;  // Time increment for each trajectory point
-        Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
+            // Calculate the trajectory
+            for (int i = 0; i < trajectoryPoints; i++)
+            {
+                float t = i * 0.1f;  // Time increment for each trajectory point
+                Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
 
-        lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
-    }
-}
+                lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
+            }
+        }
 
 
 
@@ -420,7 +480,7 @@ void DrawThrowTrajectory()
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, 2);
         }
-        
+
 
     }
 }
