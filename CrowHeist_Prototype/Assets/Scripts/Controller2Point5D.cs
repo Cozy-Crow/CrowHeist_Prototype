@@ -335,7 +335,7 @@ namespace KinematicCharacterController.Examples
                     float angle = 20f * Mathf.Deg2Rad;
                     Vector3 throwDirection;
 
-                    if (_isMovingForward)
+                    if (_isMovingForward || _isMovingBackward)
                     {
                         // Ensure the throw is always in the player's forward direction
                         throwDirection = new Vector3(0, Mathf.Tan(angle), (_isMovingForward ? 1 : -1)).normalized;
