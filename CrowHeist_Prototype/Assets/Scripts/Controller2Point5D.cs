@@ -212,11 +212,6 @@ namespace KinematicCharacterController.Examples
             Flip(_isFlipped);
         }
 
-
-
-
-
-
         //private void HandleGravity()
         //{
         //    if (IsGrounded && _velocitY < 0)
@@ -313,9 +308,6 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-
-
-            //Static Throwing mechanism
             if (Input.GetKeyDown(KeyCode.T))
             {
                 Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
@@ -328,7 +320,20 @@ namespace KinematicCharacterController.Examples
 
                     // Convert 20 degrees to a direction vector
                     float angle = 20f * Mathf.Deg2Rad;
-                    Vector3 throwDirection = new Vector3(Mathf.Cos(angle) * (_isFacingRight ? 1 : -1), Mathf.Sin(angle), 0);
+                    Vector3 throwDirection;
+
+                    if (_isMovingForward)
+                    {
+                        // Ensure the throw is always in the player's forward direction
+                        throwDirection = new Vector3(0, Mathf.Tan(angle), (_isMovingForward ? 1 : -1)).normalized;
+                    }
+                    else
+                    {
+                        // Throw left or right based on facing direction
+                        throwDirection = new Vector3((_isFacingRight ? 1 : -1), Mathf.Tan(angle), 0).normalized;
+                    }
+
+                    Debug.Log($"Final Throw Direction: {throwDirection}"); // Debugging
 
                     // Apply force
                     rigidbody.AddForce(throwDirection * fixedThrowForce, ForceMode.Impulse);
@@ -349,6 +354,7 @@ namespace KinematicCharacterController.Examples
                 _pickUpsList.Clear();
                 heldObject = null;
             }
+
 
 
             // Charged Throwing mechanism
