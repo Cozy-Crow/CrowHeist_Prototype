@@ -31,6 +31,7 @@ namespace KinematicCharacterController.Examples
         private string _currentAnim;
         private bool _isFacingRight = true;
         private bool _isMovingForward = false;
+        private bool _isMovingBackward = false;
         private bool _isFlipped = true;
         private bool _isThrowing = false;
         private bool _canJump = true;
@@ -176,10 +177,21 @@ namespace KinematicCharacterController.Examples
         {
             _canDash = false;
             _isDashing = true;
+            float dashDirection;
+            Vector3 dashVelocity;
 
             // Get dash direction (only horizontal movement)
-            float dashDirection = _isFacingRight ? 1f : -1f;
-            Vector3 dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
+            if (_isMovingForward || _isMovingBackward)
+            {
+                dashDirection = _isMovingForward ? 1f : -1f;
+                dashVelocity = new Vector3(0, 0, dashDirection * _dashSpeed);
+            }
+            else
+            {
+                dashDirection = _isFacingRight ? 1f : -1f;
+                dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
+            }
+            
 
             float dashTime = 0f;
             while (dashTime < _dashDuration)
@@ -198,6 +210,7 @@ namespace KinematicCharacterController.Examples
         private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
+            _isMovingBackward = (_input.y < 0);
             // Handle rotation
             if (_input.x > 0 && !_isFlipped)
             {
