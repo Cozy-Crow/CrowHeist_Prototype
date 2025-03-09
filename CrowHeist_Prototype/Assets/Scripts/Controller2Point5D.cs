@@ -453,18 +453,6 @@ namespace KinematicCharacterController.Examples
                     DrawThrowTrajectory(storedThrowDirection);
                 }
 
-                if (Input.GetMouseButtonUp(0) && !isCanceled)
-                {
-                    isCharging = false;
-
-                    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-                    if (rigidbody != null && storedThrowDirection != Vector3.zero) // Ensure valid direction
-                    {
-                        rigidbody.isKinematic = false;
-                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
-                    }
-                }
-
                 // Release the left mouse button to throw
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
