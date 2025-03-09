@@ -49,13 +49,15 @@ namespace KinematicCharacterController.Examples
         private Animator _animator;
 
         public Transform throwPoint;
-        public float maxThrowForce = 20f;
+        public float maxThrowForce = 50f;
         public float chargeTime = 2f;
         private float throwForce = 0f;
         private bool isCharging = false;
         private float chargeStartTime;
         private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
         private Rigidbody heldObject;
+        private Vector3 storedThrowDirection = Vector3.zero;
+
 
 
         #region Properties
@@ -371,21 +373,97 @@ namespace KinematicCharacterController.Examples
 
 
             // Charged Throwing mechanism
+            //if (heldObject != null)
+            //{
+            //    if (Input.GetKeyDown(KeyCode.G))
+            //    {
+            //        isCharging = true;
+            //        chargeStartTime = Time.time;
+            //    }
+
+            //    if (Input.GetKey(KeyCode.G))
+            //    {
+            //        throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+            //        DrawThrowTrajectory();  // Draw the trajectory while charging
+            //    }
+
+            //    if (Input.GetKeyUp(KeyCode.G))
+            //    {
+            //        isCharging = false;
+
+            //        // Throw object
+            //        Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+            //        if (rigidbody != null)
+            //        {
+            //            rigidbody.isKinematic = false;
+            //            Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+            //            rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+
+            //            // If the object is a knife, set its spin speed
+            //            KnifeStick knife = heldObject.GetComponent<KnifeStick>();
+            //            if (knife != null)
+            //            {
+            //                float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+            //                knife.SetRotationSpeed(spinSpeed);
+            //            }
+            //        }
+
+            //        foreach (IPickupable pickUp in _pickUpsList)
+            //        {
+            //            pickUp.Drop(_dropPoint.position);
+            //        }
+            //        _pickUpsList.Clear();
+            //        heldObject = null;
+            //        throwForce = 0f;
+
+            //        // Clear the line renderer after throw
+            //        lineRenderer.positionCount = 0;
+            //    }
+            //}
+
+
+
+            // Charged Throwing mechanism
             if (heldObject != null)
             {
-                if (Input.GetKeyDown(KeyCode.G))
+
+                // Start charging when left mouse button is pressed
+                if (Input.GetMouseButtonDown(0)) // Left mouse button
                 {
                     isCharging = true;
                     chargeStartTime = Time.time;
                 }
 
-                if (Input.GetKey(KeyCode.G))
+                // While holding the left mouse button, update throw force and aim direction
+                
+                if (Input.GetMouseButton(0))
                 {
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
-                    DrawThrowTrajectory();  // Draw the trajectory while charging
+
+                    Vector3 mousePosition = Input.mousePosition;
+                    mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
+                    Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                    Vector3 playerPosition = transform.position;
+                    storedThrowDirection = (worldMousePos - playerPosition).normalized; // Always assign value
+
+                    DrawThrowTrajectory(storedThrowDirection);
                 }
 
-                if (Input.GetKeyUp(KeyCode.G))
+                if (Input.GetMouseButtonUp(0))
+                {
+                    isCharging = false;
+
+                    Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+                    if (rigidbody != null && storedThrowDirection != Vector3.zero) // Ensure valid direction
+                    {
+                        rigidbody.isKinematic = false;
+                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
+                    }
+                }
+
+                // Release the left mouse button to throw
+                if (Input.GetMouseButtonUp(0))
                 {
                     isCharging = false;
 
@@ -394,18 +472,31 @@ namespace KinematicCharacterController.Examples
                     if (rigidbody != null)
                     {
                         rigidbody.isKinematic = false;
-                        Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-                        rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
+
+                        // Final throw direction calculation (same as above)
+                        Vector3 mousePosition = Input.mousePosition;
+                        mousePosition.z = 10f; // Adjust based on your setup
+                        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
+
+                        Vector3 playerPosition = transform.position;  // Assuming this is the player's position
+                        Vector3 throwDirection = (worldMousePos - playerPosition);
+                        throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f); // Limit vertical influence
+                        throwDirection = throwDirection.normalized;
+
+
+                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
 
                         // If the object is a knife, set its spin speed
                         KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                        if (knife != null)
+                        if (knife != null && _isMovingForward)
                         {
-                            float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                            knife.SetRotationSpeed(spinSpeed);
+                            heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+                            //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+                            //knife.SetRotationSpeed(spinSpeed);
                         }
                     }
 
+                    // Drop the held object
                     foreach (IPickupable pickUp in _pickUpsList)
                     {
                         pickUp.Drop(_dropPoint.position);
@@ -414,10 +505,19 @@ namespace KinematicCharacterController.Examples
                     heldObject = null;
                     throwForce = 0f;
 
-                    // Clear the line renderer after throw
+                    // Clear the trajectory visualization
                     lineRenderer.positionCount = 0;
                 }
+
+                // Right-click to cancel the throw
+                if (Input.GetMouseButtonDown(1)) // Right mouse button
+                {
+                    isCharging = false;
+                    throwForce = 0f;
+                    lineRenderer.positionCount = 0; // Clear trajectory visualization
+                }
             }
+
 
 
             if (Input.GetKeyDown(KeyCode.F))
@@ -426,30 +526,49 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        void DrawThrowTrajectory()
+        //void DrawThrowTrajectory()
+        //{
+        //    if (heldObject == null) return;
+
+        //    // Set the number of points in the trajectory
+        //    int trajectoryPoints = 30;
+        //    lineRenderer.positionCount = trajectoryPoints;
+
+        //    // Initial position of the throw (held object's current position)
+        //    Vector3 startPos = heldObject.transform.position;
+
+        //    // Initial velocity based on the charge and direction
+        //    Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
+        //    Vector3 velocity = throwDirection.normalized * throwForce;
+
+        //    // Calculate the trajectory
+        //    for (int i = 0; i < trajectoryPoints; i++)
+        //    {
+        //        float t = i * 0.1f;  // Time increment for each trajectory point
+        //        Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
+
+        //        lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
+        //    }
+        //}
+
+        void DrawThrowTrajectory(Vector3 direction)
         {
-            if (heldObject == null) return;
+            int resolution = 20; // More points = smoother curve
+            float timeStep = 0.1f; // Time increment per point
+            Vector3 startPosition = transform.position;
+            Vector3 velocity = direction * throwForce; // Use the same throw force
 
-            // Set the number of points in the trajectory
-            int trajectoryPoints = 30;
-            lineRenderer.positionCount = trajectoryPoints;
+            lineRenderer.positionCount = resolution;
 
-            // Initial position of the throw (held object's current position)
-            Vector3 startPos = heldObject.transform.position;
-
-            // Initial velocity based on the charge and direction
-            Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-            Vector3 velocity = throwDirection.normalized * throwForce;
-
-            // Calculate the trajectory
-            for (int i = 0; i < trajectoryPoints; i++)
+            for (int i = 0; i < resolution; i++)
             {
-                float t = i * 0.1f;  // Time increment for each trajectory point
-                Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
-
-                lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
+                float time = i * timeStep;
+                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
+                lineRenderer.SetPosition(i, point);
             }
         }
+
+
 
 
 
