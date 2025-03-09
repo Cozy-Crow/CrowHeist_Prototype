@@ -53,6 +53,7 @@ namespace KinematicCharacterController.Examples
         public float chargeTime = 2f;
         private float throwForce = 0f;
         private bool isCharging = false;
+        private bool isCanceled = false;
         private float chargeStartTime;
         private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
         private Rigidbody heldObject;
@@ -431,12 +432,13 @@ namespace KinematicCharacterController.Examples
                 if (Input.GetMouseButtonDown(0)) // Left mouse button
                 {
                     isCharging = true;
+                    isCanceled = false;
                     chargeStartTime = Time.time;
                 }
 
                 // While holding the left mouse button, update throw force and aim direction
                 
-                if (Input.GetMouseButton(0))
+                if (Input.GetMouseButton(0) && !isCanceled)
                 {
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
 
@@ -450,7 +452,7 @@ namespace KinematicCharacterController.Examples
                     DrawThrowTrajectory(storedThrowDirection);
                 }
 
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
                     isCharging = false;
 
@@ -463,7 +465,7 @@ namespace KinematicCharacterController.Examples
                 }
 
                 // Release the left mouse button to throw
-                if (Input.GetMouseButtonUp(0))
+                if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
                     isCharging = false;
 
@@ -513,8 +515,12 @@ namespace KinematicCharacterController.Examples
                 if (Input.GetMouseButtonDown(1)) // Right mouse button
                 {
                     isCharging = false;
+                    isCanceled = true;
                     throwForce = 0f;
                     lineRenderer.positionCount = 0; // Clear trajectory visualization
+
+                    // Ensure the object remains held but isn't thrown
+                    storedThrowDirection = Vector3.zero; // Reset the throw direction
                 }
             }
 
