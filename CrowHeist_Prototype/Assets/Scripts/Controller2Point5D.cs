@@ -356,10 +356,11 @@ namespace KinematicCharacterController.Examples
 
                     // If the object is a knife, set its spin speed
                     KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                    if (knife != null)
+                    if (knife != null && _isMovingForward)
                     {
-                        float spinSpeed = fixedThrowForce * 50f;
-                        knife.SetRotationSpeed(spinSpeed);
+                        heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+                        //knife.SetRotationSpeed(spinSpeed);
                     }
                 }
 
