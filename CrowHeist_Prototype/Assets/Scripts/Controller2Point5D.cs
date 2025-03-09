@@ -30,6 +30,7 @@ namespace KinematicCharacterController.Examples
         private CharacterController _characterController;
         private string _currentAnim;
         private bool _isFacingRight = true;
+        private bool _isMovingForward = false;
         private bool _isFlipped = true;
         private bool _isThrowing = false;
         private bool _canJump = true;
@@ -196,6 +197,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleRotation()
         {
+            _isMovingForward = (_input.y > 0);
             // Handle rotation
             if (_input.x > 0 && !_isFlipped)
             {
@@ -207,9 +209,13 @@ namespace KinematicCharacterController.Examples
                 _isFlipped = false;
                 _isFacingRight = false;
             }
-
             Flip(_isFlipped);
         }
+
+
+
+
+
 
         //private void HandleGravity()
         //{
