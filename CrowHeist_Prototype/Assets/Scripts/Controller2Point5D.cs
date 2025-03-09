@@ -307,7 +307,45 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            // Throwing mechanism
+
+
+            //Static Throwing mechanism
+            if (Input.GetKeyDown(KeyCode.T))
+            {
+                Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+                if (rigidbody != null)
+                {
+                    rigidbody.isKinematic = false;
+
+                    // Fixed velocity similar to charged throw
+                    float fixedThrowForce = maxThrowForce * 0.7f; // Adjust as needed
+
+                    // Convert 20 degrees to a direction vector
+                    float angle = 20f * Mathf.Deg2Rad;
+                    Vector3 throwDirection = new Vector3(Mathf.Cos(angle) * (_isFacingRight ? 1 : -1), Mathf.Sin(angle), 0);
+
+                    // Apply force
+                    rigidbody.AddForce(throwDirection * fixedThrowForce, ForceMode.Impulse);
+
+                    // If the object is a knife, set its spin speed
+                    KnifeStick knife = heldObject.GetComponent<KnifeStick>();
+                    if (knife != null)
+                    {
+                        float spinSpeed = fixedThrowForce * 50f;
+                        knife.SetRotationSpeed(spinSpeed);
+                    }
+                }
+
+                foreach (IPickupable pickUp in _pickUpsList)
+                {
+                    pickUp.Drop(_dropPoint.position);
+                }
+                _pickUpsList.Clear();
+                heldObject = null;
+            }
+
+
+            // Charged Throwing mechanism
             if (heldObject != null)
             {
                 if (Input.GetKeyDown(KeyCode.G))
