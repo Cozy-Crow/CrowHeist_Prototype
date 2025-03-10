@@ -295,7 +295,6 @@ namespace KinematicCharacterController.Examples
                     _velocitY -= _gravity * 0.5f * Time.deltaTime; // Use a reduced gravity factor for gliding
 
                     _fallingTime += Time.deltaTime;
-                    Debug.Log(_fallingTime);
                 }
                 
                 else
