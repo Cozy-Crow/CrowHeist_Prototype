@@ -13,6 +13,11 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
 
+
+        //Falling
+        public float _fallingTime = 0f;
+
+
         [Header("PickUP")]
         [SerializeField] private Transform _pickUpPoint;
         [SerializeField] private Transform _handPoint;
@@ -85,6 +90,7 @@ namespace KinematicCharacterController.Examples
         {
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponentInChildren<Animator>();
+
         }
         void Start()
         {
@@ -222,8 +228,6 @@ namespace KinematicCharacterController.Examples
 
                     float forceAmount = 20f; // Adjust this value
                     rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
-
-                    Debug.Log($"Applying force {forceAmount} to {hit.gameObject.name}");
                 }
             }
         }
@@ -275,19 +279,38 @@ namespace KinematicCharacterController.Examples
             {
                 // Apply a small downward force to stay grounded
                 _velocitY = -2f;
+                // Reset falling time when grounded
+                _fallingTime = 0f;
+
+
+
             }
             else
             {
-                // Apply gravity normally
-                _velocitY -= _gravity * Time.deltaTime;
+                // Slowly apply gravity when falling (gliding effect)
+                if (_velocitY < 0)
+                {
+                   
+                    // Reduce gravity over time to make the player glide down
+                    _velocitY -= _gravity * 0.5f * Time.deltaTime; // Use a reduced gravity factor for gliding
 
-                // Clamp max fall speed to avoid missing ground detection
-                _velocitY = Mathf.Clamp(_velocitY, -50f, float.MaxValue);
+                    _fallingTime += Time.deltaTime;
+                    Debug.Log(_fallingTime);
+                }
+                
+                else
+                {
+                    // Apply normal gravity if the player is moving upwards or has zero vertical velocity
+                    _velocitY -= _gravity * Time.deltaTime;
+                }
+
+                // Clamp the fall speed to a more controlled, slow speed
+                _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue); // Slow fall speed
+
             }
-
+            
             _direction.y = _velocitY;
         }
-
 
 
         private void Jump()
@@ -369,8 +392,6 @@ namespace KinematicCharacterController.Examples
                         // Throw left or right based on facing direction
                         throwDirection = new Vector3((_isFacingRight ? 1 : -1), Mathf.Tan(angle), 0).normalized;
                     }
-
-                    Debug.Log($"Final Throw Direction: {throwDirection}"); // Debugging
 
                     // Apply force
                     rigidbody.AddForce(throwDirection * fixedThrowForce, ForceMode.Impulse);

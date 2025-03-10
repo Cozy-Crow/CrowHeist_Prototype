@@ -31,14 +31,16 @@ public class BreakableCube : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Trigger entered by: {other.gameObject.name}");
-
 
         if (other.CompareTag("Player")) // Ensure the player has the correct tag
         {
             // Break if player is dashing
             Controller2Point5D player = other.GetComponent<Controller2Point5D>();
             if (player != null && player._isDashing) // Ensure your script has isDashing
+            {
+                Break();
+            }
+            if(player != null && player._fallingTime >= 1f)
             {
                 Break();
             }
