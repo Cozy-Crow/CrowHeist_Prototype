@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KinematicCharacterController.Examples;
 
 public class BreakableCube : MonoBehaviour
 {
     public GameObject brokenPrefab; // Assign the broken cube prefab in the Inspector
     public float breakForce = 5f; // Velocity needed to break
     public Vector3[] velocities = new Vector3[3] { Vector3.zero, Vector3.zero, Vector3.zero };
+
+
 
     private void FixedUpdate()
     {
@@ -22,10 +25,17 @@ public class BreakableCube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.relativeVelocity.magnitude > breakForce)
+        Controller2Point5D player = collision.gameObject.GetComponent<Controller2Point5D>();
+
+        if (player != null && player._isDashing) // Ensure IsDashing is a public property in PlayerController
         {
             Break();
         }
+        else if (collision.relativeVelocity.magnitude > breakForce)
+        {
+            Break();
+        }
+
     }
 
     void Break()

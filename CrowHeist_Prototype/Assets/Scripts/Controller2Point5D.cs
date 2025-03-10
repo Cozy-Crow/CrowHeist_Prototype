@@ -24,7 +24,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _dashDuration = 0.2f;
         public float _dashCooldown = 1f;
         private bool _canDash = true;
-        private bool _isDashing = false;
+        public bool _isDashing = false;
 
 
         private CharacterController _characterController;
