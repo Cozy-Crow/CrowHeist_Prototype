@@ -22,6 +22,7 @@ namespace KinematicCharacterController.Examples
         [Header("Dash")]
         [SerializeField] private float _dashSpeed = 40f;
         [SerializeField] private float _dashDuration = 0.2f;
+        [SerializeField] private float _dashForce = 10f;
         public float _dashCooldown = 1f;
         private bool _canDash = true;
         private bool _isDashing = false;
@@ -208,6 +209,21 @@ namespace KinematicCharacterController.Examples
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
         }
+
+        private void OnControllerColliderHit(ControllerColliderHit hit)
+        {
+            if (_isDashing) // Ensure the player is dashing
+            {
+                Rigidbody rb = hit.collider.attachedRigidbody;
+                if (rb != null && !rb.isKinematic)
+                {
+                    Vector3 forceDirection = hit.point - transform.position;
+                    forceDirection.Normalize();
+                    rb.AddForce(forceDirection * _dashForce, ForceMode.Impulse);
+                }
+            }
+        }
+
 
 
         private void HandleRotation()

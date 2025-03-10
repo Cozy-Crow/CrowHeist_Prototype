@@ -22,11 +22,18 @@ public class BreakableCube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.relativeVelocity.magnitude > breakForce)
+        if (collision.rigidbody != null) // Ensure the other object has a Rigidbody
         {
-            Break();
+            Vector3 impactForce = collision.impulse / Time.fixedDeltaTime; // Calculate force
+            Debug.Log($"Collision with {collision.gameObject.name}, Impact Force: {impactForce.magnitude}");
+
+            if (impactForce.magnitude > breakForce)
+            {
+                Break();
+            }
         }
     }
+
 
     void Break()
     {
