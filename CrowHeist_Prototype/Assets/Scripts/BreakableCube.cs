@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using KinematicCharacterController.Examples;
 
 public class BreakableCube : MonoBehaviour
 {
@@ -22,17 +23,29 @@ public class BreakableCube : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.rigidbody != null) // Ensure the other object has a Rigidbody
+        if (collision.relativeVelocity.magnitude > breakForce)
         {
-            Vector3 impactForce = collision.impulse / Time.fixedDeltaTime; // Calculate force
-            Debug.Log($"Collision with {collision.gameObject.name}, Impact Force: {impactForce.magnitude}");
+            Break();
+        }
+    }
 
-            if (impactForce.magnitude > breakForce)
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log($"Trigger entered by: {other.gameObject.name}");
+
+
+        if (other.CompareTag("Player")) // Ensure the player has the correct tag
+        {
+            // Break if player is dashing
+            Controller2Point5D player = other.GetComponent<Controller2Point5D>();
+            if (player != null && player._isDashing) // Ensure your script has isDashing
             {
                 Break();
             }
         }
     }
+
+
 
 
     void Break()

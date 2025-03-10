@@ -25,7 +25,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _dashForce = 10f;
         public float _dashCooldown = 1f;
         private bool _canDash = true;
-        private bool _isDashing = false;
+        public bool _isDashing = false;
 
 
         private CharacterController _characterController;
@@ -212,21 +212,26 @@ namespace KinematicCharacterController.Examples
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
         {
-            if (_isDashing) // Ensure the player is dashing
+            if (_isDashing) // Only apply force if dashing
             {
                 Rigidbody rb = hit.collider.attachedRigidbody;
                 if (rb != null && !rb.isKinematic)
                 {
                     Vector3 forceDirection = hit.point - transform.position;
-                    forceDirection.Normalize();
-                    rb.AddForce(forceDirection * _dashForce, ForceMode.Impulse);
+                    forceDirection = forceDirection.normalized;
+
+                    float forceAmount = 20f; // Adjust this value
+                    rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
+
+                    Debug.Log($"Applying force {forceAmount} to {hit.gameObject.name}");
                 }
             }
         }
+    
 
 
 
-        private void HandleRotation()
+    private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
             _isMovingBackward = (_input.y < 0);
