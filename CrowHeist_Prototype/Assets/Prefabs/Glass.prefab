@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 1706662974943969730}
   - component: {fileID: -4032453189688697283}
   - component: {fileID: -5718249581259567197}
-  - component: {fileID: -3386922451542773773}
   m_Layer: 3
   m_Name: Glass
   m_TagString: Untagged
@@ -150,19 +149,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brokenPrefab: {fileID: 3661299021196517164, guid: 90b87eb0d201a47409ed7cee99c2828a, type: 3}
   breakForce: 5
---- !u!114 &-3386922451542773773
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4115269697035130944}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pickedUp: 0
+  velocities:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 0, z: 0}
 --- !u!1 &7029669689841830034
 GameObject:
   m_ObjectHideFlags: 0
@@ -210,7 +200,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

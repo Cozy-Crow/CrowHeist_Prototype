@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using KinematicCharacterController.Examples;
+using Unity.VisualScripting;
 
 public class BreakableCube : MonoBehaviour
 {
@@ -70,6 +71,11 @@ public class BreakableCube : MonoBehaviour
         {
             rb.velocity = max;
             rb.AddExplosionForce(5f, transform.position, 2f);
+        }
+
+        foreach (Renderer mat in broken.GetComponentsInChildren<Renderer>())
+        {
+            mat.material = GetComponent<Renderer>().material;
         }
 
         // Destroy the original cube

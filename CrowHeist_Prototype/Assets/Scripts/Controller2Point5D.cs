@@ -204,7 +204,7 @@ namespace KinematicCharacterController.Examples
             
 
             float dashTime = 0f;
-            while (dashTime < _dashDuration)
+            while (dashTime < _dashDuration && _isDashing)
             {
                 _characterController.Move(dashVelocity * Time.deltaTime);
                 dashTime += Time.deltaTime;
@@ -228,6 +228,8 @@ namespace KinematicCharacterController.Examples
 
                     float forceAmount = 20f; // Adjust this value
                     rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
+
+                    _isDashing = false;
                 }
             }
         }
