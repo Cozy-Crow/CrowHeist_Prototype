@@ -162,7 +162,7 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(JumpCooldown());
             }
 
-            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
+            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed / 2f, _direction.z * _moveSpeed);
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
         }
