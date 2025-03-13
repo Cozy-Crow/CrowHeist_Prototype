@@ -65,6 +65,8 @@ namespace KinematicCharacterController.Examples
         private Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
+        public float _glideSpeed = 0f;
+
 
 
         #region Properties
@@ -161,10 +163,12 @@ namespace KinematicCharacterController.Examples
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
             }
-
+            
+            
             Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
+            
         }
 
 
@@ -282,39 +286,32 @@ namespace KinematicCharacterController.Examples
         {
             if (IsGrounded && _velocitY < 0)
             {
-                // Apply a small downward force to stay grounded
+                // Keep character slightly grounded
                 _velocitY = -2f;
-                // Reset falling time when grounded
                 _fallingTime = 0f;
-
-
-
             }
             else
             {
-                // Slowly apply gravity when falling (gliding effect)
-                if (_velocitY < 0)
+                if (heldObject != null && heldObject.CompareTag("Glider") && _velocitY < 0)
                 {
-                   
-                    // Reduce gravity over time to make the player glide down
-                    _velocitY -= _gravity * 0.5f * Time.deltaTime; // Use a reduced gravity factor for gliding
-
-                    _fallingTime += Time.deltaTime;
+                    // Apply a controlled glide by setting a max fall speed
+                    float glideFallSpeed = -3f; // Adjust this value for a smoother glide
+                    _velocitY = Mathf.Max(_velocitY - (_gravity * 0.1f * Time.deltaTime), glideFallSpeed);
+                    Debug.Log("Gliding");
                 }
-                
                 else
                 {
-                    // Apply normal gravity if the player is moving upwards or has zero vertical velocity
+                    // Apply normal gravity if not gliding
                     _velocitY -= _gravity * Time.deltaTime;
                 }
-
-                // Clamp the fall speed to a more controlled, slow speed
-                _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue); // Slow fall speed
-
             }
-            
+
+            // Clamp to prevent extreme fall speeds
+            _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue);
+
             _direction.y = _velocitY;
         }
+
 
 
         private void Jump()
