@@ -41,7 +41,7 @@ public class BreakableCube : MonoBehaviour
             {
                 Break();
             }
-            if(player != null && player._fallingTime >= 1f)
+            if(player != null && player._fallingTime >= 0.4f)
             {
                 Break();
             }

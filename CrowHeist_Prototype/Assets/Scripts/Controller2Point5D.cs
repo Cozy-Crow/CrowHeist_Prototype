@@ -66,6 +66,18 @@ namespace KinematicCharacterController.Examples
         private Vector3 storedThrowDirection = Vector3.zero;
 
 
+        private GameObject _touchingObject;
+        private GameObject _currentGroundObject;
+        private bool isWindingUp = false;
+        private float windUpTime = 1f; // Time player needs to hold 'F'
+        private float windUpTimer = 0f;
+        private bool isTimerActive = false;
+        public float bounceDelay = 2f; // Delay before bounce is applied
+        private float bounceTimer = 0f;
+        private bool canBounce = false;
+        private bool isInTrigger = false;
+        public GameObject jack;
+
 
         #region Properties
         public bool IsGrounded => _characterController.isGrounded;
@@ -107,6 +119,8 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleMove();
             HandleRotation();
+            HandleWindUp();
+            HandleBounce();
 
 
         }
@@ -161,10 +175,10 @@ namespace KinematicCharacterController.Examples
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
             }
-
-            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed / 2f, _direction.z * _moveSpeed);
+            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
+            
         }
 
 
@@ -185,6 +199,11 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator Dash()
         {
+            if (heldObject == null || !heldObject.CompareTag("Dashable"))
+            {
+                yield break; // Exit the coroutine if the object is not dashable
+            }
+
             _canDash = false;
             _isDashing = true;
             float dashDirection;
@@ -231,6 +250,11 @@ namespace KinematicCharacterController.Examples
 
                     _isDashing = false;
                 }
+            }
+            // Check if the player is standing on something
+            if (Vector3.Dot(hit.normal, Vector3.up) > 0.5f) // Ensures it's a mostly horizontal surface
+            {
+                _currentGroundObject = hit.gameObject;
             }
         }
     
@@ -279,39 +303,32 @@ namespace KinematicCharacterController.Examples
         {
             if (IsGrounded && _velocitY < 0)
             {
-                // Apply a small downward force to stay grounded
+                // Keep character slightly grounded
                 _velocitY = -2f;
-                // Reset falling time when grounded
                 _fallingTime = 0f;
-
-
-
             }
             else
             {
-                // Slowly apply gravity when falling (gliding effect)
-                if (_velocitY < 0)
+                if (heldObject != null && heldObject.CompareTag("Glider") && _velocitY < 0)
                 {
-                   
-                    // Reduce gravity over time to make the player glide down
-                    _velocitY -= _gravity * 0.5f * Time.deltaTime; // Use a reduced gravity factor for gliding
-
-                    _fallingTime += Time.deltaTime;
+                    // Apply a controlled glide by setting a max fall speed
+                    float glideFallSpeed = -3f; // Adjust this value for a smoother glide
+                    _velocitY = Mathf.Max(_velocitY - (_gravity * 0.1f * Time.deltaTime), glideFallSpeed);
+                    Debug.Log("Gliding");
                 }
-                
                 else
                 {
-                    // Apply normal gravity if the player is moving upwards or has zero vertical velocity
+                    // Apply normal gravity if not gliding
                     _velocitY -= _gravity * Time.deltaTime;
                 }
-
-                // Clamp the fall speed to a more controlled, slow speed
-                _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue); // Slow fall speed
-
             }
-            
+
+            // Clamp to prevent extreme fall speeds
+            _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue);
+
             _direction.y = _velocitY;
         }
+
 
 
         private void Jump()
@@ -324,14 +341,77 @@ namespace KinematicCharacterController.Examples
             // Apply an upward force to the Rigidbody for jumping
             _velocitY += _jumpForce;
         }
+        void HandleWindUp()
+        {
+            if (IsGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
+            {
+                if (Input.GetKey(KeyCode.F))
+                {
+                    windUpTimer += Time.deltaTime;
+                    Debug.Log("Winding up: " + windUpTimer);
+
+                    if (windUpTimer >= windUpTime)
+                    {
+                        jack.SetActive(false);
+                        isTimerActive = true; // Start bounce delay timer
+                        windUpTimer = 0f;
+                        Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
+                    }
+                }
+                else
+                {
+                    windUpTimer = 0f; // Reset if F is released
+                }
+            }
+
+            if (isTimerActive)
+            {
+                bounceTimer += Time.deltaTime;
+                if (bounceTimer >= bounceDelay)
+                {
+                    canBounce = true;
+                    isTimerActive = false;
+                    bounceTimer = 0f;
+                }
+            }
+        }
+
+
+        void HandleBounce()
+        {
+            if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            {
+                jack.gameObject.SetActive(true);
+                ApplyBounce(5f); // Change 10f to your desired bounce strength
+                canBounce = false;
+            }
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("JackInTheBox"))
+            {
+                isInTrigger = true;
+                _touchingObject = other.gameObject;
+                Debug.Log("Entered Jack In The Box trigger.");
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("JackInTheBox"))
+            {
+                isInTrigger = false;
+                Debug.Log("Exited Jack In The Box trigger.");
+            }
+        }
+
 
         public void ApplyBounce(float bounceStrength)
         {
-            if (IsGrounded)
-            {
-                _velocitY = bounceStrength; // Directly set Y velocity to create a clean bounce
-                Debug.Log("Bounce applied: " + bounceStrength);
-            }
+            _velocitY = bounceStrength;
+            Debug.Log("BOING! Bounce applied: " + bounceStrength);
+
         }
 
 

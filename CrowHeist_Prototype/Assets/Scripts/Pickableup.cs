@@ -22,8 +22,15 @@ public class Pickable : MonoBehaviour, IPickupable
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
 
+        if(this.tag == "Knife")
+        {
+            transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+        }
         // Adjust rotation to lay flat and face forward
-        transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0f,0f,0f);
+        }
 
         _rigidbody.isKinematic = true;
         pickedUp = true;
