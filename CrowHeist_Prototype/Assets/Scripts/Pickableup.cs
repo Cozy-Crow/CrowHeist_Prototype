@@ -8,6 +8,7 @@ public class Pickable : MonoBehaviour, IPickupable
 {
     private Rigidbody _rigidbody;
     private GameObject _item;
+    public bool pickedUp = false;
 
     public GameObject Item => _item;
 
@@ -20,15 +21,28 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
-        transform.localRotation = Quaternion.identity;
+
+        if(this.tag == "Knife")
+        {
+            transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+        }
+        // Adjust rotation to lay flat and face forward
+        else
+        {
+            transform.localRotation = Quaternion.Euler(0f,0f,0f);
+        }
+
         _rigidbody.isKinematic = true;
+        pickedUp = true;
     }
+
 
     public void Drop(Vector3 position)
     {
         transform.SetParent(null);
         transform.position = position;
         _rigidbody.isKinematic = false;
+        pickedUp = false;
     }
 
     public void Use()
