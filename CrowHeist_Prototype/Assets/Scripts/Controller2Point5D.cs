@@ -65,7 +65,7 @@ namespace KinematicCharacterController.Examples
         private Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
-        public float _glideSpeed = 0f;
+        private GameObject _currentGroundObject;
 
 
 
@@ -109,6 +109,7 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleMove();
             HandleRotation();
+            HandleBounce();
 
 
         }
@@ -239,6 +240,12 @@ namespace KinematicCharacterController.Examples
                     rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
                 }
             }
+            // Check if the player is standing on something
+            if (Vector3.Dot(hit.normal, Vector3.up) > 0.5f) // Ensures it's a mostly horizontal surface
+            {
+                _currentGroundObject = hit.gameObject;
+                Debug.Log(_currentGroundObject);
+            }
         }
     
 
@@ -325,8 +332,24 @@ namespace KinematicCharacterController.Examples
             _velocitY += _jumpForce;
         }
 
+        void HandleBounce()
+        {
+            if (IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            {
+                ApplyBounce(10f); // Change 10f to your desired bounce strength
+            }
+        }
+
+
+
         public void ApplyBounce(float bounceStrength)
         {
+            if (IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            {
+                _velocitY = bounceStrength; // Apply bounce effect
+                Debug.Log("Bounce applied from Jack In The Box: " + bounceStrength);
+            }
+
             if (IsGrounded)
             {
                 _velocitY = bounceStrength; // Directly set Y velocity to create a clean bounce
