@@ -1,49 +1,49 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+//using system.collections;
+//using system.collections.generic;
+//using unityengine;
 
-public class CrowSFXController : MonoBehaviour
-{
-    //[SerializeField] private SFXData[] _sfx;
-    //private AudioSource _audioSource;
-    //private Dictionary<string, SFXData> _sfxDictionary = new Dictionary<string, SFXData>();
+//public class crowsfxcontroller : monobehaviour
+//{
+//    //[serializefield] private sfxdata[] _sfx;
+//    //private audiosource _audiosource;
+//    //private dictionary<string, sfxdata> _sfxdictionary = new dictionary<string, sfxdata>();
 
-    //private void Awake()
-    //{
-    //    _audioSource = GetComponentInParent<AudioSource>();
-    //    foreach (var sfx in _sfx)
-    //    {
-    //        _sfxDictionary.Add(sfx.name, sfx);
-    //    }
-    //}
+//    //private void awake()
+//    //{
+//    //    _audiosource = getcomponentinparent<audiosource>();
+//    //    foreach (var sfx in _sfx)
+//    //    {
+//    //        _sfxdictionary.add(sfx.name, sfx);
+//    //    }
+//    //}
 
-    //public void PlaySFXOneShot(string sfxName)
-    //{
-    //    if (_sfxDictionary.ContainsKey(sfxName))
-    //    {
-    //        _audioSource.PlayOneShot(_sfxDictionary[sfxName].SFX);
-    //    }else
-    //    {
-    //        Debug.LogWarning("SFX name not found");
-    //    }
-    //}
+//    //public void playsfxoneshot(string sfxname)
+//    //{
+//    //    if (_sfxdictionary.containskey(sfxname))
+//    //    {
+//    //        _audiosource.playoneshot(_sfxdictionary[sfxname].sfx);
+//    //    }else
+//    //    {
+//    //        debug.logwarning("sfx name not found");
+//    //    }
+//    //}
 
-    //public void PlaySFXWithParameters(string sfxName)
-    //{
-    //    float pitch = Random.Range(_sfxDictionary[sfxName].MinPitch, _sfxDictionary[sfxName].MaxPitch);
-    //    float volume = Random.Range(_sfxDictionary[sfxName].MinVolume, _sfxDictionary[sfxName].MaxVolume);
+//    //public void playsfxwithparameters(string sfxname)
+//    //{
+//    //    float pitch = random.range(_sfxdictionary[sfxname].minpitch, _sfxdictionary[sfxname].maxpitch);
+//    //    float volume = random.range(_sfxdictionary[sfxname].minvolume, _sfxdictionary[sfxname].maxvolume);
 
-    //    _audioSource.pitch = pitch;
+//    //    _audiosource.pitch = pitch;
 
-    //    if (_sfxDictionary.ContainsKey(sfxName))
-    //    {
-    //        _audioSource.clip = _sfxDictionary[sfxName].SFX;
-    //        _audioSource.PlayOneShot(_sfxDictionary[sfxName].SFX, volume);
-    //    }else
-    //    {
-    //        Debug.LogWarning("SFX name not found");
-    //    }
+//    //    if (_sfxdictionary.containskey(sfxname))
+//    //    {
+//    //        _audiosource.clip = _sfxdictionary[sfxname].sfx;
+//    //        _audiosource.playoneshot(_sfxdictionary[sfxname].sfx, volume);
+//    //    }else
+//    //    {
+//    //        debug.logwarning("sfx name not found");
+//    //    }
 
-    //    _audioSource.pitch = 1;
-    //}
-}
+//    //    _audiosource.pitch = 1;
+//    //}
+//}
