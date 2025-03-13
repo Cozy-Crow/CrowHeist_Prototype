@@ -175,8 +175,6 @@ namespace KinematicCharacterController.Examples
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
             }
-            
-            
             Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
@@ -225,7 +223,7 @@ namespace KinematicCharacterController.Examples
             
 
             float dashTime = 0f;
-            while (dashTime < _dashDuration)
+            while (dashTime < _dashDuration && _isDashing)
             {
                 _characterController.Move(dashVelocity * Time.deltaTime);
                 dashTime += Time.deltaTime;
@@ -249,6 +247,8 @@ namespace KinematicCharacterController.Examples
 
                     float forceAmount = 20f; // Adjust this value
                     rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
+
+                    _isDashing = false;
                 }
             }
             // Check if the player is standing on something
