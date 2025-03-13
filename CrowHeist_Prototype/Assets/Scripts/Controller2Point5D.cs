@@ -72,7 +72,7 @@ namespace KinematicCharacterController.Examples
         private float windUpTime = 1f; // Time player needs to hold 'F'
         private float windUpTimer = 0f;
         private bool isTimerActive = false;
-        private float bounceDelay = 2f; // Delay before bounce is applied
+        public float bounceDelay = 2f; // Delay before bounce is applied
         private float bounceTimer = 0f;
         private bool canBounce = false;
         private bool isInTrigger = false;
