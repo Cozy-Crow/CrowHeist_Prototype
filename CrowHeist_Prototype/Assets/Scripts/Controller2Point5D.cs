@@ -185,6 +185,11 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator Dash()
         {
+            if (heldObject == null || !heldObject.CompareTag("Dashable"))
+            {
+                yield break; // Exit the coroutine if the object is not dashable
+            }
+
             _canDash = false;
             _isDashing = true;
             float dashDirection;
