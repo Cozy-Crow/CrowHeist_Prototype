@@ -65,8 +65,18 @@ namespace KinematicCharacterController.Examples
         private Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
-        private GameObject _currentGroundObject;
 
+        private GameObject _touchingObject;
+        private GameObject _currentGroundObject;
+        private bool isWindingUp = false;
+        private float windUpTime = 1f; // Time player needs to hold 'F'
+        private float windUpTimer = 0f;
+        private bool isTimerActive = false;
+        private float bounceDelay = 2f; // Delay before bounce is applied
+        private float bounceTimer = 0f;
+        private bool canBounce = false;
+        private bool isInTrigger = false;
+        public GameObject jack;
 
 
         #region Properties
@@ -109,6 +119,7 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleMove();
             HandleRotation();
+            HandleWindUp();
             HandleBounce();
 
 
@@ -244,7 +255,6 @@ namespace KinematicCharacterController.Examples
             if (Vector3.Dot(hit.normal, Vector3.up) > 0.5f) // Ensures it's a mostly horizontal surface
             {
                 _currentGroundObject = hit.gameObject;
-                Debug.Log(_currentGroundObject);
             }
         }
     
@@ -331,30 +341,77 @@ namespace KinematicCharacterController.Examples
             // Apply an upward force to the Rigidbody for jumping
             _velocitY += _jumpForce;
         }
-
-        void HandleBounce()
+        void HandleWindUp()
         {
-            if (IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            if (IsGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
-                ApplyBounce(10f); // Change 10f to your desired bounce strength
+                if (Input.GetKey(KeyCode.F))
+                {
+                    windUpTimer += Time.deltaTime;
+                    Debug.Log("Winding up: " + windUpTimer);
+
+                    if (windUpTimer >= windUpTime)
+                    {
+                        jack.SetActive(false);
+                        isTimerActive = true; // Start bounce delay timer
+                        windUpTimer = 0f;
+                        Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
+                    }
+                }
+                else
+                {
+                    windUpTimer = 0f; // Reset if F is released
+                }
+            }
+
+            if (isTimerActive)
+            {
+                bounceTimer += Time.deltaTime;
+                if (bounceTimer >= bounceDelay)
+                {
+                    canBounce = true;
+                    isTimerActive = false;
+                    bounceTimer = 0f;
+                }
             }
         }
 
 
+        void HandleBounce()
+        {
+            if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            {
+                jack.gameObject.SetActive(true);
+                ApplyBounce(5f); // Change 10f to your desired bounce strength
+                canBounce = false;
+            }
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("JackInTheBox"))
+            {
+                isInTrigger = true;
+                _touchingObject = other.gameObject;
+                Debug.Log("Entered Jack In The Box trigger.");
+            }
+        }
+
+        void OnTriggerExit(Collider other)
+        {
+            if (other.CompareTag("JackInTheBox"))
+            {
+                isInTrigger = false;
+                Debug.Log("Exited Jack In The Box trigger.");
+            }
+        }
+
 
         public void ApplyBounce(float bounceStrength)
         {
-            if (IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
-            {
-                _velocitY = bounceStrength; // Apply bounce effect
-                Debug.Log("Bounce applied from Jack In The Box: " + bounceStrength);
-            }
+            _velocitY = bounceStrength;
+            Debug.Log("BOING! Bounce applied: " + bounceStrength);
 
-            if (IsGrounded)
-            {
-                _velocitY = bounceStrength; // Directly set Y velocity to create a clean bounce
-                Debug.Log("Bounce applied: " + bounceStrength);
-            }
         }
 
 
