@@ -54,7 +54,7 @@ namespace KinematicCharacterController.Examples
 
         private Animator _animator;
 
-        public Transform throwPoint;
+        public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
         private float throwForce = 0f;
@@ -78,6 +78,9 @@ namespace KinematicCharacterController.Examples
         private bool isInTrigger = false;
         public GameObject jack;
 
+        public int pointCount;
+        public Vector3 startPoint;
+        public Vector3 endPoint;
 
         #region Properties
         public bool IsGrounded => _characterController.isGrounded;
@@ -438,6 +441,8 @@ namespace KinematicCharacterController.Examples
                 heldObject = null;
             }
 
+
+
             // Charged Throwing mechanism
             if (heldObject != null)
             {
@@ -477,7 +482,7 @@ namespace KinematicCharacterController.Examples
                     {
                         rigidbody.isKinematic = false;
 
-                        // Final throw direction calculation (same as above)
+                        // Final throw direction calculation
                         Vector3 mousePosition = Input.mousePosition;
                         mousePosition.z = 10f; // Adjust based on your setup
                         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -487,17 +492,24 @@ namespace KinematicCharacterController.Examples
                         throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f); // Limit vertical influence
                         throwDirection = throwDirection.normalized;
 
+                        Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
+                        Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
+
+                        Vector3 rotationDirection = (endPoint - startPoint).normalized;
+
 
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
+                        heldObject.transform.rotation = Quaternion.LookRotation(rotationDirection);
+
 
                         // If the object is a knife, set its spin speed
-                        KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                        if (knife != null && _isMovingForward)
-                        {
-                            heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                            //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                            //knife.SetRotationSpeed(spinSpeed);
-                        }
+                        //KnifeStick knife = heldObject.GetComponent<KnifeStick>();
+                        //if (knife != null && _isMovingForward)
+                        //{
+                        //    heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        //    //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+                        //    //knife.SetRotationSpeed(spinSpeed);
+                        //}
                     }
 
                     // Drop the held object
@@ -527,13 +539,12 @@ namespace KinematicCharacterController.Examples
             }
 
 
-
             if (Input.GetKeyDown(KeyCode.F))
             {
                 _equipped?.Interact();
             }
-        }
 
+        }
 
         void DrawThrowTrajectory(Vector3 direction)
         {
@@ -541,6 +552,8 @@ namespace KinematicCharacterController.Examples
             float timeStep = 0.1f; // Time increment per point
             Vector3 startPosition = transform.position;
             Vector3 velocity = direction * throwForce; // Use the same throw force
+            throwDirection = direction;
+            pointCount = lineRenderer.positionCount;
 
             lineRenderer.positionCount = resolution;
 
@@ -550,6 +563,7 @@ namespace KinematicCharacterController.Examples
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
                 lineRenderer.SetPosition(i, point);
             }
+            
         }
 
         private void HandleAnimation()
