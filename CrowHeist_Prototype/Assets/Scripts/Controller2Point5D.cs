@@ -499,7 +499,8 @@ namespace KinematicCharacterController.Examples
 
 
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
-                        heldObject.transform.rotation = Quaternion.LookRotation(rotationDirection);
+                        heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
+
 
 
                         // If the object is a knife, set its spin speed
