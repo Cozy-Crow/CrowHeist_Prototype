@@ -77,6 +77,7 @@ namespace KinematicCharacterController.Examples
         private bool canBounce = false;
         private bool isInTrigger = false;
         public GameObject jack;
+        private GameObject jackinthebox;
 
         public int pointCount;
         public Vector3 startPoint;
@@ -302,6 +303,8 @@ namespace KinematicCharacterController.Examples
                         isTimerActive = true; // Start bounce delay timer
                         windUpTimer = 0f;
                         Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
+                        jackinthebox = _touchingObject;
+
                     }
                 }
                 else
@@ -330,6 +333,10 @@ namespace KinematicCharacterController.Examples
                 jack.gameObject.SetActive(true);
                 ApplyBounce(5f); // Change 10f to your desired bounce strength
                 canBounce = false;
+            }
+            if (canBounce && jackinthebox != null)
+            {
+                JackInTheBox jbscript = jackinthebox.GetComponent<JackInTheBox>();
             }
         }
 
