@@ -1,3 +1,4 @@
+using KinematicCharacterController.Examples;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,16 +6,26 @@ using UnityEngine;
 public class JackInTheBox : MonoBehaviour
 {
     public bool bounce = false;
-    public float forceAmount = 10f;  // Adjust force value
+    private Vector3 launchForce = new Vector3(0, 10f, 0);
+    public GameObject player;
+    private Controller2Point5D playerController; 
 
-    private void OnTriggerStay(Collider other)
+    void Start()
     {
-        if (bounce && other.GetComponent<Rigidbody>() != null)
+        if(player != null)
         {
-            Rigidbody rb = other.GetComponent<Rigidbody>();
-            rb.AddForce(Vector3.up * forceAmount, ForceMode.Impulse);
-            Debug.Log("Hit!");
+            playerController = player.GetComponent<Controller2Point5D>();
 
         }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+        
+        if (playerController.canBounce && other.GetComponent<Rigidbody>() != null)
+        {
+            Rigidbody rb = other.GetComponent<Rigidbody>();
+            rb.AddForce(launchForce, ForceMode.Impulse);
+        }
+
     }
 }

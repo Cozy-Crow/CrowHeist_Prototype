@@ -74,7 +74,7 @@ namespace KinematicCharacterController.Examples
         private bool isTimerActive = false;
         public float bounceDelay = 2f; // Delay before bounce is applied
         private float bounceTimer = 0f;
-        private bool canBounce = false;
+        public bool canBounce = false;
         private bool isInTrigger = false;
         public GameObject jack;
         private GameObject jackinthebox;
