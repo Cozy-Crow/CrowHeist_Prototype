@@ -100,8 +100,6 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
-
-
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
@@ -125,7 +123,6 @@ namespace KinematicCharacterController.Examples
             HandleRotation();
             HandleWindUp();
             HandleBounce();
-
 
         }
 
@@ -225,9 +222,6 @@ namespace KinematicCharacterController.Examples
             }
         }
     
-
-
-
     private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
@@ -276,8 +270,6 @@ namespace KinematicCharacterController.Examples
             _direction.y = _velocitY;
         }
 
-
-
         private void Jump()
         {
             if (!IsGrounded)
@@ -325,7 +317,6 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-
         void HandleBounce()
         {
             if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
@@ -372,6 +363,7 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                AIEventManager.instance.e_pickup.Invoke();
                 LayerMask interactable = LayerMask.GetMask("Interactable");
                 Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
 

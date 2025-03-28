@@ -16,6 +16,7 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
+        //AIEventManager.instance.e_pickup.AddListener();
     }
     public void PickUP(Transform parent)
     {
@@ -49,4 +50,17 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         Debug.Log("Using " + gameObject.name);
     }
+
+    //TODO: Make this work
+    public bool PrintDirty()
+    {
+        if (true)
+        {
+            AIEventManager.instance.e_playerdirty.Invoke();
+        }
+
+        return true;
+    }
+
+
 }
