@@ -12,9 +12,13 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private Transform[] target;            // The target points for the roomba to move to
     [SerializeField] private RoombaPathing pathing;         // The pathing method for the roomba
     [SerializeField] private float bufferDistance;          // The buffer distance for the roomba to reach the target
+    [SerializeField] private float detectionRadius = 5f;    // Radius for detecting dirty objects
+    [SerializeField] private LayerMask dirtyLayerMask;      // The layer mask to detect dirty objects
 
     private int currentTargetIndex = 0;                     // The current target index for the roomba
     private bool goingBackwards = false;                    // If the roomba is going backwards in the target array if the pathing is sequential
+    private bool isDocked = true;                            // Flag to check if Roomba is docked
+    private GameObject dirtyObject;                         // The object the roomba needs to clean
 
     //Clmanp property for the current target index
     public int CurrentTargetIndex
