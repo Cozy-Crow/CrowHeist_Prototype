@@ -8,11 +8,9 @@ namespace KinematicCharacterController.Examples
     public class Controller2Point5D : MonoBehaviour
     {
         [SerializeField] private float _moveSpeed = 50f;
-        //[SerializeField] private float _sprintSpeed = 10f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
-
 
         //Falling
         public float _fallingTime = 0f;
@@ -22,6 +20,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private Transform _pickUpPoint;
         [SerializeField] private Transform _handPoint;
         [SerializeField] private Transform _dropPoint;
+        public bool _isDirty = false;
 
 
         [Header("Dash")]
@@ -108,6 +107,11 @@ namespace KinematicCharacterController.Examples
         }
         void Start()
         {
+            AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
+            if (aiEventManager != null)
+            {
+                aiEventManager.e_makedirty.AddListener(OnObjectDirty);
+            }
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0; // Initial no line
         }
@@ -394,54 +398,6 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-                if (rigidbody != null)
-                {
-                    rigidbody.isKinematic = false;
-
-                    // Fixed velocity similar to charged throw
-                    float fixedThrowForce = maxThrowForce * 0.7f; // Adjust as needed
-
-                    // Convert 20 degrees to a direction vector
-                    float angle = 20f * Mathf.Deg2Rad;
-                    Vector3 throwDirection;
-
-                    if (_isMovingForward || _isMovingBackward)
-                    {
-                        // Ensure the throw is always in the player's forward direction
-                        throwDirection = new Vector3(0, Mathf.Tan(angle), (_isMovingForward ? 1 : -1)).normalized;
-                    }
-                    else
-                    {
-                        // Throw left or right based on facing direction
-                        throwDirection = new Vector3((_isFacingRight ? 1 : -1), Mathf.Tan(angle), 0).normalized;
-                    }
-
-                    // Apply force
-                    rigidbody.AddForce(throwDirection * fixedThrowForce, ForceMode.Impulse);
-
-                    // If the object is a knife, set its spin speed
-                    KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                    if (knife != null && _isMovingForward)
-                    {
-                        heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                        //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                        //knife.SetRotationSpeed(spinSpeed);
-                    }
-                }
-
-                foreach (IPickupable pickUp in _pickUpsList)
-                {
-                    pickUp.Drop(_dropPoint.position);
-                }
-                _pickUpsList.Clear();
-                heldObject = null;
-            }
-
-
-
             // Charged Throwing mechanism
             if (heldObject != null)
             {
@@ -657,6 +613,25 @@ namespace KinematicCharacterController.Examples
             Gizmos.DrawWireSphere(transform.position, 2);
         }
 
+        void OnObjectDirty()
+        {
+            if (heldObject != null)
+            {
+                Debug.Log("not null");
+                Pickable pickUp = heldObject.GetComponent<Pickable>();
+                if (pickUp == null) 
+                {
+                    Debug.Log("null");
+                }
+                if(pickUp != null && pickUp._isDirty)
+                {
+                    _isDirty = true;
+                    Debug.Log("Dirty");
+                }
 
+            }
+
+        }
     }
+    
 }

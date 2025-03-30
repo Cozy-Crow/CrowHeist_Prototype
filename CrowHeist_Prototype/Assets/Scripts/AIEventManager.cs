@@ -8,7 +8,7 @@ public class AIEventManager : MonoBehaviour
     public static AIEventManager instance;
 
     [SerializeField] public UnityEvent e_pickup = new UnityEvent();
-    [SerializeField] public UnityEvent e_playerdirty = new UnityEvent();
+    [SerializeField] public UnityEvent e_makedirty = new UnityEvent();
 
     private void Awake()
     {
@@ -21,4 +21,12 @@ public class AIEventManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+    public void SetObjectDirty(bool isDirty)
+    {
+        if (isDirty)
+        {
+            e_makedirty.Invoke();
+        }
+    }
+
 }

@@ -9,6 +9,7 @@ public class Pickable : MonoBehaviour, IPickupable
     private Rigidbody _rigidbody;
     private GameObject _item;
     public bool pickedUp = false;
+    public bool _isDirty = false;
 
     public GameObject Item => _item;
 
@@ -17,6 +18,14 @@ public class Pickable : MonoBehaviour, IPickupable
         _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
         //AIEventManager.instance.e_pickup.AddListener();
+    }
+    void Start()
+    {
+        AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
+        if (aiEventManager != null)
+        {
+            aiEventManager.e_makedirty.AddListener(OnObjectDirty);
+        }
     }
     public void PickUP(Transform parent)
     {
@@ -51,15 +60,28 @@ public class Pickable : MonoBehaviour, IPickupable
         Debug.Log("Using " + gameObject.name);
     }
 
-    //TODO: Make this work
-    public bool PrintDirty()
-    {
-        if (true)
-        {
-            AIEventManager.instance.e_playerdirty.Invoke();
-        }
+    ////TODO: Make this work
+    //public bool PrintDirty()
+    //{
+    //    if (true)
+    //    {
+    //        AIEventManager.instance.e_playerdirty.Invoke();
+    //    }
 
-        return true;
+    //    return true;
+    //}
+    void OnObjectDirty()
+    {
+        _isDirty = true;
+        Debug.Log("Dirty");
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Ground") && _isDirty == false)
+        {
+            OnObjectDirty();
+        }
     }
 
 
