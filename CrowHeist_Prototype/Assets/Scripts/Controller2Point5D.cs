@@ -618,16 +618,6 @@ namespace KinematicCharacterController.Examples
             if (heldObject != null)
             {
                 Debug.Log("not null");
-                Pickable pickUp = heldObject.GetComponent<Pickable>();
-                if (pickUp == null) 
-                {
-                    Debug.Log("null");
-                }
-                if(pickUp != null && pickUp._isDirty)
-                {
-                    _isDirty = true;
-                    Debug.Log("Dirty");
-                }
 
             }
 

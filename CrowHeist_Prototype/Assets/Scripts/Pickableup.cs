@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using KinematicCharacterController.Examples;
+
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
@@ -10,13 +12,14 @@ public class Pickable : MonoBehaviour, IPickupable
     private GameObject _item;
     public bool pickedUp = false;
     public bool _isDirty = false;
-
+    public GameObject player;
     public GameObject Item => _item;
 
     private void Awake()
     {
         _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
+        player = GameObject.FindWithTag("Player");
         //AIEventManager.instance.e_pickup.AddListener();
     }
     void Start()
@@ -26,6 +29,7 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             aiEventManager.e_makedirty.AddListener(OnObjectDirty);
         }
+
     }
     public void PickUP(Transform parent)
     {
@@ -44,6 +48,16 @@ public class Pickable : MonoBehaviour, IPickupable
 
         _rigidbody.isKinematic = true;
         pickedUp = true;
+
+        if(player != null)
+        {
+            Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
+            if (_isDirty)
+            {
+                playerController._isDirty = true;
+                Debug.Log(playerController._isDirty);
+            }
+        }
     }
 
 
