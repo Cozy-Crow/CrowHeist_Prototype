@@ -6,7 +6,7 @@ public class PauseManager : MonoBehaviour
 {
     
     public bool isGamePaused = false; // Variable to track pause state
-    public GameObject pauseManu; // UI element to show/hide
+    public GameObject pauseMenu; // UI element to show/hide
 
     // Update is called once per frame
     void Update()
@@ -28,7 +28,7 @@ public class PauseManager : MonoBehaviour
     {
         isGamePaused = true;
         Time.timeScale = 0f; // Freeze time
-        if (paseMenu != null)
+        if (pauseMenu != null)
         {
             pauseMenu.SetActive(true); // Show pause menu
         }
