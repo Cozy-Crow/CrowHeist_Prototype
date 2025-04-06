@@ -22,7 +22,6 @@ public class Pickable : MonoBehaviour, IPickupable
         _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
         player = GameObject.FindWithTag("Player");
-        //AIEventManager.instance.e_pickup.AddListener();
     }
     void Start()
     {
@@ -57,7 +56,8 @@ public class Pickable : MonoBehaviour, IPickupable
             if (_isDirty)
             {
                 playerController._isDirty = true;
-                Debug.Log(playerController._isDirty);
+                aiEventManager.PlayerDirty(player.transform.position);
+                Debug.Log("Player is dirty");
             }
         }
     }
