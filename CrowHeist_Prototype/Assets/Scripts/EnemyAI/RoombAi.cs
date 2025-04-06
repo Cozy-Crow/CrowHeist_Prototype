@@ -103,10 +103,11 @@ public class RoombAi : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        Transform parentTransform = other.transform.parent;
         var itemScript = other.transform.parent.GetComponent<Pickable>();
         if(other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty) 
         {
-            Destroy(other);
+            Destroy(parentTransform.gameObject);
         }
         if(other.CompareTag("Player") && playerController.heldObject != null)
         {
