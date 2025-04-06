@@ -100,18 +100,29 @@ public class RoombAi : MonoBehaviour
         ItemTarget,
         PlayerTarget
     }
-
     void OnTriggerEnter(Collider other)
     {
+        // Get the parent transform
         Transform parentTransform = other.transform.parent;
-        var itemScript = other.transform.parent.GetComponent<Pickable>();
-        if(other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty) 
+
+        // Check if parentTransform is null before proceeding
+        if (parentTransform != null)
         {
-            Destroy(parentTransform.gameObject);
+            // Try to get the Pickable component from the parent
+            var itemScript = parentTransform.GetComponent<Pickable>();
+
+            // Check if the component exists and if the object is dirty
+            if (other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty) 
+            {
+                Destroy(parentTransform.gameObject); // Destroy the parent GameObject if conditions are met
+            }
         }
-        if(other.CompareTag("Player") && playerController.heldObject != null)
+
+        // Handle the player dropping the held object
+        if (other.CompareTag("Player") && playerController.heldObject != null)
         {
             playerController.Drop();
         }
     }
+
 }

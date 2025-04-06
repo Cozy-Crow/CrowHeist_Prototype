@@ -505,11 +505,12 @@ namespace KinematicCharacterController.Examples
         public void Drop()
         {
             foreach (IPickupable pickUp in _pickUpsList)
-                    {
-                        pickUp.Drop(_dropPoint.position);
-                    }
-                    _pickUpsList.Clear();
-                    heldObject = null;
+            {
+                pickUp.Drop(_dropPoint.position);
+                new WaitForSeconds(0.1f);
+            }
+            _pickUpsList.Clear();
+            heldObject = null;
         }
 
         void DrawThrowTrajectory(Vector3 direction)
