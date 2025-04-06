@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using KinematicCharacterController.Examples;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class RoombAi : MonoBehaviour
@@ -21,6 +22,8 @@ public class RoombAi : MonoBehaviour
     private bool goingBackwards = false;                    // If the roomba is going backwards in the target array if the pathing is sequential
     private bool isDocked = true;                            // Flag to check if Roomba is docked
     private GameObject dirtyObject;                         // The object the roomba needs to clean
+    private AIEventManager aiEventManager;
+
 
     //Clmanp property for the current target index
     public int CurrentTargetIndex
@@ -39,6 +42,11 @@ public class RoombAi : MonoBehaviour
 
     void Start()
     {
+        aiEventManager = FindObjectOfType<AIEventManager>();
+        if (aiEventManager != null)
+        {
+            aiEventManager.OnGroundObjectDirty.AddListener(ItemPath);
+        }
         targets.Add(dock);
     }
 
@@ -68,7 +76,7 @@ public class RoombAi : MonoBehaviour
     //Roomba goes to the location of a dirty item on the floor and destroys it
     private void ItemPath()
     {
-        return;
+        agent.SetDestination(dirtyObject.position);
     }
 
     //Roomba targets player holding a dirty object and makes the player drop the item if hit
@@ -83,5 +91,14 @@ public class RoombAi : MonoBehaviour
         Stationary,
         ItemTarget,
         PlayerTarget
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        var itemScript = other.transform.parent.GetComponent<Pickable>();
+        if(other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty) 
+        {
+            Destroy(other);
+        }
     }
 }

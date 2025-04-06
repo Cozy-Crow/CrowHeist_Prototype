@@ -76,16 +76,6 @@ public class Pickable : MonoBehaviour, IPickupable
         Debug.Log("Using " + gameObject.name);
     }
 
-    ////TODO: Make this work
-    //public bool PrintDirty()
-    //{
-    //    if (true)
-    //    {
-    //        AIEventManager.instance.e_playerdirty.Invoke();
-    //    }
-
-    //    return true;
-    //}
     void OnObjectDirty()
     {
         _isDirty = true;
