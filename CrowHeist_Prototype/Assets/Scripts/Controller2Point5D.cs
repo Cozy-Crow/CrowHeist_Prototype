@@ -61,7 +61,7 @@ namespace KinematicCharacterController.Examples
         private bool isCanceled = false;
         private float chargeStartTime;
         private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
-        private Rigidbody heldObject;
+        public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
 
@@ -500,6 +500,16 @@ namespace KinematicCharacterController.Examples
                 _equipped?.Interact();
             }
 
+        }
+        
+        public void Drop()
+        {
+            foreach (IPickupable pickUp in _pickUpsList)
+                    {
+                        pickUp.Drop(_dropPoint.position);
+                    }
+                    _pickUpsList.Clear();
+                    heldObject = null;
         }
 
         void DrawThrowTrajectory(Vector3 direction)

@@ -26,6 +26,9 @@ public class RoombAi : MonoBehaviour
 
     private Vector3 dirtyItemLocation;
 
+    public GameObject player;
+    private Controller2Point5D playerController;
+
 
     //Clmanp property for the current target index
     public int CurrentTargetIndex
@@ -39,6 +42,8 @@ public class RoombAi : MonoBehaviour
 
     private void Awake()
     {
+        player = GameObject.FindWithTag("Player");
+        playerController = player.GetComponent<Controller2Point5D>();
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -102,6 +107,10 @@ public class RoombAi : MonoBehaviour
         if(other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty) 
         {
             Destroy(other);
+        }
+        if(other.CompareTag("Player") && playerController.heldObject != null)
+        {
+            playerController.Drop();
         }
     }
 }
