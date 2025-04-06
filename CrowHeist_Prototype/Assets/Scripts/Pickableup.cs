@@ -14,6 +14,8 @@ public class Pickable : MonoBehaviour, IPickupable
     public bool _isDirty = false;
     public GameObject player;
     public GameObject Item => _item;
+    private AIEventManager aiEventManager;
+
 
     private void Awake()
     {
@@ -24,7 +26,7 @@ public class Pickable : MonoBehaviour, IPickupable
     }
     void Start()
     {
-        AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
+        aiEventManager = FindObjectOfType<AIEventManager>();
         if (aiEventManager != null)
         {
             aiEventManager.e_makedirty.AddListener(OnObjectDirty);
@@ -87,6 +89,7 @@ public class Pickable : MonoBehaviour, IPickupable
     void OnObjectDirty()
     {
         _isDirty = true;
+        aiEventManager.GroundItemDirty();
         Debug.Log("Dirty");
     }
 

@@ -10,6 +10,8 @@ public class AIEventManager : MonoBehaviour
     [SerializeField] public UnityEvent e_pickup = new UnityEvent();
     [SerializeField] public UnityEvent e_makedirty = new UnityEvent();
 
+    [SerializeField] public UnityEvent OnGroundObjectDirty = new UnityEvent();
+
     private void Awake()
     {
         if (instance == null)
@@ -27,6 +29,11 @@ public class AIEventManager : MonoBehaviour
         {
             e_makedirty.Invoke();
         }
+    }
+
+    public void GroundItemDirty()
+    {
+        OnGroundObjectDirty.Invoke();
     }
 
 }
