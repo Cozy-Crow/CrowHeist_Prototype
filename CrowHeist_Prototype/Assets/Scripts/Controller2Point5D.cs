@@ -75,9 +75,6 @@ namespace KinematicCharacterController.Examples
         private float bounceTimer = 0f;
         public bool canBounce = false;
         private bool isInTrigger = false;
-        public GameObject jack;
-        private GameObject jackinthebox;
-
         public int pointCount;
         public Vector3 startPoint;
         public Vector3 endPoint;
@@ -288,18 +285,28 @@ namespace KinematicCharacterController.Examples
         {
             if (IsGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
+                GameObject jack = _touchingObject;
+                GameObject jackInTheBox = null;
+                foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child.name == "SpringFunction")
+                    {
+                        jackInTheBox = child.gameObject;
+                        break;
+                    }
+                }
+
                 if (Input.GetKey(KeyCode.F))
                 {
                     windUpTimer += Time.deltaTime;
-                    Debug.Log("Winding up: " + windUpTimer);
 
                     if (windUpTimer >= windUpTime)
                     {
-                        jack.SetActive(false);
+                        jackInTheBox.SetActive(false);
                         isTimerActive = true; // Start bounce delay timer
                         windUpTimer = 0f;
                         Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
-                        jackinthebox = _touchingObject;
+                        jack = _touchingObject;
 
                     }
                 }
@@ -325,14 +332,22 @@ namespace KinematicCharacterController.Examples
         {
             if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
             {
-                jack.gameObject.SetActive(true);
+                GameObject jack = _currentGroundObject;
+                GameObject jackInTheBox = null;
+                foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
+                {
+                    if (child.name == "SpringFunction")
+                    {
+                        jackInTheBox = child.gameObject;
+                        break;
+                    }
+                }
+
+                jackInTheBox.gameObject.SetActive(true);
                 ApplyBounce(5f); // Change 10f to your desired bounce strength
                 canBounce = false;
             }
-            if (canBounce && jackinthebox != null)
-            {
-                JackInTheBox jbscript = jackinthebox.GetComponent<JackInTheBox>();
-            }
+            
         }
 
         void OnTriggerEnter(Collider other)

@@ -408,11 +408,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8000491189340789022, guid: 7befce1172bb6c942ac21f1ed9b014aa, type: 3}
   m_PrefabInstance: {fileID: 493429775}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &66094895 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6614579326714496604, guid: b9cf56f8ecdd7b446bd5444bd9f1a1b5, type: 3}
-  m_PrefabInstance: {fileID: 8901235735088571908}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &91963708
 GameObject:
   m_ObjectHideFlags: 0
@@ -5525,6 +5520,7 @@ GameObject:
   m_Component:
   - component: {fileID: 982206257}
   - component: {fileID: 982206258}
+  - component: {fileID: 982206259}
   m_Layer: 3
   m_Name: EventManager
   m_TagString: Untagged
@@ -5571,6 +5567,18 @@ MonoBehaviour:
   OnPlayerDirty:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &982206259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 982206256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe96a2cc42c592a4a87f94b23bec044e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1011799015 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8000491189340789022, guid: 7befce1172bb6c942ac21f1ed9b014aa, type: 3}
@@ -11738,11 +11746,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6861112999393907119, guid: 1f219218842edf54996c328f39bf3b84, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.57
+      value: 2.22
       objectReference: {fileID: 0}
     - target: {fileID: 6861112999393907119, guid: 1f219218842edf54996c328f39bf3b84, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -42.85
+      value: -46.94
       objectReference: {fileID: 0}
     - target: {fileID: 6861112999393907119, guid: 1f219218842edf54996c328f39bf3b84, type: 3}
       propertyPath: m_LocalRotation.w
@@ -12084,7 +12092,7 @@ PrefabInstance:
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: jack
       value: 
-      objectReference: {fileID: 66094895}
+      objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: _dashSpeed
       value: 20
@@ -12454,7 +12462,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6614579326714496604, guid: b9cf56f8ecdd7b446bd5444bd9f1a1b5, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6614579326714496604, guid: b9cf56f8ecdd7b446bd5444bd9f1a1b5, type: 3}
+      propertyPath: m_TagString
+      value: JackInTheBox
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
