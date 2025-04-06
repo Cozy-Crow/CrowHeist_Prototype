@@ -24,6 +24,8 @@ public class RoombAi : MonoBehaviour
     private GameObject dirtyObject;                         // The object the roomba needs to clean
     private AIEventManager aiEventManager;
 
+    private Vector3 dirtyItemLocation;
+
 
     //Clmanp property for the current target index
     public int CurrentTargetIndex
@@ -59,7 +61,7 @@ public class RoombAi : MonoBehaviour
                 StationaryPath();
                 break;
             case RoombaPathing.ItemTarget:
-                ItemPath();
+                ItemPath(dirtyItemLocation);
                 break;
             case RoombaPathing.PlayerTarget:
                 PlayerPath();
@@ -74,9 +76,10 @@ public class RoombAi : MonoBehaviour
     }
 
     //Roomba goes to the location of a dirty item on the floor and destroys it
-    private void ItemPath()
+    private void ItemPath(Vector3 dirtyItemPosition)
     {
-        agent.SetDestination(dirtyObject.position);
+        dirtyItemLocation = dirtyItemPosition;
+        agent.SetDestination(dirtyItemPosition);
     }
 
     //Roomba targets player holding a dirty object and makes the player drop the item if hit

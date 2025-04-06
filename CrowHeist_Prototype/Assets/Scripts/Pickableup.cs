@@ -79,7 +79,7 @@ public class Pickable : MonoBehaviour, IPickupable
     void OnObjectDirty()
     {
         _isDirty = true;
-        aiEventManager.GroundItemDirty();
+        aiEventManager.GroundItemDirty(transform.position);
         Debug.Log("Dirty");
     }
 
