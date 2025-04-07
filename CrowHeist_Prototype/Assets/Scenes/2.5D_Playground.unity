@@ -3524,8 +3524,12 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 288962713544032870, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 288962713544032870, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_IsTrigger
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 982814702963266294, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: butt
@@ -3610,6 +3614,18 @@ PrefabInstance:
     - target: {fileID: 8000491189340789022, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491396795450674, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.29702643
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491396795450674, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.018173415
+      objectReference: {fileID: 0}
+    - target: {fileID: 8788491396795450674, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.049777
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 4471588159937060455, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
@@ -5272,6 +5288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 339129bb78ebfd84988faedab6a3c5e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cooldownDuration: 2
   bounce: 0
   player: {fileID: 5672783914524484632}
 --- !u!1001 &898325305
