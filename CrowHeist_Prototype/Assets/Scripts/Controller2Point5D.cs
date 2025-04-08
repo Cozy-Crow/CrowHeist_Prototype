@@ -54,7 +54,7 @@ namespace KinematicCharacterController.Examples
 
         private Animator _animator;
 
-        public Transform throwPoint;
+        public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
         private float throwForce = 0f;
@@ -74,10 +74,14 @@ namespace KinematicCharacterController.Examples
         private bool isTimerActive = false;
         public float bounceDelay = 2f; // Delay before bounce is applied
         private float bounceTimer = 0f;
-        private bool canBounce = false;
+        public bool canBounce = false;
         private bool isInTrigger = false;
         public GameObject jack;
+        private GameObject jackinthebox;
 
+        public int pointCount;
+        public Vector3 startPoint;
+        public Vector3 endPoint;
 
         #region Properties
         public bool IsGrounded => _characterController.isGrounded;
@@ -125,43 +129,6 @@ namespace KinematicCharacterController.Examples
 
         }
 
-
-        //private void HandleMove()
-        //{
-        //    // Get horizontal input (e.g., A/D keys or arrow keys)
-        //    _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        //    _direction = new Vector3(_input.x, _direction.y, _input.y);
-
-        //    // Jump automatically if the player is grounded and still holding jump, but only if they are allowed to jump
-        //    if (IsGrounded && Input.GetButton("Jump") && _canJump)
-        //    {
-        //        Jump();
-        //        _canJump = false; // Prevent instant repeated jumps
-        //        StartCoroutine(JumpCooldown()); // Start cooldown
-        //    }
-
-        //    // Handles Cancel movement
-        //    if (_input == Vector2.zero)
-        //    {
-        //        Vector3 moveDir = new Vector3(0, _direction.y, 0);
-        //        _velocity = moveDir;
-        //        _characterController.Move(_velocity * Time.deltaTime);
-        //    }
-
-        //    // Handles Move the character and apply sprint speed
-        //    if (Input.GetKey(KeyCode.LeftShift))
-        //    {
-        //        Vector3 moveDir = new Vector3(_direction.x * _sprintSpeed, _direction.y * _moveSpeed, _direction.z * _sprintSpeed);
-        //        _velocity = moveDir;
-        //        _characterController.Move(_velocity * Time.deltaTime);
-        //    }
-        //    else
-        //    {
-        //        Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
-        //        _velocity = moveDir;
-        //        _characterController.Move(_velocity * Time.deltaTime);
-        //    }
-        //}
         private void HandleMove()
         {
             if (_isDashing) return; // Don't allow movement input during dash
@@ -279,26 +246,6 @@ namespace KinematicCharacterController.Examples
             Flip(_isFlipped);
         }
 
-        //private void HandleGravity()
-        //{
-        //    if (IsGrounded && _velocitY < 0)
-        //    {
-        //        // Reset the y velocity if grounded
-        //        _velocitY = -1f;
-        //    }
-        //    //else if (!IsGrounded && _velocitY < 0)
-        //    //{
-        //    //    // Apply extra gravity when not grounded and falling
-        //    //    _velocitY -= _gravity * _gravityMultiplier * Time.deltaTime;
-        //    //}
-        //    else
-        //    {
-        //        // Apply gravity to the CharacterController
-        //        _velocitY -= _gravity * Time.deltaTime;
-        //    }
-
-        //    _direction.y = _velocitY;
-        //}
         private void HandleGravity()
         {
             if (IsGrounded && _velocitY < 0)
@@ -356,6 +303,8 @@ namespace KinematicCharacterController.Examples
                         isTimerActive = true; // Start bounce delay timer
                         windUpTimer = 0f;
                         Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
+                        jackinthebox = _touchingObject;
+
                     }
                 }
                 else
@@ -384,6 +333,10 @@ namespace KinematicCharacterController.Examples
                 jack.gameObject.SetActive(true);
                 ApplyBounce(5f); // Change 10f to your desired bounce strength
                 canBounce = false;
+            }
+            if (canBounce && jackinthebox != null)
+            {
+                JackInTheBox jbscript = jackinthebox.GetComponent<JackInTheBox>();
             }
         }
 
@@ -498,57 +451,6 @@ namespace KinematicCharacterController.Examples
 
 
             // Charged Throwing mechanism
-            //if (heldObject != null)
-            //{
-            //    if (Input.GetKeyDown(KeyCode.G))
-            //    {
-            //        isCharging = true;
-            //        chargeStartTime = Time.time;
-            //    }
-
-            //    if (Input.GetKey(KeyCode.G))
-            //    {
-            //        throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
-            //        DrawThrowTrajectory();  // Draw the trajectory while charging
-            //    }
-
-            //    if (Input.GetKeyUp(KeyCode.G))
-            //    {
-            //        isCharging = false;
-
-            //        // Throw object
-            //        Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
-            //        if (rigidbody != null)
-            //        {
-            //            rigidbody.isKinematic = false;
-            //            Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-            //            rigidbody.AddForce(throwDirection * throwForce, ForceMode.Impulse);
-
-            //            // If the object is a knife, set its spin speed
-            //            KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-            //            if (knife != null)
-            //            {
-            //                float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-            //                knife.SetRotationSpeed(spinSpeed);
-            //            }
-            //        }
-
-            //        foreach (IPickupable pickUp in _pickUpsList)
-            //        {
-            //            pickUp.Drop(_dropPoint.position);
-            //        }
-            //        _pickUpsList.Clear();
-            //        heldObject = null;
-            //        throwForce = 0f;
-
-            //        // Clear the line renderer after throw
-            //        lineRenderer.positionCount = 0;
-            //    }
-            //}
-
-
-
-            // Charged Throwing mechanism
             if (heldObject != null)
             {
 
@@ -587,7 +489,7 @@ namespace KinematicCharacterController.Examples
                     {
                         rigidbody.isKinematic = false;
 
-                        // Final throw direction calculation (same as above)
+                        // Final throw direction calculation
                         Vector3 mousePosition = Input.mousePosition;
                         mousePosition.z = 10f; // Adjust based on your setup
                         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -597,17 +499,25 @@ namespace KinematicCharacterController.Examples
                         throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f); // Limit vertical influence
                         throwDirection = throwDirection.normalized;
 
+                        Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
+                        Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
+
+                        Vector3 rotationDirection = (endPoint - startPoint).normalized;
+
 
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
+                        heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
+
+
 
                         // If the object is a knife, set its spin speed
-                        KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                        if (knife != null && _isMovingForward)
-                        {
-                            heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                            //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                            //knife.SetRotationSpeed(spinSpeed);
-                        }
+                        //KnifeStick knife = heldObject.GetComponent<KnifeStick>();
+                        //if (knife != null && _isMovingForward)
+                        //{
+                        //    heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
+                        //    //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
+                        //    //knife.SetRotationSpeed(spinSpeed);
+                        //}
                     }
 
                     // Drop the held object
@@ -637,37 +547,12 @@ namespace KinematicCharacterController.Examples
             }
 
 
-
             if (Input.GetKeyDown(KeyCode.F))
             {
                 _equipped?.Interact();
             }
+
         }
-
-        //void DrawThrowTrajectory()
-        //{
-        //    if (heldObject == null) return;
-
-        //    // Set the number of points in the trajectory
-        //    int trajectoryPoints = 30;
-        //    lineRenderer.positionCount = trajectoryPoints;
-
-        //    // Initial position of the throw (held object's current position)
-        //    Vector3 startPos = heldObject.transform.position;
-
-        //    // Initial velocity based on the charge and direction
-        //    Vector3 throwDirection = new Vector3(_isFacingRight ? 1 : -1, 1, 0);
-        //    Vector3 velocity = throwDirection.normalized * throwForce;
-
-        //    // Calculate the trajectory
-        //    for (int i = 0; i < trajectoryPoints; i++)
-        //    {
-        //        float t = i * 0.1f;  // Time increment for each trajectory point
-        //        Vector3 point = startPos + velocity * t + 0.5f * Physics.gravity * t * t;  // Standard projectile motion equation
-
-        //        lineRenderer.SetPosition(i, point);  // Set the position in the LineRenderer
-        //    }
-        //}
 
         void DrawThrowTrajectory(Vector3 direction)
         {
@@ -675,6 +560,8 @@ namespace KinematicCharacterController.Examples
             float timeStep = 0.1f; // Time increment per point
             Vector3 startPosition = transform.position;
             Vector3 velocity = direction * throwForce; // Use the same throw force
+            throwDirection = direction;
+            pointCount = lineRenderer.positionCount;
 
             lineRenderer.positionCount = resolution;
 
@@ -684,11 +571,8 @@ namespace KinematicCharacterController.Examples
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
                 lineRenderer.SetPosition(i, point);
             }
+            
         }
-
-
-
-
 
         private void HandleAnimation()
         {
