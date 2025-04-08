@@ -162,6 +162,11 @@ public class RoombAi : MonoBehaviour
         {
             playerController.Drop();
             playerIsDirty = false;
+            Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
+            knockbackDir.y = 0f; 
+            float knockbackForce = 10f;
+            playerController.ApplyKnockback(knockbackDir,knockbackForce);
+
         }
     }
 

@@ -96,6 +96,11 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
+        public float knockbackDuration = 0.3f;
+        private Vector3 knockbackVelocity;
+        private float knockbackTimer = 0f;
+
+
         private void Awake()
         {
             _characterController = GetComponent<CharacterController>();
@@ -129,6 +134,11 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+            if (knockbackTimer > 0)
+            {
+                _characterController.Move(knockbackVelocity * Time.deltaTime);
+                knockbackTimer -= Time.deltaTime;
+            }
             if (_isDashing) return; // Don't allow movement input during dash
 
             _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
@@ -527,6 +537,12 @@ namespace KinematicCharacterController.Examples
             _pickUpsList.Clear();
             heldObject = null;
         }
+        public void ApplyKnockback(Vector3 direction, float force)
+        {
+            knockbackVelocity = direction.normalized * force;
+            knockbackTimer = knockbackDuration;
+        }
+
 
         void DrawThrowTrajectory(Vector3 direction)
         {
