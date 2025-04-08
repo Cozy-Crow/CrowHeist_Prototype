@@ -125,8 +125,6 @@ namespace KinematicCharacterController.Examples
             HandleRotation();
             HandleWindUp();
             HandleBounce();
-
-
         }
 
         private void HandleMove()
