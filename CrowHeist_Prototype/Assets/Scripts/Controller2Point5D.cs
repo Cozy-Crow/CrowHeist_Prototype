@@ -38,7 +38,7 @@ namespace KinematicCharacterController.Examples
         private bool _isMovingForward = false;
         private bool _isMovingBackward = false;
         private bool _isFlipped = true;
-        private bool _isThrowing = false;
+        public bool _isThrowing = false;
         private bool _canJump = true;
 
 
