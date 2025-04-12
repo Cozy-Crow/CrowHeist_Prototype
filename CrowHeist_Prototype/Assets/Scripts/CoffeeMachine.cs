@@ -64,7 +64,7 @@ public class CoffeeMachine : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if(other.CompareTag("Player") && Input.GetKeyDown(KeyCode.Q) && mug != null)
+        if(other.CompareTag("Player") && Input.GetKeyDown(KeyCode.Q) && mug != null && !isWaiting)
         {
             Debug.Log("Filling!!!!");
             StartCoroutine(WaitAndDoAction(fillTimer));
