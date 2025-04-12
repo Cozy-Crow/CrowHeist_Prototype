@@ -174,9 +174,23 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator Dash()
         {
+            GameObject coffeeDrink = null;
+            GameObject coffee = null;
             if (heldObject == null || !heldObject.CompareTag("Dashable"))
             {
                 yield break; // Exit the coroutine if the object is not dashable
+            }
+            if(heldObject.CompareTag("Dashable"))
+            {
+                coffeeDrink = heldObject.gameObject;
+            }
+            foreach (Transform child in GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == "CoffeeLiquid")
+                {
+                    coffee = child.gameObject;
+                    break;
+                }
             }
 
             _canDash = false;
@@ -208,6 +222,9 @@ namespace KinematicCharacterController.Examples
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
+            coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
+            coffeeDrink.tag = "Mug";
+            Drop();
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
