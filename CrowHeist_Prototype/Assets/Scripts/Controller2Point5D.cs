@@ -68,6 +68,8 @@ namespace KinematicCharacterController.Examples
 
         private GameObject _touchingObject;
         private GameObject _currentGroundObject;
+        private GameObject _currentHeadbuttObject;
+
         private bool isWindingUp = false;
         private float windUpTime = 1f; // Time player needs to hold 'F'
         private float windUpTimer = 0f;
@@ -263,6 +265,12 @@ namespace KinematicCharacterController.Examples
             {
                 _currentGroundObject = hit.gameObject;
             }
+            // Headbutt check — looking for objects the player hits from below
+            if (Vector3.Dot(hit.normal, Vector3.down) > 0.5f)
+            {
+                _currentHeadbuttObject = hit.gameObject;
+
+            }
         }
     
         private void HandleRotation()
@@ -399,6 +407,15 @@ namespace KinematicCharacterController.Examples
                 _touchingObject = other.gameObject;
                 Debug.Log("Entered Jack In The Box trigger.");
             }
+            if(other.CompareTag("OffSwitch") && !IsGrounded)
+            {
+                Debug.Log("Off Switch");
+            }
+            if(other.CompareTag("OnSwitch") && IsGrounded)
+            {
+                Debug.Log("On Switch");
+            }
+            
         }
 
         void OnTriggerExit(Collider other)

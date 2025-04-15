@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 489964812009495860}
   m_Layer: 0
   m_Name: OffPosition
-  m_TagString: Untagged
+  m_TagString: OffSwitch
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -185,9 +185,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: FanSwitchObject
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 45a4439c74282724da300717d64b8117, type: 3}
+      propertyPath: m_TagString
+      value: FanSwitch
+      objectReference: {fileID: 0}
     - target: {fileID: 5148817236446094103, guid: 45a4439c74282724da300717d64b8117, type: 3}
       propertyPath: m_Name
       value: OnPosition
+      objectReference: {fileID: 0}
+    - target: {fileID: 5148817236446094103, guid: 45a4439c74282724da300717d64b8117, type: 3}
+      propertyPath: m_TagString
+      value: OnSwitch
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -199,6 +207,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 45a4439c74282724da300717d64b8117, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4896467657552667112}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 45a4439c74282724da300717d64b8117, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6383275796848410480}
     - targetCorrespondingSourceObject: {fileID: 5148817236446094103, guid: 45a4439c74282724da300717d64b8117, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4207661026477460707}
@@ -227,8 +238,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.00026757052, y: 0.00013966848, z: 0.000108853026}
-  m_Center: {x: -0.00008046084, y: 9.1005964e-10, z: -0.0000000015043042}
+  m_Size: {x: 0.0004981917, y: 0.000660914, z: 0.0001592476}
+  m_Center: {x: -0.0001957701, y: 0.000018776493, z: -0.00002519822}
 --- !u!4 &8492400125729284561 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 45a4439c74282724da300717d64b8117, type: 3}
@@ -251,3 +262,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f752a2895197c459f685e0c3896d85, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!54 &6383275796848410480
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9120000660528692075}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
