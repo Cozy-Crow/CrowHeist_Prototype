@@ -153,6 +153,7 @@ namespace KinematicCharacterController.Examples
 
             if (IsGrounded && Input.GetButton("Jump") && _canJump)
             {
+                _direction.y = 0f;
                 Jump();
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
@@ -319,8 +320,7 @@ namespace KinematicCharacterController.Examples
                 return;
             }
 
-            // Apply an upward force to the Rigidbody for jumping
-            _velocitY += _jumpForce;
+            _velocitY = _jumpForce;
         }
         void HandleWindUp()
         {
