@@ -7649,75 +7649,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!1001 &1432186729
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -63.87
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 11.11
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -43.09
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: -8679921383154817045, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
-      propertyPath: m_Name
-      value: Ottomate Smart Fan
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 27effa8e403d05e44a8401ee7f596742, type: 3}
 --- !u!1001 &1437612351
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10014,6 +9945,24 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1590759806622339634, guid: 9ded4a2f612997a4ea4eff7e80932e39, type: 3}
   m_PrefabInstance: {fileID: 264578822}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1778107175 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3137750338834102523, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+  m_PrefabInstance: {fileID: 8551008188396061562}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1778107177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778107175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4df2ae29173a924d8484b0835134366, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  windForce: 2
 --- !u!1 &1787533673
 GameObject:
   m_ObjectHideFlags: 0
@@ -12490,6 +12439,70 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fc95a2034e6973448bec2a8d272ac99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &8551008188396061562
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -63.87
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 11.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -43.09
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1687586579228814166, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2026711787232440812, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_Name
+      value: Ottomate Smart Fan
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360708802275925873, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3137750338834102523, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1778107177}
+  m_SourcePrefab: {fileID: 100100000, guid: 409217eb6fdf13241947d492c25ed5ab, type: 3}
 --- !u!1001 &8901235735088571908
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12750,4 +12763,4 @@ SceneRoots:
   - {fileID: 982206257}
   - {fileID: 1300790624}
   - {fileID: 9082766020839992931}
-  - {fileID: 1432186729}
+  - {fileID: 8551008188396061562}

@@ -64,6 +64,7 @@ namespace KinematicCharacterController.Examples
         public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
+        //Jack in the Box
 
         private GameObject _touchingObject;
         private GameObject _currentGroundObject;
@@ -96,10 +97,15 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
+        // Roomba knockback
+
         public float knockbackDuration = 0.3f;
         private Vector3 knockbackVelocity;
         private float knockbackTimer = 0f;
 
+        // Fan Force
+        private Vector3 externalForce;
+        [SerializeField] private float externalForceDecay = 5f;
 
         private void Awake()
         {
@@ -125,6 +131,7 @@ namespace KinematicCharacterController.Examples
             HandleAnimation();
             HandlePickUP();
             HandleGravity();
+            HandleExternalForces();
             HandleMove();
             HandleRotation();
             HandleWindUp();
@@ -170,7 +177,14 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(Dash());
             }
         }
-
+        private void HandleExternalForces()
+        {
+            if (externalForce.magnitude > 0.01f)
+            {
+                _characterController.Move(externalForce * Time.deltaTime);
+                externalForce = Vector3.Lerp(externalForce, Vector3.zero, externalForceDecay * Time.deltaTime);
+            }
+        }
 
         private IEnumerator Dash()
         {
@@ -250,7 +264,7 @@ namespace KinematicCharacterController.Examples
             }
         }
     
-    private void HandleRotation()
+        private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
             _isMovingBackward = (_input.y < 0);
@@ -558,6 +572,11 @@ namespace KinematicCharacterController.Examples
         {
             knockbackVelocity = direction.normalized * force;
             knockbackTimer = knockbackDuration;
+        }
+
+        public void ApplyExternalForce(Vector3 force)
+        {
+            externalForce += force;
         }
 
 
