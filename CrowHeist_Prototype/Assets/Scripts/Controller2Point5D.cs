@@ -410,10 +410,14 @@ namespace KinematicCharacterController.Examples
             if(other.CompareTag("OffSwitch") && !IsGrounded)
             {
                 Debug.Log("Off Switch");
+                var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
+                offSwitchToOn.ToggleSwitchOn();
             }
-            if(other.CompareTag("OnSwitch") && IsGrounded)
+            if(other.CompareTag("OnSwitch") && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
             {
                 Debug.Log("On Switch");
+                var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
+                onSwitchToOff.ToggleSwitchOff();
             }
             
         }

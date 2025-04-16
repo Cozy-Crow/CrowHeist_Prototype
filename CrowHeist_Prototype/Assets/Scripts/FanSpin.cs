@@ -5,7 +5,7 @@ using UnityEngine;
 public class FanSpin : MonoBehaviour
 {
     [SerializeField] private float rotationSpeed = 360f; // degrees per second
-    private bool isOn = true;
+    public bool isOn = true;
 
     void Update()
     {
