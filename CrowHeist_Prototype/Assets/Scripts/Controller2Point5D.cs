@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace KinematicCharacterController.Examples
 {
@@ -444,36 +445,39 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                if (_equipped != null || heldObject != null)
+                    return;
+
                 AIEventManager.instance.e_pickup.Invoke();
                 LayerMask interactable = LayerMask.GetMask("Interactable");
                 Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
 
-                if (interactableColliders.Length > 0)
+                // Filter to only valid pickup targets
+                var validTargets = interactableColliders
+                    .Where(col => col.TryGetComponent<Equipable>(out _) || col.TryGetComponent<IPickupable>(out _))
+                    .OrderBy(col => Vector3.Distance(transform.position, col.transform.position))
+                    .ToArray();
+
+                if (validTargets.Length > 0)
                 {
-                    Collider equipCollider = interactableColliders[0];
+                    Collider closest = validTargets[0];
 
-                    if (equipCollider.TryGetComponent(out Equipable equipable))
+                    if (closest.TryGetComponent(out Equipable equipable))
                     {
-                        if (_equipped != null)
-                        {
-                            _equipped.UnEquip(_dropPoint.position);
-                        }
-
                         equipable.Equip(_handPoint);
                         _equipped = equipable;
+                        return;
                     }
 
-                    foreach (Collider hitCollider in interactableColliders)
+                    if (closest.TryGetComponent(out IPickupable pickUp))
                     {
-                        if (hitCollider.TryGetComponent(out IPickupable pickUp))
-                        {
-                            pickUp.PickUP(_pickUpPoint);
-                            _pickUpsList.Add(pickUp);
-                            heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
-                        }
+                        pickUp.PickUP(_pickUpPoint);
+                        _pickUpsList.Add(pickUp);
+                        heldObject = closest.GetComponent<Rigidbody>();
                     }
                 }
             }
+
 
             // Charged Throwing mechanism
             if (heldObject != null)
@@ -532,17 +536,6 @@ namespace KinematicCharacterController.Examples
 
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
                         heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
-
-
-
-                        // If the object is a knife, set its spin speed
-                        //KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                        //if (knife != null && _isMovingForward)
-                        //{
-                        //    heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                        //    //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                        //    //knife.SetRotationSpeed(spinSpeed);
-                        //}
                     }
 
                     // Drop the held object
