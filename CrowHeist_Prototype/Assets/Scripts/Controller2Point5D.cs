@@ -420,6 +420,11 @@ namespace KinematicCharacterController.Examples
                 var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
                 onSwitchToOff.ToggleSwitchOff();
             }
+            if(other.CompareTag("FanBase"))
+            {
+                Debug.Log("Hit Base");
+                Destroy(other.gameObject);
+            }
             
         }
 
