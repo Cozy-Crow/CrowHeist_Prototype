@@ -422,8 +422,14 @@ namespace KinematicCharacterController.Examples
             }
             if(other.CompareTag("FanBase"))
             {
-                Debug.Log("Hit Base");
-                Destroy(other.gameObject);
+                Transform parent = other.transform.parent;
+                if(parent != null)
+                {
+                    GameObject parentObj = parent.gameObject;
+                    Debug.Log("Hit Base");
+                    Destroy(parentObj);
+                }
+               
             }
             
         }
