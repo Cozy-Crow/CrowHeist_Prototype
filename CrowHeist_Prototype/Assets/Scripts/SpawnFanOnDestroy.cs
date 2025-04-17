@@ -37,19 +37,25 @@ public class SpawnFanOnDestroy : MonoBehaviour
     {
         if (!Application.isPlaying) return;
 
-        Transform armature = transform.Find("Armature");
+        Transform floorFan = transform.Find("Armature/Bone/Bone.001/Bone.002/FloorFan");
         Transform socle = transform.Find("Socle");
 
-        if (armature != null)
+        if (floorFan != null)
         {
-            armature.SetParent(null); // Detach from parent
-            armature.tag = "FloorFan";
-            Debug.Log("FloorFan");
+            floorFan.SetParent(null); // Detach
+            floorFan.tag = "FloorFan"; // Set tag
+            if (floorFan.GetComponent<Rigidbody>() == null)
+            {
+                Rigidbody rb = floorFan.gameObject.AddComponent<Rigidbody>();
+                rb.mass = 1f; // Customize as needed
+            }
+
         }
 
         if (socle != null)
         {
-            socle.SetParent(null); // Detach from parent
+            socle.SetParent(null);
+            socle.tag = "FloorFanBase";
         }
     }
 
