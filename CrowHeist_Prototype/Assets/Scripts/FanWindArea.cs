@@ -14,7 +14,7 @@ public class FanWindArea : MonoBehaviour
         // Affect rigidbodies
         if (other.attachedRigidbody != null && bladeScript.isOn)
         {
-            other.attachedRigidbody.AddForce(Vector3.down * windForce, ForceMode.Acceleration);
+            other.attachedRigidbody.AddForce(Vector3.down * windForce * 20, ForceMode.Acceleration);
         }
 
         // Affect CharacterController
