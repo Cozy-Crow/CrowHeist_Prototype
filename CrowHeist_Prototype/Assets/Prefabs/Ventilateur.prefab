@@ -26,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6969067870326236864}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.412, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7152382, y: 0.02007677, z: 0.0051931757, w: 0.69857305}
+  m_LocalPosition: {x: -0.00001287739, y: -0.0017247117, z: 0.00012408255}
+  m_LocalScale: {x: 0.010000001, y: 0.010000001, z: 0.010000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7282419952466057877}
+  m_Father: {fileID: 5722619203913838153}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &7966042573102184144
 BoxCollider:
@@ -140,6 +140,34 @@ PrefabInstance:
       propertyPath: m_Name
       value: Blades
       objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.65974504
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7284321
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.12400515
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.13691553
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 111.99701
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 75.784
+      objectReference: {fileID: 0}
+    - target: {fileID: -2639638324218457063, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 74.719
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 665ad8573733c5c418165157191a6c15, type: 3}
       propertyPath: m_Name
       value: Ventilateur
@@ -167,14 +195,36 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+    - targetCorrespondingSourceObject: {fileID: -5913172463669914825, guid: 665ad8573733c5c418165157191a6c15, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4490602265182251022}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6905609870639353253, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5198798401231773663}
     - targetCorrespondingSourceObject: {fileID: -6522695966643703301, guid: 665ad8573733c5c418165157191a6c15, type: 3}
       insertIndex: -1
       addedObject: {fileID: 9081859336536594620}
   m_SourcePrefab: {fileID: 100100000, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+--- !u!1 &4417825310593675483 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6905609870639353253, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+  m_PrefabInstance: {fileID: 7105241095642660222}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5198798401231773663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4417825310593675483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2b7ce62976944044b802909883ade9d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAngle: 45
+  rotationSpeed: 1
 --- !u!1 &5179238193171369093 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -6522695966643703301, guid: 665ad8573733c5c418165157191a6c15, type: 3}
@@ -194,8 +244,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotationSpeed: 360
   isOn: 1
---- !u!4 &7282419952466057877 stripped
+--- !u!4 &5722619203913838153 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 665ad8573733c5c418165157191a6c15, type: 3}
+  m_CorrespondingSourceObject: {fileID: -5913172463669914825, guid: 665ad8573733c5c418165157191a6c15, type: 3}
   m_PrefabInstance: {fileID: 7105241095642660222}
   m_PrefabAsset: {fileID: 0}
