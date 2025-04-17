@@ -4,15 +4,33 @@ using UnityEngine;
 
 public class SpawnFanOnDestroy : MonoBehaviour
 {
-    // Start is called before the first frame update
+    public GameObject[] prefabsToSpawn;
+    private Transform fanSpawnLocation;
+    private Transform baseSpawnLocation;
+
     void Start()
     {
-        
+        fanSpawnLocation = transform.Find("Armature");
+        baseSpawnLocation = transform.Find("Socle");
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDestroy()
     {
-        
+        if (!Application.isPlaying) return;
+
+        foreach (GameObject prefab in prefabsToSpawn)
+        {
+            if (prefab == null) continue;
+
+            if (prefab.CompareTag("FloorFan") && fanSpawnLocation != null)
+            {
+                Instantiate(prefab, fanSpawnLocation.position, fanSpawnLocation.rotation);
+            }
+            else if (prefab.CompareTag("FloorFanBase") && baseSpawnLocation != null)
+            {
+                Instantiate(prefab, baseSpawnLocation.position, baseSpawnLocation.rotation);
+            }
+        }
     }
+
 }
