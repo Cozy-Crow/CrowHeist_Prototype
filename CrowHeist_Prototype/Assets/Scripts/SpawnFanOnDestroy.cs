@@ -14,23 +14,44 @@ public class SpawnFanOnDestroy : MonoBehaviour
         baseSpawnLocation = transform.Find("Socle");
     }
 
+    // void OnDestroy()
+    // {
+    //     if (!Application.isPlaying) return;
+
+    //     foreach (GameObject prefab in prefabsToSpawn)
+    //     {
+    //         if (prefab == null) continue;
+
+    //         if (prefab.CompareTag("FloorFan") && fanSpawnLocation != null)
+    //         {
+    //             Instantiate(prefab, fanSpawnLocation.position, fanSpawnLocation.rotation);
+    //         }
+    //         else if (prefab.CompareTag("FloorFanBase") && baseSpawnLocation != null)
+    //         {
+    //             Instantiate(prefab, baseSpawnLocation.position, baseSpawnLocation.rotation);
+    //         }
+    //     }
+    // }
+
     void OnDestroy()
     {
         if (!Application.isPlaying) return;
 
-        foreach (GameObject prefab in prefabsToSpawn)
-        {
-            if (prefab == null) continue;
+        Transform armature = transform.Find("Armature");
+        Transform socle = transform.Find("Socle");
 
-            if (prefab.CompareTag("FloorFan") && fanSpawnLocation != null)
-            {
-                Instantiate(prefab, fanSpawnLocation.position, fanSpawnLocation.rotation);
-            }
-            else if (prefab.CompareTag("FloorFanBase") && baseSpawnLocation != null)
-            {
-                Instantiate(prefab, baseSpawnLocation.position, baseSpawnLocation.rotation);
-            }
+        if (armature != null)
+        {
+            armature.SetParent(null); // Detach from parent
+            armature.tag = "FloorFan";
+            Debug.Log("FloorFan");
+        }
+
+        if (socle != null)
+        {
+            socle.SetParent(null); // Detach from parent
         }
     }
+
 
 }
