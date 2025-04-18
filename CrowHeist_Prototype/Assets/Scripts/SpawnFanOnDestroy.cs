@@ -34,14 +34,14 @@ public class SpawnFanOnDestroy : MonoBehaviour
                 rb.useGravity = true;
             }
 
-            // Enable Pickable script
+            // Enable Pickable
             var pickable = floorFan.GetComponent<Pickable>();
             if (pickable != null)
             {
                 pickable.enabled = true;
             }
 
-            // Enable Outline script
+            // Enable Outline
             var outline = floorFan.GetComponent<Outline>();
             if (outline != null)
             {
@@ -54,6 +54,35 @@ public class SpawnFanOnDestroy : MonoBehaviour
             {
                 interactionTrigger.gameObject.SetActive(true);
             }
+
+            // Disable Oscillation script on Bone
+            Transform bone = floorFan.Find("Bone");
+            if (bone != null)
+            {
+                Oscillation osc = bone.GetComponent<Oscillation>();
+                if (osc != null)
+                {
+                    osc.enabled = false;
+                }
+            }
+
+            // Change tag on ForceArea
+            Transform forceArea = floorFan.Find("Bone/Bone.001/Bone.002/BladeControl/ForceArea");
+            if (forceArea != null)
+            {
+                forceArea.tag = "FloorFanForce";
+            }
+
+            // Check if FloorFan is grounded and set rotation
+            Collider floorFanCollider = floorFan.GetComponent<Collider>();
+            if (floorFanCollider != null)
+            {
+                float raycastDistance = floorFanCollider.bounds.extents.y + 0.1f;
+                if (Physics.Raycast(floorFan.position, Vector3.down, raycastDistance))
+                {
+                    floorFan.eulerAngles = new Vector3(-80f, -90f, 0f);
+                }
+            }
         }
 
         if (socle != null)
@@ -62,7 +91,6 @@ public class SpawnFanOnDestroy : MonoBehaviour
             socle.tag = "FloorFanBase";
         }
     }
-
 
 
 }
