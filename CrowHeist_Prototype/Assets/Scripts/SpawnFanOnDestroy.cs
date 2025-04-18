@@ -10,46 +10,50 @@ public class SpawnFanOnDestroy : MonoBehaviour
 
     void Start()
     {
-        fanSpawnLocation = transform.Find("Armature");
+        fanSpawnLocation = transform.Find("FloorFan");
         baseSpawnLocation = transform.Find("Socle");
     }
 
-    // void OnDestroy()
-    // {
-    //     if (!Application.isPlaying) return;
 
-    //     foreach (GameObject prefab in prefabsToSpawn)
-    //     {
-    //         if (prefab == null) continue;
-
-    //         if (prefab.CompareTag("FloorFan") && fanSpawnLocation != null)
-    //         {
-    //             Instantiate(prefab, fanSpawnLocation.position, fanSpawnLocation.rotation);
-    //         }
-    //         else if (prefab.CompareTag("FloorFanBase") && baseSpawnLocation != null)
-    //         {
-    //             Instantiate(prefab, baseSpawnLocation.position, baseSpawnLocation.rotation);
-    //         }
-    //     }
-    // }
-
-    void OnDestroy()
+    public void Disassemble()
     {
         if (!Application.isPlaying) return;
 
-        Transform floorFan = transform.Find("Armature/Bone/Bone.001/Bone.002/FloorFan");
+        Transform floorFan = transform.Find("FloorFan");
         Transform socle = transform.Find("Socle");
 
         if (floorFan != null)
         {
             floorFan.SetParent(null); // Detach
             floorFan.tag = "FloorFan"; // Set tag
-            if (floorFan.GetComponent<Rigidbody>() == null)
+
+            // Enable gravity
+            Rigidbody rb = floorFan.GetComponent<Rigidbody>();
+            if (rb != null)
             {
-                Rigidbody rb = floorFan.gameObject.AddComponent<Rigidbody>();
-                rb.mass = 1f; // Customize as needed
+                rb.useGravity = true;
             }
 
+            // Enable Pickable script
+            var pickable = floorFan.GetComponent<Pickable>();
+            if (pickable != null)
+            {
+                pickable.enabled = true;
+            }
+
+            // Enable Outline script
+            var outline = floorFan.GetComponent<Outline>();
+            if (outline != null)
+            {
+                outline.enabled = true;
+            }
+
+            // Unhide InteractionTrigger
+            Transform interactionTrigger = floorFan.Find("Bone/Bone.001/Bone.002/InteractionTrigger");
+            if (interactionTrigger != null)
+            {
+                interactionTrigger.gameObject.SetActive(true);
+            }
         }
 
         if (socle != null)
@@ -58,6 +62,7 @@ public class SpawnFanOnDestroy : MonoBehaviour
             socle.tag = "FloorFanBase";
         }
     }
+
 
 
 }

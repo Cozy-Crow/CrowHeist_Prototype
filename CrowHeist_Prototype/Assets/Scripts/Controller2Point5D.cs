@@ -427,7 +427,12 @@ namespace KinematicCharacterController.Examples
                 {
                     GameObject parentObj = parent.gameObject;
                     Debug.Log("Hit Base");
-                    Destroy(parentObj);
+                    var disassembler = parentObj.GetComponent<SpawnFanOnDestroy>();
+                    if (disassembler != null)
+                    {
+                        disassembler.Disassemble();
+                    }
+
                 }
                
             }
