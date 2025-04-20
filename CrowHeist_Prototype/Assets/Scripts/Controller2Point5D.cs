@@ -12,6 +12,12 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
+        
+        // Soda Variables
+        private bool _isSpeedBoosted = false;
+        public float _speedBoostDuration = 5f;
+        private float _normalMoveSpeed;
+        public float _speedBoostMultiplier = 5f;
 
         //Falling
         public float _fallingTime = 0f;
@@ -112,6 +118,7 @@ namespace KinematicCharacterController.Examples
 
         private void Awake()
         {
+            _normalMoveSpeed = _moveSpeed;
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponentInChildren<Animator>();
 
@@ -144,6 +151,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+            TryConsumeSoda();
             if (knockbackTimer > 0)
             {
                 _characterController.Move(knockbackVelocity * Time.deltaTime);
@@ -730,6 +738,29 @@ namespace KinematicCharacterController.Examples
             }
 
         }
+
+        // Soda Ability Helper Functions
+        private void TryConsumeSoda()
+        {
+            if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.LeftShift) && !_isSpeedBoosted)
+            {
+                heldObject.tag = "Untagged";
+                Drop();
+                StartCoroutine(SpeedBoost());
+            }
+        }
+        private IEnumerator SpeedBoost()
+        {
+            _isSpeedBoosted = true;
+            _moveSpeed *= _speedBoostMultiplier;
+
+            yield return new WaitForSeconds(_speedBoostDuration);
+
+            _moveSpeed = _normalMoveSpeed;
+            _isSpeedBoosted = false;
+        }
+
+
     }
     
 }
