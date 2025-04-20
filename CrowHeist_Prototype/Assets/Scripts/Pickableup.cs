@@ -40,10 +40,6 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
         }
-        if(this.tag == "FloorFan")
-        {
-            transform.localRotation = Quaternion.Euler(180f, 0f, 0f);
-        }
         // Adjust rotation to lay flat and face forward
         else
         {
