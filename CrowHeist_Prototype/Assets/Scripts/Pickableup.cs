@@ -5,7 +5,6 @@ using KinematicCharacterController.Examples;
 
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(Collider))]
 public class Pickable : MonoBehaviour, IPickupable
 {
     private Rigidbody _rigidbody;
