@@ -55,8 +55,6 @@ public class PauseManager : MonoBehaviour
             {
                 PauseGame();
             }
-
-            Debug.Log("Escape Pressed");
         }
     }
 
@@ -93,7 +91,5 @@ public class PauseManager : MonoBehaviour
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
-        isGamePaused = false;
-        Time.timeScale = 1f; // Resume Time
     }
 }
