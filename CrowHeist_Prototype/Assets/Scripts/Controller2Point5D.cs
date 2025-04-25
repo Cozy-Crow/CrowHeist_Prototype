@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace KinematicCharacterController.Examples
 {
@@ -11,6 +12,12 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
+        
+        // Soda Variables
+        private bool _isSpeedBoosted = false;
+        public float _speedBoostDuration = 5f;
+        private float _normalMoveSpeed;
+        public float _speedBoostMultiplier = 5f;
 
         //Falling
         public float _fallingTime = 0f;
@@ -38,7 +45,7 @@ namespace KinematicCharacterController.Examples
         private bool _isMovingForward = false;
         private bool _isMovingBackward = false;
         private bool _isFlipped = true;
-        private bool _isThrowing = false;
+        public bool _isThrowing = false;
         private bool _canJump = true;
 
 
@@ -64,9 +71,12 @@ namespace KinematicCharacterController.Examples
         public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
 
+        //Jack in the Box
 
         private GameObject _touchingObject;
         private GameObject _currentGroundObject;
+        private GameObject _currentHeadbuttObject;
+
         private bool isWindingUp = false;
         private float windUpTime = 1f; // Time player needs to hold 'F'
         private float windUpTimer = 0f;
@@ -96,13 +106,19 @@ namespace KinematicCharacterController.Examples
         }
         #endregion
 
+        // Roomba knockback
+
         public float knockbackDuration = 0.3f;
         private Vector3 knockbackVelocity;
         private float knockbackTimer = 0f;
 
+        // Fan Force
+        private Vector3 externalForce;
+        [SerializeField] private float externalForceDecay = 5f;
 
         private void Awake()
         {
+            _normalMoveSpeed = _moveSpeed;
             _characterController = GetComponent<CharacterController>();
             _animator = GetComponentInChildren<Animator>();
 
@@ -125,6 +141,7 @@ namespace KinematicCharacterController.Examples
             HandleAnimation();
             HandlePickUP();
             HandleGravity();
+            HandleExternalForces();
             HandleMove();
             HandleRotation();
             HandleWindUp();
@@ -134,6 +151,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+            TryConsumeSoda();
             if (knockbackTimer > 0)
             {
                 _characterController.Move(knockbackVelocity * Time.deltaTime);
@@ -146,6 +164,7 @@ namespace KinematicCharacterController.Examples
 
             if (IsGrounded && Input.GetButton("Jump") && _canJump)
             {
+                _direction.y = 0f;
                 Jump();
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
@@ -170,13 +189,34 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(Dash());
             }
         }
-
+        private void HandleExternalForces()
+        {
+            if (externalForce.magnitude > 0.01f)
+            {
+                _characterController.Move(externalForce * Time.deltaTime);
+                externalForce = Vector3.Lerp(externalForce, Vector3.zero, externalForceDecay * Time.deltaTime);
+            }
+        }
 
         private IEnumerator Dash()
         {
+            GameObject coffeeDrink = null;
+            GameObject coffee = null;
             if (heldObject == null || !heldObject.CompareTag("Dashable"))
             {
                 yield break; // Exit the coroutine if the object is not dashable
+            }
+            if(heldObject.CompareTag("Dashable"))
+            {
+                coffeeDrink = heldObject.gameObject;
+            }
+            foreach (Transform child in GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == "CoffeeLiquid")
+                {
+                    coffee = child.gameObject;
+                    break;
+                }
             }
 
             _canDash = false;
@@ -208,6 +248,9 @@ namespace KinematicCharacterController.Examples
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
+            coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
+            coffeeDrink.tag = "Mug";
+            Drop();
         }
 
         private void OnControllerColliderHit(ControllerColliderHit hit)
@@ -231,9 +274,15 @@ namespace KinematicCharacterController.Examples
             {
                 _currentGroundObject = hit.gameObject;
             }
+            // Headbutt check — looking for objects the player hits from below
+            if (Vector3.Dot(hit.normal, Vector3.down) > 0.5f)
+            {
+                _currentHeadbuttObject = hit.gameObject;
+
+            }
         }
     
-    private void HandleRotation()
+        private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
             _isMovingBackward = (_input.y < 0);
@@ -288,8 +337,7 @@ namespace KinematicCharacterController.Examples
                 return;
             }
 
-            // Apply an upward force to the Rigidbody for jumping
-            _velocitY += _jumpForce;
+            _velocitY = _jumpForce;
         }
         void HandleWindUp()
         {
@@ -368,6 +416,35 @@ namespace KinematicCharacterController.Examples
                 _touchingObject = other.gameObject;
                 Debug.Log("Entered Jack In The Box trigger.");
             }
+            if(other.CompareTag("OffSwitch") && !IsGrounded)
+            {
+                Debug.Log("Off Switch");
+                var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
+                offSwitchToOn.ToggleSwitchOn();
+            }
+            if(other.CompareTag("OnSwitch") && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
+            {
+                Debug.Log("On Switch");
+                var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
+                onSwitchToOff.ToggleSwitchOff();
+            }
+            if(other.CompareTag("FanBase"))
+            {
+                Transform parent = other.transform.parent;
+                if(parent != null)
+                {
+                    GameObject parentObj = parent.gameObject;
+                    Debug.Log("Hit Base");
+                    var disassembler = parentObj.GetComponent<SpawnFanOnDestroy>();
+                    if (disassembler != null)
+                    {
+                        disassembler.Disassemble();
+                    }
+
+                }
+               
+            }
+            
         }
 
         void OnTriggerExit(Collider other)
@@ -392,36 +469,39 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                if (_equipped != null || heldObject != null)
+                    return;
+
                 AIEventManager.instance.e_pickup.Invoke();
                 LayerMask interactable = LayerMask.GetMask("Interactable");
                 Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
 
-                if (interactableColliders.Length > 0)
+                // Filter to only valid pickup targets
+                var validTargets = interactableColliders
+                    .Where(col => col.TryGetComponent<Equipable>(out _) || col.TryGetComponent<IPickupable>(out _))
+                    .OrderBy(col => Vector3.Distance(transform.position, col.transform.position))
+                    .ToArray();
+
+                if (validTargets.Length > 0)
                 {
-                    Collider equipCollider = interactableColliders[0];
+                    Collider closest = validTargets[0];
 
-                    if (equipCollider.TryGetComponent(out Equipable equipable))
+                    if (closest.TryGetComponent(out Equipable equipable))
                     {
-                        if (_equipped != null)
-                        {
-                            _equipped.UnEquip(_dropPoint.position);
-                        }
-
                         equipable.Equip(_handPoint);
                         _equipped = equipable;
+                        return;
                     }
 
-                    foreach (Collider hitCollider in interactableColliders)
+                    if (closest.TryGetComponent(out IPickupable pickUp))
                     {
-                        if (hitCollider.TryGetComponent(out IPickupable pickUp))
-                        {
-                            pickUp.PickUP(_pickUpPoint);
-                            _pickUpsList.Add(pickUp);
-                            heldObject = hitCollider.GetComponent<Rigidbody>(); // Store held object
-                        }
+                        pickUp.PickUP(_pickUpPoint);
+                        _pickUpsList.Add(pickUp);
+                        heldObject = closest.GetComponent<Rigidbody>();
                     }
                 }
             }
+
 
             // Charged Throwing mechanism
             if (heldObject != null)
@@ -480,17 +560,6 @@ namespace KinematicCharacterController.Examples
 
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
                         heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
-
-
-
-                        // If the object is a knife, set its spin speed
-                        //KnifeStick knife = heldObject.GetComponent<KnifeStick>();
-                        //if (knife != null && _isMovingForward)
-                        //{
-                        //    heldObject.transform.rotation = Quaternion.Euler(90, 0, 0);
-                        //    //float spinSpeed = throwForce * 50f; // Adjust multiplier for desired effect
-                        //    //knife.SetRotationSpeed(spinSpeed);
-                        //}
                     }
 
                     // Drop the held object
@@ -541,6 +610,11 @@ namespace KinematicCharacterController.Examples
         {
             knockbackVelocity = direction.normalized * force;
             knockbackTimer = knockbackDuration;
+        }
+
+        public void ApplyExternalForce(Vector3 force)
+        {
+            externalForce += force;
         }
 
 
@@ -664,6 +738,29 @@ namespace KinematicCharacterController.Examples
             }
 
         }
+
+        // Soda Ability Helper Functions
+        private void TryConsumeSoda()
+        {
+            if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.LeftShift) && !_isSpeedBoosted)
+            {
+                heldObject.tag = "Untagged";
+                Drop();
+                StartCoroutine(SpeedBoost());
+            }
+        }
+        private IEnumerator SpeedBoost()
+        {
+            _isSpeedBoosted = true;
+            _moveSpeed *= _speedBoostMultiplier;
+
+            yield return new WaitForSeconds(_speedBoostDuration);
+
+            _moveSpeed = _normalMoveSpeed;
+            _isSpeedBoosted = false;
+        }
+
+
     }
     
 }
