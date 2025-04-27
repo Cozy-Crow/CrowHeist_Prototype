@@ -306,17 +306,18 @@ namespace KinematicCharacterController.Examples
         {
             if (IsGrounded)
             {
-                _isJumping = false;
                 if(_velocitY <= 0f)
                 {
                     // Keep character slightly grounded
                     _velocitY = -2f;
+                    _isJumping = false;
+
                 }
                 _fallingTime = 0f;
             }
             else
             {
-                if(_wasGroundedLastFrame && !_isJumping)
+                if(_wasGroundedLastFrame && _velocitY <= 0f)
                 {
                     _velocitY = 0f;
                 }
@@ -327,7 +328,6 @@ namespace KinematicCharacterController.Examples
                     // Apply a controlled glide by setting a max fall speed
                     float glideFallSpeed = -3f; // Adjust this value for a smoother glide
                     _velocitY = Mathf.Max(_velocitY - (_gravity * 0.1f * Time.deltaTime), glideFallSpeed);
-                    Debug.Log("Gliding");
                 }
                 else
                 {
