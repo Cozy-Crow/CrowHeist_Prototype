@@ -153,6 +153,8 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+            CollisionFlags flags = _characterController.Move(_velocity * Time.deltaTime);
+            HandleAboveCollisions(flags);
             TryConsumeSoda();
             if (knockbackTimer > 0)
             {
@@ -172,9 +174,15 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(JumpCooldown());
             }
             Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
-            _velocity = moveDir;
-            _characterController.Move(_velocity * Time.deltaTime);
-            
+            _velocity = moveDir;            
+        }
+        private void HandleAboveCollisions(CollisionFlags flags)
+        {
+            if((flags & CollisionFlags.Above)!= 0 && _velocitY > 0f)
+            {
+                _velocitY = 0f;
+            }
+
         }
 
 
