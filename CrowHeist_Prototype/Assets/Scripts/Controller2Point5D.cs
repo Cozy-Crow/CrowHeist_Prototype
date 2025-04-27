@@ -38,7 +38,7 @@ namespace KinematicCharacterController.Examples
         private bool _canDash = true;
         public bool _isDashing = false;
 
-
+        //Physics/Direction
         private CharacterController _characterController;
         private string _currentAnim;
         private bool _isFacingRight = true;
@@ -48,20 +48,16 @@ namespace KinematicCharacterController.Examples
         public bool _isThrowing = false;
         private bool _canJump = true;
         private bool _isJumping = false;
-
-
         private Vector2 _input;
         private Vector3 _direction;
         private Vector3 _velocity;
         private float _velocitY;
         private float _gravity = 7f;
         private bool _wasGroundedLastFrame = false;
-
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
-        private Equipable _equipped;
-
         private Animator _animator;
 
+        //Charged Throw
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -74,15 +70,15 @@ namespace KinematicCharacterController.Examples
         private Vector3 storedThrowDirection = Vector3.zero;
 
         //Jack in the Box
-
         private GameObject _touchingObject;
         private GameObject _currentGroundObject;
         private GameObject _currentHeadbuttObject;
-
         private bool isWindingUp = false;
         private float windUpTime = 1f; // Time player needs to hold 'F'
         private float windUpTimer = 0f;
         private bool isTimerActive = false;
+        
+        //Bouncing
         public float bounceDelay = 2f; // Delay before bounce is applied
         private float bounceTimer = 0f;
         public bool canBounce = false;
@@ -95,17 +91,7 @@ namespace KinematicCharacterController.Examples
         public bool IsGrounded => _characterController.isGrounded;
         public bool IsFlipped => _isFlipped;
         public bool IsFacingRight => _isFacingRight;
-        public string Equipped
-        {
-            get
-            {
-                if (_equipped != null)
-                {
-                    return _equipped.name;
-                }
-                return "null";
-            }
-        }
+      
         #endregion
 
         // Roomba knockback
@@ -128,10 +114,6 @@ namespace KinematicCharacterController.Examples
         void Start()
         {
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
-            if (aiEventManager != null)
-            {
-                aiEventManager.e_makedirty.AddListener(OnObjectDirty);
-            }
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0; // Initial no line
         }
@@ -176,13 +158,14 @@ namespace KinematicCharacterController.Examples
             Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
             _velocity = moveDir;            
         }
+
+        // Makes sure player does not get stuck when they headbutt something
         private void HandleAboveCollisions(CollisionFlags flags)
         {
             if((flags & CollisionFlags.Above)!= 0 && _velocitY > 0f)
             {
                 _velocitY = 0f;
             }
-
         }
 
 
@@ -208,6 +191,7 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        // Dash Ability... Needs update to make sure players can dash omnidirectionally
         private IEnumerator Dash()
         {
             GameObject coffeeDrink = null;
@@ -228,12 +212,10 @@ namespace KinematicCharacterController.Examples
                     break;
                 }
             }
-
             _canDash = false;
             _isDashing = true;
             float dashDirection;
             Vector3 dashVelocity;
-
             // Get dash direction (only horizontal movement)
             if (_isMovingForward || _isMovingBackward)
             {
@@ -245,8 +227,6 @@ namespace KinematicCharacterController.Examples
                 dashDirection = _isFacingRight ? 1f : -1f;
                 dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
             }
-            
-
             float dashTime = 0f;
             while (dashTime < _dashDuration && _isDashing)
             {
@@ -254,7 +234,6 @@ namespace KinematicCharacterController.Examples
                 dashTime += Time.deltaTime;
                 yield return null;
             }
-
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
@@ -361,6 +340,8 @@ namespace KinematicCharacterController.Examples
             _velocitY = _jumpForce;
             _isJumping = true;
         }
+
+        // Handles WindUp for JackInTheBox
         void HandleWindUp()
         {
             if (IsGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
@@ -395,7 +376,6 @@ namespace KinematicCharacterController.Examples
                     windUpTimer = 0f; // Reset if F is released
                 }
             }
-
             if (isTimerActive)
             {
                 bounceTimer += Time.deltaTime;
@@ -408,6 +388,7 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        // Handles bouncing ability for JackInTheBox
         void HandleBounce()
         {
             if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
@@ -430,6 +411,7 @@ namespace KinematicCharacterController.Examples
             
         }
 
+        // Object detection for physics insterations for CharacterController
         void OnTriggerEnter(Collider other)
         {
             if (other.CompareTag("JackInTheBox"))
@@ -462,11 +444,8 @@ namespace KinematicCharacterController.Examples
                     {
                         disassembler.Disassemble();
                     }
-
                 }
-               
             }
-            
         }
 
         void OnTriggerExit(Collider other)
@@ -482,8 +461,6 @@ namespace KinematicCharacterController.Examples
         public void ApplyBounce(float bounceStrength)
         {
             _velocitY = bounceStrength;
-            Debug.Log("BOING! Bounce applied: " + bounceStrength);
-
         }
 
 
@@ -491,9 +468,6 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if (_equipped != null || heldObject != null)
-                    return;
-
                 AIEventManager.instance.e_pickup.Invoke();
                 LayerMask interactable = LayerMask.GetMask("Interactable");
                 Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
@@ -507,14 +481,6 @@ namespace KinematicCharacterController.Examples
                 if (validTargets.Length > 0)
                 {
                     Collider closest = validTargets[0];
-
-                    if (closest.TryGetComponent(out Equipable equipable))
-                    {
-                        equipable.Equip(_handPoint);
-                        _equipped = equipable;
-                        return;
-                    }
-
                     if (closest.TryGetComponent(out IPickupable pickUp))
                     {
                         pickUp.PickUP(_pickUpPoint);
@@ -524,11 +490,9 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-
             // Charged Throwing mechanism
             if (heldObject != null)
             {
-
                 // Start charging when left mouse button is pressed
                 if (Input.GetMouseButtonDown(0)) // Left mouse button
                 {
@@ -536,9 +500,7 @@ namespace KinematicCharacterController.Examples
                     isCanceled = false;
                     chargeStartTime = Time.time;
                 }
-
                 // While holding the left mouse button, update throw force and aim direction
-                
                 if (Input.GetMouseButton(0) && !isCanceled)
                 {
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
@@ -552,12 +514,10 @@ namespace KinematicCharacterController.Examples
 
                     DrawThrowTrajectory(storedThrowDirection);
                 }
-
                 // Release the left mouse button to throw
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
                     isCharging = false;
-
                     // Throw object
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
                     if (rigidbody != null)
@@ -573,30 +533,17 @@ namespace KinematicCharacterController.Examples
                         Vector3 throwDirection = (worldMousePos - playerPosition);
                         throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f); // Limit vertical influence
                         throwDirection = throwDirection.normalized;
-
                         Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
                         Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
-
                         Vector3 rotationDirection = (endPoint - startPoint).normalized;
-
-
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
                         heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
                     }
-
-                    // Drop the held object
-                    foreach (IPickupable pickUp in _pickUpsList)
-                    {
-                        pickUp.Drop(_dropPoint.position);
-                    }
-                    _pickUpsList.Clear();
-                    heldObject = null;
+                    Drop();
                     throwForce = 0f;
-
                     // Clear the trajectory visualization
                     lineRenderer.positionCount = 0;
                 }
-
                 // Right-click to cancel the throw
                 if (Input.GetMouseButtonDown(1)) // Right mouse button
                 {
@@ -604,20 +551,13 @@ namespace KinematicCharacterController.Examples
                     isCanceled = true;
                     throwForce = 0f;
                     lineRenderer.positionCount = 0; // Clear trajectory visualization
-
                     // Ensure the object remains held but isn't thrown
                     storedThrowDirection = Vector3.zero; // Reset the throw direction
                 }
             }
-
-
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                _equipped?.Interact();
-            }
-
         }
         
+        // Drop Item Helper Function
         public void Drop()
         {
             foreach (IPickupable pickUp in _pickUpsList)
@@ -628,6 +568,8 @@ namespace KinematicCharacterController.Examples
             _pickUpsList.Clear();
             heldObject = null;
         }
+
+        // Player Knockback function
         public void ApplyKnockback(Vector3 direction, float force)
         {
             knockbackVelocity = direction.normalized * force;
@@ -639,7 +581,7 @@ namespace KinematicCharacterController.Examples
             externalForce += force;
         }
 
-
+        // LineRenderer Trajectory for Charged Throw
         void DrawThrowTrajectory(Vector3 direction)
         {
             int resolution = 20; // More points = smoother curve
@@ -657,7 +599,6 @@ namespace KinematicCharacterController.Examples
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
                 lineRenderer.SetPosition(i, point);
             }
-            
         }
 
         private void HandleAnimation()
@@ -749,16 +690,6 @@ namespace KinematicCharacterController.Examples
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, 2);
-        }
-
-        void OnObjectDirty()
-        {
-            if (heldObject != null)
-            {
-                Debug.Log("not null");
-
-            }
-
         }
 
         // Soda Ability Helper Functions

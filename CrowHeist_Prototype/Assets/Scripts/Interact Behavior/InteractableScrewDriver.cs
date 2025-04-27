@@ -7,24 +7,6 @@ public class InteractableScrewDriver : Interactable
         base.Awake();
     }
 
-    public override void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            string itemHeld = other.GetComponent<Controller2Point5D>().Equipped;
-
-            if (itemHeld == "ScrewDriver")
-            {
-                if (_canvas is not null)
-                {
-                    _canvas.SetActive(true);
-                }
-                _outline.enabled = true;
-                _interact = true;
-            }
-        }
-    }
-
     public override void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
