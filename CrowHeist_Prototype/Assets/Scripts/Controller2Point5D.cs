@@ -47,6 +47,7 @@ namespace KinematicCharacterController.Examples
         private bool _isFlipped = true;
         public bool _isThrowing = false;
         private bool _canJump = true;
+        private bool _isJumping = false;
 
 
         private Vector2 _input;
@@ -54,6 +55,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 _velocity;
         private float _velocitY;
         private float _gravity = 7f;
+        private bool _wasGroundedLastFrame = false;
 
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Equipable _equipped;
@@ -302,15 +304,25 @@ namespace KinematicCharacterController.Examples
 
         private void HandleGravity()
         {
-            if (IsGrounded && _velocitY < 0)
+            if (IsGrounded)
             {
-                // Keep character slightly grounded
-                _velocitY = -2f;
+                _isJumping = false;
+                if(_velocitY <= 0f)
+                {
+                    // Keep character slightly grounded
+                    _velocitY = -2f;
+                }
                 _fallingTime = 0f;
             }
             else
             {
-                if (heldObject != null && heldObject.CompareTag("Glider") && _velocitY < 0)
+                if(_wasGroundedLastFrame && !_isJumping)
+                {
+                    _velocitY = 0f;
+                }
+                bool isFalling = _velocitY <= 0;
+                bool isGliding = (heldObject != null && heldObject.CompareTag("Glider"));
+                if(isFalling && isGliding)
                 {
                     // Apply a controlled glide by setting a max fall speed
                     float glideFallSpeed = -3f; // Adjust this value for a smoother glide
@@ -323,6 +335,7 @@ namespace KinematicCharacterController.Examples
                     _velocitY -= _gravity * Time.deltaTime;
                 }
             }
+            _wasGroundedLastFrame = IsGrounded;
 
             // Clamp to prevent extreme fall speeds
             _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue);
@@ -338,6 +351,7 @@ namespace KinematicCharacterController.Examples
             }
 
             _velocitY = _jumpForce;
+            _isJumping = true;
         }
         void HandleWindUp()
         {

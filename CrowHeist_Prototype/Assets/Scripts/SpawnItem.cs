@@ -6,7 +6,7 @@ public class SpawnItem : MonoBehaviour
 {
     private ItemEventManager itemEventManager;
 
-    public GameObject item;
+    public List<GameObject> spawnItems = new List<GameObject>();
     public Transform spawnPoint;
 
     [SerializeField] private int maxSpawnCount = 1;
@@ -23,10 +23,14 @@ public class SpawnItem : MonoBehaviour
 
     public void Spawn()
     {
-        if (item == null || currentSpawnCount >= maxSpawnCount) return;
+        if (spawnItems.Count <= 0 || currentSpawnCount >= maxSpawnCount) return;
         currentSpawnCount++;
         Vector3 position = spawnPoint ? spawnPoint.position : transform.position + Vector3.up;
         Quaternion rotation = spawnPoint ? spawnPoint.rotation : Quaternion.identity;
-        Instantiate(item, position, rotation);
+        if(this.CompareTag("VendingMachineDropper"))
+        {
+            Instantiate(spawnItems[0], position, rotation);
+
+        }
     }
 }
