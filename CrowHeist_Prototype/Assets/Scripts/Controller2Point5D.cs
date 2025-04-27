@@ -712,8 +712,5 @@ namespace KinematicCharacterController.Examples
             _moveSpeed = _normalMoveSpeed;
             _isSpeedBoosted = false;
         }
-
-
-    }
-    
+    }   
 }

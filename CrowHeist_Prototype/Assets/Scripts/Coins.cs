@@ -13,12 +13,12 @@ public class Coins : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
+        //transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("HeistZone"))
         {
             GameManager.Score += _coinValue;
             UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
