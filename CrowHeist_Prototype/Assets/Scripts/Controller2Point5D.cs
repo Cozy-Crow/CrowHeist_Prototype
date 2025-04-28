@@ -512,6 +512,10 @@ namespace KinematicCharacterController.Examples
             {
                 AIEventManager.instance.e_pickup.Invoke();
                 //LayerMask interactable = LayerMask.GetMask("Interactable");
+                if(_pickUpsList.Count > 0)
+                {
+                    return;
+                }
 
                 if(nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
