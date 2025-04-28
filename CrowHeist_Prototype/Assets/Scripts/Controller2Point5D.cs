@@ -68,6 +68,9 @@ namespace KinematicCharacterController.Examples
         private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
         public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
+        private List<Interactable> nearbyInteractables = new List<Interactable>();
+        private int currentTargetIndex = 0;
+        private int previousTargetIndex = 0;
 
         //Jack in the Box
         private GameObject _touchingObject;
@@ -414,6 +417,14 @@ namespace KinematicCharacterController.Examples
         // Object detection for physics insterations for CharacterController
         void OnTriggerEnter(Collider other)
         {
+            if (other.TryGetComponent (out Interactable interactable))
+            {
+                if(!nearbyInteractables.Contains(interactable))
+                {
+                    nearbyInteractables.Add(interactable);
+                    UpdateHighlightedInteractable();
+                }
+            }
             if (other.CompareTag("JackInTheBox"))
             {
                 isInTrigger = true;
@@ -450,6 +461,14 @@ namespace KinematicCharacterController.Examples
 
         void OnTriggerExit(Collider other)
         {
+            if(other.TryGetComponent(out Interactable interactable))
+            {
+                if(nearbyInteractables.Contains(interactable))
+                {
+                    nearbyInteractables.Remove(interactable);
+                    UpdateHighlightedInteractable();
+                }
+            }
             if (other.CompareTag("JackInTheBox"))
             {
                 isInTrigger = false;
@@ -463,31 +482,64 @@ namespace KinematicCharacterController.Examples
             _velocitY = bounceStrength;
         }
 
+        private void UpdateHighlightedInteractable()
+        {
+            if (nearbyInteractables.Count == 0)
+            {
+                return;
+            }
+            if (currentTargetIndex >= nearbyInteractables.Count)
+            {
+                currentTargetIndex = 0;
+            }
+
+            foreach(var interactable in nearbyInteractables)
+            {
+                if(interactable != null)
+                {
+                    interactable.SetOutline(false);
+                }
+            }
+            Interactable target = nearbyInteractables[currentTargetIndex];
+            if(target != null)
+                target.SetOutline(true);
+            
+        }
 
         private void HandlePickUP()
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
                 AIEventManager.instance.e_pickup.Invoke();
-                LayerMask interactable = LayerMask.GetMask("Interactable");
-                Collider[] interactableColliders = Physics.OverlapSphere(transform.position, 2, interactable);
+                //LayerMask interactable = LayerMask.GetMask("Interactable");
 
-                // Filter to only valid pickup targets
-                var validTargets = interactableColliders
-                    .Where(col => col.TryGetComponent<Equipable>(out _) || col.TryGetComponent<IPickupable>(out _))
-                    .OrderBy(col => Vector3.Distance(transform.position, col.transform.position))
-                    .ToArray();
-
-                if (validTargets.Length > 0)
+                if(nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
-                    Collider closest = validTargets[0];
-                    if (closest.TryGetComponent(out IPickupable pickUp))
+                    Interactable selected = nearbyInteractables[currentTargetIndex];
+                    if(selected != null && selected.realObject != null)
                     {
-                        pickUp.PickUP(_pickUpPoint);
-                        _pickUpsList.Add(pickUp);
-                        heldObject = closest.GetComponent<Rigidbody>();
+                        if (selected.realObject.TryGetComponent(out IPickupable pickUp))
+                        {
+                            pickUp.PickUP(_pickUpPoint);
+                            _pickUpsList.Add(pickUp);
+                            heldObject = selected.realObject.GetComponent<Rigidbody>();
+                        }
+                        // if (heldObject != null)
+                        // {
+                        //     heldObject.isKinematic = true;
+                        // }
                     }
                 }
+            } 
+            if (nearbyInteractables.Count > 1 && Input.GetKeyDown(KeyCode.R))
+            {
+                previousTargetIndex = currentTargetIndex;
+                currentTargetIndex++;
+                if(currentTargetIndex >= nearbyInteractables.Count)
+                {
+                    currentTargetIndex = 0;
+                }
+                UpdateHighlightedInteractable();
             }
 
             // Charged Throwing mechanism
