@@ -510,6 +510,15 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+                if(heldObject != null && heldObject.CompareTag("PaintBucket"))
+                {
+                    Paint paintBucket = heldObject.GetComponent<Paint>();
+                    if (paintBucket != null)
+                    {
+                        paintBucket.Spill();
+                    }
+                }
+
                 AIEventManager.instance.e_pickup.Invoke();
                 //LayerMask interactable = LayerMask.GetMask("Interactable");
                 if(_pickUpsList.Count > 0)
@@ -528,10 +537,6 @@ namespace KinematicCharacterController.Examples
                             _pickUpsList.Add(pickUp);
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                         }
-                        // if (heldObject != null)
-                        // {
-                        //     heldObject.isKinematic = true;
-                        // }
                     }
                 }
             } 

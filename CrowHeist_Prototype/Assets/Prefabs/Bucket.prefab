@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3549101700959735950
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4576121996113722667}
+  m_Layer: 0
+  m_Name: Waypoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4576121996113722667
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3549101700959735950}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.054, y: -0.027, z: 0.252}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 613892220060282578}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7102941219625272466
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,6 +174,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 033f579580d110049a03b01944044bdd, type: 3}
+      propertyPath: m_TagString
+      value: PaintBucket
+      objectReference: {fileID: 0}
     - target: {fileID: 1907644618531486236, guid: 033f579580d110049a03b01944044bdd, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -157,6 +192,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 033f579580d110049a03b01944044bdd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2272615161682639438}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 033f579580d110049a03b01944044bdd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4576121996113722667}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 033f579580d110049a03b01944044bdd, type: 3}
       insertIndex: -1
@@ -170,6 +208,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 033f579580d110049a03b01944044bdd, type: 3}
       insertIndex: -1
       addedObject: {fileID: 50744782088688227}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 033f579580d110049a03b01944044bdd, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2289452578955508769}
   m_SourcePrefab: {fileID: 100100000, guid: 033f579580d110049a03b01944044bdd, type: 3}
 --- !u!1 &274485467756491880 stripped
 GameObject:
@@ -258,6 +299,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5056305, y: 0.530534, z: 0.44994164}
   m_Center: {x: -0.015768051, y: 0.18553317, z: -0.0017824173}
+--- !u!114 &2289452578955508769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 274485467756491880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df4e9fcab7e04a45a4b7c7c0fbe5dbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  paintSpillPrefab: {fileID: 5136825467307771738, guid: 88032c73c2146e441b52f406544f8414, type: 3}
+  spillSpawnPoint: {fileID: 4576121996113722667}
 --- !u!4 &613892220060282578 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 033f579580d110049a03b01944044bdd, type: 3}
