@@ -30,9 +30,26 @@ public class Paint : MonoBehaviour
                 puddleInstance.transform.Rotate(Vector3.up, randomYRotation);
 
                 // OPTIONAL: Random scale (URP Decal Projector must be set to "Inherit from Hierarchy")
-                float randomScale = Random.Range(0.8f, 1.6f);
-                puddleInstance.transform.localScale = new Vector3(randomScale, 1f, randomScale);
+                float randomScale = Random.Range(0.1f, 0.6f);
+                Vector3 finalScale = new Vector3(randomScale, 1f, randomScale);
+                StartCoroutine(AnimateScale(puddleInstance, 0.5f, finalScale)); // 0.5f is duration in seconds
+
             }
         }
     }
+    private IEnumerator AnimateScale(GameObject puddle, float duration, Vector3 targetScale)
+    {
+        Vector3 startScale = Vector3.zero;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            puddle.transform.localScale = Vector3.Lerp(startScale, targetScale, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        puddle.transform.localScale = targetScale;
+    }
+
 }
