@@ -20,7 +20,7 @@ public class RoombAi : MonoBehaviour
     private int currentTargetIndex = 0;
     private bool isDocked = true;
     private GameObject dirtyObject;
-    private List<Pickable> allDirtyObjects = new List<Pickable>();
+    private List<Transform> allDirtyObjects;
     private AIEventManager aiEventManager;
 
     private Vector3 dirtyItemLocation;
@@ -70,7 +70,7 @@ public class RoombAi : MonoBehaviour
         else if (allDirtyObjects.Count > 0)
         {
             anyObjectDirty = true;
-            Pickable nearest = allDirtyObjects[0]; // already sorted by distance
+            Transform nearest = allDirtyObjects[0];
             dirtyItemLocation = nearest.transform.position;
             ItemPath(dirtyItemLocation);
         }
@@ -137,14 +137,37 @@ public class RoombAi : MonoBehaviour
 
     private void HandleDirtyItemCollection()
     {
-        allDirtyObjects = FindObjectsOfType<Pickable>()
+        allDirtyObjects = new List<Transform>();
+
+        // Add dirty pickables
+        var dirtyPickables = FindObjectsOfType<Pickable>()
             .Where(obj => obj._isDirty && !obj.transform.IsChildOf(player.transform))
-            .OrderBy(obj => Vector3.Distance(transform.position, obj.transform.position))
+            .Select(obj => obj.transform);
+
+        allDirtyObjects.AddRange(dirtyPickables);
+
+        // Add puddles
+        var puddles = GameObject.FindGameObjectsWithTag("Puddle")
+            .Select(obj => obj.transform);
+
+        allDirtyObjects.AddRange(puddles);
+
+        // Sort by distance to this Roomba
+        allDirtyObjects = allDirtyObjects
+            .OrderBy(obj => Vector3.Distance(transform.position, obj.position))
             .ToList();
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Puddle") && other != null)
+        {
+            Debug.Log(other);
+            Destroy(other.gameObject);
+            HandleDirtyItemCollection();
+            return;
+        }
+
         Transform parentTransform = other.transform.parent;
 
         if (parentTransform != null)
