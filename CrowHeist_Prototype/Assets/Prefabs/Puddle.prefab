@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7442911607864288299}
   - component: {fileID: 5437361133471660587}
   - component: {fileID: 6040187794609938828}
+  - component: {fileID: 8617089188561275134}
   m_Layer: 3
   m_Name: Puddle
   m_TagString: Puddle
@@ -78,8 +79,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.985381, y: 5.0668006, z: 0.97204816}
-  m_Center: {x: -0.05228603, y: 0.02094078, z: 0.51397604}
+  m_Size: {x: 4.985381, y: 5.0668006, z: 3.2435992}
+  m_Center: {x: -0.052286148, y: 0.02094078, z: 0.25065738}
 --- !u!23 &6040187794609938828
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -122,6 +123,33 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!54 &8617089188561275134
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5136825467307771738}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &8409047375899642144
 GameObject:
   m_ObjectHideFlags: 0
@@ -133,7 +161,7 @@ GameObject:
   - component: {fileID: 4914702203180624938}
   - component: {fileID: 6727647925444947808}
   - component: {fileID: 1385248532777461860}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Trigger
   m_TagString: Puddle
   m_Icon: {fileID: 0}

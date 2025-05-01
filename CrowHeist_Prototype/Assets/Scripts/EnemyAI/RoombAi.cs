@@ -165,7 +165,6 @@ public class RoombAi : MonoBehaviour
             Debug.Log(other);
             Destroy(other.gameObject);
             HandleDirtyItemCollection();
-            return;
         }
 
         Transform parentTransform = other.transform.parent;
