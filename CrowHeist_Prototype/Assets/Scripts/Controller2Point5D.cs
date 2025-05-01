@@ -180,7 +180,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleDash()
         {
-            if (_canDash && Input.GetKeyDown(KeyCode.LeftShift))
+            if (_canDash && Input.GetKeyDown(KeyCode.E) && heldObject != null)
             {
                 StartCoroutine(Dash());
             }
@@ -360,7 +360,7 @@ namespace KinematicCharacterController.Examples
                     }
                 }
 
-                if (Input.GetKey(KeyCode.F))
+                if (Input.GetKeyDown(KeyCode.E))
                 {
                     windUpTimer += Time.deltaTime;
 
@@ -520,7 +520,6 @@ namespace KinematicCharacterController.Examples
                 }
 
                 AIEventManager.instance.e_pickup.Invoke();
-                //LayerMask interactable = LayerMask.GetMask("Interactable");
                 if(_pickUpsList.Count > 0)
                 {
                     return;
