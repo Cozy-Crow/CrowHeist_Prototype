@@ -508,27 +508,29 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUP()
         {
+            //interact key
             if (Input.GetKeyDown(KeyCode.E))
             {
-                if(heldObject != null && heldObject.CompareTag("PaintBucket"))
-                {
-                    Paint paintBucket = heldObject.GetComponent<Paint>();
-                    if (paintBucket != null)
-                    {
-                        paintBucket.Spill();
-                    }
-                }
+                //original paint bucket code
+                // if (heldObject != null && heldObject.CompareTag("PaintBucket"))
+                // {
+                //     Paint paintBucket = heldObject.GetComponent<Paint>();
+                //     if (paintBucket != null)
+                //     {
+                //         paintBucket.Spill();
+                //     }
+                // }
 
                 AIEventManager.instance.e_pickup.Invoke();
-                if(_pickUpsList.Count > 0)
+                if (_pickUpsList.Count > 0)
                 {
                     return;
                 }
 
-                if(nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
+                if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
                     Interactable selected = nearbyInteractables[currentTargetIndex];
-                    if(selected != null && selected.realObject != null)
+                    if (selected != null && selected.realObject != null)
                     {
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
@@ -539,11 +541,38 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             } 
+            
+            #warning need to comeback to paintBucket logic, implementation works but is not clean
+            //when holding paint bucket
+            if (heldObject != null && heldObject.CompareTag("PaintBucket"))
+            {
+                //holding E...
+                if (Input.GetKey(KeyCode.E))
+                {
+                    // Debug.Log("HOLDING");
+                    Paint paintBucket = heldObject.GetComponent<Paint>();
+                    if (paintBucket != null && paintBucket._paintInBucket > 0)
+                    {
+                        Debug.Log("Painting! " + paintBucket._paintInBucket);
+                        paintBucket.Spill();
+                        paintBucket._paintInBucket -= Time.deltaTime;
+
+                    }
+                    //drop if the bucket is empty
+                    if (paintBucket._paintInBucket <= 0)
+                    {
+                        Debug.Log("Out of paint, Dropping bucket");
+                        Drop();
+                    }
+                }
+            }
+
+
             if (nearbyInteractables.Count > 1 && Input.GetKeyDown(KeyCode.R))
             {
                 previousTargetIndex = currentTargetIndex;
                 currentTargetIndex++;
-                if(currentTargetIndex >= nearbyInteractables.Count)
+                if (currentTargetIndex >= nearbyInteractables.Count)
                 {
                     currentTargetIndex = 0;
                 }
