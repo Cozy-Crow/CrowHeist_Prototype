@@ -7,12 +7,29 @@ using FMOD.Studio;
 public class AudioManager : MonoBehaviour
 {
     //Reference the singleton
-    public static AudioManager Instance;
+
+    private List<EventInstance> eventInstances;
+    public static AudioManager Instance { get; private set; }
+
+    //This checks if there is only one instance of audio manager
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        eventInstances = new List<EventInstance>();
+    }
     /// <summary>
     /// Use to play oneshot sfx
     /// </summary>
     /// <param name="eventSFX"></param>
-    public static void PlayOneShot(EventReference eventSFX)
+    public void PlayOneShot(EventReference eventSFX)
     {
         RuntimeManager.PlayOneShot(eventSFX);
     }
@@ -21,9 +38,34 @@ public class AudioManager : MonoBehaviour
     /// </summary>
     /// <param name="eventSFX"></param>
     /// <returns></returns>
-    public static EventInstance CreateInstance(EventReference eventSFX)
+    public EventInstance CreateInstance(EventReference eventSFX)
     {
         EventInstance instance = RuntimeManager.CreateInstance(eventSFX);
+        eventInstances.Add(instance);
         return instance;
+    }
+
+    // <summary>
+    //This is to play oneshot SFX that need spatialization
+    /// <param name="eventSFX"></param>
+    /// <param name="worldPos"></param>
+    public void PlayOneShot3D(EventReference eventSFX, Vector3 worldPos)
+    {
+        RuntimeManager.PlayOneShot(eventSFX, worldPos);
+    }
+
+    private void CleanUp()
+    {
+        //stop and release any created instances
+        foreach (EventInstance instance in eventInstances)
+        {
+            instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            instance.release();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        CleanUp();
     }
 }

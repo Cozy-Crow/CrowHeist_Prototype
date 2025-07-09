@@ -2,6 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using FMODUnity;
+using FMOD.Studio;
+using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 namespace KinematicCharacterController.Examples
 {
@@ -12,7 +16,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
-        
+
         // Soda Variables
         private bool _isSpeedBoosted = false;
         public float _speedBoostDuration = 5f;
@@ -116,6 +120,11 @@ namespace KinematicCharacterController.Examples
         private Vector3 externalForce;
         [SerializeField] private float externalForceDecay = 5f;
 
+        //Audio event reference and instance for footsteps
+        [SerializeField] private EventReference playerFootsteps;
+
+        private EventInstance footstepInstance;
+
         private void Awake()
         {
             _normalMoveSpeed = _moveSpeed;
@@ -123,7 +132,7 @@ namespace KinematicCharacterController.Examples
             _animator = GetComponentInChildren<Animator>();
 
         }
-        void Start()
+        public void Start()
         {
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             if (aiEventManager != null)
@@ -132,6 +141,9 @@ namespace KinematicCharacterController.Examples
             }
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0; // Initial no line
+
+            //creates instance for footsteps SFX
+            footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
         void Update()
@@ -172,7 +184,8 @@ namespace KinematicCharacterController.Examples
             Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
-            
+
+            updateSound();
         }
 
 
@@ -206,7 +219,7 @@ namespace KinematicCharacterController.Examples
             {
                 yield break; // Exit the coroutine if the object is not dashable
             }
-            if(heldObject.CompareTag("Dashable"))
+            if (heldObject.CompareTag("Dashable"))
             {
                 coffeeDrink = heldObject.gameObject;
             }
@@ -235,7 +248,7 @@ namespace KinematicCharacterController.Examples
                 dashDirection = _isFacingRight ? 1f : -1f;
                 dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
             }
-            
+
 
             float dashTime = 0f;
             while (dashTime < _dashDuration && _isDashing)
@@ -281,7 +294,7 @@ namespace KinematicCharacterController.Examples
 
             }
         }
-    
+
         private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
@@ -405,7 +418,7 @@ namespace KinematicCharacterController.Examples
                 ApplyBounce(5f); // Change 10f to your desired bounce strength
                 canBounce = false;
             }
-            
+
         }
 
         void OnTriggerEnter(Collider other)
@@ -416,22 +429,22 @@ namespace KinematicCharacterController.Examples
                 _touchingObject = other.gameObject;
                 Debug.Log("Entered Jack In The Box trigger.");
             }
-            if(other.CompareTag("OffSwitch") && !IsGrounded)
+            if (other.CompareTag("OffSwitch") && !IsGrounded)
             {
                 Debug.Log("Off Switch");
                 var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
                 offSwitchToOn.ToggleSwitchOn();
             }
-            if(other.CompareTag("OnSwitch") && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
+            if (other.CompareTag("OnSwitch") && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
             {
                 Debug.Log("On Switch");
                 var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
                 onSwitchToOff.ToggleSwitchOff();
             }
-            if(other.CompareTag("FanBase"))
+            if (other.CompareTag("FanBase"))
             {
                 Transform parent = other.transform.parent;
-                if(parent != null)
+                if (parent != null)
                 {
                     GameObject parentObj = parent.gameObject;
                     Debug.Log("Hit Base");
@@ -442,9 +455,9 @@ namespace KinematicCharacterController.Examples
                     }
 
                 }
-               
+
             }
-            
+
         }
 
         void OnTriggerExit(Collider other)
@@ -516,7 +529,7 @@ namespace KinematicCharacterController.Examples
                 }
 
                 // While holding the left mouse button, update throw force and aim direction
-                
+
                 if (Input.GetMouseButton(0) && !isCanceled)
                 {
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
@@ -595,7 +608,7 @@ namespace KinematicCharacterController.Examples
             }
 
         }
-        
+
         public void Drop()
         {
             foreach (IPickupable pickUp in _pickUpsList)
@@ -635,7 +648,7 @@ namespace KinematicCharacterController.Examples
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
                 lineRenderer.SetPosition(i, point);
             }
-            
+
         }
 
         private void HandleAnimation()
@@ -758,6 +771,27 @@ namespace KinematicCharacterController.Examples
 
             _moveSpeed = _normalMoveSpeed;
             _isSpeedBoosted = false;
+        }
+
+        private void updateSound()
+        { 
+            //checking for playback state of footsteps
+            PLAYBACK_STATE playbackState;
+            footstepInstance.getPlaybackState(out playbackState);
+
+            //checking if player is moving THIS IS BAD CODE ASK FOR HELP TO FIGURE OUT HOW TO DETERMINE IF CHARACTER MOVING
+            if (IsGrounded == true && (_isMovingForward == true || _isMovingBackward == true))
+            {
+                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+                {
+                    footstepInstance.start();
+                }
+            }
+            else
+            {
+                footstepInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
+
         }
 
 

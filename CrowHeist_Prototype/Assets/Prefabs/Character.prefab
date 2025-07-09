@@ -275,13 +275,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _moveSpeed: 5
-  _sprintSpeed: 10
   _smoothTime: 0.05
   _jumpForce: 5.3
   _gravityMultiplier: 1.5
+  _speedBoostDuration: 5
+  _speedBoostMultiplier: 5
+  _fallingTime: 0
   _pickUpPoint: {fileID: 7843053465694190917}
   _handPoint: {fileID: 2564438339915437367}
   _dropPoint: {fileID: 5167104243750956226}
-  throwPoint: {fileID: 0}
+  _isDirty: 0
+  _dashSpeed: 40
+  _dashDuration: 0.2
+  _dashForce: 10
+  _dashCooldown: 1
+  _isDashing: 0
+  _isThrowing: 0
+  throwDirection: {x: 0, y: 0, z: 0}
   maxThrowForce: 20
   chargeTime: 2
+  heldObject: {fileID: 0}
+  bounceDelay: 2
+  canBounce: 0
+  pointCount: 0
+  startPoint: {x: 0, y: 0, z: 0}
+  endPoint: {x: 0, y: 0, z: 0}
+  knockbackDuration: 0.3
+  externalForceDecay: 5
+  playerFootsteps:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
