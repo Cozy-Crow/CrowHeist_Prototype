@@ -6,6 +6,7 @@ using FMODUnity;
 using FMOD.Studio;
 using Unity.VisualScripting;
 using JetBrains.Annotations;
+using UnityEngine.TextCore.Text;
 
 namespace KinematicCharacterController.Examples
 {
@@ -772,16 +773,16 @@ namespace KinematicCharacterController.Examples
             _moveSpeed = _normalMoveSpeed;
             _isSpeedBoosted = false;
         }
-
         private void updateSound()
-        { 
+        {
             //checking for playback state of footsteps
             PLAYBACK_STATE playbackState;
             footstepInstance.getPlaybackState(out playbackState);
 
-            //checking if player is moving THIS IS BAD CODE ASK FOR HELP TO FIGURE OUT HOW TO DETERMINE IF CHARACTER MOVING
-            if (IsGrounded == true && (_isMovingForward == true || _isMovingBackward == true))
+            //checking if player is moving its
+            if (_input != new Vector2(0,0) && IsGrounded == true)
             {
+                //print("moving");
                 if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
                 {
                     footstepInstance.start();
@@ -789,9 +790,9 @@ namespace KinematicCharacterController.Examples
             }
             else
             {
+                //print("not moving");
                 footstepInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             }
-
         }
 
 
