@@ -11,6 +11,11 @@ public class AudioManager : MonoBehaviour
     private List<EventInstance> eventInstances;
     public static AudioManager Instance { get; private set; }
 
+    [SerializeField] private EventReference Ambience;
+
+    [SerializeField] private EventReference Music;
+    private EventInstance AmbienceInstance;
+
     //This checks if there is only one instance of audio manager
     private void Awake()
     {
@@ -25,6 +30,34 @@ public class AudioManager : MonoBehaviour
 
         eventInstances = new List<EventInstance>();
     }
+
+
+    //starts ambience intance using createinstance function
+    private void InitializeAmbience(EventReference AmbienceReference)
+    {
+        AmbienceInstance = CreateInstance(AmbienceReference);
+        AmbienceInstance.start();
+    }
+
+    //starts music intance using createinstance function
+    private void InitializeMusic(EventReference MusicReference)
+    {
+        AmbienceInstance = CreateInstance(MusicReference);
+        AmbienceInstance.start();
+    }
+
+    //starts ambience and music on start
+    private void Start()
+    {
+        InitializeAmbience(Ambience);
+        InitializeMusic(Music);
+    }
+
+    private void SetAdaptiveMusic ()
+    {
+        
+    }
+
     /// <summary>
     /// Use to play oneshot sfx
     /// </summary>

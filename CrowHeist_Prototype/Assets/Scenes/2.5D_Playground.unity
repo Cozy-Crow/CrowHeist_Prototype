@@ -9622,7 +9622,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 530659579}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
   m_Name: 
@@ -10316,7 +10316,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1854470710}
-  - component: {fileID: 1854470711}
   - component: {fileID: 1854470712}
   m_Layer: 0
   m_Name: SoundManager
@@ -10340,18 +10339,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 658139267}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1854470711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1854470709}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c8ce6d09467cff444ad7c01994351cf9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1854470712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10364,6 +10351,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ad406c131723f443b60ceeead701512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Ambience:
+    Guid:
+      Data1: 1440588435
+      Data2: 1142408379
+      Data3: 29881249
+      Data4: 859620508
+    Path: event:/LoopingTest
+  Music:
+    Guid:
+      Data1: 1440588435
+      Data2: 1142408379
+      Data3: 29881249
+      Data4: 859620508
+    Path: event:/LoopingTest
 --- !u!4 &1859105514 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4786653231002656771, guid: 88d126b4de386094c87b9d404e6b833d, type: 3}
