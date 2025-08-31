@@ -26,7 +26,5 @@ public class UIManager : MonoBehaviour
         }
 
         _coinsUI = GameObject.Find("CoinsUI").GetComponent<CoinsUI>();
-
-        _noiseUI = GameObject.Find("NoiseUI").GetComponent<NoiseMeterUI>();
     }
 }
