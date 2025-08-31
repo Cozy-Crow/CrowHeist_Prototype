@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -10,8 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private float playerSpeed = 2.0f;
     [SerializeField]
     private float fastSpeed = 2.0f;
-
-
+   
     public float PlayerSpeed
     {
         get

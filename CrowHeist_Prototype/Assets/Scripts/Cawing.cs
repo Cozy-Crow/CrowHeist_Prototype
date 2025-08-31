@@ -12,7 +12,7 @@ public class Cawing : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C))
         {
-            AudioManager.PlayOneShot(_cawingSfx);
+            AudioManager.Instance.PlayOneShot(_cawingSfx);
             //RuntimeManager.PlayOneShot("event:/Crow");
         }
     }
@@ -22,7 +22,7 @@ public class Cawing : MonoBehaviour
         switch (audioname)
         {
             case "caw":
-                AudioManager.PlayOneShot(_cawingSfx);
+                AudioManager.Instance.PlayOneShot(_cawingSfx);
                 break;
         }
 
