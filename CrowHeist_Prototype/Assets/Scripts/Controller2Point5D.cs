@@ -152,7 +152,7 @@ namespace KinematicCharacterController.Examples
         private void HandleMove()
         {
             CollisionFlags flags = _characterController.Move(_velocity * Time.deltaTime);
-            HandleAboveCollisions(flags);
+            //HandleAboveCollisions(flags);
             TryConsumeSoda();
             if (knockbackTimer > 0)
             {
@@ -176,7 +176,6 @@ namespace KinematicCharacterController.Examples
             _velocity = moveDir;
             _characterController.Move(_velocity * Time.deltaTime);
 
-            updateSound();
         }
 
 
@@ -465,25 +464,26 @@ namespace KinematicCharacterController.Examples
                         disassembler.Disassemble();
                     }
                 }
+            }
 
         }
 
-        void OnTriggerExit(Collider other)
-        {
-            if(other.TryGetComponent(out Interactable interactable))
-            {
-                if(nearbyInteractables.Contains(interactable))
-                {
-                    nearbyInteractables.Remove(interactable);
-                    UpdateHighlightedInteractable();
-                }
-            }
-            if (other.CompareTag("JackInTheBox"))
-            {
-                isInTrigger = false;
-                Debug.Log("Exited Jack In The Box trigger.");
-            }
-        }
+        // void OnTriggerExit(Collider other)
+        // {
+        //     if(other.TryGetComponent(out Interactable interactable))
+        //     {
+        //         if(nearbyInteractables.Contains(interactable))
+        //         {
+        //             nearbyInteractables.Remove(interactable);
+        //             UpdateHighlightedInteractable();
+        //         }
+        //     }
+        //     if (other.CompareTag("JackInTheBox"))
+        //     {
+        //         isInTrigger = false;
+        //         Debug.Log("Exited Jack In The Box trigger.");
+        //     }
+        // }
 
 
         public void ApplyBounce(float bounceStrength)
@@ -811,3 +811,4 @@ namespace KinematicCharacterController.Examples
             _isSpeedBoosted = false;
         }
 }
+    }
