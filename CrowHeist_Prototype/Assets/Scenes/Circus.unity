@@ -731,6 +731,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!54 &157269829
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2829,6 +2832,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1098177574187462569, guid: 6f04a5e665ab7984ab354f6d6c323589, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3263369536369607103, guid: 6f04a5e665ab7984ab354f6d6c323589, type: 3}
       propertyPath: m_LocalPosition.x
       value: -73.89178
@@ -4197,6 +4204,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!54 &945011977
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4514,6 +4524,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!1001 &1003186224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5799,6 +5812,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 288962713544032870, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6476383176361823772, guid: c3c12c1f70bdf35448eab3cb0a7a4e7a, type: 3}
       propertyPath: m_Name
       value: Knife (21)
@@ -6007,6 +6024,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!65 &1164666616
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6679,6 +6697,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!1 &1300932081
 GameObject:
   m_ObjectHideFlags: 0
@@ -7674,6 +7695,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!54 &1537182972
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7990,6 +8014,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!1001 &1595509519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9820,6 +9847,8 @@ GameObject:
   - component: {fileID: 2011481680}
   - component: {fileID: 2011481679}
   - component: {fileID: 2011481678}
+  - component: {fileID: 2011481681}
+  - component: {fileID: 2011481682}
   m_Layer: 0
   m_Name: EventSystem
   m_TagString: Untagged
@@ -9877,6 +9906,45 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2011481681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011481677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0124d6484410d094684b9b8845b77c0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  e_pickup:
+    m_PersistentCalls:
+      m_Calls: []
+  e_makedirty:
+    m_PersistentCalls:
+      m_Calls: []
+  OnGroundObjectDirty:
+    m_PersistentCalls:
+      m_Calls: []
+  OnPlayerDirty:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &2011481682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2011481677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe96a2cc42c592a4a87f94b23bec044e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  e_spawnObj:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &2027096481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10186,6 +10254,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pickedUp: 0
+  _isDirty: 0
+  player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!1 &2050907799
 GameObject:
   m_ObjectHideFlags: 0

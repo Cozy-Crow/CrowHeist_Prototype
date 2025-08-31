@@ -11,10 +11,15 @@ public class Interactable : MonoBehaviour, IInteractable
     protected GameObject _canvas;
 
     public Outline Outline => _outline;
+    public GameObject realObject;
     public bool Interact => _interact;
 
     protected virtual void Awake()
     {
+        if (realObject == null)
+        {
+            realObject = transform.parent != null ? transform.parent.gameObject : gameObject;
+        }
         _outline = GetComponentInParent<Outline>();
         if (transform.parent.Find("KeyBind") is not null)
         {
@@ -23,6 +28,13 @@ public class Interactable : MonoBehaviour, IInteractable
         }
     }
 
+    public void SetOutline(bool enabled)
+    {
+        if (_outline != null)
+        {
+            _outline.enabled = enabled;
+        }
+    }
     public virtual void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))

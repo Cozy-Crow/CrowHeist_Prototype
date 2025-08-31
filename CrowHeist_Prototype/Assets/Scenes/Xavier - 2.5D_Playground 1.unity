@@ -2234,10 +2234,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f40630809dd804c44b6c3c11f650e7d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGameWon: 0
-  WinMenu: {fileID: 1658759010}
-  quitButton: {fileID: 2134640414}
-  restartButton: {fileID: 1752250733}
 --- !u!1 &364594406 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4236301446373263153, guid: 96601b29b22d1f842aa50afa24fda550, type: 3}
@@ -6415,7 +6411,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cooldownDuration: 2
   bounce: 0
-  player: {fileID: 5672783914524484632}
+  player: {fileID: 0}
 --- !u!1 &896348998
 GameObject:
   m_ObjectHideFlags: 0
@@ -6976,6 +6972,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe96a2cc42c592a4a87f94b23bec044e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  e_spawnObj:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &1011799015 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8000491189340789022, guid: 7befce1172bb6c942ac21f1ed9b014aa, type: 3}
@@ -7554,7 +7553,7 @@ MonoBehaviour:
   m_Priority: 10
   m_StandbyUpdate: 2
   m_LookAt: {fileID: 0}
-  m_Follow: {fileID: 6505057340831361182}
+  m_Follow: {fileID: 0}
   m_Lens:
     FieldOfView: 60
     OrthographicSize: 10
@@ -14101,6 +14100,10 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
+      propertyPath: _jumpForce
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: _moveSpeed
       value: 10
       objectReference: {fileID: 0}
@@ -14183,7 +14186,7 @@ PrefabInstance:
     - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_Follow
       value: 
-      objectReference: {fileID: 6505057340831361182}
+      objectReference: {fileID: 0}
     - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -14233,11 +14236,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
---- !u!4 &6505057340831361182 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 631451988467006383, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
-  m_PrefabInstance: {fileID: 5672783914524484631}
-  m_PrefabAsset: {fileID: 0}
 --- !u!136 &6505057340831361183
 CapsuleCollider:
   m_ObjectHideFlags: 0

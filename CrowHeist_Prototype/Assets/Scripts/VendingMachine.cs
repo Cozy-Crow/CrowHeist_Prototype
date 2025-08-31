@@ -13,6 +13,8 @@ public class VendingMachine : MonoBehaviour
     private float playerDistance; 
     [SerializeField] private float checkCooldown = 1.0f;
     private float lastCheckTime = -Mathf.Infinity;
+    public SpawnItem mySpawner;
+    public Transform spawnPoint;
 
 
 
@@ -34,10 +36,11 @@ public class VendingMachine : MonoBehaviour
             DistanceCalculator();
             lastCheckTime = Time.time;
         }
-        if(other.CompareTag("Quarter") && playerDistance < 5f)
+        if(other.CompareTag("Quarter") && playerDistance < 5f && mySpawner != null)
         {
+            mySpawner.SpawnAtPoint(spawnPoint);
             Destroy(other.gameObject);
-            Notify();
+            
         }
     }
     private void DistanceCalculator()
@@ -50,9 +53,9 @@ public class VendingMachine : MonoBehaviour
 
 
     // Update is called once per frame
-    public void Notify()
-    {
-        Debug.Log("Notifying...");
-        itemEventManager.SpawnItemTrigger();
-    }
+    // public void Notify()
+    // {
+    //     Debug.Log("Notifying...");
+    //     itemEventManager.SpawnItemTrigger();
+    // }
 }

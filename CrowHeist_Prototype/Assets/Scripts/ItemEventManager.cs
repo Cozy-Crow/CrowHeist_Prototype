@@ -24,4 +24,5 @@ public class ItemEventManager : MonoBehaviour
         e_spawnObj?.Invoke();
     }
 
+
 }

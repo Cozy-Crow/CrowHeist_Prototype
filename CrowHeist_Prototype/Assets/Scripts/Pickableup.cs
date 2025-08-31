@@ -14,7 +14,8 @@ public class Pickable : MonoBehaviour, IPickupable
     public GameObject player;
     public GameObject Item => _item;
     private AIEventManager aiEventManager;
-
+    private ItemEventManager itemEventManager;
+    public SpawnItem mySpawner;
 
     private void Awake()
     {
@@ -24,12 +25,13 @@ public class Pickable : MonoBehaviour, IPickupable
     }
     void Start()
     {
+        itemEventManager = FindObjectOfType<ItemEventManager>();
+        
         aiEventManager = FindObjectOfType<AIEventManager>();
         if (aiEventManager != null)
         {
             aiEventManager.e_makedirty.AddListener(OnObjectDirty);
         }
-
     }
     public void PickUP(Transform parent)
     {
@@ -60,8 +62,6 @@ public class Pickable : MonoBehaviour, IPickupable
             }
         }
     }
-
-
     public void Drop(Vector3 position)
     {
         transform.SetParent(null);
@@ -89,6 +89,17 @@ public class Pickable : MonoBehaviour, IPickupable
             OnObjectDirty();
         }
     }
-
-
+    void OnTriggerExit(Collider other)
+    {
+        if(other.CompareTag ("Waypoint"))
+        {
+            SpawnItem spawner = other.GetComponentInParent<SpawnItem>();
+            Debug.Log(spawner);
+            if(spawner != null)
+            {
+                mySpawner = spawner;
+                mySpawner.NotifyIfRemoved(this.gameObject);
+            }
+        }
+    }
 }
