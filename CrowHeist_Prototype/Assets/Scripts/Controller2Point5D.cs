@@ -10,14 +10,19 @@ using UnityEngine.TextCore.Text;
 
 namespace KinematicCharacterController.Examples
 {
-    [RequireComponent(typeof(CharacterController))]
+    [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(CapsuleCollider))]
     public class Controller2Point5D : MonoBehaviour
     {
+        [Header("Movement")]
         [SerializeField] private float _moveSpeed = 50f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
-        [SerializeField] private float _gravityMultiplier = 2f; // Extra gravity when falling add later for airtime
-
+        [SerializeField] private float _gravityMultiplier = 2f;
+        [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
+        [SerializeField] private float _groundCheckDistance = 0.15f;
+        [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
+        
         // Soda Variables
         private bool _isSpeedBoosted = false;
         public float _speedBoostDuration = 5f;
@@ -26,14 +31,13 @@ namespace KinematicCharacterController.Examples
 
         //Falling
         public float _fallingTime = 0f;
-
+        private float _maxFallSpeed = 20f;
 
         [Header("PickUP")]
         [SerializeField] private Transform _pickUpPoint;
         [SerializeField] private Transform _handPoint;
         [SerializeField] private Transform _dropPoint;
         public bool _isDirty = false;
-
 
         [Header("Dash")]
         [SerializeField] private float _dashSpeed = 40f;
@@ -44,7 +48,8 @@ namespace KinematicCharacterController.Examples
         public bool _isDashing = false;
 
         //Physics/Direction
-        private CharacterController _characterController;
+        private Rigidbody _rb;
+        private CapsuleCollider _capsuleCollider;
         private string _currentAnim;
         private bool _isFacingRight = true;
         private bool _isMovingForward = false;
@@ -54,10 +59,8 @@ namespace KinematicCharacterController.Examples
         private bool _canJump = true;
         private bool _isJumping = false;
         private Vector2 _input;
-        private Vector3 _direction;
-        private Vector3 _velocity;
-        private float _velocitY;
-        private float _gravity = 7f;
+        private Vector3 _moveVelocity;
+        private bool _isGrounded = false;
         private bool _wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Animator _animator;
@@ -70,7 +73,7 @@ namespace KinematicCharacterController.Examples
         private bool isCharging = false;
         private bool isCanceled = false;
         private float chargeStartTime;
-        private LineRenderer lineRenderer;  // LineRenderer to draw trajectory
+        private LineRenderer lineRenderer;
         public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
         private List<Interactable> nearbyInteractables = new List<Interactable>();
@@ -82,12 +85,12 @@ namespace KinematicCharacterController.Examples
         private GameObject _currentGroundObject;
         private GameObject _currentHeadbuttObject;
         private bool isWindingUp = false;
-        private float windUpTime = 1f; // Time player needs to hold 'F'
+        private float windUpTime = 1f;
         private float windUpTimer = 0f;
         private bool isTimerActive = false;
         
         //Bouncing
-        public float bounceDelay = 2f; // Delay before bounce is applied
+        public float bounceDelay = 2f;
         private float bounceTimer = 0f;
         public bool canBounce = false;
         private bool isInTrigger = false;
@@ -96,14 +99,12 @@ namespace KinematicCharacterController.Examples
         public Vector3 endPoint;
 
         #region Properties
-        public bool IsGrounded => _characterController.isGrounded;
+        public bool IsGrounded => _isGrounded;
         public bool IsFlipped => _isFlipped;
         public bool IsFacingRight => _isFacingRight;
-      
         #endregion
 
-        // Roomba knockback
-
+        // Knockback
         public float knockbackDuration = 0.3f;
         private Vector3 knockbackVelocity;
         private float knockbackTimer = 0f;
@@ -111,77 +112,198 @@ namespace KinematicCharacterController.Examples
         // Fan Force
         private Vector3 externalForce;
         [SerializeField] private float externalForceDecay = 5f;
+        [SerializeField] private float externalForceDamping = 0.9f;
 
-        //Audio event reference and instance for footsteps
+        //Audio
         [SerializeField] private EventReference playerFootsteps;
-
         private EventInstance footstepInstance;
 
         private void Awake()
         {
             _normalMoveSpeed = _moveSpeed;
-            _characterController = GetComponent<CharacterController>();
+            _rb = GetComponent<Rigidbody>();
+            _capsuleCollider = GetComponent<CapsuleCollider>();
             _animator = GetComponentInChildren<Animator>();
-
+            
+            // Configure Rigidbody for character movement
+            _rb.freezeRotation = true;
+            _rb.interpolation = RigidbodyInterpolation.Interpolate;
+            _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+            _rb.drag = 1f; // Increased drag for stability
+            _rb.angularDrag = 0f;
+            _rb.constraints = RigidbodyConstraints.FreezeRotation;
+            
+            // Set a reasonable mass
+            _rb.mass = 1f;
+            
+            // Configure solver iterations for better collision
+            _rb.solverIterations = 10;
+            _rb.solverVelocityIterations = 10;
         }
+
         public void Start()
         {
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             lineRenderer = GetComponent<LineRenderer>();
-            lineRenderer.positionCount = 0; // Initial no line
+            lineRenderer.positionCount = 0;
 
-            //creates instance for footsteps SFX
             footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
         void Update()
         {
-            // Handle movement
+            // Input and state checks in Update
+            CheckGrounded();
+            HandleInput();
             HandleDash();
             HandleAnimation();
             HandlePickUP();
-            HandleGravity();
-            HandleExternalForces();
-            HandleMove();
             HandleRotation();
             HandleWindUp();
             HandleBounce();
-
         }
 
-        private void HandleMove()
+        void FixedUpdate()
         {
-            CollisionFlags flags = _characterController.Move(_velocity * Time.deltaTime);
-            //HandleAboveCollisions(flags);
-            TryConsumeSoda();
-            if (knockbackTimer > 0)
+            // Physics in FixedUpdate
+            HandleMove();
+            HandleGravity();
+            HandleExternalForces();
+            HandleKnockback();
+        }
+
+        private void CheckGrounded()
+        {
+            _wasGroundedLastFrame = _isGrounded;
+            
+            // Cast from the center of the character downward
+            Vector3 origin = transform.position;
+            float radius = _capsuleCollider.radius * 0.9f;
+            
+            // Start the cast from just below the center
+            Vector3 castOrigin = origin;
+            
+            RaycastHit hit;
+            // Cast distance should reach just below the feet
+            float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
+            
+            // Main ground check using a raycast for more precision
+            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
+            
+            // Additional check with spherecast for better edge detection
+            if (!_isGrounded)
             {
-                _characterController.Move(knockbackVelocity * Time.deltaTime);
-                knockbackTimer -= Time.deltaTime;
+                _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
             }
-            if (_isDashing) return; // Don't allow movement input during dash
-
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            _direction = new Vector3(_input.x, _direction.y, _input.y);
-
-            if (IsGrounded && Input.GetButton("Jump") && _canJump)
+            
+            if (_isGrounded && hit.collider != null)
             {
-                _direction.y = 0f;
+                _currentGroundObject = hit.collider.gameObject;
+                
+                // Keep player at proper height above ground
+                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
+                float currentHeight = transform.position.y;
+                
+                // Only apply correction if significantly below target height (actually sinking)
+                if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+                {
+                    // Use position-based correction with physics
+                    Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+                    _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+                }
+            }
+            else
+            {
+                _currentGroundObject = null;
+            }
+        }
+
+        private void HandleInput()
+        {
+            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            
+            // Jump input
+            if (_isGrounded && Input.GetButtonDown("Jump") && _canJump)
+            {
                 Jump();
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
             }
-            Vector3 moveDir = new Vector3(_direction.x * _moveSpeed, _direction.y * _moveSpeed, _direction.z * _moveSpeed);
-
-            _velocity = moveDir;
-            _characterController.Move(_velocity * Time.deltaTime);
-
+            
+            TryConsumeSoda();
         }
 
+        private void HandleMove()
+        {
+            if (_isDashing) return;
+
+            Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
+            _moveVelocity = moveDirection * _moveSpeed;
+            
+            // Apply horizontal movement while preserving vertical velocity
+            Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
+            
+            // Use MovePosition for smoother movement with physics
+            Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
+            _rb.MovePosition(newPosition);
+        }
+
+        private void HandleGravity()
+        {
+            if (!_isGrounded)
+            {
+                bool isGliding = (heldObject != null && heldObject.CompareTag("Glider"));
+                float gravityForce = Physics.gravity.y * _gravityMultiplier;
+                
+                if (isGliding && _rb.velocity.y < 0)
+                {
+                    // Gliding - reduced gravity
+                    gravityForce *= 0.1f;
+                    float glideFallSpeed = -3f;
+                    if (_rb.velocity.y < glideFallSpeed)
+                    {
+                        _rb.velocity = new Vector3(_rb.velocity.x, glideFallSpeed, _rb.velocity.z);
+                    }
+                }
+                
+                // Apply gravity
+                _rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
+                
+                // Clamp fall speed
+                if (_rb.velocity.y < -_maxFallSpeed)
+                {
+                    _rb.velocity = new Vector3(_rb.velocity.x, -_maxFallSpeed, _rb.velocity.z);
+                }
+                
+                _fallingTime += Time.fixedDeltaTime;
+            }
+            else
+            {
+                _fallingTime = 0f;
+                
+                // When grounded, stop excessive downward velocity
+                if (_rb.velocity.y < -0.5f)
+                {
+                    _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+                }
+                
+                _isJumping = false;
+            }
+        }
+
+        private void Jump()
+        {
+            if (!_isGrounded) return;
+            
+            // Add upward force for jump
+            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+            _isJumping = true;
+        }
 
         private IEnumerator JumpCooldown()
         {
-            yield return new WaitForSeconds(0.1f); // Small delay before allowing another jump
+            yield return new WaitForSeconds(0.1f);
             _canJump = true;
         }
 
@@ -192,28 +314,22 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(Dash());
             }
         }
-        private void HandleExternalForces()
-        {
-            if (externalForce.magnitude > 0.01f)
-            {
-                _characterController.Move(externalForce * Time.deltaTime);
-                externalForce = Vector3.Lerp(externalForce, Vector3.zero, externalForceDecay * Time.deltaTime);
-            }
-        }
 
-        // Dash Ability... Needs update to make sure players can dash omnidirectionally
         private IEnumerator Dash()
         {
             GameObject coffeeDrink = null;
             GameObject coffee = null;
+            
             if (heldObject == null || !heldObject.CompareTag("Dashable"))
             {
-                yield break; // Exit the coroutine if the object is not dashable
+                yield break;
             }
+            
             if (heldObject.CompareTag("Dashable"))
             {
                 coffeeDrink = heldObject.gameObject;
             }
+            
             foreach (Transform child in GetComponentsInChildren<Transform>(true))
             {
                 if (child.name == "CoffeeLiquid")
@@ -222,11 +338,13 @@ namespace KinematicCharacterController.Examples
                     break;
                 }
             }
+            
             _canDash = false;
             _isDashing = true;
+            
             float dashDirection;
             Vector3 dashVelocity;
-            // Get dash direction (only horizontal movement)
+            
             if (_isMovingForward || _isMovingBackward)
             {
                 dashDirection = _isMovingForward ? 1f : -1f;
@@ -241,44 +359,92 @@ namespace KinematicCharacterController.Examples
             float dashTime = 0f;
             while (dashTime < _dashDuration && _isDashing)
             {
-                _characterController.Move(dashVelocity * Time.deltaTime);
+                _rb.velocity = new Vector3(dashVelocity.x, _rb.velocity.y, dashVelocity.z);
                 dashTime += Time.deltaTime;
                 yield return null;
             }
+            
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
-            coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
-            coffeeDrink.tag = "Mug";
+            
+            if (coffee != null)
+            {
+                coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
+            }
+            
+            if (coffeeDrink != null)
+            {
+                coffeeDrink.tag = "Mug";
+            }
+            
             Drop();
         }
 
-        private void OnControllerColliderHit(ControllerColliderHit hit)
+        private void HandleExternalForces()
         {
-            if (_isDashing) // Only apply force if dashing
+            if (externalForce.magnitude > 0.01f)
             {
-                Rigidbody rb = hit.collider.attachedRigidbody;
-                if (rb != null && !rb.isKinematic)
+                _rb.AddForce(externalForce, ForceMode.Force);
+                externalForce *= externalForceDamping;
+                
+                if (externalForce.magnitude < 0.01f)
                 {
-                    Vector3 forceDirection = hit.point - transform.position;
+                    externalForce = Vector3.zero;
+                }
+            }
+        }
+
+        private void HandleKnockback()
+        {
+            if (knockbackTimer > 0)
+            {
+                _rb.AddForce(knockbackVelocity, ForceMode.Force);
+                knockbackTimer -= Time.fixedDeltaTime;
+            }
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            HandleCollisionLogic(collision);
+        }
+
+        private void OnCollisionStay(Collision collision)
+        {
+            // Check for ground contact
+            foreach (ContactPoint contact in collision.contacts)
+            {
+                if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
+                {
+                    _currentGroundObject = collision.gameObject;
+                }
+            }
+        }
+
+        private void HandleCollisionLogic(Collision collision)
+        {
+            if (_isDashing)
+            {
+                Rigidbody otherRb = collision.rigidbody;
+                if (otherRb != null && !otherRb.isKinematic)
+                {
+                    Vector3 forceDirection = collision.contacts[0].point - transform.position;
                     forceDirection = forceDirection.normalized;
-
-                    float forceAmount = 20f; // Adjust this value
-                    rb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
-
+                    
+                    float forceAmount = 20f;
+                    otherRb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
+                    
                     _isDashing = false;
                 }
             }
-            // Check if the player is standing on something
-            if (Vector3.Dot(hit.normal, Vector3.up) > 0.5f) // Ensures it's a mostly horizontal surface
+            
+            // Headbutt check
+            foreach (ContactPoint contact in collision.contacts)
             {
-                _currentGroundObject = hit.gameObject;
-            }
-            // Headbutt check — looking for objects the player hits from below
-            if (Vector3.Dot(hit.normal, Vector3.down) > 0.5f)
-            {
-                _currentHeadbuttObject = hit.gameObject;
-
+                if (Vector3.Dot(contact.normal, Vector3.down) > 0.5f)
+                {
+                    _currentHeadbuttObject = collision.gameObject;
+                }
             }
         }
 
@@ -286,7 +452,7 @@ namespace KinematicCharacterController.Examples
         {
             _isMovingForward = (_input.y > 0);
             _isMovingBackward = (_input.y < 0);
-            // Handle rotation
+            
             if (_input.x > 0 && !_isFlipped)
             {
                 _isFlipped = true;
@@ -297,68 +463,17 @@ namespace KinematicCharacterController.Examples
                 _isFlipped = false;
                 _isFacingRight = false;
             }
+            
             Flip(_isFlipped);
         }
 
-        private void HandleGravity()
-        {
-            if (IsGrounded)
-            {
-                if(_velocitY <= 0f)
-                {
-                    // Keep character slightly grounded
-                    _velocitY = -2f;
-                    _isJumping = false;
-
-                }
-                _fallingTime = 0f;
-            }
-            else
-            {
-                if(_wasGroundedLastFrame && _velocitY <= 0f)
-                {
-                    _velocitY = 0f;
-                }
-                bool isFalling = _velocitY <= 0;
-                bool isGliding = (heldObject != null && heldObject.CompareTag("Glider"));
-                if(isFalling && isGliding)
-                {
-                    // Apply a controlled glide by setting a max fall speed
-                    float glideFallSpeed = -3f; // Adjust this value for a smoother glide
-                    _velocitY = Mathf.Max(_velocitY - (_gravity * 0.1f * Time.deltaTime), glideFallSpeed);
-                }
-                else
-                {
-                    // Apply normal gravity if not gliding
-                    _velocitY -= _gravity * Time.deltaTime;
-                }
-            }
-            _wasGroundedLastFrame = IsGrounded;
-
-            // Clamp to prevent extreme fall speeds
-            _velocitY = Mathf.Clamp(_velocitY, -20f, float.MaxValue);
-
-            _direction.y = _velocitY;
-        }
-
-        private void Jump()
-        {
-            if (!IsGrounded)
-            {
-                return;
-            }
-
-            _velocitY = _jumpForce;
-            _isJumping = true;
-        }
-
-        // Handles WindUp for JackInTheBox
         void HandleWindUp()
         {
-            if (IsGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
+            if (_isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
                 GameObject jack = _touchingObject;
                 GameObject jackInTheBox = null;
+                
                 foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
                 {
                     if (child.name == "SpringFunction")
@@ -368,25 +483,27 @@ namespace KinematicCharacterController.Examples
                     }
                 }
 
-                if (Input.GetKeyDown(KeyCode.E))
+                if (Input.GetKey(KeyCode.E))
                 {
                     windUpTimer += Time.deltaTime;
 
                     if (windUpTimer >= windUpTime)
                     {
-                        jackInTheBox.SetActive(false);
-                        isTimerActive = true; // Start bounce delay timer
+                        if (jackInTheBox != null)
+                        {
+                            jackInTheBox.SetActive(false);
+                        }
+                        isTimerActive = true;
                         windUpTimer = 0f;
                         Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
-                        jack = _touchingObject;
-
                     }
                 }
                 else
                 {
-                    windUpTimer = 0f; // Reset if F is released
+                    windUpTimer = 0f;
                 }
             }
+            
             if (isTimerActive)
             {
                 bounceTimer += Time.deltaTime;
@@ -399,13 +516,13 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        // Handles bouncing ability for JackInTheBox
         void HandleBounce()
         {
-            if (canBounce && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            if (canBounce && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
             {
                 GameObject jack = _currentGroundObject;
                 GameObject jackInTheBox = null;
+                
                 foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
                 {
                     if (child.name == "SpringFunction")
@@ -415,42 +532,54 @@ namespace KinematicCharacterController.Examples
                     }
                 }
 
-                jackInTheBox.gameObject.SetActive(true);
-                ApplyBounce(5f); // Change 10f to your desired bounce strength
+                if (jackInTheBox != null)
+                {
+                    jackInTheBox.SetActive(true);
+                }
+                
+                ApplyBounce(5f);
                 canBounce = false;
             }
-
         }
 
-        // Object detection for physics insterations for CharacterController
+        public void ApplyBounce(float bounceStrength)
+        {
+            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
+            _rb.AddForce(Vector3.up * bounceStrength, ForceMode.VelocityChange);
+        }
+
         void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent (out Interactable interactable))
+            if (other.TryGetComponent(out Interactable interactable))
             {
-                if(!nearbyInteractables.Contains(interactable))
+                if (!nearbyInteractables.Contains(interactable))
                 {
                     nearbyInteractables.Add(interactable);
                     UpdateHighlightedInteractable();
                 }
             }
+            
             if (other.CompareTag("JackInTheBox"))
             {
                 isInTrigger = true;
                 _touchingObject = other.gameObject;
                 Debug.Log("Entered Jack In The Box trigger.");
             }
-            if (other.CompareTag("OffSwitch") && !IsGrounded)
+            
+            if (other.CompareTag("OffSwitch") && !_isGrounded)
             {
                 Debug.Log("Off Switch");
                 var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
                 offSwitchToOn.ToggleSwitchOn();
             }
-            if (other.CompareTag("OnSwitch") && IsGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
+            
+            if (other.CompareTag("OnSwitch") && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
             {
                 Debug.Log("On Switch");
                 var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
                 onSwitchToOff.ToggleSwitchOff();
             }
+            
             if (other.CompareTag("FanBase"))
             {
                 Transform parent = other.transform.parent;
@@ -465,76 +594,57 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-
         }
 
-        // void OnTriggerExit(Collider other)
-        // {
-        //     if(other.TryGetComponent(out Interactable interactable))
-        //     {
-        //         if(nearbyInteractables.Contains(interactable))
-        //         {
-        //             nearbyInteractables.Remove(interactable);
-        //             UpdateHighlightedInteractable();
-        //         }
-        //     }
-        //     if (other.CompareTag("JackInTheBox"))
-        //     {
-        //         isInTrigger = false;
-        //         Debug.Log("Exited Jack In The Box trigger.");
-        //     }
-        // }
-
-
-        public void ApplyBounce(float bounceStrength)
+        void OnTriggerExit(Collider other)
         {
-            _velocitY = bounceStrength;
+            if (other.TryGetComponent(out Interactable interactable))
+            {
+                if (nearbyInteractables.Contains(interactable))
+                {
+                    nearbyInteractables.Remove(interactable);
+                    UpdateHighlightedInteractable();
+                }
+            }
+            
+            if (other.CompareTag("JackInTheBox"))
+            {
+                isInTrigger = false;
+                Debug.Log("Exited Jack In The Box trigger.");
+            }
         }
 
         private void UpdateHighlightedInteractable()
         {
-            if (nearbyInteractables.Count == 0)
-            {
-                return;
-            }
+            if (nearbyInteractables.Count == 0) return;
+            
             if (currentTargetIndex >= nearbyInteractables.Count)
             {
                 currentTargetIndex = 0;
             }
 
-            foreach(var interactable in nearbyInteractables)
+            foreach (var interactable in nearbyInteractables)
             {
-                if(interactable != null)
+                if (interactable != null)
                 {
                     interactable.SetOutline(false);
                 }
             }
-            Interactable target = nearbyInteractables[currentTargetIndex];
-            if(target != null)
-                target.SetOutline(true);
             
+            Interactable target = nearbyInteractables[currentTargetIndex];
+            if (target != null)
+            {
+                target.SetOutline(true);
+            }
         }
 
         private void HandlePickUP()
         {
-            //interact key
             if (Input.GetKeyDown(KeyCode.E))
             {
-                //original paint bucket code
-                // if (heldObject != null && heldObject.CompareTag("PaintBucket"))
-                // {
-                //     Paint paintBucket = heldObject.GetComponent<Paint>();
-                //     if (paintBucket != null)
-                //     {
-                //         paintBucket.Spill();
-                //     }
-                // }
-
                 AIEventManager.instance.e_pickup.Invoke();
-                if (_pickUpsList.Count > 0)
-                {
-                    return;
-                }
+                
+                if (_pickUpsList.Count > 0) return;
 
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
@@ -549,25 +659,21 @@ namespace KinematicCharacterController.Examples
                         }
                     }
                 }
-            } 
+            }
             
-            #warning need to comeback to paintBucket logic, implementation works but is not clean
-            //when holding paint bucket
+            // Paint bucket logic
             if (heldObject != null && heldObject.CompareTag("PaintBucket"))
             {
-                //holding E...
                 if (Input.GetKey(KeyCode.E))
                 {
-                    // Debug.Log("HOLDING");
                     Paint paintBucket = heldObject.GetComponent<Paint>();
                     if (paintBucket != null && paintBucket._paintInBucket > 0)
                     {
                         Debug.Log("Painting! " + paintBucket._paintInBucket);
                         paintBucket.Spill();
                         paintBucket._paintInBucket -= Time.deltaTime;
-
                     }
-                    //drop if the bucket is empty
+                    
                     if (paintBucket._paintInBucket <= 0)
                     {
                         Debug.Log("Out of paint, Dropping bucket");
@@ -575,7 +681,6 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-
 
             if (nearbyInteractables.Count > 1 && Input.GetKeyDown(KeyCode.R))
             {
@@ -588,17 +693,15 @@ namespace KinematicCharacterController.Examples
                 UpdateHighlightedInteractable();
             }
 
-            // Charged Throwing mechanism
+            // Charged Throwing
             if (heldObject != null)
             {
-                // Start charging when left mouse button is pressed
-                if (Input.GetMouseButtonDown(0)) // Left mouse button
+                if (Input.GetMouseButtonDown(0))
                 {
                     isCharging = true;
                     isCanceled = false;
                     chargeStartTime = Time.time;
                 }
-                // While holding the left mouse button, update throw force and aim direction
 
                 if (Input.GetMouseButton(0) && !isCanceled)
                 {
@@ -609,49 +712,48 @@ namespace KinematicCharacterController.Examples
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
                     Vector3 playerPosition = transform.position;
-                    storedThrowDirection = (worldMousePos - playerPosition).normalized; // Always assign value
+                    storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
                 }
-                // Release the left mouse button to throw
+
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
                     isCharging = false;
-                    // Throw object
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
                     if (rigidbody != null)
                     {
                         rigidbody.isKinematic = false;
 
-                        // Final throw direction calculation
                         Vector3 mousePosition = Input.mousePosition;
-                        mousePosition.z = 10f; // Adjust based on your setup
+                        mousePosition.z = 10f;
                         Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
-                        Vector3 playerPosition = transform.position;  // Assuming this is the player's position
+                        Vector3 playerPosition = transform.position;
                         Vector3 throwDirection = (worldMousePos - playerPosition);
-                        throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f); // Limit vertical influence
+                        throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f);
                         throwDirection = throwDirection.normalized;
+                        
                         Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
                         Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
                         Vector3 rotationDirection = (endPoint - startPoint).normalized;
-                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse); // Use stored direction
+                        
+                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
                         heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
                     }
+                    
                     Drop();
                     throwForce = 0f;
-                    // Clear the trajectory visualization
                     lineRenderer.positionCount = 0;
                 }
-                // Right-click to cancel the throw
-                if (Input.GetMouseButtonDown(1)) // Right mouse button
+
+                if (Input.GetMouseButtonDown(1))
                 {
                     isCharging = false;
                     isCanceled = true;
                     throwForce = 0f;
-                    lineRenderer.positionCount = 0; // Clear trajectory visualization
-                    // Ensure the object remains held but isn't thrown
-                    storedThrowDirection = Vector3.zero; // Reset the throw direction
+                    lineRenderer.positionCount = 0;
+                    storedThrowDirection = Vector3.zero;
                 }
             }
         }
@@ -661,13 +763,11 @@ namespace KinematicCharacterController.Examples
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(_dropPoint.position);
-                new WaitForSeconds(0.1f);
             }
             _pickUpsList.Clear();
             heldObject = null;
         }
 
-        // Player Knockback function
         public void ApplyKnockback(Vector3 direction, float force)
         {
             knockbackVelocity = direction.normalized * force;
@@ -679,13 +779,12 @@ namespace KinematicCharacterController.Examples
             externalForce += force;
         }
 
-        // LineRenderer Trajectory for Charged Throw
         void DrawThrowTrajectory(Vector3 direction)
         {
-            int resolution = 20; // More points = smoother curve
-            float timeStep = 0.1f; // Time increment per point
+            int resolution = 20;
+            float timeStep = 0.1f;
             Vector3 startPosition = transform.position;
-            Vector3 velocity = direction * throwForce; // Use the same throw force
+            Vector3 velocity = direction * throwForce;
             throwDirection = direction;
             pointCount = lineRenderer.positionCount;
 
@@ -716,7 +815,7 @@ namespace KinematicCharacterController.Examples
                 return;
             }
 
-            if (_velocitY > -1)
+            if (_rb.velocity.y > 0.1f || !_isGrounded)
             {
                 if (_isFacingRight)
                 {
@@ -727,8 +826,7 @@ namespace KinematicCharacterController.Examples
                     ChangeAnimation("JumpLeft");
                 }
             }
-
-            else if (_velocity.x != 0 || _velocity.z != 0)
+            else if (_moveVelocity.magnitude > 0.1f)
             {
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
@@ -748,7 +846,7 @@ namespace KinematicCharacterController.Examples
                     ChangeAnimation("RunLeft");
                 }
             }
-            else if (_velocity.x == 0 && _velocity.z == 0)
+            else
             {
                 if (_isFacingRight)
                 {
@@ -763,11 +861,8 @@ namespace KinematicCharacterController.Examples
 
         private void ChangeAnimation(string animation, float crossfade = 0.2f)
         {
-            if (_currentAnim == animation)
-            {
-                return;
-            }
-
+            if (_currentAnim == animation) return;
+            
             _currentAnim = animation;
             _animator.CrossFade(animation, crossfade);
         }
@@ -778,7 +873,7 @@ namespace KinematicCharacterController.Examples
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
             }
-            else if (!doFlip)
+            else
             {
                 transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
             }
@@ -788,9 +883,16 @@ namespace KinematicCharacterController.Examples
         {
             Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(transform.position, 2);
+            
+            // Draw ground check
+            if (_capsuleCollider != null)
+            {
+                Gizmos.color = _isGrounded ? Color.green : Color.yellow;
+                Vector3 origin = transform.position + Vector3.up * (_capsuleCollider.height * 0.5f);
+                Gizmos.DrawWireSphere(origin - Vector3.up * ((_capsuleCollider.height * 0.5f) + _groundCheckDistance), _capsuleCollider.radius * 0.9f);
+            }
         }
 
-        // Soda Ability Helper Functions
         private void TryConsumeSoda()
         {
             if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.LeftShift) && !_isSpeedBoosted)
@@ -800,6 +902,7 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(SpeedBoost());
             }
         }
+
         private IEnumerator SpeedBoost()
         {
             _isSpeedBoosted = true;
@@ -810,5 +913,5 @@ namespace KinematicCharacterController.Examples
             _moveSpeed = _normalMoveSpeed;
             _isSpeedBoosted = false;
         }
-}
     }
+}
