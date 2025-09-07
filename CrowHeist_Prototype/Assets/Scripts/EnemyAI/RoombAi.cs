@@ -17,6 +17,10 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
 
+    // Added for Patrol Mode
+    [SerializeField] private List<Transform> patrolPoints;
+    private int currentPatrolIndex = 0;
+
     private int currentTargetIndex = 0;
     private bool isDocked = true;
     private GameObject dirtyObject;
@@ -77,13 +81,30 @@ public class RoombAi : MonoBehaviour
         else
         {
             anyObjectDirty = false;
-            StationaryPath();
+            // StationaryPath();
+            Patrol();
         }
     }
 
     private void StationaryPath()
     {
+        Debug.Log("run stationary path");
         agent.SetDestination(dock.position);
+    }
+
+    // Patrol method just added by Mark D. 9/9/25
+    private void Patrol()
+    {
+        Debug.Log("run Patrol method");
+        if (patrolPoints.Count == 0) return;
+
+        Transform target = patrolPoints[currentPatrolIndex];
+        agent.SetDestination(target.position);
+
+        if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
+        {
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+        }
     }
 
     private void ItemPath(Vector3 targetPos)
