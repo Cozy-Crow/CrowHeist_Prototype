@@ -739,7 +739,12 @@ namespace KinematicCharacterController.Examples
                         Vector3 rotationDirection = (endPoint - startPoint).normalized;
                         
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
-                        heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
+                        if (heldObject.CompareTag("Glider"))
+                        {
+                            heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 0));
+                        }
+                        else
+                            heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
                     }
                     
                     Drop();
