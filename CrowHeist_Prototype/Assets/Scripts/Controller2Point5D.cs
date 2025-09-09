@@ -741,7 +741,17 @@ namespace KinematicCharacterController.Examples
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
                         if (heldObject.CompareTag("Glider"))
                         {
-                            heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(0, 0, 0));
+                            //static falling motion
+                            //heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, 0, rotationDirection.z));
+
+                            //rotating falling motion
+                            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+                            if (rb != null)
+                            {
+                                Vector3 spinForce = new Vector3(-15f, 0, 0);
+                                rb.angularVelocity = spinForce;
+                                heldObject.transform.rotation = Quaternion.LookRotation(rotationDirection);
+                            }
                         }
                         else
                             heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
