@@ -230,7 +230,7 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(JumpCooldown());
             }
             
-            TryConsumeSoda();
+            TryConsumeCoffee();
         }
 
         private void HandleMove()
@@ -309,7 +309,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleDash()
         {
-            if (_canDash && Input.GetKeyDown(KeyCode.E) && heldObject != null)
+            if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.E) && !_isDashing && _canDash)
             {
                 StartCoroutine(Dash());
             }
@@ -317,28 +317,6 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator Dash()
         {
-            GameObject coffeeDrink = null;
-            GameObject coffee = null;
-            
-            if (heldObject == null || !heldObject.CompareTag("Dashable"))
-            {
-                yield break;
-            }
-            
-            if (heldObject.CompareTag("Dashable"))
-            {
-                coffeeDrink = heldObject.gameObject;
-            }
-            
-            foreach (Transform child in GetComponentsInChildren<Transform>(true))
-            {
-                if (child.name == "CoffeeLiquid")
-                {
-                    coffee = child.gameObject;
-                    break;
-                }
-            }
-            
             _canDash = false;
             _isDashing = true;
             
@@ -367,18 +345,6 @@ namespace KinematicCharacterController.Examples
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
-            
-            if (coffee != null)
-            {
-                coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
-            }
-            
-            if (coffeeDrink != null)
-            {
-                coffeeDrink.tag = "Mug";
-            }
-            
-            Drop();
         }
 
         private void HandleExternalForces()
@@ -908,18 +874,38 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        private void TryConsumeSoda()
+        private void TryConsumeCoffee()
         {
-            if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.LeftShift) && !_isSpeedBoosted)
+            if (heldObject != null && heldObject.CompareTag("Dashable") && Input.GetKeyDown(KeyCode.E) && !_isSpeedBoosted)
             {
-                heldObject.tag = "Untagged";
-                Drop();
                 StartCoroutine(SpeedBoost());
             }
         }
 
         private IEnumerator SpeedBoost()
         {
+            GameObject coffeeDrink = null;
+            GameObject coffee = null;
+
+            if (heldObject == null || !heldObject.CompareTag("Dashable"))
+            {
+                yield break;
+            }
+
+            if (heldObject.CompareTag("Dashable"))
+            {
+                coffeeDrink = heldObject.gameObject;
+            }
+
+            foreach (Transform child in GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == "CoffeeLiquid")
+                {
+                    coffee = child.gameObject;
+                    break;
+                }
+            }
+
             _isSpeedBoosted = true;
             _moveSpeed *= _speedBoostMultiplier;
 
@@ -927,6 +913,18 @@ namespace KinematicCharacterController.Examples
 
             _moveSpeed = _normalMoveSpeed;
             _isSpeedBoosted = false;
+            
+            if (coffee != null)
+            {
+                coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
+            }
+            
+            if (coffeeDrink != null)
+            {
+                coffeeDrink.tag = "Mug";
+            }
+            
+            Drop();
         }
     }
 }
