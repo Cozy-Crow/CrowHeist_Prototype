@@ -12,7 +12,7 @@ namespace KinematicCharacterController.Examples
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class Controller2Point5D : MonoBehaviour
+    public class Controller2Point5DLoganEdits : MonoBehaviour
     {
         [Header("Movement")]
         [SerializeField] private float _moveSpeed = 50f;
@@ -341,7 +341,7 @@ namespace KinematicCharacterController.Examples
                 dashTime += Time.deltaTime;
                 yield return null;
             }
-                
+            
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
