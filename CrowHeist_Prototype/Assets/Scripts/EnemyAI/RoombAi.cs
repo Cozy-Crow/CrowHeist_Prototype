@@ -73,6 +73,7 @@ public class RoombAi : MonoBehaviour
             // Prioritize player if dirty and holding something
             if (playerIsDirty && playerController.heldObject != null)
             {
+                Debug.Log("attack crowley");
                 PlayerPath(player.transform.position);
             }
             else if (allDirtyObjects.Count > 0)
