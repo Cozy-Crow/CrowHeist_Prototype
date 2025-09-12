@@ -5,7 +5,7 @@
 			<value>contraBass</value>
 		</property>
 		<property name="outputFormat">
-			<value>0</value>
+			<value>1</value>
 		</property>
 		<relationship name="folder">
 			<destination>{134a2f6a-c7ae-462c-a850-4e5678244388}</destination>
@@ -61,11 +61,17 @@
 	<object class="MarkerTrack" id="{2dd4903e-7064-46e9-9777-8c4c16bbab5c}" />
 	<object class="MarkerTrack" id="{208c7b01-f1b4-4a76-a596-16ec286b29c6}" />
 	<object class="GroupTrack" id="{0653bf95-8bbd-4c4c-a8af-b0e8b8f64de0}">
+		<relationship name="modules">
+			<destination>{76f68b80-355a-4d11-827c-a82473a5767b}</destination>
+		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{3922a5db-f756-4b95-8d08-aef994248629}</destination>
 		</relationship>
 	</object>
 	<object class="Timeline" id="{7e418156-40af-4d73-b26a-eafcbd2080f6}">
+		<relationship name="modules">
+			<destination>{76f68b80-355a-4d11-827c-a82473a5767b}</destination>
+		</relationship>
 		<relationship name="markers">
 			<destination>{0531ecee-c15c-4f36-a5e6-de96b42032e6}</destination>
 			<destination>{c9969ec4-d4de-49cc-b44e-ba658923d7ef}</destination>
@@ -88,6 +94,14 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{970cbc58-99dc-4b24-80c8-3c80832d42f3}" />
+	<object class="SingleSound" id="{76f68b80-355a-4d11-827c-a82473a5767b}">
+		<property name="length">
+			<value>402.08546485260769</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{a4da8c6a-7f59-4d67-91ac-8d974db4ea30}</destination>
+		</relationship>
+	</object>
 	<object class="EventMixerGroup" id="{3922a5db-f756-4b95-8d08-aef994248629}">
 		<property name="name">
 			<value>Audio 1</value>
