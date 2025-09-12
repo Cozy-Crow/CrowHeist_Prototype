@@ -66,6 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!1 &7162343924344954473
 GameObject:
   m_ObjectHideFlags: 0
@@ -97,8 +98,8 @@ Transform:
   m_GameObject: {fileID: 7162343924344954473}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -59.525215, y: 6.519182, z: -51.544724}
-  m_LocalScale: {x: 3.4931, y: -0.032354, z: 2.7715}
+  m_LocalPosition: {x: -59.525215, y: 6.8207, z: -51.544724}
+  m_LocalScale: {x: 3.4931, y: -0.0033982128, z: 2.7715}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2502151022112743944}
@@ -173,8 +174,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 28.019909, z: 1}
-  m_Center: {x: 0, y: -6.8247814, z: 0}
+  m_Size: {x: 1, y: 47.483368, z: 1}
+  m_Center: {x: 0, y: -16.556528, z: 0}
 --- !u!54 &408166149881714024
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -183,8 +184,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7162343924344954473}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
+  m_Mass: 0.5
+  m_Drag: 5
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
@@ -217,6 +218,7 @@ MonoBehaviour:
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!114 &1098177574187462569
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,7 @@ namespace KinematicCharacterController.Examples
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class Controller2Point5D : MonoBehaviour
+    public class Controller2Point5DLoganEdits : MonoBehaviour
     {
         [Header("Movement")]
         [SerializeField] private float _moveSpeed = 50f;
@@ -297,7 +297,7 @@ namespace KinematicCharacterController.Examples
             
             // Add upward force for jump
             _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange); //changed to impulse from velocitychange
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
             _isJumping = true;
         }
 
@@ -341,7 +341,7 @@ namespace KinematicCharacterController.Examples
                 dashTime += Time.deltaTime;
                 yield return null;
             }
-                
+            
             _isDashing = false;
             yield return new WaitForSeconds(_dashCooldown);
             _canDash = true;
