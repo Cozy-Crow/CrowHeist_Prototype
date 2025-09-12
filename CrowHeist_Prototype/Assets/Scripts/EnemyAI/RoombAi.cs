@@ -17,6 +17,11 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
 
+    // Added for Patrol Mode
+    [SerializeField] private List<Transform> patrolPoints;
+    private int currentPatrolIndex = 0;
+    public bool isActivated = false;
+
     private int currentTargetIndex = 0;
     private bool isDocked = true;
     private GameObject dirtyObject;
@@ -62,29 +67,40 @@ public class RoombAi : MonoBehaviour
     {
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
 
-        // Prioritize player if dirty and holding something
-        if (playerIsDirty && playerController.heldObject != null)
+        // check if Roomba has been activated before movement logic - edited by Mark D. 9/10/25
+        if(isActivated)
         {
-            PlayerPath(player.transform.position);
-        }
-        else if (allDirtyObjects.Count > 0)
-        {
-            anyObjectDirty = true;
-            Transform nearest = allDirtyObjects[0];
-            dirtyItemLocation = nearest.transform.position;
-            ItemPath(dirtyItemLocation);
-        }
-        else
-        {
-            anyObjectDirty = false;
-            StationaryPath();
+            // Prioritize player if dirty and holding something
+            if (playerIsDirty && playerController.heldObject != null)
+            {
+                Debug.Log("attack crowley");
+                PlayerPath(player.transform.position);
+            }
+            else if (allDirtyObjects.Count > 0)
+            {
+                anyObjectDirty = true;
+                Transform nearest = allDirtyObjects[0];
+                dirtyItemLocation = nearest.transform.position;
+                ItemPath(dirtyItemLocation);
+            }
+            else
+            {
+                anyObjectDirty = false;
+                Patrol();
+
+                // StationaryPath();
+            }
         }
     }
 
-    private void StationaryPath()
-    {
-        agent.SetDestination(dock.position);
-    }
+    // Roomba will start docked, and will never return to dock.
+    // So this method is no longer necesary
+
+    // private void StationaryPath()
+    // {
+    //     agent.SetDestination(dock.position);
+    // }
+
 
     private void ItemPath(Vector3 targetPos)
     {
@@ -131,7 +147,9 @@ public class RoombAi : MonoBehaviour
         else
         {
             anyObjectDirty = false;
-            StationaryPath();
+            Patrol();
+
+            //StationaryPath();
         }
     }
 
@@ -188,7 +206,6 @@ public class RoombAi : MonoBehaviour
             knockbackDir.y = 0f; 
             float knockbackForce = 10f;
             playerController.ApplyKnockback(knockbackDir,knockbackForce);
-
         }
     }
 
@@ -204,4 +221,28 @@ public class RoombAi : MonoBehaviour
         ItemTarget,
         PlayerTarget
     }
+
+    // Patrol method added by Mark D. 9/9/25
+    private void Patrol()
+    {
+        Debug.Log("run Patrol method");
+        if (patrolPoints.Count == 0) return;
+
+        Transform target = patrolPoints[currentPatrolIndex];
+        agent.SetDestination(target.position);
+
+        if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
+        {
+            currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
+        }
+    }
+
+    // Activate method added by Mark D. 9/10/25
+    public void Activate()
+    {
+        isActivated = true;
+        Debug.Log("Roomba activated!");
+    }
+
+
 }
