@@ -42,5 +42,4 @@ public class AIEventManager : MonoBehaviour
     {
         OnPlayerDirty.Invoke(playerPos);
     }
-
 }
