@@ -142,7 +142,7 @@ public class MusicManager : MonoBehaviour
     {
         try
         {
-            Debug.Log("Setting " + parameter + "to " + value);
+            Debug.Log("Setting " + parameter + " to " + value);
             Instance.CurrentMusicInstance.setParameterByName(parameter, value);
             Debug.Log(Instance.CurrentMusicInstance.getParameterByName(parameter, out float paraValue));
         }
