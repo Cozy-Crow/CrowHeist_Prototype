@@ -22,6 +22,9 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
         [SerializeField] private float _groundCheckDistance = 0.15f;
         [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
+
+        //Sprite
+        [SerializeField] GameObject playerSprite;
         
         // Soda Variables
         private bool _isSpeedBoosted = false;
@@ -158,7 +161,6 @@ namespace KinematicCharacterController.Examples
             HandleDash();
             HandleAnimation();
             HandlePickUP();
-            HandleRotation();
             HandleWindUp();
             HandleBounce();
         }
@@ -170,6 +172,8 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
+            HandleRotation();
+
         }
 
         private void CheckGrounded()
@@ -221,7 +225,7 @@ namespace KinematicCharacterController.Examples
         private void HandleInput()
         {
             _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-            
+
             // Jump input
             if (_isGrounded && Input.GetButtonDown("Jump") && _canJump)
             {
@@ -239,10 +243,10 @@ namespace KinematicCharacterController.Examples
 
             Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
             _moveVelocity = moveDirection * _moveSpeed;
-            
+
             // Apply horizontal movement while preserving vertical velocity
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
-            
+
             // Use MovePosition for smoother movement with physics
             Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
             _rb.MovePosition(newPosition);
@@ -850,14 +854,61 @@ namespace KinematicCharacterController.Examples
 
         private void Flip(bool doFlip)
         {
-            if (doFlip)
+            //input:
+            // 1 - right away from camera
+            // -1 - left and towards camera
+
+            //slightly edited rotation system so crowley better faces which direction he's moving
+            //Rotate Sprite (1) vs rotate Player RB (2)
+
+            //left rotations
+            if (_input.x >= 0 && _input.x <= 1 && _input.y == 0) // right
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5));
             }
-            else
+            else if (_input.x >= 0 && _input.x <= 1 && _input.y >= 0 && _input.y <= 1) //back right
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * 5));
             }
+            else if (_input.x >= 0 && _input.x <= 1 && _input.y <= 0 && _input.y >= -1) //front right
+            {
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * 5));
+            }
+            //left rotations
+            else if (_input.x >= -1 && _input.x <= 0 && _input.y == 0) //left
+            {
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5));
+            }
+            else if (_input.x >= -1 && _input.x <= 0 && _input.y >= 0 && _input.y <= 1) //back left
+            {
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * 5));
+            }
+            else if (_input.x >= -1 && _input.x <= 0 && _input.y <= 0 && _input.y >= -1) //front left
+            {
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * 5);
+
+                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * 5));
+            }
+            
+            // old rotation 
+            // if (doFlip)
+            //     {
+            //         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
+            //     }
+            //     else
+            //     {
+            //         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
+            //     }
         }
 
         void OnDrawGizmos()
