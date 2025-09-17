@@ -857,10 +857,8 @@ namespace KinematicCharacterController.Examples
             //input:
             // 1 - right away from camera
             // -1 - left and towards camera
-
             //slightly edited rotation system so crowley better faces which direction he's moving
             //Rotate Sprite (1) vs rotate Player RB (2)
-
             //left rotations
             if (_input.x >= 0 && _input.x <= 1 && _input.y == 0) // right
             {
