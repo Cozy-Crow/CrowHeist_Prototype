@@ -84,7 +84,7 @@ public class PixieDust : MonoBehaviour, IPickupable
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.LeftShift) && playerController != null)
+            if (Input.GetKeyDown(KeyCode.E) && playerController != null)
             {
                 Debug.Log("Using Enhanced Pixie Dust!");
                 Use();
