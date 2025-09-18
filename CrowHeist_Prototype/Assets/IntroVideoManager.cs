@@ -5,11 +5,16 @@ using UnityEngine.SceneManagement;
 public class IntroVideoManager : MonoBehaviour
 {
     [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private AudioSource audioSource;
     [SerializeField] private string gameSceneName = "GameScene";
     [SerializeField] private bool skipOnInput = true;
     
     void Start()
     {
+        // Configure video player to have audio source
+        videoPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        videoPlayer.SetTargetAudioSource(0, audioSource);
+
         // Set up video player
         videoPlayer.loopPointReached += OnVideoFinished;
         
