@@ -53,25 +53,23 @@ public class SpawnItem : MonoBehaviour
     }
 
     public void Spawn()
-    {
-        if (spawnItems.Count <= 0) return;
+{
+    if (spawnItems.Count <= 0) return;
 
-        //Transform freePoint = null;
-        foreach (Transform point in spawnPoints)
+    foreach (Transform point in spawnPoints)
+    {
+        // Only spawn if the point is free AND we haven't hit max count
+        if ((!activeSpawns.ContainsKey(point) || activeSpawns[point] == null) && currentSpawnCount < maxSpawnCount)
         {
-            if (!activeSpawns.ContainsKey(point) || activeSpawns[point] == null)
-            {
-                if (currentSpawnCount >= maxSpawnCount) return;
-            }
             Vector3 position = point.position;
             Quaternion rotation = point.rotation; 
             GameObject spawned = Instantiate(spawnItems[0], position, rotation);
             activeSpawns[point] = spawned;
             currentSpawnCount++;
-
         }
-        
     }
+}
+
 
     public void SpawnAtPoint(Transform point)
     {

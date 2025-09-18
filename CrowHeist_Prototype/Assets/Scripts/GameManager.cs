@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,14 +14,17 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<string, CinemachineVirtualCamera> _cameraDictionary = new Dictionary<string, CinemachineVirtualCamera>();
     private static int _score = 0;
-    public static int Score { get => _score;   set => _score = value; }
+    public static int Score { get => _score; set => _score = value; }
+    [SerializeField] private string endCutsceneScene = "EndCutsceneScene";
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-        }else
+            ResetGameData();
+        }
+        else
         {
             Destroy(gameObject);
         }
@@ -49,7 +53,31 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    public void TriggerGameEnd()
+    {
+
+        SceneManager.LoadScene(endCutsceneScene);
+
+    }
+
+    private void Update()
+    {
+        if (_score >= 5)
+        {
+            TriggerGameEnd();
+        }
+    }
+    public static void ResetGameData()
+    {
+        _score = 0;
+        _cameraDictionary.Clear();
+    }
+
+
+
 }
+
+
 
 [System.Serializable]
 public class CameraObject

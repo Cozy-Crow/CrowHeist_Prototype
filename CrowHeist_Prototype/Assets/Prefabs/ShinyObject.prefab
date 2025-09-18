@@ -104,7 +104,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -124,6 +124,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinValue: 1
   _rotateSpeed: 25
+  CubeCollectedSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!54 &5354364256869844381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -166,6 +173,7 @@ MonoBehaviour:
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!114 &3966910754532871489
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -173,7 +181,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3078150366677145011}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
   m_Name: 
@@ -250,3 +258,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
