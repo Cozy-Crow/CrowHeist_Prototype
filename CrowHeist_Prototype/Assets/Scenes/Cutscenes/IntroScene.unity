@@ -133,6 +133,7 @@ GameObject:
   - component: {fileID: 925730702}
   - component: {fileID: 925730703}
   - component: {fileID: 925730704}
+  - component: {fileID: 925730705}
   m_Layer: 0
   m_Name: Video
   m_TagString: Untagged
@@ -207,6 +208,37 @@ MonoBehaviour:
   audioSource: {fileID: 0}
   gameSceneName: TinkerfestScene
   skipOnInput: 1
+--- !u!114 &925730705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 925730701}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 803841619
+      Data2: 1235725185
+      Data3: -1304383559
+      Data4: -168236936
+    Path: event:/Music/CutsceneAudioTinkerfest/abuelaLevelStartCutscene
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1946749419
 GameObject:
   m_ObjectHideFlags: 0
