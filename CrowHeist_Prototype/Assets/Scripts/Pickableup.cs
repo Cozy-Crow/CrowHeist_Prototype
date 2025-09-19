@@ -37,15 +37,16 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
+        //MusicManager.SetParameterByName("ItemYes", 1);
 
-        if(this.tag == "Knife")
+        if (this.tag == "Knife")
         {
             transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
         }
         // Adjust rotation to lay flat and face forward
         else
         {
-            transform.localRotation = Quaternion.Euler(0f,0f,0f);
+            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
         _rigidbody.isKinematic = true;
@@ -68,11 +69,13 @@ public class Pickable : MonoBehaviour, IPickupable
         transform.position = position;
         _rigidbody.isKinematic = false;
         pickedUp = false;
+        MusicManager.SetParameterByName("ItemYes", 0);
     }
 
     public void Use()
     {
         Debug.Log("Using " + gameObject.name);
+        //MusicManager.SetParameterByName("ItemYes", 0);
     }
 
     void OnObjectDirty()

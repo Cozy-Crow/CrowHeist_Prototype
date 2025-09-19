@@ -26,6 +26,11 @@ public class Coins : MonoBehaviour
             //SoundManager.instance.PlaySFXByClip(_coinSound);
             //SoundManager.instance.PlaySFX();
             AudioManager.Instance.PlayOneShot(CubeCollectedSound);
+            float currentValue;
+            MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out currentValue);
+            float newValue = currentValue += 1;
+            MusicManager.SetParameterByName("TrinketsCollected", + newValue);
+            MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out float value1);
             Destroy(gameObject);
         }
     }

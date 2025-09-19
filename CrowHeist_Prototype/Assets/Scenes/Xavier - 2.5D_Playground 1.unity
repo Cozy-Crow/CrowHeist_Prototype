@@ -4257,6 +4257,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   dock: {fileID: 1300790624}
+  patrolPoints: []
+  isActivated: 0
   player: {fileID: 0}
 --- !u!1 &536928176
 GameObject:
@@ -5646,6 +5648,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!1 &788158380
 GameObject:
   m_ObjectHideFlags: 0
@@ -5691,6 +5694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!65 &788158383
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6173,6 +6177,7 @@ MonoBehaviour:
     _camera: {fileID: 254669746}
   - _name: Exit
     _camera: {fileID: 1060763413}
+  endCutsceneScene: EndCutsceneScene
 --- !u!1 &858428356
 GameObject:
   m_ObjectHideFlags: 0
@@ -6620,6 +6625,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!1 &942403426
 GameObject:
   m_ObjectHideFlags: 0
@@ -7738,6 +7744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f8c86ba7be1d9347b4c7ad8866bf840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!850595691 &1120297750
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -8530,6 +8537,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!114 &1267788716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9176,6 +9184,7 @@ MonoBehaviour:
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!54 &1466896845
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -9815,6 +9824,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ec964f85360698478bf81dc4de65433, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!1 &1553263409
 GameObject:
   m_ObjectHideFlags: 0
@@ -10981,6 +10991,7 @@ MonoBehaviour:
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
+  mySpawner: {fileID: 0}
 --- !u!54 &1662772860
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11293,6 +11304,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 055376e23f88b1149b14b662581bec7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
   _sfx:
   - {fileID: 11400000, guid: f417d8acd9bcda44db3df05c1d2366c1, type: 2}
   - {fileID: 11400000, guid: 0dc9c1bacbac9804e939e8f9c668383c, type: 2}
@@ -12249,6 +12261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f8c86ba7be1d9347b4c7ad8866bf840, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
 --- !u!1 &1912054928
 GameObject:
   m_ObjectHideFlags: 0
@@ -12933,6 +12946,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinValue: 1
   _rotateSpeed: 1
+  CubeCollectedSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!4 &1997090842 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8000491189340789022, guid: 7befce1172bb6c942ac21f1ed9b014aa, type: 3}
@@ -14395,7 +14415,7 @@ MonoBehaviour:
       Data2: 1338355012
       Data3: 1227322515
       Data4: 1079479445
-    Path: event:/Crow
+    Path: event:/SFX/Crow
 --- !u!114 &6505057340831361190
 MonoBehaviour:
   m_ObjectHideFlags: 0

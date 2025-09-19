@@ -3584,6 +3584,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   dock: {fileID: 1021668750}
+  patrolPoints: []
+  isActivated: 0
   player: {fileID: 0}
 --- !u!114 &609317916
 MonoBehaviour:
@@ -4439,6 +4441,7 @@ MonoBehaviour:
     _camera: {fileID: 834801971}
   - _name: Exit
     _camera: {fileID: 44027445}
+  endCutsceneScene: EndCutsceneScene
 --- !u!1001 &748273855
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4883,13 +4886,6 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  Music:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
 --- !u!1001 &784139460
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5132,7 +5128,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5269614778711817667, guid: 331f5f4eb835a5249ad63f9c71b85fc9, type: 3}
       propertyPath: CubeCollectedSound.Path
-      value: event:/Test
+      value: event:/SFX/Test
       objectReference: {fileID: 0}
     - target: {fileID: -5269614778711817667, guid: 331f5f4eb835a5249ad63f9c71b85fc9, type: 3}
       propertyPath: CubeCollectedSound.Guid.Data1
@@ -5808,7 +5804,7 @@ MonoBehaviour:
       Data2: 1142408379
       Data3: 29881249
       Data4: 859620508
-    Path: event:/LoopingTest
+    Path: event:/SFX/LoopingTest
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -6772,7 +6768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Path
-      value: event:/Test 2
+      value: event:/SFX/Test 2
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data1
@@ -10222,7 +10218,7 @@ MonoBehaviour:
       Data2: 1338355012
       Data3: 1227322515
       Data4: 1079479445
-    Path: event:/Crow
+    Path: event:/SFX/Crow
 --- !u!114 &1652768100
 MonoBehaviour:
   m_ObjectHideFlags: 0
