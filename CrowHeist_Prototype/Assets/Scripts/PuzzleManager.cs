@@ -43,12 +43,10 @@ public class PuzzleManager : MonoBehaviour
 
     void OnPuzzleComplete()
     {
-        Transform coinSpawnpoint = smallDisc.GetComponent<Transform>();
-        coinSpawnpoint.position = new Vector3(coinSpawnpoint.position.x, coinSpawnpoint.position.y+10, coinSpawnpoint.position.z);
-        
-        Debug.Log("Spawn Called");
-        Instantiate(coin, coinSpawnpoint);
-        
+        Vector3 spawnPosition = smallDisc.transform.position + new Vector3(0, 1, 0);
 
+        Debug.Log("Spawn Called");
+
+        Instantiate(coin, spawnPosition, Quaternion.identity);
     }
 }
