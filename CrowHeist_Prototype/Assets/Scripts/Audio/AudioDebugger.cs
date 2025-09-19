@@ -10,7 +10,7 @@ public class AudioDebugger : MonoBehaviour
         //Audio Changer
         if (Input.GetKeyDown(KeyCode.F8) && Input.GetKey(KeyCode.LeftShift))
         {
-        float currentValue;
+            float currentValue;
             MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out currentValue);
             float newValue = currentValue += 1;
             MusicManager.SetParameterByName("TrinketsCollected", + newValue);

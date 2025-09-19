@@ -4490,6 +4490,57 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.6454809, y: 0.83568704, z: 2.4570808}
   m_Center: {x: -2.0186303, y: -0.0821565, z: 0.5202403}
+--- !u!1 &692427679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 692427680}
+  - component: {fileID: 692427681}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &692427680
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692427679}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2126432885}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &692427681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 692427679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ad406c131723f443b60ceeead701512, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Ambience:
+    Guid:
+      Data1: 1440588435
+      Data2: 1142408379
+      Data3: 29881249
+      Data4: 859620508
+    Path: event:/SFX/LoopingTest
 --- !u!1001 &707885294
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5291,6 +5342,58 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+--- !u!1 &744300951
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 744300952}
+  - component: {fileID: 744300953}
+  m_Layer: 0
+  m_Name: SoundtrackSetter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &744300952
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744300951}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2126432885}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &744300953
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 744300951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94a05d811005637448e752b5e3ffd536, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _musicReference:
+    Guid:
+      Data1: -1003063325
+      Data2: 1243931125
+      Data3: 1616946107
+      Data4: -1139620065
+    Path: event:/Music/abuelitaLevel
+  _musicName: 
 --- !u!1001 &746684963
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15340,7 +15443,7 @@ MonoBehaviour:
       Data2: 1338355012
       Data3: 1227322515
       Data4: 1079479445
-    Path: event:/Crow
+    Path: event:/SFX/Crow
 --- !u!114 &2074509602
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16688,6 +16791,39 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 61817540364832675, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
   m_PrefabInstance: {fileID: 2123280433}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2126432884
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2126432885}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2126432885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126432884}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.5554497, y: 0.43757945, z: 0.43757933, w: 0.5554496}
+  m_LocalPosition: {x: -25.82, y: 12.64, z: 12.54}
+  m_LocalScale: {x: 100.00003, y: 100.00005, z: 100.00006}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 744300952}
+  - {fileID: 692427680}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2145954200
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16885,4 +17021,5 @@ SceneRoots:
   - {fileID: 732695873}
   - {fileID: 1037302747}
   - {fileID: 1670304150}
+  - {fileID: 2126432885}
   - {fileID: 950109168}

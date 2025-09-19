@@ -15,10 +15,15 @@ public class MusicManager : MonoBehaviour
     #region Serialized Fields
     public static MusicManager Instance;
     [SerializeField] private string currentMusicName;
-    [SerializeField] private EventReference
+    [SerializeField]
+    private EventReference
     menuTheme,
     crowleyTheme,
-    abuelitaLevel;
+    abuelitaLevel,
+
+    abuelitaIntro,
+    abuelitaOutro;
+
 
     [SerializeField] private bool canSetParameter = false;
 

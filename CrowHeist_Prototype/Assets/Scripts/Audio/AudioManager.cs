@@ -65,7 +65,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //Stops and releases all created instances
-    private void CleanUp()
+    public void CleanUp()
     {
         foreach (EventInstance instance in eventInstances)
         {

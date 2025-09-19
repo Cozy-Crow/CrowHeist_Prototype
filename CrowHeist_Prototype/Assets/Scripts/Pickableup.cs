@@ -37,7 +37,7 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
-        MusicManager.SetParameterByName("ItemYes", 1);
+        //MusicManager.SetParameterByName("ItemYes", 1);
 
         if (this.tag == "Knife")
         {
@@ -75,7 +75,7 @@ public class Pickable : MonoBehaviour, IPickupable
     public void Use()
     {
         Debug.Log("Using " + gameObject.name);
-        MusicManager.SetParameterByName("ItemYes", 0);
+        //MusicManager.SetParameterByName("ItemYes", 0);
     }
 
     void OnObjectDirty()
