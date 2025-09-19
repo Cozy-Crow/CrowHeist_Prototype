@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class BubbleBehavior : MonoBehaviour
 {
@@ -44,7 +46,17 @@ public class BubbleBehavior : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             exceededWeight = true;
-            Debug.Log("Player touched bubble - start falling");
+            Debug.Log("Player touched bubble: start falling");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        Debug.Log("Trigger Left");
+        if (other.CompareTag("Player"))
+        {
+            exceededWeight = false;
+            Debug.Log("Player left bubble: start rising");
         }
     }
 }
