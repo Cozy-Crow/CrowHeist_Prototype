@@ -28,12 +28,19 @@ public class PixieDust : MonoBehaviour, IPickupable
     [SerializeField] private int maxFloorDustParticles = 50;
     [SerializeField] private float floorDustLifetime = 60f;
 
+    [Header("Usage Settings")]
+    [SerializeField] private float pickupCooldown = 0.5f; // Delay before item can be used after pickup
+
     private GameObject item;
     private bool isUsed = false;
     private KinematicCharacterController.Examples.Controller2Point5D playerController;
     private Renderer playerRenderer;
     private Material[] originalMaterials;
     private Animator playerAnimator;
+
+    // Track when the item was picked up to prevent immediate use
+    private float pickupTime = -1f;
+    private bool wasPickedUp = false;
 
     // Static list to track floor dust particles across all pixie dust instances
     private static System.Collections.Generic.List<GameObject> floorDustInstances =
@@ -84,7 +91,10 @@ public class PixieDust : MonoBehaviour, IPickupable
                 }
             }
 
-            if (Input.GetKeyDown(KeyCode.E) && playerController != null)
+            // Check if enough time has passed since pickup before allowing use
+            bool canUse = !wasPickedUp || (Time.time - pickupTime >= pickupCooldown);
+
+            if (Input.GetKeyDown(KeyCode.E) && playerController != null && canUse)
             {
                 Debug.Log("Using Enhanced Pixie Dust!");
                 Use();
@@ -122,6 +132,10 @@ public class PixieDust : MonoBehaviour, IPickupable
         {
             col.enabled = false;
         }
+
+        // Track pickup time to prevent immediate use
+        pickupTime = Time.time;
+        wasPickedUp = true;
     }
 
     public void Drop(Vector3 position)
@@ -143,6 +157,10 @@ public class PixieDust : MonoBehaviour, IPickupable
         {
             col.enabled = true;
         }
+
+        // Reset pickup tracking when dropped
+        wasPickedUp = false;
+        pickupTime = -1f;
     }
 
     public void Use()
