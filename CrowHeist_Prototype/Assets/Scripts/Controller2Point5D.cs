@@ -690,6 +690,12 @@ namespace KinematicCharacterController.Examples
             // Charged Throwing
             if (heldObject != null)
             {
+                Collider heldCollider = heldObject.GetComponent<Collider>();
+                if (heldCollider != null)
+                {
+                    heldCollider.enabled = true;
+                }
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     isCharging = true;

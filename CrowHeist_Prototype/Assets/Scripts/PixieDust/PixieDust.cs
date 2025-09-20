@@ -107,6 +107,7 @@ public class PixieDust : MonoBehaviour, IPickupable
                 Use();
             }
         }
+        
     }
 
     private void InitializeAudio()
@@ -194,6 +195,7 @@ public class PixieDust : MonoBehaviour, IPickupable
 
         // Destroy the pixie dust item
         //Destroy(gameObject, 0.1f);
+        
     }
 
     private void PlayUseExplosionEffect()
