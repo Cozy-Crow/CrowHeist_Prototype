@@ -190,10 +190,10 @@ public class PixieDust : MonoBehaviour, IPickupable
         CreateFloorDust();
         
         //Update Crowley
-        playerController.Drop();
+        //playerController.Drop();
 
         // Destroy the pixie dust item
-        Destroy(gameObject, 0.1f);
+        //Destroy(gameObject, 0.1f);
     }
 
     private void PlayUseExplosionEffect()

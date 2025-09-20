@@ -637,9 +637,6 @@ namespace KinematicCharacterController.Examples
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
 
-
-                    
-
                     Interactable selected = nearbyInteractables[currentTargetIndex];
                     if (selected != null && selected.realObject != null)
                     {
@@ -778,7 +775,6 @@ namespace KinematicCharacterController.Examples
                 pickUp.Drop(_dropPoint.position);
             }
             
-
             _pickUpsList.Clear();
             heldObject = null;
         }
