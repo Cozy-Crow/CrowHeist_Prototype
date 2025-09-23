@@ -498,7 +498,14 @@ namespace KinematicCharacterController.Examples
             {
                 if (!nearbyInteractables.Contains(interactable))
                 {
+                    Debug.Log("Added Interactable: " + interactable.gameObject.name);
                     nearbyInteractables.Add(interactable);
+                    Debug.Log("Interactables: ");
+                    foreach (Interactable item in nearbyInteractables)
+                    {
+                        Debug.Log(item.gameObject.name + "\n");
+                    }
+
                     UpdateHighlightedInteractable();
                 }
             }
@@ -546,7 +553,14 @@ namespace KinematicCharacterController.Examples
             {
                 if (nearbyInteractables.Contains(interactable))
                 {
+                    Debug.Log("Removed " + interactable.gameObject.name);
                     nearbyInteractables.Remove(interactable);
+                    Debug.Log("Interactables: ");
+                    foreach (Interactable item in nearbyInteractables)
+                    {
+                        Debug.Log(item.gameObject.name + "\n");
+                    }
+
                     UpdateHighlightedInteractable();
                 }
             }
@@ -586,12 +600,17 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
+
                 AIEventManager.instance.e_pickup.Invoke();
                 
                 if (_pickUpsList.Count > 0) return;
 
+                Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
+                
+
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
+
                     Interactable selected = nearbyInteractables[currentTargetIndex];
                     if (selected != null && selected.realObject != null)
                     {
@@ -599,6 +618,11 @@ namespace KinematicCharacterController.Examples
                         {
                             pickUp.PickUP(_pickUpPoint);
                             _pickUpsList.Add(pickUp);
+                            nearbyInteractables.Remove(selected);
+                            foreach (var interactable in nearbyInteractables)
+                            {   
+                                Debug.Log("Item: " + interactable.transform.name);
+                            }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                         }
                     }
@@ -640,6 +664,12 @@ namespace KinematicCharacterController.Examples
             // Charged Throwing
             if (heldObject != null)
             {
+                Collider heldCollider = heldObject.GetComponent<Collider>();
+                if (heldCollider != null)
+                {
+                    heldCollider.enabled = true;
+                }
+
                 if (Input.GetMouseButtonDown(0))
                 {
                     isCharging = true;
@@ -719,10 +749,12 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
+            
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(_dropPoint.position);
             }
+            
             _pickUpsList.Clear();
             heldObject = null;
         }

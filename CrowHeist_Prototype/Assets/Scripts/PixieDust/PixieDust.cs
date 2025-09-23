@@ -1,6 +1,7 @@
 using System.Collections;
 using UnityEngine;
 using FMODUnity;
+using KinematicCharacterController.Examples;
 
 public class PixieDust : MonoBehaviour, IPickupable
 {
@@ -33,7 +34,9 @@ public class PixieDust : MonoBehaviour, IPickupable
 
     private GameObject item;
     private bool isUsed = false;
-    private KinematicCharacterController.Examples.Controller2Point5D playerController;
+    private GameObject player;
+    private Controller2Point5D playerController;
+    //private KinematicCharacterController.Examples.Controller2Point5D playerController;
     private Renderer playerRenderer;
     private Material[] originalMaterials;
     private Animator playerAnimator;
@@ -66,6 +69,10 @@ public class PixieDust : MonoBehaviour, IPickupable
             spawnPoint.transform.localPosition = Vector3.zero;
             particleSpawnPoint = spawnPoint.transform;
         }
+        
+        
+        player = GameObject.FindWithTag("Player");
+        playerController = player.GetComponent<Controller2Point5D>();
 
         // Initialize audio instances
         InitializeAudio();
@@ -100,6 +107,7 @@ public class PixieDust : MonoBehaviour, IPickupable
                 Use();
             }
         }
+        
     }
 
     private void InitializeAudio()
@@ -181,9 +189,13 @@ public class PixieDust : MonoBehaviour, IPickupable
 
         // Create floor dust
         CreateFloorDust();
+        
+        //Update Crowley
+        //playerController.Drop();
 
         // Destroy the pixie dust item
-        Destroy(gameObject, 0.1f);
+        //Destroy(gameObject, 0.1f);
+        
     }
 
     private void PlayUseExplosionEffect()
