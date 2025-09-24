@@ -46,7 +46,7 @@ public class SoundtrackSetter : MonoBehaviour
     }
 }
 
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
 public class MusicPlayerEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -63,3 +63,4 @@ public class MusicPlayerEditor : Editor
     }
 }
 #endif
+*/
