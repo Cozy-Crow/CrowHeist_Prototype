@@ -42,17 +42,20 @@ public class Pickable : MonoBehaviour, IPickupable
         if (this.tag == "Knife")
         {
             transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
+            Debug.Log("Knife Picked up");
         }
         // Adjust rotation to lay flat and face forward
         else
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            Debug.Log("Non-Knife Picked up");
         }
+
 
         _rigidbody.isKinematic = true;
         pickedUp = true;
 
-        if(player != null)
+        if (player != null)
         {
             Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
             if (_isDirty)
@@ -62,6 +65,8 @@ public class Pickable : MonoBehaviour, IPickupable
                 Debug.Log("Player is dirty");
             }
         }
+
+
     }
     public void Drop(Vector3 position)
     {
