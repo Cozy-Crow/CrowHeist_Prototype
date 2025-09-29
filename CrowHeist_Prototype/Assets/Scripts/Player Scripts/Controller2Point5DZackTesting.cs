@@ -12,7 +12,7 @@ namespace KinematicCharacterController.Examples
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class Controller2Point5D : MonoBehaviour
+    public class Controller2Point5DZackTesting : MonoBehaviour
     {
         [Header("Movement")]
         [SerializeField] private float _moveSpeed = 50f;
@@ -179,48 +179,49 @@ namespace KinematicCharacterController.Examples
         private void CheckGrounded()
         {
             _wasGroundedLastFrame = _isGrounded;
-            
+
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
             float radius = _capsuleCollider.radius * 0.9f;
-            
+
             // Start the cast from just below the center
             Vector3 castOrigin = origin;
-            
+
             RaycastHit hit;
             // Cast distance should reach just below the feet
             float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
-            
+
             // Main ground check using a raycast for more precision
             _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
 
             // Additional check with spherecast for better edge detection
-            //------this block of code is responsible for phasing through colliders)
-            if (!_isGrounded)
-            {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
-            }
+            //  ------this block of code is responsible for phasing through colliders------
+            // if (!_isGrounded)
+            // {
+            //     _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
+            // }
             
-            if (_isGrounded && hit.collider != null)
-            {
-                _currentGroundObject = hit.collider.gameObject;
-                
-                // Keep player at proper height above ground
-                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
-                float currentHeight = transform.position.y;
-                
-                // Only apply correction if significantly below target height (actually sinking)
-                if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-                {
-                    // Use position-based correction with physics
-                    Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-                    _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-                }
-            }
-            else
-            {
-                _currentGroundObject = null;
-            }
+
+            // if (_isGrounded && hit.collider != null)
+            // {
+            //     _currentGroundObject = hit.collider.gameObject;
+
+            //     // Keep player at proper height above ground
+            //     float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
+            //     float currentHeight = transform.position.y;
+
+            //     // Only apply correction if significantly below target height (actually sinking)
+            //     if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+            //     {
+            //         // Use position-based correction with physics
+            //         Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+            //         _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+            //     }
+            // }
+            // else
+            // {
+            //     _currentGroundObject = null;
+            // }
         }
 
         private void HandleInput()
@@ -251,7 +252,7 @@ namespace KinematicCharacterController.Examples
             // Use MovePosition for smoother movement with physics
             Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
             _rb.MovePosition(newPosition);
-            
+            // _rb.AddForce(_moveVelocity, ForceMode.Acceleration);
 
         }
 
