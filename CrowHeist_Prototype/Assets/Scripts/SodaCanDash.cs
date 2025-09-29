@@ -6,6 +6,8 @@ namespace KinematicCharacterController.Examples
 {
     public class SodaCanDash : MonoBehaviour
     {
+        [SerializeField] private float dashCooldown = 1f;
+        private float lastDashTime = -1f;
 
         private Controller2Point5D controller;
 
@@ -17,15 +19,20 @@ namespace KinematicCharacterController.Examples
 
         public void HandleDash()
         {
-            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && controller._canDash)
+            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && CanDash())
             {
                 StartCoroutine(Dash());
             }
         }
 
+        private bool CanDash()
+        {
+            return Time.time >= lastDashTime + controller._dashCooldown;
+        }
+
         private IEnumerator Dash()
         {
-            controller._canDash = false;
+            lastDashTime = Time.time;
             controller._isDashing = true;
 
             float dashDirection;
@@ -51,8 +58,6 @@ namespace KinematicCharacterController.Examples
             }
 
             controller._isDashing = false;
-            yield return new WaitForSeconds(controller._dashCooldown);
-            controller._canDash = true;
         }
     }
 }
