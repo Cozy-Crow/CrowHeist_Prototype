@@ -12,8 +12,8 @@ public class SpawnItem : MonoBehaviour
     public Transform spawnPoint;
 
     [SerializeField] private int maxSpawnCount = 1;
-    private int currentSpawnCount = 0;
     private int currentSpawnPoint = 0;
+    private int itemCount = 0;
 
     private void Start()
     {
@@ -22,21 +22,32 @@ public class SpawnItem : MonoBehaviour
         {
             itemEventManager.e_spawnObj.AddListener(Spawn);
         }
-        if(this.CompareTag("Cupboard"))
+        if (this.CompareTag("Cupboard"))
         {
             Spawn();
         }
     }
+
+    private void Update()
+    {
+        if (spawnItems.Count > 0)
+        {
+            string targetTag = spawnItems[0].tag;
+            itemCount = GameObject.FindGameObjectsWithTag(targetTag).Length;
+        }
+        
+        
+    }
+
     
     public void NotifyIfRemoved(GameObject item)
     {
-        foreach(var pair in activeSpawns)
+        foreach (var pair in activeSpawns)
         {
             if (pair.Value == item)
             {
                 activeSpawns[pair.Key] = null;
-                currentSpawnCount--;
-                if(currentSpawnCount < maxSpawnCount)
+                if (itemCount < maxSpawnCount)
                 {
                     StartCoroutine(SpawnAfterDelay(pair.Key));
                 }
@@ -59,13 +70,12 @@ public class SpawnItem : MonoBehaviour
     foreach (Transform point in spawnPoints)
     {
         // Only spawn if the point is free AND we haven't hit max count
-        if ((!activeSpawns.ContainsKey(point) || activeSpawns[point] == null) && currentSpawnCount < maxSpawnCount)
+        if ((!activeSpawns.ContainsKey(point) || activeSpawns[point] == null) && itemCount < maxSpawnCount)
         {
             Vector3 position = point.position;
             Quaternion rotation = point.rotation; 
             GameObject spawned = Instantiate(spawnItems[0], position, rotation);
             activeSpawns[point] = spawned;
-            currentSpawnCount++;
         }
     }
 }
@@ -73,17 +83,16 @@ public class SpawnItem : MonoBehaviour
 
     public void SpawnAtPoint(Transform point)
     {
-        if (spawnItems.Count <= 0 || currentSpawnCount >= maxSpawnCount)
+        if (spawnItems.Count <= 0 || itemCount >= maxSpawnCount)
         {
-            if(activeSpawns.ContainsKey(point) && activeSpawns[point] != null)
+            if (activeSpawns.ContainsKey(point) && activeSpawns[point] != null)
             {
                 return;
             }
         }
         Vector3 position = point.position;
-        Quaternion rotation = point.rotation; 
+        Quaternion rotation = point.rotation;
         GameObject spawned = Instantiate(spawnItems[0], position, rotation);
         activeSpawns[point] = spawned;
-        currentSpawnCount++;
     }
 }

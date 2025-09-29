@@ -19,7 +19,11 @@ namespace KinematicCharacterController.Examples
 
         public void HandleDash()
         {
-            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && CanDash())
+            if (controller == null)
+            {
+                return;
+            }
+            else if ((controller.heldObject == this.GetComponent<Rigidbody>()) && Input.GetKeyDown(KeyCode.E) && CanDash())
             {
                 StartCoroutine(Dash());
             }
