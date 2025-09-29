@@ -102,7 +102,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levitationDuration: 5
-  levitationForce: 90
+  levitationForce: 10
+  levitationRampUpTime: 1
+  maxUpwardVelocity: 6
+  useAntiGravity: 0
   useExplosionParticles: {fileID: 0}
   levitatingTrailParticles: {fileID: 0}
   floorDustPrefab: {fileID: 0}
@@ -131,8 +134,11 @@ MonoBehaviour:
   pixieDustMaterial: {fileID: 2100000, guid: 8e7a8b2556da26a4aaeb271598a72203, type: 2}
   shaderEffectDuration: 1
   levitationAnimation: {fileID: 0}
+  usedItemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  usedItemMaterial: {fileID: 2100000, guid: fa7583f4941f3ec4695e3315f9ab341c, type: 2}
   maxFloorDustParticles: 50
   floorDustLifetime: 60
+  pickupCooldown: 0.5
 --- !u!54 &2093602837174568616
 Rigidbody:
   m_ObjectHideFlags: 0
