@@ -647,15 +647,9 @@ namespace Unity.VisualScripting.Generated.Aot
 	// MusicManager.op_Implicit
 	// MusicManager.op_Equality
 	// MusicManager.op_Inequality
-	// MusicMangerEditor.op_Implicit
-	// MusicMangerEditor.op_Equality
-	// MusicMangerEditor.op_Inequality
 	// SoundtrackSetter.op_Implicit
 	// SoundtrackSetter.op_Equality
 	// SoundtrackSetter.op_Inequality
-	// MusicPlayerEditor.op_Implicit
-	// MusicPlayerEditor.op_Equality
-	// MusicPlayerEditor.op_Inequality
 	// Bomb.op_Implicit
 	// Bomb.op_Equality
 	// Bomb.op_Inequality
@@ -8855,41 +8849,6 @@ namespace Unity.VisualScripting.Generated.Aot
 			optimized.Invoke(default(object[]));
 		}
 		
-		// MusicMangerEditor.op_Implicit
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicMangerEditor_op_Implicit()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			bool conversion = ((bool)(arg0));
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0);
-			optimized.Invoke(default(object[]));
-		}
-		
-		// MusicMangerEditor.op_Equality
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicMangerEditor_op_Equality()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
-			bool @operator = (arg0 == arg1);
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0, arg1);
-			optimized.Invoke(default(object[]));
-		}
-		
-		// MusicMangerEditor.op_Inequality
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicMangerEditor_op_Inequality()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
-			bool @operator = (arg0 != arg1);
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0, arg1);
-			optimized.Invoke(default(object[]));
-		}
-		
 		// SoundtrackSetter.op_Implicit
 		[global::UnityEngine.Scripting.PreserveAttribute()]
 		public static void SoundtrackSetter_op_Implicit()
@@ -8916,41 +8875,6 @@ namespace Unity.VisualScripting.Generated.Aot
 		// SoundtrackSetter.op_Inequality
 		[global::UnityEngine.Scripting.PreserveAttribute()]
 		public static void SoundtrackSetter_op_Inequality()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
-			bool @operator = (arg0 != arg1);
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0, arg1);
-			optimized.Invoke(default(object[]));
-		}
-		
-		// MusicPlayerEditor.op_Implicit
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicPlayerEditor_op_Implicit()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			bool conversion = ((bool)(arg0));
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0);
-			optimized.Invoke(default(object[]));
-		}
-		
-		// MusicPlayerEditor.op_Equality
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicPlayerEditor_op_Equality()
-		{
-			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
-			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);
-			bool @operator = (arg0 == arg1);
-			global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool> optimized = new global::Unity.VisualScripting.StaticFunctionInvoker<UnityEngine.Object, UnityEngine.Object, bool>(default(global::System.Reflection.MethodInfo));
-			optimized.Invoke(null, arg0, arg1);
-			optimized.Invoke(default(object[]));
-		}
-		
-		// MusicPlayerEditor.op_Inequality
-		[global::UnityEngine.Scripting.PreserveAttribute()]
-		public static void MusicPlayerEditor_op_Inequality()
 		{
 			global::UnityEngine.Object arg0 = default(global::UnityEngine.Object);
 			global::UnityEngine.Object arg1 = default(global::UnityEngine.Object);

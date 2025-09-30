@@ -7,8 +7,7 @@ using Unity.VisualScripting;
 using UnityEngine.AI;
 using System;
 using System.IO;
-using UnityEditor.Timeline;
-using UnityEditor;
+
 
 public class MusicManager : MonoBehaviour
 {
@@ -173,9 +172,9 @@ public class MusicManager : MonoBehaviour
         CurrentMusicInstance = RuntimeManager.CreateInstance(newMusic);
         CurrentMusicInstance.start();
 
-#if UNITY_EDITOR
-        ActiveMusicName = GetMusicName(newMusic);
-#endif
+        //#if UNITY_EDITOR
+        //ActiveMusicName = GetMusicName(newMusic);
+        //#endif
     }
 
     public static string GetEventName(string path)
@@ -193,8 +192,9 @@ public class MusicManager : MonoBehaviour
 
         return GetEventName(music.ToString());
     }
+}
 
-#if UNITY_EDITOR
+/*#if UNITY_EDITOR
     private static string GetMusicName(EventReference music)
     {
         if (string.IsNullOrEmpty(music.Path))
@@ -205,8 +205,6 @@ public class MusicManager : MonoBehaviour
 #endif
 }
 #endregion
-#region Designer Tool
-
 #if UNITY_EDITOR
 
 [CustomTimelineEditor(typeof(MusicManager))]
@@ -261,3 +259,5 @@ public class MusicMangerEditor : Editor
 }    
  #endif
  #endregion
+*/
+#endregion
