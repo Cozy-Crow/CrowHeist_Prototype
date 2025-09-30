@@ -7,7 +7,10 @@ public class PixieDust : MonoBehaviour, IPickupable
 {
     [Header("Levitation Settings")]
     [SerializeField] private float levitationDuration = 5f;
-    [SerializeField] private float levitationForce = 50f;
+    [SerializeField] private float levitationForce = 15f; // Reduced default value
+    [SerializeField] private float levitationRampUpTime = 0.8f; // Slightly faster ramp-up
+    [SerializeField] private float maxUpwardVelocity = 8f; // Cap upward speed
+    [SerializeField] private bool useAntiGravity = true; // Option to disable anti-gravity
 
     [Header("Particle Effects")]
     [SerializeField] private ParticleSystem useExplosionParticles;
@@ -25,6 +28,10 @@ public class PixieDust : MonoBehaviour, IPickupable
     [SerializeField] private float shaderEffectDuration = 1f;
     [SerializeField] private AnimationClip levitationAnimation;
 
+    [Header("Used Item Appearance")] // New section
+    [SerializeField] private Color usedItemColor = Color.gray;
+    [SerializeField] private Material usedItemMaterial; // Optional: specific material for used items
+
     [Header("Floor Dust Management")]
     [SerializeField] private int maxFloorDustParticles = 50;
     [SerializeField] private float floorDustLifetime = 60f;
@@ -36,10 +43,13 @@ public class PixieDust : MonoBehaviour, IPickupable
     private bool isUsed = false;
     private GameObject player;
     private Controller2Point5D playerController;
-    //private KinematicCharacterController.Examples.Controller2Point5D playerController;
     private Renderer playerRenderer;
     private Material[] originalMaterials;
     private Animator playerAnimator;
+
+    // Item's own renderer and materials for color changes
+    private Renderer itemRenderer;
+    private Material[] itemOriginalMaterials;
 
     // Track when the item was picked up to prevent immediate use
     private float pickupTime = -1f;
@@ -61,6 +71,13 @@ public class PixieDust : MonoBehaviour, IPickupable
         item = gameObject;
         gameObject.tag = "PixieDust";
 
+        // Get item's renderer for color changes
+        itemRenderer = GetComponent<Renderer>();
+        if (itemRenderer != null)
+        {
+            itemOriginalMaterials = itemRenderer.materials;
+        }
+
         // Create particle spawn point if not assigned
         if (particleSpawnPoint == null)
         {
@@ -69,8 +86,7 @@ public class PixieDust : MonoBehaviour, IPickupable
             spawnPoint.transform.localPosition = Vector3.zero;
             particleSpawnPoint = spawnPoint.transform;
         }
-        
-        
+
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
 
@@ -80,7 +96,10 @@ public class PixieDust : MonoBehaviour, IPickupable
 
     void Update()
     {
-        if (transform.parent != null && !isUsed)
+        // Only allow E key usage if item hasn't been used yet
+        if (isUsed) return;
+
+        if (transform.parent != null)
         {
             if (playerController == null)
             {
@@ -107,7 +126,6 @@ public class PixieDust : MonoBehaviour, IPickupable
                 Use();
             }
         }
-        
     }
 
     private void InitializeAudio()
@@ -122,9 +140,7 @@ public class PixieDust : MonoBehaviour, IPickupable
 
     public void PickUP(Transform parent)
     {
-        if (isUsed) return;
-
-        Debug.Log("Picking up Enhanced Pixie Dust");
+        Debug.Log(isUsed ? "Picking up Used Pixie Dust" : "Picking up Enhanced Pixie Dust");
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -141,16 +157,17 @@ public class PixieDust : MonoBehaviour, IPickupable
             col.enabled = false;
         }
 
-        // Track pickup time to prevent immediate use
-        pickupTime = Time.time;
-        wasPickedUp = true;
+        // Track pickup time to prevent immediate use (only matters if not used)
+        if (!isUsed)
+        {
+            pickupTime = Time.time;
+            wasPickedUp = true;
+        }
     }
 
     public void Drop(Vector3 position)
     {
-        if (isUsed) return;
-
-        Debug.Log("Dropping Enhanced Pixie Dust");
+        Debug.Log(isUsed ? "Dropping Used Pixie Dust" : "Dropping Enhanced Pixie Dust");
         transform.SetParent(null);
         transform.position = position;
 
@@ -166,9 +183,12 @@ public class PixieDust : MonoBehaviour, IPickupable
             col.enabled = true;
         }
 
-        // Reset pickup tracking when dropped
-        wasPickedUp = false;
-        pickupTime = -1f;
+        // Reset pickup tracking when dropped (only matters if not used)
+        if (!isUsed)
+        {
+            wasPickedUp = false;
+            pickupTime = -1f;
+        }
     }
 
     public void Use()
@@ -176,7 +196,7 @@ public class PixieDust : MonoBehaviour, IPickupable
         if (isUsed || playerController == null) return;
 
         isUsed = true;
-        Debug.Log("Starting enhanced pixie dust effect");
+        Debug.Log("Using Enhanced Pixie Dust - item will remain as cosmetic after use");
 
         // Play use explosion particles
         PlayUseExplosionEffect();
@@ -189,13 +209,40 @@ public class PixieDust : MonoBehaviour, IPickupable
 
         // Create floor dust
         CreateFloorDust();
-        
-        //Update Crowley
-        //playerController.Drop();
 
-        // Destroy the pixie dust item
-        //Destroy(gameObject, 0.1f);
-        
+        // Change item appearance to show it's used
+        ChangeToUsedAppearance();
+    }
+
+    private void ChangeToUsedAppearance()
+    {
+        if (itemRenderer != null)
+        {
+            if (usedItemMaterial != null)
+            {
+                // Use specific material for used items
+                Material[] newMaterials = new Material[itemRenderer.materials.Length];
+                for (int i = 0; i < newMaterials.Length; i++)
+                {
+                    newMaterials[i] = usedItemMaterial;
+                }
+                itemRenderer.materials = newMaterials;
+            }
+            else
+            {
+                // Just change the color of existing materials
+                Material[] newMaterials = new Material[itemRenderer.materials.Length];
+                for (int i = 0; i < itemOriginalMaterials.Length; i++)
+                {
+                    newMaterials[i] = new Material(itemOriginalMaterials[i]);
+                    newMaterials[i].color = usedItemColor;
+                }
+                itemRenderer.materials = newMaterials;
+            }
+        }
+
+        // Keep the same tag so it can still be picked up and thrown
+        // gameObject.tag remains "PixieDust" for pickup/throw functionality
     }
 
     private void PlayUseExplosionEffect()
@@ -296,15 +343,44 @@ public class PixieDust : MonoBehaviour, IPickupable
         {
             timer -= Time.deltaTime;
             float timeRemaining = timer;
+            float elapsedTime = levitationDuration - timer;
 
-            // Apply levitation force
+            // Apply levitation force with gradual ramp-up
             if (playerRb != null)
             {
-                Vector3 upwardForce = Vector3.up * levitationForce;
-                Vector3 antiGravity = -Physics.gravity * playerRb.mass;
-                Vector3 totalForce = upwardForce + antiGravity;
+                // Calculate ramp-up multiplier (0 to 1 over rampUpTime)
+                float rampUpMultiplier = Mathf.Clamp01(elapsedTime / levitationRampUpTime);
+
+                // Use a smooth curve for more natural feel
+                rampUpMultiplier = Mathf.SmoothStep(0f, 1f, rampUpMultiplier);
+
+                // Check current upward velocity to prevent going too high
+                Vector3 currentVelocity = playerRb.velocity;
+                float upwardVelocity = currentVelocity.y;
+
+                Vector3 totalForce = Vector3.zero;
+
+                // Anti-gravity (optional)
+                if (useAntiGravity)
+                {
+                    totalForce += -Physics.gravity * playerRb.mass * rampUpMultiplier;
+                }
+
+                // Only add upward force if we're not already moving too fast upward
+                if (upwardVelocity < maxUpwardVelocity)
+                {
+                    float velocityFactor = 1f - Mathf.Clamp01(upwardVelocity / maxUpwardVelocity);
+                    Vector3 upwardForce = Vector3.up * (levitationForce * rampUpMultiplier * velocityFactor);
+                    totalForce += upwardForce;
+                }
 
                 playerRb.AddForce(totalForce, ForceMode.Force);
+
+                // Debug output during ramp-up
+                if (elapsedTime <= levitationRampUpTime)
+                {
+                    Debug.Log($"Levitation ramp-up: {rampUpMultiplier:F2} | Upward Vel: {upwardVelocity:F1} | Force: {totalForce.magnitude:F1}");
+                }
             }
 
             // Check if we're running low on time for end warning
