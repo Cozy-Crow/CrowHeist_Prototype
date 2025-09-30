@@ -932,6 +932,5 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-
     }
 }
