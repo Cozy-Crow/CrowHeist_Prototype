@@ -2,12 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
+using KinematicCharacterController.Examples;
 
 public class Coins : MonoBehaviour
 {
     [SerializeField] private int _coinValue = 1;
     [SerializeField] private float _rotateSpeed = 1.0f;
     [SerializeField] private EventReference CubeCollectedSound;
+    private GameObject player;
+    private Controller2Point5D playerController;
 
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
     
@@ -15,6 +18,12 @@ public class Coins : MonoBehaviour
     void Update()
     {
         //transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
+    }
+
+    private void Awake()
+    {
+        player = GameObject.FindWithTag("Player");
+        playerController = player.GetComponent<Controller2Point5D>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -31,6 +40,7 @@ public class Coins : MonoBehaviour
             float newValue = currentValue += 1;
             MusicManager.SetParameterByName("TrinketsCollected", + newValue);
             MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out float value1);
+            playerController.Drop();
             Destroy(gameObject);
         }
     }

@@ -24,6 +24,7 @@ namespace KinematicCharacterController.Examples
                 return;
             }
             else if ((controller.heldObject == this.GetComponent<Rigidbody>()) && Input.GetKeyDown(KeyCode.E) && CanDash())
+            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && controller._canDash)
             {
                 StartCoroutine(Dash());
             }
@@ -37,6 +38,9 @@ namespace KinematicCharacterController.Examples
         private IEnumerator Dash()
         {
             lastDashTime = Time.time;
+        private IEnumerator Dash()
+        {
+            controller._canDash = false;
             controller._isDashing = true;
 
             float dashDirection;
@@ -62,6 +66,9 @@ namespace KinematicCharacterController.Examples
             }
 
             controller._isDashing = false;
+
+            yield return new WaitForSeconds(controller._dashCooldown);
+            controller._canDash = true;
         }
     }
 }

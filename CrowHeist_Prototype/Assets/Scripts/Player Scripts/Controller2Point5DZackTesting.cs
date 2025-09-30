@@ -12,13 +12,13 @@ namespace KinematicCharacterController.Examples
 {
     [RequireComponent(typeof(Rigidbody))]
     [RequireComponent(typeof(CapsuleCollider))]
-    public class Controller2Point5D : MonoBehaviour
+    public class Controller2Point5DZackTesting : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] public float _moveSpeed = 50f;
+        [SerializeField] private float _moveSpeed = 50f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
-        [SerializeField] public float _gravityMultiplier = 2f;
+        [SerializeField] private float _gravityMultiplier = 2f;
         [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
         [SerializeField] private float _groundCheckDistance = 0.15f;
         [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
@@ -27,9 +27,9 @@ namespace KinematicCharacterController.Examples
         [SerializeField] GameObject playerSprite;
         
         // Soda Variables
-        public bool _isSpeedBoosted = false;
+        private bool _isSpeedBoosted = false;
         public float _speedBoostDuration = 5f;
-        public float _normalMoveSpeed;
+        private float _normalMoveSpeed;
         public float _speedBoostMultiplier = 5f;
 
         //Falling
@@ -43,20 +43,20 @@ namespace KinematicCharacterController.Examples
         public bool _isDirty = false;
 
         [Header("Dash")]
-        [SerializeField] public float _dashSpeed = 40f;
-        [SerializeField] public float _dashDuration = 0.2f;
-        [SerializeField] public float _dashForce = 10f;
+        [SerializeField] private float _dashSpeed = 40f;
+        [SerializeField] private float _dashDuration = 0.2f;
+        [SerializeField] private float _dashForce = 10f;
         public float _dashCooldown = 1f;
-        public bool _canDash = true;
+        private bool _canDash = true;
         public bool _isDashing = false;
 
         //Physics/Direction
-        public Rigidbody _rb;
+        private Rigidbody _rb;
         private CapsuleCollider _capsuleCollider;
         private string _currentAnim;
-        public bool _isFacingRight = true;
-        public bool _isMovingForward = false;
-        public bool _isMovingBackward = false;
+        private bool _isFacingRight = true;
+        private bool _isMovingForward = false;
+        private bool _isMovingBackward = false;
         private bool _isFlipped = true;
         public bool _isThrowing = false;
         private bool _canJump = true;
@@ -158,34 +158,7 @@ namespace KinematicCharacterController.Examples
             // Input and state checks in Update
             CheckGrounded();
             HandleInput();
-            // Handle item-specific mechanics
-            if (heldObject != null)
-            {
-                if (heldObject.CompareTag("Soda"))
-                {
-                    SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
-                    if (sodaDash != null)
-                    {
-                        sodaDash.HandleDash();
-                    }
-                }
-                else if (heldObject.CompareTag("Dashable"))
-                {
-                    CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
-                    if (coffee != null)
-                {
-                        coffee.TryConsumeCoffee();
-                    }
-                }
-                else if (heldObject.CompareTag("Glider"))
-                {
-                    PaperGlider glider = heldObject.GetComponent<PaperGlider>();
-                    if (glider != null)
-                    {
-                        glider.HandleGliding();
-                    }
-                }
-            }
+            HandleDash();
             HandleAnimation();
             HandlePickUP();
             HandleWindUp();
@@ -206,48 +179,49 @@ namespace KinematicCharacterController.Examples
         private void CheckGrounded()
         {
             _wasGroundedLastFrame = _isGrounded;
-            
+
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
             float radius = _capsuleCollider.radius * 0.9f;
-            
+
             // Start the cast from just below the center
             Vector3 castOrigin = origin;
-            
+
             RaycastHit hit;
             // Cast distance should reach just below the feet
             float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
-            
+
             // Main ground check using a raycast for more precision
             _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
 
             // Additional check with spherecast for better edge detection
-            //------this block of code is responsible for phasing through colliders)
-            if (!_isGrounded)
-            {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
-            }
+            //  ------this block of code is responsible for phasing through colliders------
+            // if (!_isGrounded)
+            // {
+            //     _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
+            // }
             
-            if (_isGrounded && hit.collider != null)
-            {
-                _currentGroundObject = hit.collider.gameObject;
-                
-                // Keep player at proper height above ground
-                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
-                float currentHeight = transform.position.y;
-                
-                // Only apply correction if significantly below target height (actually sinking)
-                if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-                {
-                    // Use position-based correction with physics
-                    Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-                    _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-                }
-            }
-            else
-            {
-                _currentGroundObject = null;
-            }
+
+            // if (_isGrounded && hit.collider != null)
+            // {
+            //     _currentGroundObject = hit.collider.gameObject;
+
+            //     // Keep player at proper height above ground
+            //     float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
+            //     float currentHeight = transform.position.y;
+
+            //     // Only apply correction if significantly below target height (actually sinking)
+            //     if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+            //     {
+            //         // Use position-based correction with physics
+            //         Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+            //         _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+            //     }
+            // }
+            // else
+            // {
+            //     _currentGroundObject = null;
+            // }
         }
 
         private void HandleInput()
@@ -262,23 +236,45 @@ namespace KinematicCharacterController.Examples
                 StartCoroutine(JumpCooldown());
             }
             
-            // Coffee consumption now handled by CoffeeConsumption component
+            TryConsumeCoffee();
         }
+
+        [SerializeField] private float _accellerationTEST = 5;
+        [SerializeField] private float _deccellerationTEST = 5;
+        [SerializeField] private float _maxSpeedTEST = 20;
+
 
         private void HandleMove()
         {
+            //if the character is dashing dont let them move
             if (_isDashing) return;
-
             Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
             _moveVelocity = moveDirection * _moveSpeed;
-
-            // Apply horizontal movement while preserving vertical velocity
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
 
-            // Use MovePosition for smoother movement with physics
-            Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
-            _rb.MovePosition(newPosition);
-            
+
+            //if you're moving (!= 0)
+            if (_moveVelocity != Vector3.zero)
+            {
+                // _rb.AddForce(_moveVelocity * _accellerationTEST, ForceMode.Force);
+                _rb.velocity = targetVelocity;
+
+                // if (_rb.velocity.magnitude > _maxSpeedTEST)
+                // {
+                //     _rb.velocity = _rb.velocity.normalized * _maxSpeedTEST;
+                // }
+            }
+            else
+            {
+                // _rb.AddForce(_rb.velocity * -_accellerationTEST);
+            }
+            // Apply horizontal movement while preserving vertical velocity
+            // Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
+
+                // Use MovePosition for smoother movement with physics
+                // Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
+                // _rb.MovePosition(newPosition);
+
 
         }
 
@@ -286,8 +282,21 @@ namespace KinematicCharacterController.Examples
         {
             if (!_isGrounded)
             {
-                // Apply normal gravity
+                bool isGliding = (heldObject != null && heldObject.CompareTag("Glider"));
                 float gravityForce = Physics.gravity.y * _gravityMultiplier;
+                
+                if (isGliding && _rb.velocity.y < 0)
+                {
+                    // Gliding - reduced gravity
+                    gravityForce *= 0.1f;
+                    float glideFallSpeed = -3f;
+                    if (_rb.velocity.y < glideFallSpeed)
+                    {
+                        _rb.velocity = new Vector3(_rb.velocity.x, glideFallSpeed, _rb.velocity.z);
+                    }
+                }
+                
+                // Apply gravity
                 _rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
                 
                 // Clamp fall speed
@@ -326,6 +335,46 @@ namespace KinematicCharacterController.Examples
         {
             yield return new WaitForSeconds(0.1f);
             _canJump = true;
+        }
+
+        private void HandleDash()
+        {
+            if (heldObject != null && heldObject.CompareTag("Soda") && Input.GetKeyDown(KeyCode.E) && !_isDashing && _canDash)
+            {
+                StartCoroutine(Dash());
+            }
+        }
+
+        private IEnumerator Dash()
+        {
+            _canDash = false;
+            _isDashing = true;
+            
+            float dashDirection;
+            Vector3 dashVelocity;
+            
+            Vector3 inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
+            if (inputDirection != Vector3.zero)
+            {
+                dashVelocity = inputDirection * _dashSpeed;
+            }
+            else
+            {
+                dashDirection = _isFacingRight ? 1f : -1f;
+                dashVelocity = new Vector3(dashDirection * _dashSpeed, 0, 0);
+            }
+
+            float dashTime = 0f;
+            while (dashTime < _dashDuration && _isDashing)
+            {
+                _rb.velocity = new Vector3(dashVelocity.x, _rb.velocity.y, dashVelocity.z);
+                dashTime += Time.deltaTime;
+                yield return null;
+            }
+                
+            _isDashing = false;
+            yield return new WaitForSeconds(_dashCooldown);
+            _canDash = true;
         }
 
         private void HandleExternalForces()
@@ -501,14 +550,7 @@ namespace KinematicCharacterController.Examples
             {
                 if (!nearbyInteractables.Contains(interactable))
                 {
-                    Debug.Log("Added Interactable: " + interactable.gameObject.name);
                     nearbyInteractables.Add(interactable);
-                    Debug.Log("Interactables: ");
-                    foreach (Interactable item in nearbyInteractables)
-                    {
-                        Debug.Log(item.gameObject.name + "\n");
-                    }
-
                     UpdateHighlightedInteractable();
                 }
             }
@@ -556,14 +598,7 @@ namespace KinematicCharacterController.Examples
             {
                 if (nearbyInteractables.Contains(interactable))
                 {
-                    Debug.Log("Removed " + interactable.gameObject.name);
                     nearbyInteractables.Remove(interactable);
-                    Debug.Log("Interactables: ");
-                    foreach (Interactable item in nearbyInteractables)
-                    {
-                        Debug.Log(item.gameObject.name + "\n");
-                    }
-
                     UpdateHighlightedInteractable();
                 }
             }
@@ -603,17 +638,12 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-
                 AIEventManager.instance.e_pickup.Invoke();
                 
                 if (_pickUpsList.Count > 0) return;
 
-                Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
-                
-
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
-
                     Interactable selected = nearbyInteractables[currentTargetIndex];
                     if (selected != null && selected.realObject != null)
                     {
@@ -621,11 +651,6 @@ namespace KinematicCharacterController.Examples
                         {
                             pickUp.PickUP(_pickUpPoint);
                             _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            foreach (var interactable in nearbyInteractables)
-                            {   
-                                Debug.Log("Item: " + interactable.transform.name);
-                            }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                         }
                     }
@@ -667,12 +692,6 @@ namespace KinematicCharacterController.Examples
             // Charged Throwing
             if (heldObject != null)
             {
-                Collider heldCollider = heldObject.GetComponent<Collider>();
-                if (heldCollider != null)
-                {
-                    heldCollider.enabled = true;
-                }
-
                 if (Input.GetMouseButtonDown(0))
                 {
                     isCharging = true;
@@ -752,12 +771,10 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
-            
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(_dropPoint.position);
             }
-            
             _pickUpsList.Clear();
             heldObject = null;
         }
@@ -932,5 +949,57 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        private void TryConsumeCoffee()
+        {
+            if (heldObject != null && heldObject.CompareTag("Dashable") && Input.GetKeyDown(KeyCode.E) && !_isSpeedBoosted)
+            {
+                StartCoroutine(SpeedBoost());
+            }
+        }
+
+        private IEnumerator SpeedBoost()
+        {
+            GameObject coffeeDrink = null;
+            GameObject coffee = null;
+
+            if (heldObject == null || !heldObject.CompareTag("Dashable"))
+            {
+                yield break;
+            }
+
+            if (heldObject.CompareTag("Dashable"))
+            {
+                coffeeDrink = heldObject.gameObject;
+            }
+
+            foreach (Transform child in GetComponentsInChildren<Transform>(true))
+            {
+                if (child.name == "CoffeeLiquid")
+                {
+                    coffee = child.gameObject;
+                    break;
+                }
+            }
+
+            _isSpeedBoosted = true;
+            _moveSpeed *= _speedBoostMultiplier;
+
+            yield return new WaitForSeconds(_speedBoostDuration);
+
+            _moveSpeed = _normalMoveSpeed;
+            _isSpeedBoosted = false;
+            
+            if (coffee != null)
+            {
+                coffee.transform.localPosition = new Vector3(0, 0.0076f, 0);
+            }
+            
+            if (coffeeDrink != null)
+            {
+                coffeeDrink.tag = "Mug";
+            }
+            
+            Drop();
+        }
     }
 }
