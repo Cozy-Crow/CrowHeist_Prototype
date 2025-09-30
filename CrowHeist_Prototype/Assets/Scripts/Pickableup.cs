@@ -72,10 +72,17 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         transform.SetParent(null);
         transform.position = position;
+
+        if (this.CompareTag("HanoiDisc"))
+        {
+            transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+        }
+
         _rigidbody.isKinematic = false;
         pickedUp = false;
         MusicManager.SetParameterByName("ItemYes", 0);
     }
+
 
     public void Use()
     {
