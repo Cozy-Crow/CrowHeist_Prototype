@@ -239,20 +239,42 @@ namespace KinematicCharacterController.Examples
             TryConsumeCoffee();
         }
 
+        [SerializeField] private float _accellerationTEST = 5;
+        [SerializeField] private float _deccellerationTEST = 5;
+        [SerializeField] private float _maxSpeedTEST = 20;
+
+
         private void HandleMove()
         {
+            //if the character is dashing dont let them move
             if (_isDashing) return;
-
             Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
             _moveVelocity = moveDirection * _moveSpeed;
-
-            // Apply horizontal movement while preserving vertical velocity
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
 
-            // Use MovePosition for smoother movement with physics
-            Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
-            _rb.MovePosition(newPosition);
-            // _rb.AddForce(_moveVelocity, ForceMode.Acceleration);
+
+            //if you're moving (!= 0)
+            if (_moveVelocity != Vector3.zero)
+            {
+                // _rb.AddForce(_moveVelocity * _accellerationTEST, ForceMode.Force);
+                _rb.velocity = targetVelocity;
+
+                // if (_rb.velocity.magnitude > _maxSpeedTEST)
+                // {
+                //     _rb.velocity = _rb.velocity.normalized * _maxSpeedTEST;
+                // }
+            }
+            else
+            {
+                // _rb.AddForce(_rb.velocity * -_accellerationTEST);
+            }
+            // Apply horizontal movement while preserving vertical velocity
+            // Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
+
+                // Use MovePosition for smoother movement with physics
+                // Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
+                // _rb.MovePosition(newPosition);
+
 
         }
 
