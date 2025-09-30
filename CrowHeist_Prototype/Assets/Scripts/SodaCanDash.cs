@@ -38,8 +38,6 @@ namespace KinematicCharacterController.Examples
         private IEnumerator Dash()
         {
             lastDashTime = Time.time;
-        private IEnumerator Dash()
-        {
             controller._canDash = false;
             controller._isDashing = true;
 
