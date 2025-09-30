@@ -232,6 +232,7 @@ GameObject:
   - component: {fileID: 828802146757365661}
   - component: {fileID: 6440320087468348431}
   - component: {fileID: 5020479746723126709}
+  - component: {fileID: 89815437061914632}
   m_Layer: 0
   m_Name: InteractionTrigger
   m_TagString: Untagged
@@ -288,3 +289,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   realObject: {fileID: 0}
+--- !u!114 &89815437061914632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4835208588106013302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 225158db34be5f24fa327846f43b95e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shineParticles: {fileID: 0}
+  autoCreateParticles: 1
+  shineColor: {r: 1, g: 0.92, b: 0.016, a: 1}
+  particleSize: 0.1
+  emissionRate: 20
+  particleLifetime: 1
+  particleSpeed: 0.5
+  useOrbitMotion: 1
+  orbitRadius: 0.5
+  orbitSpeed: 1
+  autoDetectPlayerRange: 1
