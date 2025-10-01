@@ -25,6 +25,7 @@ namespace KinematicCharacterController.Examples
 
         //Sprite
         [SerializeField] GameObject playerSprite;
+        [SerializeField] Transform spriteRotator;
         
         // Soda Variables
         public bool _isSpeedBoosted = false;
@@ -54,6 +55,7 @@ namespace KinematicCharacterController.Examples
         public Rigidbody _rb;
         private CapsuleCollider _capsuleCollider;
         private string _currentAnim;
+        private Quaternion targetRotation = Quaternion.identity;
         public bool _isFacingRight = true;
         public bool _isMovingForward = false;
         public bool _isMovingBackward = false;
@@ -62,6 +64,7 @@ namespace KinematicCharacterController.Examples
         private bool _canJump = true;
         private bool _isJumping = false;
         private Vector2 _input;
+        private Vector2 _lastMovementInput;
         private Vector3 _moveVelocity;
         private bool _isGrounded = false;
         private bool _wasGroundedLastFrame = false;
@@ -201,7 +204,7 @@ namespace KinematicCharacterController.Examples
             HandleKnockback();
 
         }
-        
+
         void LateUpdate()
         {
             HandleRotation(); 
@@ -266,7 +269,7 @@ namespace KinematicCharacterController.Examples
                 _canJump = false;
                 StartCoroutine(JumpCooldown());
             }
-            
+
             // Coffee consumption now handled by CoffeeConsumption component
         }
         
@@ -864,14 +867,14 @@ namespace KinematicCharacterController.Examples
             _currentAnim = animation;
             _animator.CrossFade(animation, crossfade);
         }
-        
+
         private void Flip(bool doFlip)
         {
             float rotationSpeed = 10f;
-            
+
             // Only rotate if there's movement input
             if (_input.magnitude < 0.01f) return;
-            
+
             //input:
             // 1 - right away from camera
             // -1 - left and towards camera
