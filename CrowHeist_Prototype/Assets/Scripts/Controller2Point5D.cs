@@ -395,25 +395,28 @@ namespace KinematicCharacterController.Examples
                 }
             }
         }
-
+        
         private void HandleRotation()
         {
             _isMovingForward = (_input.y > 0);
             _isMovingBackward = (_input.y < 0);
             
-            if (_input.x > 0 && !_isFlipped)
+            // Only update facing direction if there's actual horizontal input
+            if (_input.x > 0.01f)
             {
                 _isFlipped = true;
                 _isFacingRight = true;
             }
-            else if (_input.x < 0 && _isFlipped)
+            else if (_input.x < -0.01f)
             {
                 _isFlipped = false;
                 _isFacingRight = false;
             }
+            // If no input, _isFlipped and _isFacingRight retain their previous values
             
             Flip(_isFlipped);
         }
+
 
         void HandleWindUp()
         {
@@ -864,15 +867,17 @@ namespace KinematicCharacterController.Examples
         
         private void Flip(bool doFlip)
         {
+            float rotationSpeed = 10f;
             
-            float rotationSpeed = 10f; // Increased for snappier rotation
-
+            // Only rotate if there's movement input
+            if (_input.magnitude < 0.01f) return;
+            
             //input:
-            //     // 1 - right away from camera
-            //     // -1 - left and towards camera
-            //     //slightly edited rotation system so crowley better faces which direction he's moving
-            //     //Rotate Sprite (1) vs rotate Player RB (2)
-        
+            // 1 - right away from camera
+            // -1 - left and towards camera
+            //slightly edited rotation system so crowley better faces which direction he's moving
+            //Rotate Sprite (1) vs rotate Player RB (2)
+
             if (_input.x >= 0 && _input.x <= 1 && _input.y == 0) // right
             {
                 playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * rotationSpeed);
@@ -898,6 +903,7 @@ namespace KinematicCharacterController.Examples
                 playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * rotationSpeed);
             }
         }
+
 
         void OnDrawGizmos()
         {
