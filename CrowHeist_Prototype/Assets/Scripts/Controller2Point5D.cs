@@ -132,7 +132,7 @@ namespace KinematicCharacterController.Examples
             _rb.freezeRotation = true;
             _rb.interpolation = RigidbodyInterpolation.Interpolate;
             _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            _rb.drag = 1f; // Increased drag for stability
+            _rb.drag = 0f; // Increased drag for stability
             _rb.angularDrag = 0f;
             _rb.constraints = RigidbodyConstraints.FreezeRotation;
             
@@ -156,7 +156,6 @@ namespace KinematicCharacterController.Examples
         void Update()
         {
             // Input and state checks in Update
-            CheckGrounded();
             HandleInput();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -195,29 +194,35 @@ namespace KinematicCharacterController.Examples
         void FixedUpdate()
         {
             // Physics in FixedUpdate
+            CheckGrounded();
             HandleMove();
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
-            HandleRotation();
 
         }
+        
+        void LateUpdate()
+        {
+            HandleRotation(); 
+        }
+
 
         private void CheckGrounded()
         {
             _wasGroundedLastFrame = _isGrounded;
-            
+
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
             float radius = _capsuleCollider.radius * 0.9f;
-            
+
             // Start the cast from just below the center
             Vector3 castOrigin = origin;
-            
+
             RaycastHit hit;
             // Cast distance should reach just below the feet
             float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
-            
+
             // Main ground check using a raycast for more precision
             _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
 
@@ -227,15 +232,15 @@ namespace KinematicCharacterController.Examples
             {
                 _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
             }
-            
+
             if (_isGrounded && hit.collider != null)
             {
                 _currentGroundObject = hit.collider.gameObject;
-                
+
                 // Keep player at proper height above ground
                 float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
                 float currentHeight = transform.position.y;
-                
+
                 // Only apply correction if significantly below target height (actually sinking)
                 if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
                 {
@@ -264,7 +269,7 @@ namespace KinematicCharacterController.Examples
             
             // Coffee consumption now handled by CoffeeConsumption component
         }
-
+        
         private void HandleMove()
         {
             if (_isDashing) return;
@@ -272,15 +277,11 @@ namespace KinematicCharacterController.Examples
             Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
             _moveVelocity = moveDirection * _moveSpeed;
 
-            // Apply horizontal movement while preserving vertical velocity
+            // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
-
-            // Use MovePosition for smoother movement with physics
-            Vector3 newPosition = _rb.position + new Vector3(targetVelocity.x, 0, targetVelocity.z) * Time.fixedDeltaTime;
-            _rb.MovePosition(newPosition);
-            
-
+            _rb.velocity = targetVelocity;
         }
+
 
         private void HandleGravity()
         {
@@ -289,25 +290,25 @@ namespace KinematicCharacterController.Examples
                 // Apply normal gravity
                 float gravityForce = Physics.gravity.y * _gravityMultiplier;
                 _rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
-                
+
                 // Clamp fall speed
                 if (_rb.velocity.y < -_maxFallSpeed)
                 {
                     _rb.velocity = new Vector3(_rb.velocity.x, -_maxFallSpeed, _rb.velocity.z);
                 }
-                
+
                 _fallingTime += Time.fixedDeltaTime;
             }
             else
             {
                 _fallingTime = 0f;
-                
+
                 // When grounded, stop excessive downward velocity
                 if (_rb.velocity.y < -0.5f)
                 {
                     _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
                 }
-                
+
                 _isJumping = false;
             }
         }
@@ -860,62 +861,42 @@ namespace KinematicCharacterController.Examples
             _currentAnim = animation;
             _animator.CrossFade(animation, crossfade);
         }
-
+        
         private void Flip(bool doFlip)
         {
+            
+            float rotationSpeed = 10f; // Increased for snappier rotation
+
             //input:
-            // 1 - right away from camera
-            // -1 - left and towards camera
-            //slightly edited rotation system so crowley better faces which direction he's moving
-            //Rotate Sprite (1) vs rotate Player RB (2)
-            //left rotations
+            //     // 1 - right away from camera
+            //     // -1 - left and towards camera
+            //     //slightly edited rotation system so crowley better faces which direction he's moving
+            //     //Rotate Sprite (1) vs rotate Player RB (2)
+        
             if (_input.x >= 0 && _input.x <= 1 && _input.y == 0) // right
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * rotationSpeed);
             }
             else if (_input.x >= 0 && _input.x <= 1 && _input.y >= 0 && _input.y <= 1) //back right
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * rotationSpeed);
             }
             else if (_input.x >= 0 && _input.x <= 1 && _input.y <= 0 && _input.y >= -1) //front right
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * rotationSpeed);
             }
-            //left rotations
             else if (_input.x >= -1 && _input.x <= 0 && _input.y == 0) //left
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * rotationSpeed);
             }
             else if (_input.x >= -1 && _input.x <= 0 && _input.y >= 0 && _input.y <= 1) //back left
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * rotationSpeed);
             }
             else if (_input.x >= -1 && _input.x <= 0 && _input.y <= 0 && _input.y >= -1) //front left
             {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * 5);
-
-                // _rb.MoveRotation(Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * 5));
+                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * rotationSpeed);
             }
-            
-            // old rotation 
-            // if (doFlip)
-            //     {
-            //         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * 5);
-            //     }
-            //     else
-            //     {
-            //         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * 5);
-            //     }
         }
 
         void OnDrawGizmos()
