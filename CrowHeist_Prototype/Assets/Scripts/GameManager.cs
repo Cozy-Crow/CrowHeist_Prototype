@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     private static int _score = 0;
     public static int Score { get => _score; set => _score = value; }
     [SerializeField] private string endCutsceneScene = "EndCutsceneScene";
+    [SerializeField] private string gameSceneName = "IntroScene"; 
 
     private void Awake()
     {
@@ -53,31 +54,38 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
+    
     public void TriggerGameEnd()
     {
-
         SceneManager.LoadScene(endCutsceneScene);
-
     }
 
     private void Update()
     {
+        // Check for R key to restart
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            RestartGame();
+        }
+        
         if (_score >= 5)
         {
             TriggerGameEnd();
         }
     }
+    
+    private void RestartGame()
+    {
+        ResetGameData();
+        SceneManager.LoadScene(gameSceneName);
+    }
+    
     public static void ResetGameData()
     {
         _score = 0;
         _cameraDictionary.Clear();
     }
-
-
-
 }
-
-
 
 [System.Serializable]
 public class CameraObject
