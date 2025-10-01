@@ -63,7 +63,7 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Check for R key to restart
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.F))
         {
             RestartGame();
         }
