@@ -74,7 +74,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 997e15feffc52e64fa3e698783dc9ac7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -257,7 +257,11 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   _groundCheckDistance: 0.1
+  _skinWidth: 0.02
+  playerSprite: {fileID: 0}
+  _isSpeedBoosted: 0
   _speedBoostDuration: 5
+  _normalMoveSpeed: 0
   _speedBoostMultiplier: 5
   _fallingTime: 0
   _pickUpPoint: {fileID: 7843053465694190917}
@@ -268,7 +272,12 @@ MonoBehaviour:
   _dashDuration: 0.2
   _dashForce: 10
   _dashCooldown: 1
+  _canDash: 1
   _isDashing: 0
+  _rb: {fileID: 0}
+  _isFacingRight: 1
+  _isMovingForward: 0
+  _isMovingBackward: 0
   _isThrowing: 0
   throwDirection: {x: 0, y: 0, z: 0}
   maxThrowForce: 20
