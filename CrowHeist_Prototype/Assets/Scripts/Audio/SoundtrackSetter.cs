@@ -4,7 +4,6 @@ using UnityEngine;
 using UnityEditor;
 using FMODUnity;
 using FMOD.Studio;
-using UnityEditor.EditorTools;
 
 public class SoundtrackSetter : MonoBehaviour
 {
