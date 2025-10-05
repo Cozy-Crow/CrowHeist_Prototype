@@ -225,7 +225,6 @@ public class RoombAi : MonoBehaviour
     // Patrol method added by Mark D. 9/9/25
     private void Patrol()
     {
-        Debug.Log("run Patrol method");
         if (patrolPoints.Count == 0) return;
 
         Transform target = patrolPoints[currentPatrolIndex];
@@ -241,7 +240,6 @@ public class RoombAi : MonoBehaviour
     public void Activate()
     {
         isActivated = true;
-        Debug.Log("Roomba activated!");
     }
 
 
