@@ -51,6 +51,12 @@ namespace KinematicCharacterController.Examples
         public bool _canDash = true;
         public bool _isDashing = false;
 
+        [Header("Added Jump Features")]
+        [SerializeField] private float _coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
+        [SerializeField] private float _jumpBufferTime = 0.2f; // Time before landing where jump input is remembered
+        private float _coyoteTimeCounter = 0f;
+        private float _jumpBufferCounter = 0f;
+
         //Physics/Direction
         public Rigidbody _rb;
         private CapsuleCollider _capsuleCollider;
@@ -158,6 +164,7 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+            UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
             // Handle item-specific mechanics
@@ -262,15 +269,25 @@ namespace KinematicCharacterController.Examples
         {
             _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-            // Jump input
-            if (_isGrounded && Input.GetButtonDown("Jump") && _canJump)
+            if (Input.GetButtonDown("Jump"))
             {
-                Jump();
-                _canJump = false;
-                StartCoroutine(JumpCooldown());
+                _jumpBufferCounter = _jumpBufferTime;
             }
 
-            // Coffee consumption now handled by CoffeeConsumption component
+            // Handle jump buffering and coyote time
+            if (_jumpBufferCounter > 0f)
+            {
+                if ((_isGrounded || _coyoteTimeCounter > 0f) && !_isJumping)
+                {
+                    Jump();
+                    _jumpBufferCounter = 0f;
+                }
+            }
+
+            if (_jumpBufferCounter > 0f)
+            {
+                _jumpBufferCounter -= Time.deltaTime;
+            }
         }
 
         private void HandleMove()
@@ -300,9 +317,7 @@ namespace KinematicCharacterController.Examples
                 // If so, stop the movement
                 _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
             }
-
         }
-
 
         private void HandleGravity()
         {
@@ -336,18 +351,47 @@ namespace KinematicCharacterController.Examples
 
         private void Jump()
         {
-            if (!_isGrounded) return;
-            
-            // Add upward force for jump
-            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange); //changed to impulse from velocitychange
+            // Prevent jumping if already airborne
+            if (_isJumping || !_canJump)
+            {
+                return;
+            }
             _isJumping = true;
+            _isGrounded = false;
+            _coyoteTimeCounter = 0f;
+            _canJump = false;
+
+            // Reset vertical velocity before jump
+            _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+
+            // Re-enable jumping only when grounded again
+            StartCoroutine(ResetJumpFlag());
         }
 
-        private IEnumerator JumpCooldown()
+        private IEnumerator ResetJumpFlag()
         {
-            yield return new WaitForSeconds(0.1f);
+            // Adds small delay so that we do not re-enable jump mid-air
+            yield return new WaitUntil(() => _isGrounded);
+            _isJumping = false;
             _canJump = true;
+        }        
+
+        private void UpdateCoyoteTime()
+        {
+            // If grounded, reset coyote time
+            if (_isGrounded)
+            {
+                _coyoteTimeCounter = _coyoteTime;
+            }
+            else
+            {
+                // Count down coyote time when not grounded
+                if (_coyoteTimeCounter > 0)
+                {
+                    _coyoteTimeCounter -= Time.deltaTime;
+                }
+            }
         }
 
         private void HandleExternalForces()
@@ -356,7 +400,7 @@ namespace KinematicCharacterController.Examples
             {
                 _rb.AddForce(externalForce, ForceMode.Force);
                 externalForce *= externalForceDamping;
-                
+
                 if (externalForce.magnitude < 0.01f)
                 {
                     externalForce = Vector3.zero;
@@ -924,7 +968,6 @@ namespace KinematicCharacterController.Examples
                 playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * rotationSpeed);
             }
         }
-
 
         void OnDrawGizmos()
         {
