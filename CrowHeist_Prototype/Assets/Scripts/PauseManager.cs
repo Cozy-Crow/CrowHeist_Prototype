@@ -8,34 +8,34 @@ public class PauseManager : MonoBehaviour
 {
     
     public bool isGamePaused = false; // Variable to track pause state
-    public GameObject pauseMenu; // UI element to show/hide
-    public Button quitButton; // Reference to the "Quit Button"
-    public Button resumeButton; // Reference to the "Resume Button"
-    public Button restartButton; // Reference to the "Restart Button"
+    public GameObject PauseMenu; // UI element to show/hide
+    public Button QuitButton; // Reference to the "Quit Button"
+    public Button ResumeButton; // Reference to the "Resume Button"
+    public Button RestartButton; // Reference to the "Restart Button"
 
     void Start() 
     {
-        if (resumeButton != null)
+        if (ResumeButton != null)
         {
-            resumeButton.onClick.AddListener(ResumeGame);
+            ResumeButton.onClick.AddListener(ResumeGame);
         }
         else
         {
             Debug.Log("Resume Button is not assigned!");
         }
 
-        if (quitButton != null)
+        if (QuitButton != null)
         {
-            quitButton.onClick.AddListener(QuitGame);
+            QuitButton.onClick.AddListener(QuitGame);
         }
         else 
         {
             Debug.Log("Quit Button is not assigned!");
         }
 
-        if (restartButton != null)
+        if (RestartButton != null)
         {
-            restartButton.onClick.AddListener(RestartGame);
+            RestartButton.onClick.AddListener(RestartGame);
         }
         else
         {
@@ -43,7 +43,7 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    void Update()
+    public void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape)) // Check for Escape key press
         {
@@ -58,27 +58,27 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    void PauseGame()
+    public void PauseGame()
     {
         isGamePaused = true;
         Time.timeScale = 0f; // Freeze time
-        if (pauseMenu != null)
+        if (PauseMenu != null)
         {
-            pauseMenu.SetActive(true); // Show pause menu
+            PauseMenu.SetActive(true); // Show pause menu
         }
     }
 
-    void ResumeGame()
+    public void ResumeGame()
     {
         isGamePaused = false;
         Time.timeScale = 1f; // Resume time
-        if (pauseMenu != null)
+        if (PauseMenu != null)
         {
-            pauseMenu.SetActive(false); // Hide pause menu
+            PauseMenu.SetActive(false); // Hide pause menu
         }
     }
 
-    void QuitGame()
+    public void QuitGame()
     {
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;
@@ -87,8 +87,10 @@ public class PauseManager : MonoBehaviour
         #endif
     }
 
-    void RestartGame()
+    public void RestartGame()
     {
+        isGamePaused = false;
+        Time.timeScale = 1f; // Resume time
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
     }
