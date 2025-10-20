@@ -305,18 +305,18 @@ namespace KinematicCharacterController.Examples
             Vector3 horizontalMove = _rb.velocity;
             // Don't use the vertical velocity
             horizontalMove.y = 0;
-            // Calculate the approximate distance that will be traversed
-            float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
-            // Normalize horizontalMove since it should be used to indicate direction
-            horizontalMove.Normalize();
-            RaycastHit hit;
+            // // Calculate the approximate distance that will be traversed
+            // float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
+            // // Normalize horizontalMove since it should be used to indicate direction
+            // horizontalMove.Normalize();
+            // RaycastHit hit;
 
-            // Check if the body's current velocity will result in a collision
-            if(_rb.SweepTest(horizontalMove, out hit, distance))
-            {
-                // If so, stop the movement
-                _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
-            }
+            // // Check if the body's current velocity will result in a collision
+            // if(_rb.SweepTest(horizontalMove, out hit, distance))
+            // {
+            //     // If so, stop the movement
+            //     _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
+            // }
         }
 
         private void HandleGravity()
@@ -674,11 +674,11 @@ namespace KinematicCharacterController.Examples
             {
 
                 AIEventManager.instance.e_pickup.Invoke();
-                
+
                 if (_pickUpsList.Count > 0) return;
 
                 Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
-                
+
 
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
@@ -692,7 +692,7 @@ namespace KinematicCharacterController.Examples
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
                             foreach (var interactable in nearbyInteractables)
-                            {   
+                            {
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
@@ -700,7 +700,7 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-            
+
             // Paint bucket logic
             if (heldObject != null && heldObject.CompareTag("PaintBucket"))
             {
@@ -713,7 +713,7 @@ namespace KinematicCharacterController.Examples
                         paintBucket.Spill();
                         paintBucket._paintInBucket -= Time.deltaTime;
                     }
-                    
+
                     if (paintBucket._paintInBucket <= 0)
                     {
                         Debug.Log("Out of paint, Dropping bucket");
@@ -754,10 +754,13 @@ namespace KinematicCharacterController.Examples
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
 
                     Vector3 mousePosition = Input.mousePosition;
+                    
+                    //mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
-                    Vector3 playerPosition = transform.position;
+                    //Vector3 playerPosition = transform.position;
+                    Vector3 playerPosition = _handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
@@ -779,11 +782,11 @@ namespace KinematicCharacterController.Examples
                         Vector3 throwDirection = (worldMousePos - playerPosition);
                         throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f);
                         throwDirection = throwDirection.normalized;
-                        
+
                         Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
                         Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
                         Vector3 rotationDirection = (endPoint - startPoint).normalized;
-                        
+
                         rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
                         if (heldObject.CompareTag("Glider"))
                         {
@@ -802,7 +805,7 @@ namespace KinematicCharacterController.Examples
                         else
                             heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
                     }
-                    
+
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
@@ -818,7 +821,6 @@ namespace KinematicCharacterController.Examples
                 }
             }
         }
-
         public void Drop()
         {
             
@@ -846,7 +848,8 @@ namespace KinematicCharacterController.Examples
         {
             int resolution = 20;
             float timeStep = 0.1f;
-            Vector3 startPosition = transform.position;
+            //Vector3 startPosition = transform.position;
+            Vector3 startPosition = _handPoint.position;
             Vector3 velocity = direction * throwForce;
             throwDirection = direction;
             pointCount = lineRenderer.positionCount;
