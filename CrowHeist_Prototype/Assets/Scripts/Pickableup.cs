@@ -44,6 +44,11 @@ public class Pickable : MonoBehaviour, IPickupable
             transform.localRotation = Quaternion.Euler(90f, 90f, 0f);
             Debug.Log("Knife Picked up");
         }
+        else if (this.CompareTag("Paintbrush"))
+        {
+            transform.localRotation = Quaternion.Euler(45f, -90f, 0f);
+            transform.localPosition = new Vector3(-1, -1, 0);
+        }
         // Adjust rotation to lay flat and face forward
         else
         {
