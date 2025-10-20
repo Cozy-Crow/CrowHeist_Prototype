@@ -5,22 +5,36 @@ using UnityEngine;
 public class ThrowForIdiots : MonoBehaviour
 {
     [SerializeField] private GameObject spawnObject;
-    [SerializeField] private Animator bookAnimator;
+    [SerializeField] private GameObject bookCover;
+    private Rigidbody rb;
     private bool hasLanded = false;
+    private bool wasThrown = false;
 
-    void OnCollisionEnter(Collision collision)
+    void Start()
     {
-        if (!hasLanded && collision.gameObject.CompareTag("Ground"))
+        rb = GetComponent<Rigidbody>();
+    }
+
+    void Update()
+    {
+        if (rb != null && !hasLanded)
         {
-            hasLanded = true;
-            OpenBook();
-            SpawnObjectOnTop();
+            if (rb.velocity.magnitude > 1f)
+                wasThrown = true;
+            
+            if (wasThrown && rb.velocity.magnitude < 0.1f)
+            {
+                hasLanded = true;
+                OpenBook();
+                SpawnObjectOnTop();
+            }
         }
     }
 
     void OpenBook()
     {
-        // Trigger the book opening
+        if (bookCover != null)
+            bookCover.transform.Rotate(Vector3.right, -120f);
     }
 
     void SpawnObjectOnTop()
