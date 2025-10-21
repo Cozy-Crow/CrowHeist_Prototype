@@ -12,12 +12,10 @@ GameObject:
   - component: {fileID: 4896174874022058715}
   - component: {fileID: 7300723760877417254}
   - component: {fileID: 3807239450537446808}
-  - component: {fileID: -5269614778711817667}
   - component: {fileID: 5354364256869844381}
-  - component: {fileID: 8271206297480907123}
-  - component: {fileID: 3966910754532871489}
+  - component: {fileID: -2253749284213756321}
   m_Layer: 3
-  m_Name: ShinyObject
+  m_Name: collectableCoin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -111,36 +109,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &-5269614778711817667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078150366677145011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c150bc0f4833d746a689d9876d6a4b7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _coinValue: 1
-  _rotateSpeed: 25
-  CubeCollectedSound:
-    Guid:
-      Data1: -2108607817
-      Data2: 1280256464
-      Data3: -779780991
-      Data4: -1785143012
-    Path: event:/Empty
-  _collectSound:
-    Guid:
-      Data1: -2108607817
-      Data2: 1280256464
-      Data3: -779780991
-      Data4: -1785143012
-    Path: event:/Empty
-  _collectParticlePrefab: {fileID: 8344967203117557352, guid: a6b9b97b44670d04c9b61087f798f9f9, type: 3}
-  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
 --- !u!54 &5354364256869844381
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -168,7 +136,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &8271206297480907123
+--- !u!114 &-2253749284213756321
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -177,31 +145,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 3078150366677145011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
+  m_Script: {fileID: 11500000, guid: ca5dc05a4fab55f4c98b018abefc7f32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pickedUp: 0
-  _isDirty: 0
-  player: {fileID: 0}
-  mySpawner: {fileID: 0}
---- !u!114 &3966910754532871489
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078150366677145011}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
-  outlineWidth: 5
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  _pointValue: 1
+  _rotateSpeed: 25
+  _rotateObject: 1
+  _collectSound:
+    Guid:
+      Data1: -2108607817
+      Data2: 1280256464
+      Data3: -779780991
+      Data4: -1785143012
+    Path: event:/Empty
+  _collectParticlePrefab: {fileID: 8344967203117557352, guid: a6b9b97b44670d04c9b61087f798f9f9, type: 3}
+  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
+  _spawnUIPopup: 0
 --- !u!1 &3785057032258832425
 GameObject:
   m_ObjectHideFlags: 0
