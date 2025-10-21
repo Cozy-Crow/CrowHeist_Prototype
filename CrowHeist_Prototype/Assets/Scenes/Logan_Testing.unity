@@ -8402,6 +8402,7 @@ MonoBehaviour:
   - _name: Exit
     _camera: {fileID: 0}
   endCutsceneScene: EndingScene
+  gameSceneName: IntroScene
 --- !u!1 &1111865652 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 87fd9dc3d14c1a446958bc5802fc4eda, type: 3}
@@ -14799,6 +14800,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 0}
+  _altWinCoinsUI: {fileID: 0}
   _noiseUI: {fileID: 0}
 --- !u!114 &1957589097
 MonoBehaviour:
@@ -17048,6 +17050,63 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+--- !u!1001 &4055073138694473199
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 8.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 90
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2230580424861749400, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4396163176847246859, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
+      propertyPath: m_Name
+      value: BookThrowForIdiots
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c81f5e1bcfc7441d99e6f0a1646cd352, type: 3}
 --- !u!1001 &5963408249611117217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17171,7 +17230,6 @@ SceneRoots:
   - {fileID: 943734810}
   - {fileID: 1023150259}
   - {fileID: 1055481017}
-  - {fileID: 1957589100}
   - {fileID: 1981009251}
   - {fileID: 756840113}
   - {fileID: 1238182099}
@@ -17191,3 +17249,5 @@ SceneRoots:
   - {fileID: 2126432885}
   - {fileID: 950109168}
   - {fileID: 655749584}
+  - {fileID: 1957589100}
+  - {fileID: 4055073138694473199}

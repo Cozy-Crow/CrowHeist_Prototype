@@ -156,6 +156,7 @@ namespace KinematicCharacterController.Examples
             footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
+
         void Update()
         {
             // Input and state checks in Update
@@ -272,7 +273,7 @@ namespace KinematicCharacterController.Examples
 
             // Coffee consumption now handled by CoffeeConsumption component
         }
-        
+
         private void HandleMove()
         {
             if (_isDashing) return;
@@ -283,6 +284,24 @@ namespace KinematicCharacterController.Examples
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
             _rb.velocity = targetVelocity;
+
+            // // Get the velocity
+            // Vector3 horizontalMove = _rb.velocity;
+            // // Don't use the vertical velocity
+            // horizontalMove.y = 0;
+            // // Calculate the approximate distance that will be traversed
+            // float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
+            // // Normalize horizontalMove since it should be used to indicate direction
+            // horizontalMove.Normalize();
+            // RaycastHit hit;
+
+            // // Check if the body's current velocity will result in a collision
+            // if(_rb.SweepTest(horizontalMove, out hit, distance))
+            // {
+            //     // If so, stop the movement
+            //     _rb.velocity = 
+            // }
+
         }
 
 
@@ -374,6 +393,11 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
+            if(collision.gameObject.layer == 9) //testing
+            {
+                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            }
+
             if (_isDashing)
             {
                 Rigidbody otherRb = collision.rigidbody;
