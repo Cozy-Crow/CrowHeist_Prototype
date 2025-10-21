@@ -12,6 +12,13 @@ public class Coins : MonoBehaviour
     private GameObject player;
     private Controller2Point5D playerController;
 
+    [Header("Audio")]
+    [SerializeField] private EventReference _collectSound;
+
+    [Header("Visual Effects")]
+    [SerializeField] private GameObject _collectParticlePrefab;
+    [SerializeField] private GameObject _popupPrefab;
+
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
     
     // Update is called once per frame
@@ -41,6 +48,13 @@ public class Coins : MonoBehaviour
             MusicManager.SetParameterByName("TrinketsCollected", + newValue);
             MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out float value1);
             playerController.Drop();
+
+            // Spawn particle effect
+            if (_collectParticlePrefab != null)
+            {
+                Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            }
+
             Destroy(gameObject);
         }
     }

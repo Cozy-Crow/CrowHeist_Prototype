@@ -162,6 +162,7 @@ namespace KinematicCharacterController.Examples
             footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
+
         void Update()
         {
             UpdateCoyoteTime();
@@ -436,6 +437,11 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
+            if(collision.gameObject.layer == 9) //testing
+            {
+                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            }
+
             if (_isDashing)
             {
                 Rigidbody otherRb = collision.rigidbody;
@@ -696,6 +702,20 @@ namespace KinematicCharacterController.Examples
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
+
+                            
+
+                            
+                            
+                            // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
+                            // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
+                            // if(heldObject.gameObject.GetComponentInChildren<Collider>())
+                            // {
+                            //
+                            //     //Debug.Log("Child collider: " + heldObject.gameObject.GetComponent<Collider>());
+                            //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), true);
+                            // }
+
                         }
                     }
                 }
@@ -831,6 +851,15 @@ namespace KinematicCharacterController.Examples
             
             _pickUpsList.Clear();
             heldObject = null;
+            
+            // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), false);
+            // if(heldObject.gameObject.GetComponentInChildren<Collider>())
+            // {
+            //     
+            //     Debug.Log("Child collider: " + heldObject.gameObject.GetComponent<Collider>());
+            //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), false);
+            // }
+
         }
 
         public void ApplyKnockback(Vector3 direction, float force)
