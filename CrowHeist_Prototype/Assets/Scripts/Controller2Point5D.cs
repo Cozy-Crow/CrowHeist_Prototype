@@ -302,10 +302,10 @@ namespace KinematicCharacterController.Examples
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
             _rb.velocity = targetVelocity;
 
-            // Get the velocity
-            Vector3 horizontalMove = _rb.velocity;
-            // Don't use the vertical velocity
-            horizontalMove.y = 0;
+            // // Get the velocity
+            // Vector3 horizontalMove = _rb.velocity;
+            // // Don't use the vertical velocity
+            // horizontalMove.y = 0;
             // // Calculate the approximate distance that will be traversed
             // float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
             // // Normalize horizontalMove since it should be used to indicate direction
