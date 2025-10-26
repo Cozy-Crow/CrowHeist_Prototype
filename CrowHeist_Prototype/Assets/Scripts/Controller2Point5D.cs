@@ -741,7 +741,8 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-
+            
+            // rotate to the next nearby item
             if (nearbyInteractables.Count > 1 && Input.GetKeyDown(KeyCode.R))
             {
                 previousTargetIndex = currentTargetIndex;
