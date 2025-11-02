@@ -1,62 +1,73 @@
 using System.Collections;
 using UnityEngine;
 
-public class Cobweb : MonoBehaviour
+namespace KinematicCharacterController.Examples
 {
-    [SerializeField] private float slowdownFactor = 0.3f;
-    [SerializeField] private ParticleSystem destroyEffect;
-    
-    private PlayerMovement playerMovement;
-    private bool playerInWeb = false;
-
-    private void OnTriggerEnter(Collider other)
+    public class Cobweb : MonoBehaviour
     {
-        if (other.CompareTag("Player") && !playerInWeb)
+        [SerializeField] private float slowdownFactor = 0.1f;
+        [SerializeField] private ParticleSystem destroyEffect;
+
+        private Controller2Point5D controller;
+        private bool playerInWeb = false;
+        private float originalSpeed;
+
+        void Start()
         {
-            playerMovement = other.GetComponent<PlayerMovement>();
-            if (playerMovement)
+            controller = FindObjectOfType<Controller2Point5D>();
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.CompareTag("Player") && !playerInWeb)
             {
-                playerMovement.SetSpeedMultiplier(slowdownFactor);
-                playerInWeb = true;
+                controller = other.GetComponent<Controller2Point5D>();
+                if (controller)
+                {
+                    originalSpeed = controller._moveSpeed;
+                    controller._moveSpeed *= slowdownFactor;
+                    playerInWeb = true;
+                }
             }
         }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player") && playerInWeb)
+        private void OnTriggerExit(Collider other)
         {
-            if (playerMovement)
+            if (other.CompareTag("Player") && playerInWeb)
             {
-                playerMovement.SetSpeedMultiplier(1f);
+                if (controller)
+                {
+                    controller._moveSpeed = originalSpeed;
+                    playerInWeb = false;
+                }
+            }
+        }
+
+        public void CutWithKnife()
+        {
+            if (playerInWeb && controller)
+            {
+                controller._moveSpeed = originalSpeed;
                 playerInWeb = false;
             }
-        }
-    }
 
-    public void CutWithKnife()
-    {
-        if (playerInWeb && playerMovement)
-        {
-            playerMovement.SetSpeedMultiplier(1f);
+            if (destroyEffect)
+            {
+                destroyEffect.Play();
+                StartCoroutine(DestroyAfterEffect());
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         }
-        
-        if (destroyEffect)
+
+        private IEnumerator DestroyAfterEffect()
         {
-            destroyEffect.Play();
-            StartCoroutine(DestroyAfterEffect());
-        }
-        else
-        {
+            GetComponent<Collider>().enabled = false;
+            GetComponent<Renderer>().enabled = false;
+            yield return new WaitForSeconds(destroyEffect.main.duration);
             Destroy(gameObject);
         }
-    }
-
-    private IEnumerator DestroyAfterEffect()
-    {
-        GetComponent<Collider>().enabled = false;
-        GetComponent<Renderer>().enabled = false;
-        yield return new WaitForSeconds(destroyEffect.main.duration);
-        Destroy(gameObject);
     }
 }
