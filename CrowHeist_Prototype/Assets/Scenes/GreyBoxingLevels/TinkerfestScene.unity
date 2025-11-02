@@ -5411,7 +5411,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 171855320}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -11594,7 +11594,6 @@ RectTransform:
   - {fileID: 1020954859}
   - {fileID: 332931171}
   - {fileID: 297248185}
-  - {fileID: 171855320}
   - {fileID: 504768373}
   - {fileID: 2087955985}
   - {fileID: 1169357293}
@@ -19093,7 +19092,7 @@ CapsuleCollider:
   m_Radius: 0.5
   m_Height: 1.9327359
   m_Direction: 1
-  m_Center: {x: 0, y: -0.14957182, z: 0}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!4 &2074509607 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 631451988467006383, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
@@ -19112,7 +19111,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shadow: {fileID: 171619101}
-  offest: 0
+  offset: 0
 --- !u!1 &2082934252 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: f4c2e3011782c3e4b8cd34fe437eed62, type: 3}
@@ -20558,6 +20557,10 @@ PrefabInstance:
       value: -1785143012
       objectReference: {fileID: 0}
     - target: {fileID: 4752121033635030517, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4752121033635030517, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: m_Center.y
       value: 0.000000037252903
       objectReference: {fileID: 0}
@@ -20568,6 +20571,10 @@ PrefabInstance:
     - target: {fileID: 5167104243750956226, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0.967
+      objectReference: {fileID: 0}
+    - target: {fileID: 5211487340551427737, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
+      propertyPath: m_Drag
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8784716332313436473, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: m_CastShadows
@@ -20853,3 +20860,4 @@ SceneRoots:
   - {fileID: 931675087}
   - {fileID: 550920807}
   - {fileID: 1661021316}
+  - {fileID: 642876977}
