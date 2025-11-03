@@ -11,6 +11,7 @@ public class Coins : MonoBehaviour
     [SerializeField] private EventReference CubeCollectedSound;
     private GameObject player;
     private Controller2Point5D playerController;
+    private Pickable pickableUpScript;
 
     [Header("Audio")]
     [SerializeField] private EventReference _collectSound;
@@ -31,6 +32,7 @@ public class Coins : MonoBehaviour
     {
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
+        pickableUpScript = GetComponent<Pickable>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,21 +43,39 @@ public class Coins : MonoBehaviour
             UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
             //SoundManager.instance.PlaySFXByClip(_coinSound);
             //SoundManager.instance.PlaySFX();
-            AudioManager.Instance.PlayOneShot(CubeCollectedSound);
-            float currentValue;
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out currentValue);
-            float newValue = currentValue += 1;
-            MusicManager.SetParameterByName("TrinketsCollected", + newValue);
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("TrinketsCollected", out float value1);
-            playerController.Drop();
 
+            #warning causes the double scoring bug - MUSIC MANAGER IS NOT IN SCENE
+            // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
+            // float currentValue;
+            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
+            // float newValue = currentValue += 1;
+            // MusicManager.SetParameterByName("TrinketsCollected", + newValue);
+            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float value1);
+
+            //works if player runs into heist zone
+            //if player throws coin and picks up another item, it will drop what they pick up
+            
+            //if the item is picked up, ONLY THEN drop the item
+            if(pickableUpScript.pickedUp)
+            {
+                playerController.Drop();
+            }
+            
+
+            // playerController.ItemWasDestroyed();
             // Spawn particle effect
             if (_collectParticlePrefab != null)
             {
                 Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
             }
 
-            Destroy(gameObject);
+            //run in a function to allow the item to drop first
+            KillObject();
         }
+    }
+    
+    void KillObject()
+    {
+        Destroy(gameObject);
     }
 }
