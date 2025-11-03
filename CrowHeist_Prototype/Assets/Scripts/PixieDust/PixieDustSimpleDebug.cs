@@ -130,4 +130,9 @@ public class PixieDustSimpleDebug : MonoBehaviour, IPickupable
 
         Debug.Log("Levitation effect complete");
     }
+
+    public void Consume()
+    {
+        return;
+    }
 }
