@@ -693,6 +693,7 @@ namespace KinematicCharacterController.Examples
                     Interactable selected = nearbyInteractables[currentTargetIndex];
                     if (selected != null && selected.realObject != null)
                     {
+
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             pickUp.PickUP(_pickUpPoint);
@@ -703,10 +704,7 @@ namespace KinematicCharacterController.Examples
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
-
-                            
-
-                            
+    
                             
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);

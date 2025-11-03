@@ -35,9 +35,10 @@ public class IntroVideoManager : MonoBehaviour
     {
         LoadGameScene();
     }
-    
+
     private void LoadGameScene()
     {
         SceneManager.LoadScene(gameSceneName);
     }
+
 }

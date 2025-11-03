@@ -44,7 +44,7 @@ public class Coins : MonoBehaviour
             //SoundManager.instance.PlaySFXByClip(_coinSound);
             //SoundManager.instance.PlaySFX();
 
-            #warning causes the double scoring bug - MUSIC MANAGER IS NOT IN SCENE
+            #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
             // float currentValue;
             // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
