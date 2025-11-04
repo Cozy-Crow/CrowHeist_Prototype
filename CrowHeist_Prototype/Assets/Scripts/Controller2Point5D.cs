@@ -162,7 +162,6 @@ namespace KinematicCharacterController.Examples
             footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
-
         void Update()
         {
             UpdateCoyoteTime();
@@ -209,16 +208,17 @@ namespace KinematicCharacterController.Examples
         {
             // Physics in FixedUpdate
             CheckGrounded();
-            HandleMove();
             HandleGravity();
+            HandleMove();
             HandleExternalForces();
             HandleKnockback();
         }
 
         void LateUpdate()
         {
-            HandleRotation(); 
+            HandleRotation();
         }
+        
 
 
         private void CheckGrounded()
@@ -258,8 +258,8 @@ namespace KinematicCharacterController.Examples
             {
                 _currentGroundObject = hit.collider.gameObject;
 
-                // Keep player at proper height above ground
-                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.5f);
+                // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
+                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
                 float currentHeight = transform.position.y;
 
                 // Only apply correction if significantly below target height (actually sinking)
