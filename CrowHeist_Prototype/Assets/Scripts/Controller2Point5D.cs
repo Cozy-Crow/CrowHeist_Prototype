@@ -45,7 +45,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("Dash")]
         [SerializeField] public float _dashSpeed = 40f;
-        [SerializeField] public float _dashDuration = 0.2f;
+        [SerializeField] public float _dashDuration = 0.3f;
         [SerializeField] public float _dashForce = 10f;
         public float _dashCooldown = 1f;
         public bool _canDash = true;
