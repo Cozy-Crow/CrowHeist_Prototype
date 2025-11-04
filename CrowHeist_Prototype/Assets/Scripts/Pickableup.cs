@@ -11,7 +11,7 @@ public class Pickable : MonoBehaviour, IPickupable
     private GameObject _item;
     public bool pickedUp = false;
     public bool _isDirty = false;
-    public GameObject player;
+    public Controller2Point5D player;
     public GameObject Item => _item;
     private AIEventManager aiEventManager;
     private ItemEventManager itemEventManager;
@@ -21,7 +21,7 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         _item = gameObject;
         _rigidbody = GetComponent<Rigidbody>();
-        player = GameObject.FindWithTag("Player");
+        player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
     }
     void Start()
     {
@@ -62,10 +62,10 @@ public class Pickable : MonoBehaviour, IPickupable
 
         if (player != null)
         {
-            Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
+            //Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
             if (_isDirty)
             {
-                playerController._isDirty = true;
+                player._isDirty = true;
                 aiEventManager.PlayerDirty(player.transform.position);
                 Debug.Log("Player is dirty");
             }
@@ -93,6 +93,11 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         Debug.Log("Using " + gameObject.name);
         //MusicManager.SetParameterByName("ItemYes", 0);
+    }
+
+    public void Consume()
+    {
+        player.ConsumeItem();
     }
 
     void OnObjectDirty()

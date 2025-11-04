@@ -52,7 +52,11 @@ public class ThrowForIdiots : MonoBehaviour
 
     void SpawnItem()
     {
-        if (spawnObject && spawnPoint) Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
+        if (spawnObject && spawnPoint)
+        {
+            GameObject spawned = Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
+            spawned.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
+        }
     }
 
     // Animation-based opening (call this from animation event)

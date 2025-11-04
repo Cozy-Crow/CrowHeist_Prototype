@@ -59,8 +59,8 @@ public class RoombAi : MonoBehaviour
             aiEventManager.OnPlayerDirty.AddListener(UpdatePlayerPath);
         }
 
-        if (!targets.Contains(dock))
-            targets.Add(dock);
+        // if (!targets.Contains(dock))
+        //     targets.Add(dock);
     }
 
     private void Update()
@@ -73,7 +73,6 @@ public class RoombAi : MonoBehaviour
             // Prioritize player if dirty and holding something
             if (playerIsDirty && playerController.heldObject != null)
             {
-                Debug.Log("attack crowley");
                 PlayerPath(player.transform.position);
             }
             else if (allDirtyObjects.Count > 0)
@@ -87,20 +86,9 @@ public class RoombAi : MonoBehaviour
             {
                 anyObjectDirty = false;
                 Patrol();
-
-                // StationaryPath();
             }
         }
     }
-
-    // Roomba will start docked, and will never return to dock.
-    // So this method is no longer necesary
-
-    // private void StationaryPath()
-    // {
-    //     agent.SetDestination(dock.position);
-    // }
-
 
     private void ItemPath(Vector3 targetPos)
     {
@@ -148,8 +136,6 @@ public class RoombAi : MonoBehaviour
         {
             anyObjectDirty = false;
             Patrol();
-
-            //StationaryPath();
         }
     }
 

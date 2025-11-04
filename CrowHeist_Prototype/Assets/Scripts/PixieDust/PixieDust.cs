@@ -542,4 +542,9 @@ public class PixieDust : MonoBehaviour, IPickupable
         }
         floorDustInstances.Clear();
     }
+
+    public void Consume()
+    {
+        return;
+    }
 }

@@ -8,4 +8,6 @@ public interface IPickupable
     public void PickUP(Transform parent);
     public void Drop(Vector3 position);
     public void Use();
+
+    public void Consume();
 }
