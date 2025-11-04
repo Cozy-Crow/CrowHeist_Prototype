@@ -200,6 +200,9 @@ namespace KinematicCharacterController.Examples
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
+
+            //added as a fix for now, could probably called more efficiently
+            RemoveNullItems();
         }
 
         void FixedUpdate()
@@ -210,7 +213,6 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
-
         }
 
         void LateUpdate()
@@ -310,10 +312,10 @@ namespace KinematicCharacterController.Examples
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
             _rb.velocity = targetVelocity;
 
-            // Get the velocity
-            Vector3 horizontalMove = _rb.velocity;
-            // Don't use the vertical velocity
-            horizontalMove.y = 0;
+            // // Get the velocity
+            // Vector3 horizontalMove = _rb.velocity;
+            // // Don't use the vertical velocity
+            // horizontalMove.y = 0;
             // // Calculate the approximate distance that will be traversed
             // float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
             // // Normalize horizontalMove since it should be used to indicate direction
@@ -584,12 +586,12 @@ namespace KinematicCharacterController.Examples
             {
                 if (!nearbyInteractables.Contains(interactable))
                 {
-                    Debug.Log("Added Interactable: " + interactable.gameObject.name);
+                    // Debug.Log("Added Interactable: " + interactable.gameObject.name);
                     nearbyInteractables.Add(interactable);
-                    Debug.Log("Interactables: ");
+                    // Debug.Log("Interactables: ");
                     foreach (Interactable item in nearbyInteractables)
                     {
-                        Debug.Log(item.gameObject.name + "\n");
+                        // Debug.Log(item.gameObject.name + "\n");
                     }
 
                     UpdateHighlightedInteractable();
@@ -693,13 +695,13 @@ namespace KinematicCharacterController.Examples
 
                 Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
 
-
                 if (nearbyInteractables.Count > 0 && currentTargetIndex < nearbyInteractables.Count)
                 {
 
                     Interactable selected = nearbyInteractables[currentTargetIndex];
                     if (selected != null && selected.realObject != null)
                     {
+
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             pickUp.PickUP(_pickUpPoint);
@@ -710,10 +712,7 @@ namespace KinematicCharacterController.Examples
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
-
-                            
-
-                            
+    
                             
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
@@ -749,7 +748,8 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-
+            
+            // rotate to the next nearby item
             if (nearbyInteractables.Count > 1 && Input.GetKeyDown(KeyCode.R))
             {
                 previousTargetIndex = currentTargetIndex;
@@ -851,15 +851,15 @@ namespace KinematicCharacterController.Examples
         }
         public void Drop()
         {
-            
+
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(_dropPoint.position);
             }
-            
+
             _pickUpsList.Clear();
             heldObject = null;
-            
+
             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), false);
             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
             // {
@@ -867,7 +867,23 @@ namespace KinematicCharacterController.Examples
             //     Debug.Log("Child collider: " + heldObject.gameObject.GetComponent<Collider>());
             //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), false);
             // }
+        }
+        
+        public void RemoveNullItems()
+        {
+            //safely loop through items, find ones to remove, then remove them
+            List<Interactable> toRemove = new List<Interactable>();
 
+            foreach (var interactable in nearbyInteractables)
+            {
+                if (interactable == null)
+                    toRemove.Add(interactable);
+            }
+
+            foreach (var interactable in toRemove)
+            {
+                nearbyInteractables.Remove(interactable);
+            }
         }
 
         public void ApplyKnockback(Vector3 direction, float force)
