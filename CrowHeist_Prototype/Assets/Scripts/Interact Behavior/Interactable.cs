@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using KinematicCharacterController.Examples;
 using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 
@@ -43,7 +44,7 @@ public class Interactable : MonoBehaviour, IInteractable
             {
                 _canvas.SetActive(true);
             }
-            _outline.enabled = true;
+            //_outline.enabled = true;
             _interact = true;
         }
     }
@@ -60,5 +61,10 @@ public class Interactable : MonoBehaviour, IInteractable
             _outline.enabled = false;
             _interact = false;
         }
+    }
+
+    public virtual void TriggerInteraction(Pickable item)
+    {
+        return;
     }
 }

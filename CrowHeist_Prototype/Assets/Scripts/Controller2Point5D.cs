@@ -584,17 +584,21 @@ namespace KinematicCharacterController.Examples
         {
             if (other.TryGetComponent(out Interactable interactable))
             {
-                if (!nearbyInteractables.Contains(interactable))
+                if (!nearbyInteractables.Contains(interactable) )
                 {
-                    // Debug.Log("Added Interactable: " + interactable.gameObject.name);
-                    nearbyInteractables.Add(interactable);
-                    // Debug.Log("Interactables: ");
-                    foreach (Interactable item in nearbyInteractables)
+                    if (heldObject == null || interactable.realObject != heldObject.gameObject)
                     {
-                        // Debug.Log(item.gameObject.name + "\n");
+                        Debug.Log("Added Interactable: " + interactable.gameObject.name);
+                        nearbyInteractables.Add(interactable);
+                        Debug.Log("Interactables: ");
+                        foreach (Interactable item in nearbyInteractables)
+                        {
+                            Debug.Log(item.gameObject.name + "\n");
+                        }
+
+                        UpdateHighlightedInteractable();
                     }
 
-                    UpdateHighlightedInteractable();
                 }
             }
             
@@ -691,7 +695,6 @@ namespace KinematicCharacterController.Examples
 
                 AIEventManager.instance.e_pickup.Invoke();
 
-                if (_pickUpsList.Count > 0) return;
 
                 Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
 
@@ -704,6 +707,8 @@ namespace KinematicCharacterController.Examples
 
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
+                            if (_pickUpsList.Count > 0) return;
+                            selected.SetOutline(false);
                             pickUp.PickUP(_pickUpPoint);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
@@ -712,7 +717,12 @@ namespace KinematicCharacterController.Examples
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
-    
+                            UpdateHighlightedInteractable();
+                            
+
+                            
+
+                            
                             
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
@@ -723,6 +733,10 @@ namespace KinematicCharacterController.Examples
                             //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), true);
                             // }
 
+                        }
+                        else
+                        {
+                            selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
                     }
                 }
@@ -884,6 +898,12 @@ namespace KinematicCharacterController.Examples
             {
                 nearbyInteractables.Remove(interactable);
             }
+        }
+
+        public void ConsumeItem()
+        {
+            Destroy(heldObject.gameObject);
+            Drop();
         }
 
         public void ApplyKnockback(Vector3 direction, float force)
