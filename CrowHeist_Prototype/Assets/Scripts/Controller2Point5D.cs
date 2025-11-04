@@ -246,6 +246,14 @@ namespace KinematicCharacterController.Examples
                 _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
             }
 
+            // Added by Mark D. 10/28/25
+            // don't grounded if its a trigger collider
+            // so player can't stand on object SurfaceCheck colliders
+            if(hit.collider != null && hit.collider.isTrigger)
+            {
+                _isGrounded = false;
+            }
+            
             if (_isGrounded && hit.collider != null)
             {
                 _currentGroundObject = hit.collider.gameObject;
