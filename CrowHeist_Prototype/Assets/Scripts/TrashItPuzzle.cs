@@ -27,7 +27,9 @@ public class TrashITPuzzle : MonoBehaviour
                     ball.GetComponent<Rigidbody>().AddForce(Vector3.up * shootForce, ForceMode.Impulse);
                 }
 
-                Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
+                GameObject spawnedObject = Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
+                Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
+                spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);
             }
         }
     }
