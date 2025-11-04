@@ -46,10 +46,7 @@ public class KnifeStick : MonoBehaviour
             // Rotate the knife while it's moving
             transform.Rotate(Vector3.forward * rotationSpeed * Time.deltaTime);
             blade.isTrigger = true;
-           
-            
         }
-        
     }
     
     void SetColliderActive(int index, bool isActive)
