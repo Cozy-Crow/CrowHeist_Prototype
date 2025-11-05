@@ -1,461 +1,276 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Reflection;
-using System.Linq;
 
-public class SinkCleaner : MonoBehaviour
+public class Sink : MonoBehaviour
 {
     [Header("Water Settings")]
-    [SerializeField] private GameObject waterObject; // Assign a water plane/mesh in the sink
-    [SerializeField] private float waterFillSpeed = 0.5f;
-    [SerializeField] private float maxWaterLevel = 0.5f; // Local Y position for max water
-    [SerializeField] private float minWaterLevel = -0.5f; // Local Y position when empty
-    [SerializeField] private ParticleSystem waterParticles; // Optional water pour effect
-
-    [Header("Interaction")]
-    [SerializeField] private bool isInteractable = true;
-    [SerializeField] private float interactionRange = 2f;
-    [SerializeField] private KeyCode fillKey = KeyCode.E;
-    [SerializeField] private KeyCode drainKey = KeyCode.Q;
-
-    [Header("Cleaning")]
-    [SerializeField] private Transform cleaningZone; // Trigger area for detecting objects
-    [SerializeField] private float cleaningDelay = 1f; // Time object needs to be in water
-    [SerializeField] private ParticleSystem bubbleEffect; // Optional cleaning bubbles
-    [SerializeField] private string[] dirtyFieldNames = { "isFilthy", "isDirty"}; // Field names to check
-    [SerializeField] private string[] cleanableTags = { "Cleanable", "cleanable" }; // Tags that can be cleaned
-    [SerializeField] private bool cleanAllObjects = true; // If true, tries to clean ANY object regardless of tag
-
-    [Header("Audio")]
-    [SerializeField] private AudioSource waterAudioSource;
-    [SerializeField] private AudioClip waterFillSound;
-    [SerializeField] private AudioClip waterDrainSound;
-    [SerializeField] private AudioClip cleaningSound;
-
-    [Header("UI")]
-    [SerializeField] private GameObject interactionUI; // "Press E to fill / Q to drain" prompt
-
-    [Header("Debug")]
-    [SerializeField] private bool debugMode = false;
-
-    private float currentWaterLevel;
-    private bool isPlayerNearby = false;
+    public GameObject waterObject;
+    public float fillTime = 2f;
+    public float drainTime = 1.5f;
+    public float maxWaterHeight = 1f;
+    public Material cleanWaterMaterial;
+    public Material dirtyWaterMaterial;
+    public float drainDelay = 1f;
+    private float currentWaterHeight = 0f;
     private bool isFilling = false;
+    private bool isFilled = false;
     private bool isDraining = false;
-    private bool hasWater = false;
-    private List<GameObject> objectsInWater = new List<GameObject>();
-    private Dictionary<GameObject, float> cleaningTimers = new Dictionary<GameObject, float>();
-    private Dictionary<GameObject, List<FieldInfo>> dirtyFields = new Dictionary<GameObject, List<FieldInfo>>();
+    private bool isWaterDirty = false;
 
-    private Transform player;
+    [Header("Processing Settings")]
+    public float processingTime = 1f;
+    private List<Pickable> itemsBeingCleaned = new List<Pickable>();
+    private List<Pickable> processedItems = new List<Pickable>();
+
+    [Header("Launch Settings")]
+    public float launchForce = 10f;
+    public Vector3 launchDirection = Vector3.up;
+
+    private Vector3 waterInitialScale;
 
     void Start()
     {
-        // Find player
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            player = playerObj.transform;
-        }
-
-        // Initialize water at minimum level
-        currentWaterLevel = minWaterLevel;
         if (waterObject != null)
         {
-            waterObject.SetActive(false);
-            Vector3 waterPos = waterObject.transform.localPosition;
-            waterPos.y = minWaterLevel;
-            waterObject.transform.localPosition = waterPos;
-        }
+            waterInitialScale = waterObject.transform.localScale;
+            // Start with water at minimum height
+            waterObject.transform.localScale = new Vector3(
+                waterInitialScale.x,
+                0.01f,
+                waterInitialScale.z
+            );
 
-        // Setup cleaning zone if not assigned
-        if (cleaningZone == null)
-        {
-            // Create a trigger zone for cleaning detection
-            GameObject cleanZone = new GameObject("CleaningZone");
-            cleanZone.transform.SetParent(transform);
-            cleanZone.transform.localPosition = Vector3.zero;
-            BoxCollider trigger = cleanZone.AddComponent<BoxCollider>();
-            trigger.isTrigger = true;
-            trigger.size = new Vector3(1f, 0.5f, 1f); // Adjust based on sink size
-            cleaningZone = cleanZone.transform;
-        }
-
-        // Hide interaction UI initially
-        if (interactionUI != null)
-        {
-            interactionUI.SetActive(false);
+            // Store the clean water material if not already set
+            if (cleanWaterMaterial == null)
+            {
+                MeshRenderer renderer = waterObject.GetComponent<MeshRenderer>();
+                if (renderer != null)
+                {
+                    cleanWaterMaterial = renderer.material;
+                }
+            }
         }
     }
 
     void Update()
     {
-        // Check player distance
-        CheckPlayerProximity();
-
-        // Handle water filling/draining
-        if (isPlayerNearby && isInteractable)
+        // Fill water when needed
+        if (isFilling && !isFilled)
         {
-            HandleWaterControls();
-        }
+            currentWaterHeight += (maxWaterHeight / fillTime) * Time.deltaTime;
 
-        // Update water level visually
-        UpdateWaterVisual();
-
-        // Process cleaning for objects in water
-        ProcessCleaning();
-    }
-
-    void CheckPlayerProximity()
-    {
-        if (player == null) return;
-
-        float distance = Vector3.Distance(transform.position, player.position);
-        bool wasNearby = isPlayerNearby;
-        isPlayerNearby = distance <= interactionRange;
-
-        // Show/hide interaction UI
-        if (interactionUI != null && wasNearby != isPlayerNearby)
-        {
-            interactionUI.SetActive(isPlayerNearby);
-        }
-    }
-
-    void HandleWaterControls()
-    {
-        // Fill water
-        if (Input.GetKey(fillKey) && !isFilling && currentWaterLevel < maxWaterLevel)
-        {
-            StartFilling();
-        }
-        else if (Input.GetKeyUp(fillKey) && isFilling)
-        {
-            StopFilling();
-        }
-
-        // Drain water
-        if (Input.GetKey(drainKey) && !isDraining && currentWaterLevel > minWaterLevel)
-        {
-            StartDraining();
-        }
-        else if (Input.GetKeyUp(drainKey) && isDraining)
-        {
-            StopDraining();
-        }
-    }
-
-    void StartFilling()
-    {
-        isFilling = true;
-        isDraining = false;
-
-        // Show water object when starting to fill
-        if (waterObject != null && !waterObject.activeSelf && currentWaterLevel <= minWaterLevel)
-        {
-            waterObject.SetActive(true);
-        }
-
-        // Play water particles
-        if (waterParticles != null && !waterParticles.isPlaying)
-        {
-            waterParticles.Play();
-        }
-
-        // Play fill sound
-        if (waterAudioSource != null && waterFillSound != null)
-        {
-            waterAudioSource.clip = waterFillSound;
-            waterAudioSource.loop = true;
-            waterAudioSource.Play();
-        }
-    }
-
-    void StopFilling()
-    {
-        isFilling = false;
-
-        // Stop water particles
-        if (waterParticles != null && waterParticles.isPlaying)
-        {
-            waterParticles.Stop();
-        }
-
-        // Stop fill sound
-        if (waterAudioSource != null && waterAudioSource.isPlaying)
-        {
-            waterAudioSource.Stop();
-        }
-    }
-
-    void StartDraining()
-    {
-        isDraining = true;
-        isFilling = false;
-
-        // Play drain sound
-        if (waterAudioSource != null && waterDrainSound != null)
-        {
-            waterAudioSource.clip = waterDrainSound;
-            waterAudioSource.loop = true;
-            waterAudioSource.Play();
-        }
-    }
-
-    void StopDraining()
-    {
-        isDraining = false;
-
-        // Stop drain sound
-        if (waterAudioSource != null && waterAudioSource.isPlaying)
-        {
-            waterAudioSource.Stop();
-        }
-    }
-
-    void UpdateWaterVisual()
-    {
-        // Update water level
-        if (isFilling)
-        {
-            currentWaterLevel = Mathf.MoveTowards(currentWaterLevel, maxWaterLevel, waterFillSpeed * Time.deltaTime);
-            hasWater = currentWaterLevel > minWaterLevel + 0.1f;
-        }
-        else if (isDraining)
-        {
-            currentWaterLevel = Mathf.MoveTowards(currentWaterLevel, minWaterLevel, waterFillSpeed * Time.deltaTime);
-            hasWater = currentWaterLevel > minWaterLevel + 0.1f;
-        }
-
-        // Update water object position
-        if (waterObject != null)
-        {
-            Vector3 waterPos = waterObject.transform.localPosition;
-            waterPos.y = currentWaterLevel;
-            waterObject.transform.localPosition = waterPos;
-
-            // Hide water when fully drained
-            if (currentWaterLevel <= minWaterLevel && waterObject.activeSelf)
+            if (currentWaterHeight >= maxWaterHeight)
             {
-                waterObject.SetActive(false);
-                hasWater = false;
+                currentWaterHeight = maxWaterHeight;
+                isFilled = true;
+                isFilling = false;
+            }
+
+            if (waterObject != null)
+            {
+                waterObject.transform.localScale = new Vector3(
+                    waterInitialScale.x,
+                    currentWaterHeight,
+                    waterInitialScale.z
+                );
             }
         }
 
-        // Auto-stop when reaching limits
-        if (isFilling && currentWaterLevel >= maxWaterLevel)
+        // Drain water when needed
+        if (isDraining)
         {
-            StopFilling();
-        }
-        else if (isDraining && currentWaterLevel <= minWaterLevel)
-        {
-            StopDraining();
-        }
-    }
+            currentWaterHeight -= (maxWaterHeight / drainTime) * Time.deltaTime;
 
-    void ProcessCleaning()
-    {
-        if (!hasWater) return;
-
-        // Update cleaning timers for objects in water
-        List<GameObject> cleanedObjects = new List<GameObject>();
-
-        foreach (var obj in objectsInWater)
-        {
-            if (obj == null)
+            if (currentWaterHeight <= 0.01f)
             {
-                cleanedObjects.Add(obj);
-                continue;
-            }
+                currentWaterHeight = 0.01f;
+                isDraining = false;
 
-            // Update timer
-            if (!cleaningTimers.ContainsKey(obj))
-            {
-                cleaningTimers[obj] = 0f;
-            }
-
-            cleaningTimers[obj] += Time.deltaTime;
-
-            // Check if object has been in water long enough
-            if (cleaningTimers[obj] >= cleaningDelay)
-            {
-                CleanObject(obj);
-                cleanedObjects.Add(obj);
-            }
-        }
-
-        // Remove cleaned objects from tracking
-        foreach (var obj in cleanedObjects)
-        {
-            objectsInWater.Remove(obj);
-            if (obj != null && cleaningTimers.ContainsKey(obj))
-            {
-                cleaningTimers.Remove(obj);
-            }
-        }
-    }
-
-    void CleanObject(GameObject obj)
-    {
-        bool wasCleaned = false;
-
-        // Use cached fields if available
-        if (dirtyFields.ContainsKey(obj) && dirtyFields[obj] != null)
-        {
-            foreach (var field in dirtyFields[obj])
-            {
-                if (field.FieldType == typeof(bool))
+                // Reset water back to clean material after draining
+                if (isWaterDirty && cleanWaterMaterial != null && waterObject != null)
                 {
-                    field.SetValue(field.DeclaringType.IsValueType ? obj : obj.GetComponent(field.DeclaringType), false);
-                    wasCleaned = true;
-                    if (debugMode) Debug.Log($"Cleaned {obj.name} - Set {field.Name} to false");
-                }
-            }
-        }
-
-        if (wasCleaned)
-        {
-            // Play cleaning effect
-            if (bubbleEffect != null)
-            {
-                ParticleSystem bubbles = Instantiate(bubbleEffect, obj.transform.position, Quaternion.identity);
-                Destroy(bubbles.gameObject, 2f);
-            }
-
-            // Play cleaning sound
-            if (waterAudioSource != null && cleaningSound != null)
-            {
-                waterAudioSource.PlayOneShot(cleaningSound);
-            }
-
-            // Send message to object (for custom cleaning logic)
-            obj.SendMessage("OnCleaned", SendMessageOptions.DontRequireReceiver);
-
-            Debug.Log($"Successfully cleaned: {obj.name}");
-        }
-    }
-
-    bool IsObjectCleanable(GameObject obj)
-    {
-        // Check if object should be cleaned based on settings
-        if (!cleanAllObjects)
-        {
-            // Check if object has any of the cleanable tags
-            bool hasCleanableTag = false;
-            foreach (string tag in cleanableTags)
-            {
-                if (obj.CompareTag(tag))
-                {
-                    hasCleanableTag = true;
-                    break;
-                }
-            }
-            if (!hasCleanableTag) return false;
-        }
-
-        // Find and cache dirty fields
-        List<FieldInfo> foundFields = new List<FieldInfo>();
-        Component[] components = obj.GetComponents<Component>();
-
-        foreach (Component comp in components)
-        {
-            if (comp == null) continue;
-
-            System.Type type = comp.GetType();
-
-            // Check all fields in the component
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-
-            foreach (FieldInfo field in fields)
-            {
-                // Check if field name matches any of our dirty field names
-                foreach (string dirtyFieldName in dirtyFieldNames)
-                {
-                    if (field.Name.ToLower() == dirtyFieldName.ToLower() && field.FieldType == typeof(bool))
+                    MeshRenderer renderer = waterObject.GetComponent<MeshRenderer>();
+                    if (renderer != null)
                     {
-                        // Check if the field is currently true (dirty)
-                        bool currentValue = (bool)field.GetValue(comp);
-                        if (currentValue)
-                        {
-                            foundFields.Add(field);
-                            if (debugMode) Debug.Log($"Found dirty field '{field.Name}' in {comp.GetType().Name} on {obj.name}");
-                        }
+                        renderer.material = cleanWaterMaterial;
+                        isWaterDirty = false;
+                        Debug.Log("Water has been reset to clean!");
                     }
                 }
             }
-        }
 
-        // Cache the fields for this object
-        if (foundFields.Count > 0)
+            if (waterObject != null)
+            {
+                waterObject.transform.localScale = new Vector3(
+                    waterInitialScale.x,
+                    currentWaterHeight,
+                    waterInitialScale.z
+                );
+            }
+        }
+    }
+
+    public void StartFilling()
+    {
+        if (!isFilled && !isFilling)
         {
-            dirtyFields[obj] = foundFields;
-            return true;
+            isFilling = true;
         }
-
-        return false;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        // Skip if it's the cleaning zone itself
-        if (cleaningZone != null && other.transform.IsChildOf(cleaningZone)) return;
+        // Check if the object has the Pickable component (check parent objects too)
+        Pickable pickable = other.GetComponentInParent<Pickable>();
 
-        // Skip the player
-        if (other.CompareTag("Player")) return;
-
-        // Check if object is cleanable
-        if (IsObjectCleanable(other.gameObject))
+        if (pickable != null)
         {
-            if (!objectsInWater.Contains(other.gameObject))
+            // Start filling water when item enters
+            StartFilling();
+
+            // If the sink is filled and item hasn't been processed yet, process it
+            if (isFilled && !processedItems.Contains(pickable) && !itemsBeingCleaned.Contains(pickable))
             {
-                objectsInWater.Add(other.gameObject);
-                cleaningTimers[other.gameObject] = 0f;
-                Debug.Log($"Cleanable object entered sink water: {other.name}");
+                itemsBeingCleaned.Add(pickable); // Add immediately to prevent double processing
+                StartCoroutine(ProcessItem(pickable));
             }
         }
-        else if (debugMode)
+    }
+
+    void OnTriggerStay(Collider other)
+    {
+        // Check if water just finished filling (check parent objects too)
+        Pickable pickable = other.GetComponentInParent<Pickable>();
+
+        if (pickable != null && isFilled && !itemsBeingCleaned.Contains(pickable) && !processedItems.Contains(pickable))
         {
-            Debug.Log($"Object {other.name} entered sink but is not cleanable (no dirty fields found or wrong tag)");
+            itemsBeingCleaned.Add(pickable); // Add immediately to prevent double processing
+            StartCoroutine(ProcessItem(pickable));
         }
+    }
+
+    IEnumerator ProcessItem(Pickable item)
+    {
+        yield return new WaitForSeconds(processingTime);
+
+        // Check if this item has a Paintbrush component with isDirty boolean
+        Paintbrush paintbrush = item.GetComponent<Paintbrush>();
+        bool wasDirty = false;
+
+        if (paintbrush != null)
+        {
+            wasDirty = paintbrush.isDirty;
+            Debug.Log($"Processing {item.gameObject.name} - Paintbrush.isDirty BEFORE: {paintbrush.isDirty}");
+        }
+
+        // Clean the item if it was dirty
+        if (wasDirty && paintbrush != null)
+        {
+            paintbrush.isDirty = false;
+
+            Debug.Log($"Set {item.gameObject.name}.Paintbrush.isDirty to false - Current value: {paintbrush.isDirty}");
+
+            // Update player dirty status if the item is picked up
+            if (item.pickedUp && item.player != null)
+            {
+                item.player._isDirty = false;
+            }
+
+            Debug.Log(item.gameObject.name + " has been cleaned!");
+
+            // Turn water brown/dirty only if the item was dirty
+            MakeWaterDirty();
+        }
+        else
+        {
+            Debug.Log(item.gameObject.name + " processed (was already clean or no Paintbrush component)");
+        }
+
+        if (paintbrush != null)
+        {
+            Debug.Log($"Processing {item.gameObject.name} - Paintbrush.isDirty AFTER: {paintbrush.isDirty}");
+        }
+
+        // Launch the item into the air (happens regardless of dirty state)
+        LaunchItem(item);
+
+        itemsBeingCleaned.Remove(item);
+
+        // Mark this item as processed so it won't be processed again until it exits
+        processedItems.Add(item);
     }
 
     void OnTriggerExit(Collider other)
     {
-        // Remove object from water tracking
-        if (objectsInWater.Contains(other.gameObject))
+        Pickable pickable = other.GetComponentInParent<Pickable>();
+
+        if (pickable != null)
         {
-            objectsInWater.Remove(other.gameObject);
-            if (cleaningTimers.ContainsKey(other.gameObject))
+            if (itemsBeingCleaned.Contains(pickable))
             {
-                cleaningTimers.Remove(other.gameObject);
+                itemsBeingCleaned.Remove(pickable);
             }
-            if (dirtyFields.ContainsKey(other.gameObject))
+
+            if (processedItems.Contains(pickable))
             {
-                dirtyFields.Remove(other.gameObject);
+                processedItems.Remove(pickable);
             }
-            Debug.Log($"Object left sink water: {other.name}");
         }
     }
 
-    void OnDrawGizmosSelected()
+    void LaunchItem(Pickable item)
     {
-        // Draw interaction range
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawWireSphere(transform.position, interactionRange);
+        Rigidbody rb = item.GetComponent<Rigidbody>();
 
-        // Draw cleaning zone
-        if (cleaningZone != null)
+        if (rb != null)
         {
-            Gizmos.color = Color.blue;
-            BoxCollider box = cleaningZone.GetComponent<BoxCollider>();
-            if (box != null)
+            // Make sure the item isn't kinematic
+            rb.isKinematic = false;
+
+            // Reset velocity before launching
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+
+            // Apply launch force
+            rb.AddForce(launchDirection.normalized * launchForce, ForceMode.Impulse);
+
+            Debug.Log(item.gameObject.name + " launched into the air!");
+
+            // Drain the sink after a short delay
+            StartCoroutine(DrainAfterDelay(drainDelay));
+        }
+    }
+
+    IEnumerator DrainAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        DrainSink();
+    }
+
+    void MakeWaterDirty()
+    {
+        if (!isWaterDirty && waterObject != null && dirtyWaterMaterial != null)
+        {
+            MeshRenderer renderer = waterObject.GetComponent<MeshRenderer>();
+            if (renderer != null)
             {
-                Gizmos.DrawWireCube(cleaningZone.position, box.size);
+                renderer.material = dirtyWaterMaterial;
+                isWaterDirty = true;
+                Debug.Log("Water has turned brown/dirty!");
             }
-            else
-            {
-                Gizmos.DrawWireCube(cleaningZone.position, Vector3.one);
-            }
+        }
+    }
+
+    // Public method to drain the sink
+    public void DrainSink()
+    {
+        if (!isDraining)
+        {
+            isFilled = false;
+            isFilling = false;
+            isDraining = true;
+            Debug.Log("Sink is draining...");
         }
     }
 }

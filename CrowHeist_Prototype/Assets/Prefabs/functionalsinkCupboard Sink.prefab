@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5922047291566851000}
   - component: {fileID: 3090701881428978608}
   m_Layer: 0
-  m_Name: watercube
+  m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 1632032908601730871}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.074, y: -0.74, z: 0.14}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.526, z: 0.187}
+  m_LocalScale: {x: 3.4, y: 0.5, z: 1.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 225627419563975951}
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 1625f63737c872043b06db73c8670208, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -101,7 +101,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -113,6 +113,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: f96c02045113a204d9987f10bd14504a, type: 3}
       propertyPath: m_LocalPosition.x
       value: -53.655052
@@ -169,10 +181,25 @@ PrefabInstance:
       addedObject: {fileID: 363670748667208365}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f96c02045113a204d9987f10bd14504a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2997629897176839527}
+      addedObject: {fileID: 508457833851123202}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: f96c02045113a204d9987f10bd14504a, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 508457833851123202}
+      addedObject: {fileID: 6748268176233438627}
+    - targetCorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1484671757790281466}
+    - targetCorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6150264313054746690}
+    - targetCorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3597552368490661737}
+    - targetCorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8165235253294720636}
+    - targetCorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3698080242504259096}
   m_SourcePrefab: {fileID: 100100000, guid: f96c02045113a204d9987f10bd14504a, type: 3}
 --- !u!4 &225627419563975951 stripped
 Transform:
@@ -197,31 +224,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waterObject: {fileID: 1632032908601730871}
-  waterFillSpeed: 0.5
-  maxWaterLevel: 0.5
-  minWaterLevel: -0.5
-  waterParticles: {fileID: 0}
-  isInteractable: 1
-  interactionRange: 2
-  fillKey: 101
-  drainKey: 113
-  cleaningZone: {fileID: 0}
-  cleaningDelay: 1
-  bubbleEffect: {fileID: 0}
-  dirtyFieldNames:
-  - isFilthy
-  - isDirty
-  cleanableTags:
-  - Cleanable
-  - cleanable
-  cleanAllObjects: 1
-  waterAudioSource: {fileID: 0}
-  waterFillSound: {fileID: 0}
-  waterDrainSound: {fileID: 0}
-  cleaningSound: {fileID: 0}
-  interactionUI: {fileID: 0}
-  debugMode: 0
---- !u!65 &2997629897176839527
+  fillTime: 2
+  drainTime: 1.5
+  maxWaterHeight: 1
+  cleanWaterMaterial: {fileID: 0}
+  dirtyWaterMaterial: {fileID: 2100000, guid: 28c29bcc599d5c34bb93a6f82bebc6ce, type: 2}
+  drainDelay: 2
+  cleaningTime: 1
+  launchForce: 10
+  launchDirection: {x: 1, y: 1, z: 0}
+--- !u!114 &508457833851123202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606374468436279221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  realObject: {fileID: 0}
+--- !u!65 &6748268176233438627
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -236,22 +261,119 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 1, z: -0.8}
---- !u!114 &508457833851123202
-MonoBehaviour:
+  m_Size: {x: 3.4, y: 0.5, z: 1.8}
+  m_Center: {x: 0, y: 0, z: 0.16}
+--- !u!1 &2305789312828921098 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -7253926096318441490, guid: f96c02045113a204d9987f10bd14504a, type: 3}
+  m_PrefabInstance: {fileID: 336414876250374884}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &1484671757790281466
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 606374468436279221}
+  m_GameObject: {fileID: 2305789312828921098}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  realObject: {fileID: 0}
+  serializedVersion: 3
+  m_Size: {x: 0.047, y: 0.0313, z: 0.05}
+  m_Center: {x: 0.00001604762, y: -0.0017708015, z: -0.0275}
+--- !u!65 &6150264313054746690
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305789312828921098}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.007, y: 0.032, z: 0.007}
+  m_Center: {x: 0.0203, y: -0.0016, z: 0}
+--- !u!65 &3597552368490661737
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305789312828921098}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.007, y: 0.032, z: 0.007}
+  m_Center: {x: -0.0203, y: -0.0016, z: 0}
+--- !u!65 &8165235253294720636
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305789312828921098}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.035, y: 0.007, z: 0.007}
+  m_Center: {x: 0, y: 0.0104, z: 0}
+--- !u!65 &3698080242504259096
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305789312828921098}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.035, y: 0.007, z: 0.007}
+  m_Center: {x: 0, y: -0.014, z: 0}
