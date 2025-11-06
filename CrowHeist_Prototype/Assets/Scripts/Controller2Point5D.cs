@@ -241,10 +241,10 @@ namespace KinematicCharacterController.Examples
 
             // Additional check with spherecast for better edge detection
             //------this block of code is responsible for phasing through colliders)
-            if (!_isGrounded)
-            {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
-            }
+            // if (!_isGrounded)
+            // {
+            //     _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer);
+            // }
 
             // Added by Mark D. 10/28/25
             // don't grounded if its a trigger collider
@@ -256,19 +256,19 @@ namespace KinematicCharacterController.Examples
             
             if (_isGrounded && hit.collider != null)
             {
-                _currentGroundObject = hit.collider.gameObject;
+                // _currentGroundObject = hit.collider.gameObject;
 
-                // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
-                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
-                float currentHeight = transform.position.y;
+                // // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
+                // float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
+                // float currentHeight = transform.position.y;
 
-                // Only apply correction if significantly below target height (actually sinking)
-                if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-                {
-                    // Use position-based correction with physics
-                    Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-                    _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-                }
+                // // Only apply correction if significantly below target height (actually sinking)
+                // if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+                // {
+                //     // Use position-based correction with physics
+                //     Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+                //     _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+                // }
             }
             else
             {

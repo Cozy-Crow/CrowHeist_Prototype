@@ -47,6 +47,8 @@ public class Coins : MonoBehaviour
             #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
             // float currentValue;
+
+            
             // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
             // float newValue = currentValue += 1;
             // MusicManager.SetParameterByName("TrinketsCollected", + newValue);
