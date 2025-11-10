@@ -251,29 +251,32 @@ namespace KinematicCharacterController.Examples
             // so player can't stand on object SurfaceCheck colliders
             if(hit.collider != null && hit.collider.isTrigger)
             {
+                //this doesn't generally fix the issue as it doesn't check around crowley
+                //also stops movement immediately rather than making sure player hits the floor
+                //also doesn't check from the side - i think this is the issue with the counters
                 _isGrounded = false;
             }
             
-            if (_isGrounded && hit.collider != null)
-            {
-                // _currentGroundObject = hit.collider.gameObject;
+            // if (_isGrounded && hit.collider != null)
+            // {
+            //     // _currentGroundObject = hit.collider.gameObject;
 
-                // // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
-                // float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
-                // float currentHeight = transform.position.y;
+            //     // // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
+            //     // float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
+            //     // float currentHeight = transform.position.y;
 
-                // // Only apply correction if significantly below target height (actually sinking)
-                // if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-                // {
-                //     // Use position-based correction with physics
-                //     Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-                //     _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-                // }
-            }
-            else
-            {
-                _currentGroundObject = null;
-            }
+            //     // // Only apply correction if significantly below target height (actually sinking)
+            //     // if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+            //     // {
+            //     //     // Use position-based correction with physics
+            //     //     Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+            //     //     _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+            //     // }
+            // }
+            // else
+            // {
+            //     _currentGroundObject = null;
+            // }
         }
 
         private void HandleInput()
