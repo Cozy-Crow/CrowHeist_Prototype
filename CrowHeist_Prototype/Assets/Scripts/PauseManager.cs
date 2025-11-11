@@ -12,6 +12,7 @@ public class PauseManager : MonoBehaviour
     public Button QuitButton; // Reference to the "Quit Button"
     public Button ResumeButton; // Reference to the "Resume Button"
     public Button RestartButton; // Reference to the "Restart Button"
+    public Button SaveButton; // Reference to the "Save Button"
 
     void Start() 
     {
