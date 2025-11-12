@@ -71,6 +71,7 @@ public class Pickable : MonoBehaviour, IPickupable
             }
         }
 
+        TooltipManager.Instance.CheckItemTag(tag);
 
     }
     public void Drop(Vector3 position)
