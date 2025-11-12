@@ -13,6 +13,8 @@ public class PauseManager : MonoBehaviour
     public Button ResumeButton; // Reference to the "Resume Button"
     public Button RestartButton; // Reference to the "Restart Button"
     public Button SaveButton; // Reference to the "Save Button"
+    public Button PlayButton; // Reference to the "Play Button"
+    public Button LoadButton; // Reference to the "Load Button"
 
     void Start() 
     {
@@ -42,6 +44,11 @@ public class PauseManager : MonoBehaviour
         {
             Debug.Log("Restart Button is not assigned!");
         }
+
+        if (PlayButton != null)
+        {
+            PlayButton.onClick.AddListener(PlayGame);
+        }
     }
 
     public void Update()
@@ -57,6 +64,11 @@ public class PauseManager : MonoBehaviour
                 PauseGame();
             }
         }
+    }
+
+    public void PlayGame()
+    {
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void PauseGame()
