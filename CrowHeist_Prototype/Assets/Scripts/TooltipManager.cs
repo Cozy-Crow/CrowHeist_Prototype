@@ -17,9 +17,6 @@ public class TooltipManager : MonoBehaviour
     [Header("Tracked Tooltips")]
     public List<TooltipItem> tooltipItems = new List<TooltipItem>();
 
-    [Tooltip("How long the tooltip should stay active")]
-    public float tooltipDuration = 2f;
-
     private void Awake()
     {
         if (Instance == null)
@@ -28,33 +25,29 @@ public class TooltipManager : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void CheckItemTag(string tagName)
+    // Called when an item is picked up
+    public void ShowTooltip(string tagName)
     {
         foreach (var item in tooltipItems)
         {
-            if (item.tagName == tagName)
+            if (item.tagName == tagName && item.tooltipUI != null)
             {
-                ShowTooltip(item.tooltipUI);
+                item.tooltipUI.SetActive(true);
                 return;
             }
         }
     }
 
-    private void ShowTooltip(GameObject tooltipUI)
-    {
-        if (tooltipUI == null) return;
-
-        tooltipUI.SetActive(true);
-        CancelInvoke(nameof(HideAllTooltips));
-        Invoke(nameof(HideAllTooltips), tooltipDuration);
-    }
-
-    private void HideAllTooltips()
+    // Called when an item is dropped
+    public void HideTooltip(string tagName)
     {
         foreach (var item in tooltipItems)
         {
-            if (item.tooltipUI != null)
+            if (item.tagName == tagName && item.tooltipUI != null)
+            {
                 item.tooltipUI.SetActive(false);
+                return;
+            }
         }
     }
 }
