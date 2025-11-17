@@ -8,13 +8,17 @@ public class PauseManager : MonoBehaviour
 {
     
     public bool isGamePaused = false; // Variable to track pause state
-    public GameObject PauseMenu; // UI element to show/hide
+
+    public GameObject PauseMenu; // UI element to show/hide Pause Menu
+    public GameObject loadSaveSlots; // UI element to show/hide Save Slots
+
     public Button QuitButton; // Reference to the "Quit Button"
     public Button ResumeButton; // Reference to the "Resume Button"
     public Button RestartButton; // Reference to the "Restart Button"
     public Button SaveButton; // Reference to the "Save Button"
     public Button PlayButton; // Reference to the "Play Button"
     public Button LoadButton; // Reference to the "Load Button"
+    public Button BackButton; // Reference to the "Back Button"
 
     void Start() 
     {
@@ -48,6 +52,16 @@ public class PauseManager : MonoBehaviour
         if (PlayButton != null)
         {
             PlayButton.onClick.AddListener(PlayGame);
+        }
+
+        if (LoadButton != null)
+        {
+            LoadButton.onClick.AddListener(LoadGame);
+        }
+
+        if (BackButton != null)
+        {
+            BackButton.onClick.AddListener(GoBack);
         }
     }
 
@@ -106,5 +120,15 @@ public class PauseManager : MonoBehaviour
         Time.timeScale = 1f; // Resume time
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
+    }
+
+    public void LoadGame()
+    {
+        loadSaveSlots.SetActive(true); // Show Save Slot 1 button
+    }
+
+    public void GoBack()
+    {
+        loadSaveSlots.SetActive(false); // Hide Save Slot 1 button
     }
 }
