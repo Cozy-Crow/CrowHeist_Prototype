@@ -237,14 +237,13 @@ namespace KinematicCharacterController.Examples
             float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
+            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
 
             // Additional check with spherecast for better edge detection
-            //------this block of code is responsible for phasing through colliders)
-            // if (!_isGrounded)
-            // {
-            //     _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer);
-            // }
+            if (!_isGrounded)
+            {
+                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+            }
 
             // Added by Mark D. 10/28/25
             // don't grounded if its a trigger collider
@@ -254,7 +253,7 @@ namespace KinematicCharacterController.Examples
                 //this doesn't generally fix the issue as it doesn't check around crowley
                 //also stops movement immediately rather than making sure player hits the floor
                 //also doesn't check from the side - i think this is the issue with the counters
-                _isGrounded = false;
+                // _isGrounded = false;
             }
             
             // if (_isGrounded && hit.collider != null)
@@ -502,7 +501,7 @@ namespace KinematicCharacterController.Examples
         }
 
 
-        void HandleWindUp()
+        void HandleWindUp() //jack in the box
         {
             if (_isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
@@ -551,7 +550,7 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        void HandleBounce()
+        void HandleBounce() //jack in the box
         {
             if (canBounce && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
             {
@@ -877,6 +876,9 @@ namespace KinematicCharacterController.Examples
             _pickUpsList.Clear();
             heldObject = null;
 
+            //reset line renderer
+            lineRenderer.positionCount = 0;
+
             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), false);
             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
             // {
@@ -1050,8 +1052,9 @@ namespace KinematicCharacterController.Examples
 
         void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 2);
+            //what is the purpose of this wiresphere LOL
+            // Gizmos.color = Color.red;
+            // Gizmos.DrawWireSphere(transform.position, 2);
             
             // Draw ground check
             if (_capsuleCollider != null)
