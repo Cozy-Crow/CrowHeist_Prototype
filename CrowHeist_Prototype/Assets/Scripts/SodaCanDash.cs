@@ -6,7 +6,7 @@ namespace KinematicCharacterController.Examples
 {
     public class SodaCanDash : MonoBehaviour
     {
-        [SerializeField] private float dashCooldown = 1f;
+        private int dashCount = 4;
         private float lastDashTime = -1f;
 
         private Controller2Point5D controller;
@@ -25,14 +25,15 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        private bool CanDash()
+        private bool CanDash(int dashCount)
         {
-            return Time.time >= lastDashTime + controller._dashCooldown;
+            return dashCount > 0 && Time.time >= lastDashTime + controller._dashCooldown;
         }
 
         private IEnumerator Dash()
         {
             lastDashTime = Time.time;
+            dashCount--;
             controller._canDash = false;
             controller._isDashing = true;
 
