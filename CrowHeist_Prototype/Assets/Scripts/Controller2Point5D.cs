@@ -59,7 +59,9 @@ namespace KinematicCharacterController.Examples
 
         //Physics/Direction
         public Rigidbody _rb;
-        private CapsuleCollider _capsuleCollider;
+        private CapsuleCollider[] _capsuleCollider; //stores both colliders
+        private CapsuleCollider _normalCollider;
+        private CapsuleCollider _triggerCollider;
         private string _currentAnim;
         private Quaternion targetRotation = Quaternion.identity;
         public bool _isFacingRight = true;
@@ -134,7 +136,12 @@ namespace KinematicCharacterController.Examples
         {
             _normalMoveSpeed = _moveSpeed;
             _rb = GetComponent<Rigidbody>();
-            _capsuleCollider = GetComponent<CapsuleCollider>();
+            _capsuleCollider = GetComponents<CapsuleCollider>();
+            //0 and 1 based on order in inspector
+            // - trigger is listed first in inspector 
+            _triggerCollider = _capsuleCollider[0];
+            _normalCollider = _capsuleCollider[1];
+
             _animator = GetComponentInChildren<Animator>();
             
             // Configure Rigidbody for character movement
@@ -227,14 +234,14 @@ namespace KinematicCharacterController.Examples
 
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
-            float radius = _capsuleCollider.radius * 0.9f;
+            float radius = _normalCollider.radius * 0.9f;
 
             // Start the cast from just below the center
             Vector3 castOrigin = origin;
 
             RaycastHit hit;
             // Cast distance should reach just below the feet
-            float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
+            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance;
 
             // Main ground check using a raycast for more precision
             _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
@@ -280,7 +287,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleInput()
         {
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -1057,11 +1064,11 @@ namespace KinematicCharacterController.Examples
             // Gizmos.DrawWireSphere(transform.position, 2);
             
             // Draw ground check
-            if (_capsuleCollider != null)
+            if (_normalCollider != null)
             {
                 Gizmos.color = _isGrounded ? Color.green : Color.yellow;
-                Vector3 origin = transform.position + Vector3.up * (_capsuleCollider.height * 0.5f);
-                Gizmos.DrawWireSphere(origin - Vector3.up * ((_capsuleCollider.height * 0.5f) + _groundCheckDistance), _capsuleCollider.radius * 0.9f);
+                Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
+                Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
             }
         }
 
