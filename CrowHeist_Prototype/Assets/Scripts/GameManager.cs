@@ -1,8 +1,6 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,7 +16,10 @@ public class GameManager : MonoBehaviour
     public static int Score { get => _score; set => _score = value; }
     public static int AltCoinsScore { get => altCoinsScore; set => altCoinsScore = value; }
     [SerializeField] private string endCutsceneScene = "EndCutsceneScene";
-    [SerializeField] private string gameSceneName = "IntroScene"; 
+    [SerializeField] private string gameSceneName = "IntroScene";
+
+    [Header("Save System")]
+    [SerializeField] private bool enableSaveSystem = true;
 
     private void Awake()
     {
@@ -26,6 +27,12 @@ public class GameManager : MonoBehaviour
         {
             Instance = this;
             ResetGameData();
+
+            // Initialize save system if enabled
+            if (enableSaveSystem)
+            {
+                InitializeSaveSystem();
+            }
         }
         else
         {
@@ -35,6 +42,18 @@ public class GameManager : MonoBehaviour
         foreach (var camera in _cameras)
         {
             _cameraDictionary.Add(camera.Name, camera.Camera);
+        }
+    }
+
+    private void InitializeSaveSystem()
+    {
+        // Check if SaveLoadSystem already exists in scene
+        if (SaveLoadSystem.Instance == null)
+        {
+            // Create a new GameObject with SaveLoadSystem component
+            GameObject saveSystemObj = new GameObject("SaveLoadSystem");
+            saveSystemObj.AddComponent<SaveLoadSystem>();
+            Debug.Log("SaveLoadSystem created dynamically");
         }
     }
 
@@ -56,7 +75,7 @@ public class GameManager : MonoBehaviour
                 break;
         }
     }
-    
+
     public void TriggerGameEnd()
     {
         SceneManager.LoadScene(endCutsceneScene);
@@ -64,28 +83,67 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        // Check for R key to restart
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
         }
-        
+
+        // Check win condition
         if (_score >= 5 || altCoinsScore >= 5)
         {
             TriggerGameEnd();
         }
     }
-    
+
     private void RestartGame()
     {
         ResetGameData();
         SceneManager.LoadScene(gameSceneName);
     }
-    
+
     public static void ResetGameData()
     {
         _score = 0;
+        altCoinsScore = 0;
         _cameraDictionary.Clear();
+    }
+
+  
+    /// Quick save via GameManager (alternative to pressing S)
+
+    public void QuickSave()
+    {
+        if (SaveLoadSystem.Instance != null)
+        {
+            SaveLoadSystem.Instance.SaveGame();
+        }
+        else
+        {
+            Debug.LogWarning("SaveLoadSystem not found!");
+        }
+    }
+
+    
+    /// Quick load via GameManager (alternative to pressing L)
+   
+    public void QuickLoad()
+    {
+        if (SaveLoadSystem.Instance != null)
+        {
+            SaveLoadSystem.Instance.LoadGame();
+        }
+        else
+        {
+            Debug.LogWarning("SaveLoadSystem not found!");
+        }
+    }
+
+    
+    /// Check if a save file exists
+   
+    public bool HasSaveFile()
+    {
+        return SaveLoadSystem.Instance != null && SaveLoadSystem.Instance.SaveFileExists();
     }
 }
 
