@@ -8,24 +8,27 @@ public class TrashITPuzzle : MonoBehaviour
     [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float shootForce = 10f;
+    [SerializeField] private GameObject trashBallPrefab;
 
-    private List<GameObject> trashBalls = new List<GameObject>();
+    private List<Vector3> originalPositions = new List<Vector3>();
+    private List<Quaternion> originalRotations = new List<Quaternion>();
+    private int collectedCount = 0;
     private bool puzzleCompleted = false;
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("TrashBall") && !puzzleCompleted)
         {
-            trashBalls.Add(other.gameObject);
+            originalPositions.Add(other.transform.position);
+            originalRotations.Add(other.transform.rotation);
+            
+            Destroy(other.gameObject);
+            collectedCount++;
 
-            if (trashBalls.Count == 4)
+            if (collectedCount == 4)
             {
                 puzzleCompleted = true;
-                
-                foreach (GameObject ball in trashBalls)
-                {
-                    ball.GetComponent<Rigidbody>().AddForce(Vector3.up * shootForce, ForceMode.Impulse);
-                }
+                StartCoroutine(RespawnAndShootBalls());
 
                 GameObject spawnedObject = Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
                 Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
@@ -34,11 +37,16 @@ public class TrashITPuzzle : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private IEnumerator RespawnAndShootBalls()
     {
-        if (other.CompareTag("TrashBall"))
+        yield return new WaitForSeconds(0.2f);
+
+        for (int i = 0; i < originalPositions.Count; i++)
         {
-            trashBalls.Remove(other.gameObject);
+            GameObject newBall = Instantiate(trashBallPrefab, spawnPoint.position, originalRotations[i]);
+            Vector3 skewedDirection = new Vector3(Random.Range(-0.5f, 0.5f), 1f, Random.Range(-0.5f, 0.5f)).normalized;
+            newBall.GetComponent<Rigidbody>().AddForce(skewedDirection * shootForce, ForceMode.Impulse);
         }
+        
     }
 }

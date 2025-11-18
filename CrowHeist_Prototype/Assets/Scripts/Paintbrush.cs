@@ -7,7 +7,8 @@ public class Paintbrush : MonoBehaviour
 {
     
     private Camera mainCamera;
-    
+    public bool isDirty = true;
+
     // Start is called before the first frame update
     void Start()
     {

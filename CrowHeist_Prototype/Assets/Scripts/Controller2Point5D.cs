@@ -59,7 +59,9 @@ namespace KinematicCharacterController.Examples
 
         //Physics/Direction
         public Rigidbody _rb;
-        private CapsuleCollider _capsuleCollider;
+        private CapsuleCollider[] _capsuleCollider; //stores both colliders
+        private CapsuleCollider _normalCollider;
+        private CapsuleCollider _triggerCollider;
         private string _currentAnim;
         private Quaternion targetRotation = Quaternion.identity;
         public bool _isFacingRight = true;
@@ -67,7 +69,7 @@ namespace KinematicCharacterController.Examples
         public bool _isMovingBackward = false;
         private bool _isFlipped = true;
         public bool _isThrowing = false;
-        private bool _canJump = true;
+        public bool _canJump = true;
         private bool _isJumping = false;
         private Vector2 _input;
         private Vector2 _lastMovementInput;
@@ -134,7 +136,12 @@ namespace KinematicCharacterController.Examples
         {
             _normalMoveSpeed = _moveSpeed;
             _rb = GetComponent<Rigidbody>();
-            _capsuleCollider = GetComponent<CapsuleCollider>();
+            _capsuleCollider = GetComponents<CapsuleCollider>();
+            //0 and 1 based on order in inspector
+            // - trigger is listed first in inspector 
+            _triggerCollider = _capsuleCollider[0];
+            _normalCollider = _capsuleCollider[1];
+
             _animator = GetComponentInChildren<Animator>();
             
             // Configure Rigidbody for character movement
@@ -227,23 +234,22 @@ namespace KinematicCharacterController.Examples
 
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
-            float radius = _capsuleCollider.radius * 0.9f;
+            float radius = _normalCollider.radius * 0.9f;
 
             // Start the cast from just below the center
             Vector3 castOrigin = origin;
 
             RaycastHit hit;
             // Cast distance should reach just below the feet
-            float castDistance = (_capsuleCollider.height * 0.5f) + _groundCheckDistance;
+            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance;
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer);
+            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
 
             // Additional check with spherecast for better edge detection
-            //------this block of code is responsible for phasing through colliders)
             if (!_isGrounded)
             {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * 0.5f, Vector3.down, out hit, castDistance, _groundLayer);
+                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
             }
 
             // Added by Mark D. 10/28/25
@@ -251,34 +257,37 @@ namespace KinematicCharacterController.Examples
             // so player can't stand on object SurfaceCheck colliders
             if(hit.collider != null && hit.collider.isTrigger)
             {
-                _isGrounded = false;
+                //this doesn't generally fix the issue as it doesn't check around crowley
+                //also stops movement immediately rather than making sure player hits the floor
+                //also doesn't check from the side - i think this is the issue with the counters
+                // _isGrounded = false;
             }
             
-            if (_isGrounded && hit.collider != null)
-            {
-                _currentGroundObject = hit.collider.gameObject;
+            // if (_isGrounded && hit.collider != null)
+            // {
+            //     // _currentGroundObject = hit.collider.gameObject;
 
-                // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
-                float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
-                float currentHeight = transform.position.y;
+            //     // // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
+            //     // float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
+            //     // float currentHeight = transform.position.y;
 
-                // Only apply correction if significantly below target height (actually sinking)
-                if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-                {
-                    // Use position-based correction with physics
-                    Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-                    _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-                }
-            }
-            else
-            {
-                _currentGroundObject = null;
-            }
+            //     // // Only apply correction if significantly below target height (actually sinking)
+            //     // if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
+            //     // {
+            //     //     // Use position-based correction with physics
+            //     //     Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
+            //     //     _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
+            //     // }
+            // }
+            // else
+            // {
+            //     _currentGroundObject = null;
+            // }
         }
 
         private void HandleInput()
         {
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -499,7 +508,7 @@ namespace KinematicCharacterController.Examples
         }
 
 
-        void HandleWindUp()
+        void HandleWindUp() //jack in the box
         {
             if (_isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
@@ -548,7 +557,7 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        void HandleBounce()
+        void HandleBounce() //jack in the box
         {
             if (canBounce && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
             {
@@ -874,6 +883,9 @@ namespace KinematicCharacterController.Examples
             _pickUpsList.Clear();
             heldObject = null;
 
+            //reset line renderer
+            lineRenderer.positionCount = 0;
+
             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), false);
             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
             // {
@@ -1047,15 +1059,16 @@ namespace KinematicCharacterController.Examples
 
         void OnDrawGizmos()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, 2);
+            //what is the purpose of this wiresphere LOL
+            // Gizmos.color = Color.red;
+            // Gizmos.DrawWireSphere(transform.position, 2);
             
             // Draw ground check
-            if (_capsuleCollider != null)
+            if (_normalCollider != null)
             {
                 Gizmos.color = _isGrounded ? Color.green : Color.yellow;
-                Vector3 origin = transform.position + Vector3.up * (_capsuleCollider.height * 0.5f);
-                Gizmos.DrawWireSphere(origin - Vector3.up * ((_capsuleCollider.height * 0.5f) + _groundCheckDistance), _capsuleCollider.radius * 0.9f);
+                Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
+                Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
             }
         }
 

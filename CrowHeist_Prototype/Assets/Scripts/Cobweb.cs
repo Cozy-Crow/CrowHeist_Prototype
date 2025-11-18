@@ -19,16 +19,23 @@ namespace KinematicCharacterController.Examples
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && !playerInWeb)
+            if (other.CompareTag("Knife"))
             {
-                controller = other.GetComponent<Controller2Point5D>();
-                if (controller)
-                {
-                    originalSpeed = controller._moveSpeed;
-                    controller._moveSpeed *= slowdownFactor;
-                    playerInWeb = true;
-                }
+                CutWithKnife();
             }
+
+            if (other.CompareTag("Player") && !playerInWeb)
+                {
+                    controller = other.GetComponent<Controller2Point5D>();
+                    if (controller)
+                    {
+                        originalSpeed = controller._moveSpeed;
+                        controller._moveSpeed *= slowdownFactor;
+                        playerInWeb = true;
+                        controller._canJump = false;
+                        
+                    }
+                }
         }
 
         private void OnTriggerExit(Collider other)
@@ -39,6 +46,7 @@ namespace KinematicCharacterController.Examples
                 {
                     controller._moveSpeed = originalSpeed;
                     playerInWeb = false;
+                    controller._canJump = true;
                 }
             }
         }

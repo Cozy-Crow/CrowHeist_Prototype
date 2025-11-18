@@ -9,12 +9,23 @@ public class ThrowForIdiots : MonoBehaviour
 
     private Rigidbody rb;
     private bool hasLanded, wasThrown;
+    private bool _pickedUp = false;
 
-    void Start() => rb = GetComponent<Rigidbody>();
+    private Pickable pickableUp;
+
+    void Start() {
+        rb = GetComponent<Rigidbody>();
+        pickableUp = GetComponent<Pickable>();
+    }
 
     void Update()
     {
-        if (rb && !hasLanded)
+        if (pickableUp.pickedUp) 
+        {
+            _pickedUp = true;
+        }
+
+        if (_pickedUp && !hasLanded)
         {
             if (rb.velocity.magnitude > 1f) wasThrown = true;
             if (wasThrown && rb.velocity.magnitude < 0.1f)

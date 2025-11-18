@@ -49,6 +49,11 @@ public class Pickable : MonoBehaviour, IPickupable
             transform.localRotation = Quaternion.Euler(45f, -90f, 0f);
             transform.localPosition = new Vector3(-1, -1, 0);
         }
+        // added by Mark D. 11/09/2025 to fix dart rotation and jumping issue
+        else if (this.CompareTag("Dart"))
+        {
+            transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        }
         // Adjust rotation to lay flat and face forward
         else
         {
