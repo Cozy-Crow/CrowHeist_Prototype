@@ -26,6 +26,12 @@ public class Coins : MonoBehaviour
     void Update()
     {
         //transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
+        
+        // Prevent coin from becoming dirty
+        if (pickableUpScript != null)
+        {
+            pickableUpScript._isDirty = false;
+        }
     }
 
     private void Awake()
