@@ -12,9 +12,15 @@ public class RoombaCamManager : MonoBehaviour
     public Camera dockCam;
     public Camera roombaCam;
 
-    public float playerCamTime = 1f;
-    public float dockCamTime = 3f;
-    public float roombaCamTime = 3f;
+    public float playerCamTime;
+    public float dockCamTime;
+    public float roombaDeactivateTime;
+    public float roombaCamTime;
+
+    // references to deactivate and dispense - added 11/17/25
+    public RoombAi roombAi;
+    public RoombaDispense roombaDispense;
+
 
     public void StartRoombaSequence()
     {
@@ -31,6 +37,12 @@ public class RoombaCamManager : MonoBehaviour
 
         // Roomba camera
         SetActiveCamera(roombaCam);
+        // call deactivate & pause before dispense - added 11/17/25
+        roombAi.Deactivate();
+        yield return new WaitForSeconds(roombaDeactivateTime);
+
+        // call dispense method - added 11/17/25
+        roombaDispense.Dispense();
         yield return new WaitForSeconds(roombaCamTime);
 
         // Back to player camera

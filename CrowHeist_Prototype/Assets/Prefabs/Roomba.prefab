@@ -220,6 +220,37 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!1 &1931581427574581184
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5234677575694991999}
+  m_Layer: 3
+  m_Name: DispensePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5234677575694991999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1931581427574581184}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4237245843932807}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2140921117632262067
 GameObject:
   m_ObjectHideFlags: 0
@@ -757,6 +788,7 @@ GameObject:
   - component: {fileID: 8561673151240357530}
   - component: {fileID: 3031293307280382077}
   - component: {fileID: 8928873112428040853}
+  - component: {fileID: 6206648810514300098}
   m_Layer: 3
   m_Name: Roomba
   m_TagString: Roomba
@@ -780,6 +812,7 @@ Transform:
   - {fileID: 5368843316896594704}
   - {fileID: 707020846911155698}
   - {fileID: 4537329765168474486}
+  - {fileID: 5234677575694991999}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &1922181252443977738
@@ -908,6 +941,25 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &6206648810514300098
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266549675316877170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6264deb6faa634847ac9cf5fab23c3f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dispenseObjects:
+  - {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+  - {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+  - {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+  dispensePoint: {fileID: 0}
+  sideForce: 2.5
+  upwardForce: 10
 --- !u!1 &8692655095678254709
 GameObject:
   m_ObjectHideFlags: 0

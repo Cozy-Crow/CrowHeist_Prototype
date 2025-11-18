@@ -530,6 +530,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ab5e19fab8f285241af216f7e9a8ec11, type: 3}
   m_PrefabInstance: {fileID: 27698436}
   m_PrefabAsset: {fileID: 0}
+--- !u!4 &37596376 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5234677575694991999, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+  m_PrefabInstance: {fileID: 931675087}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &41205392 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5460175120882292786, guid: 7a31cd62680804869828d14be1591da1, type: 3}
@@ -9227,6 +9232,10 @@ PrefabInstance:
       propertyPath: patrolPoints.Array.data[7]
       value: 
       objectReference: {fileID: 1983115822}
+    - target: {fileID: 6206648810514300098, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: dispensePoint
+      value: 
+      objectReference: {fileID: 37596376}
     - target: {fileID: 8266549675316877170, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: m_Name
       value: Roomba
@@ -9899,7 +9908,10 @@ MonoBehaviour:
   roombaCam: {fileID: 931675088}
   playerCamTime: 1
   dockCamTime: 3
+  roombaDeactivateTime: 1
   roombaCamTime: 3
+  roombAi: {fileID: 1848783563}
+  roombaDispense: {fileID: 1848783561}
 --- !u!1001 &1013296400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15956,8 +15968,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 250b6c902d14e4e0a9fa8f6c6169aacc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomba: {fileID: 0}
-  fixedRot: {x: 0, y: 0, z: 0, w: 1}
 --- !u!1 &1625790619
 GameObject:
   m_ObjectHideFlags: 0
@@ -18251,6 +18261,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4237245843932807, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
   m_PrefabInstance: {fileID: 931675087}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1848783561 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6206648810514300098, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+  m_PrefabInstance: {fileID: 931675087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6264deb6faa634847ac9cf5fab23c3f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1848783563 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+  m_PrefabInstance: {fileID: 931675087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2116831f02cce1e4792a2fbbd687da21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1879551792
 PrefabInstance:
   m_ObjectHideFlags: 0
