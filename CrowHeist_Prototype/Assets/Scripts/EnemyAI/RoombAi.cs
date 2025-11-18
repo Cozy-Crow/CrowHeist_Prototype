@@ -228,5 +228,12 @@ public class RoombAi : MonoBehaviour
         isActivated = true;
     }
 
+    // Activate method added by Mark D. 11/17/25
+    public void Deactivate()
+    {
+        isActivated = false;
+        agent.isStopped = true;
+    }
+
 
 }
