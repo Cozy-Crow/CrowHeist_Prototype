@@ -38,7 +38,7 @@ public class IntroVideoManager : MonoBehaviour
 
     private void LoadGameScene()
     {
-        SceneManager.LoadSceneAsync(gameSceneName);
+        SceneManager.LoadScene(gameSceneName);
     }
 
 }
