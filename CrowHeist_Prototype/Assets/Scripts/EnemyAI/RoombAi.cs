@@ -232,6 +232,7 @@ public class RoombAi : MonoBehaviour
     public void Deactivate()
     {
         isActivated = false;
+        agent.isStopped = true;
     }
 
 

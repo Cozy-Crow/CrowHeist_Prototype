@@ -12,10 +12,10 @@ public class RoombaCamManager : MonoBehaviour
     public Camera dockCam;
     public Camera roombaCam;
 
-    public float playerCamTime;
-    public float dockCamTime;
-    public float roombaDeactivateTime;
-    public float roombaCamTime;
+    public float playerCamTime = 1f;
+    public float dockCamTime = 3f;
+    public float roombaDeactivateTime = 1f;
+    public float roombaCamTime = 3f;
 
     // references to deactivate and dispense - added 11/17/25
     public RoombAi roombAi;

@@ -10,8 +10,8 @@ public class RoombaDispense : MonoBehaviour
 
     public List<GameObject> dispenseObjects;
     public Transform dispensePoint;
-    public float sideForce;
-    public float upwardForce;
+    public float sideForce = 2.5f;
+    public float upwardForce = 5f;
 
     public void Dispense()
     {
