@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
 
     public void TriggerGameEnd()
     {
-        SceneManager.LoadSceneAsync(endCutsceneScene);
+        SceneManager.LoadScene(endCutsceneScene);
     }
 
     private void Update()
@@ -98,7 +98,7 @@ public class GameManager : MonoBehaviour
     private void RestartGame()
     {
         ResetGameData();
-        SceneManager.LoadSceneAsync(gameSceneName);
+        SceneManager.LoadScene(gameSceneName);
     }
 
     public static void ResetGameData()
