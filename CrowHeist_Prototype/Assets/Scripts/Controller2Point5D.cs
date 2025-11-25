@@ -7,6 +7,7 @@ using FMOD.Studio;
 using Unity.VisualScripting;
 using JetBrains.Annotations;
 using UnityEngine.TextCore.Text;
+using System;
 
 namespace KinematicCharacterController.Examples
 {
@@ -20,7 +21,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] public float _gravityMultiplier = 2f;
         [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
-        [SerializeField] private float _groundCheckDistance = 0.15f;
+        [SerializeField] private float _groundCheckDistance = .15f;
         [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
 
         //Sprite
@@ -71,6 +72,7 @@ namespace KinematicCharacterController.Examples
         public bool _isThrowing = false;
         public bool _canJump = true;
         private bool _isJumping = false;
+        private bool _onSlope = false;
         private Vector2 _input;
         private Vector2 _lastMovementInput;
         private Vector3 _moveVelocity;
@@ -226,7 +228,7 @@ namespace KinematicCharacterController.Examples
             HandleRotation();
         }
         
-
+        [SerializeField] float angleTest = 30f;
 
         private void CheckGrounded()
         {
@@ -236,33 +238,77 @@ namespace KinematicCharacterController.Examples
             Vector3 origin = transform.position;
             float radius = _normalCollider.radius * 0.9f;
 
-            // Start the cast from just below the center
-            Vector3 castOrigin = origin;
+            RaycastHit hitMain;
+            RaycastHit hitSlope;
 
-            RaycastHit hit;
             // Cast distance should reach just below the feet
-            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance;
+            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance; //1.215
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
+            _isGrounded = Physics.Raycast(origin, Vector3.down, out hitMain, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+            if(hitMain.transform != null)
+            {
+                Debug.Log("Raycast hit: " + hitMain.transform.name);
+            }
+
+            float castDistanceForSlope = (_normalCollider.height * 0.5f) + _groundCheckDistance + 5f;
+            //check for slopes
+            if(Physics.Raycast(origin, Vector3.down, out hitSlope, castDistanceForSlope, _groundLayer, QueryTriggerInteraction.Ignore))
+            {
+                //if you're on a slope, set variables to let player know
+                //you want to stop gravity if you're on a slope
+
+                float distanceToObject = Vector3.Distance (transform.position, hitSlope.point);
+                float angle = Vector3.Angle(hitSlope.normal, Vector3.up);
+                if(angle > 0.2) // && distanceToObject <= _groundCheckDistance
+                {
+                    _onSlope = true;
+
+                    if(distanceToObject > castDistance) //NOTE >30* IS CUTOFF
+                    {
+                        //when ray recognizes a slope, but you are too high to collide correctly
+                        if(angle >= angleTest)
+                        {
+                            //if it's too steep, make gravity stop
+                            if(distanceToObject < 2.5) // have to hard code 2.5 to still be able to get on the open oven
+                                _isGrounded = true;
+                        }
+                        else
+                            _isGrounded = false; // => making you fall
+                    }
+                    else
+                        _isGrounded = true; // => making you stop
+
+                    //show distance from player origin to hit pos
+                    // Debug.Log("distancetoobj " + distanceToObject);
+                }
+                else
+                    _onSlope = false;
+                    
+                //angle debugs
+                // Debug.Log("Raycast hit: " + hitSecond.transform.name);
+                // Debug.Log("on slope: " + _onSlope);
+                // Debug.Log("angle: " + angle);
+            }
 
             // Additional check with spherecast for better edge detection
             if (!_isGrounded)
             {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+                // _isGrounded = Physics.SphereCast(origin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
             }
 
             // Added by Mark D. 10/28/25
             // don't grounded if its a trigger collider
             // so player can't stand on object SurfaceCheck colliders
-            if(hit.collider != null && hit.collider.isTrigger)
-            {
+            // if(hit.collider != null && hit.collider.isTrigger)
+            // {
                 //this doesn't generally fix the issue as it doesn't check around crowley
                 //also stops movement immediately rather than making sure player hits the floor
                 //also doesn't check from the side - i think this is the issue with the counters
                 // _isGrounded = false;
-            }
+            // }
             
+
             // if (_isGrounded && hit.collider != null)
             // {
             //     // _currentGroundObject = hit.collider.gameObject;
@@ -287,7 +333,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleInput()
         {
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            _input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -377,7 +423,6 @@ namespace KinematicCharacterController.Examples
                 return;
             }
             _isJumping = true;
-            _isGrounded = false;
             _coyoteTimeCounter = 0f;
             _canJump = false;
 
@@ -1063,10 +1108,10 @@ namespace KinematicCharacterController.Examples
             // Gizmos.color = Color.red;
             // Gizmos.DrawWireSphere(transform.position, 2);
             
-            // Draw ground check
+            // Draw ground check -- is this supposed to show the collider size? doesn't work with a capsule
             if (_normalCollider != null)
             {
-                Gizmos.color = _isGrounded ? Color.green : Color.yellow;
+                Gizmos.color = _isGrounded ? Color.red : Color.yellow;
                 Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
                 Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
             }
