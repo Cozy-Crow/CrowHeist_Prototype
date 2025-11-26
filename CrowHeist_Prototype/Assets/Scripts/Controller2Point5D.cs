@@ -864,6 +864,9 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
+                    _isThrowing = true; //start throw animation
+                    StartCoroutine(ThrowAnimRoutine()); // used to stop the animation after x seconds
+
                     isCharging = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
                     if (rigidbody != null)
@@ -915,8 +918,15 @@ namespace KinematicCharacterController.Examples
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
                 }
-            }
+            } 
         }
+
+        IEnumerator ThrowAnimRoutine()
+        {
+            yield return new WaitForSeconds(.5f);
+            _isThrowing = false;
+        }
+
         public void Drop()
         {
 
@@ -1001,12 +1011,12 @@ namespace KinematicCharacterController.Examples
                 if (_isFacingRight)
                 {
                     Debug.Log("ThrowRight");
-                    ChangeAnimation("ThrowRight");
+                    ChangeAnimation("ThrowRight", .5f);
                 }
                 else
                 {
                     Debug.Log("ThrowLeft");
-                    ChangeAnimation("ThrowLeft");
+                    ChangeAnimation("ThrowLeft", .5f);
                 }
                 return;
             }
@@ -1015,11 +1025,11 @@ namespace KinematicCharacterController.Examples
             {
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("JumpRight");
+                    ChangeAnimation("JumpRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("JumpLeft");
+                    ChangeAnimation("JumpLeft", 0);
                 }
             }
             else if (_moveVelocity.magnitude > 0.1f)
@@ -1035,32 +1045,37 @@ namespace KinematicCharacterController.Examples
 
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("RunRight");
+                    ChangeAnimation("RunRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("RunLeft");
+                    ChangeAnimation("RunLeft", 0);
                 }
             }
             else
             {
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("IdleRight");
+                    ChangeAnimation("IdleRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("IdleLeft");
+                    ChangeAnimation("IdleLeft", 0);
                 }
             }
         }
 
-        private void ChangeAnimation(string animation, float crossfade = 0.2f)
+        //added by Zack H. 11/26
+        //added float startTime, to allow us to change/transition animations at certain times in the animation
+        //ex the throw animation needs to be started halfway through to function correctly
+        //use 0 on animations to start at their first frame
+        //start time is a measure of time I believe not frames.
+        private void ChangeAnimation(string animation, float startTime, float crossfade = 0.2f, int layer = 0)
         {
             if (_currentAnim == animation) return;
             
             _currentAnim = animation;
-            _animator.CrossFade(animation, crossfade);
+            _animator.CrossFade(animation, crossfade, layer, startTime);
         }
 
         private void Flip(bool doFlip)
