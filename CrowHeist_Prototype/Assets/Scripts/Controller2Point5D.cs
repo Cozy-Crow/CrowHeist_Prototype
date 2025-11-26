@@ -921,6 +921,9 @@ namespace KinematicCharacterController.Examples
             } 
         }
 
+        //Throw Coroutine to time the animation correctly
+        //Note: No charge animation
+        //   so you only need it to play when crowley throws the item
         IEnumerator ThrowAnimRoutine()
         {
             yield return new WaitForSeconds(.5f);
