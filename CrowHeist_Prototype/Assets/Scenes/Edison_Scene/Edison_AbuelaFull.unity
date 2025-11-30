@@ -5544,7 +5544,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -10763,6 +10763,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TV A
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: d733a3ab30d8a774ca94e0c037834815, type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10809,7 +10813,7 @@ GameObject:
   - component: {fileID: 1017203637}
   - component: {fileID: 1017203639}
   - component: {fileID: 1017203638}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SurfaceCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -15850,7 +15854,7 @@ GameObject:
   - component: {fileID: 1463066886}
   - component: {fileID: 1463066888}
   - component: {fileID: 1463066887}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: SurfaceCheck
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -16235,7 +16239,6 @@ GameObject:
   - component: {fileID: 1489178916}
   - component: {fileID: 1489178915}
   - component: {fileID: 1489178914}
-  - component: {fileID: 1489178913}
   - component: {fileID: 1489178918}
   m_Layer: 0
   m_Name: GroundLivingRoom
@@ -16244,18 +16247,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1489178913
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1489178912}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f47ab7c00004fac48bc3677059eab171, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!65 &1489178914
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21006,9 +20997,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 14059f45d59192349a75c9d02b1ba92e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maskObjects:
-  - transform: {fileID: 548350918}
-    targetScale: {x: 3, y: 3, z: 3}
+  maskObject:
+    transform: {fileID: 548350918}
+    targetScale: {x: 5, y: 5, z: 5}
+  maskLayer:
+    serializedVersion: 2
+    m_Bits: 2047
+  expandTime: 0.3
+  retractTime: 0.2
 --- !u!1 &1931336658
 GameObject:
   m_ObjectHideFlags: 0
@@ -21748,6 +21744,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 87fd9dc3d14c1a446958bc5802fc4eda, type: 3}
       propertyPath: m_Name
       value: Table D
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 87fd9dc3d14c1a446958bc5802fc4eda, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -23480,6 +23480,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: fc023b066b87dcd40bff3d72c1a8bc8d, type: 3}
       propertyPath: m_Name
       value: Table C
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: fc023b066b87dcd40bff3d72c1a8bc8d, type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
