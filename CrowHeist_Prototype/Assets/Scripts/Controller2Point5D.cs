@@ -227,7 +227,6 @@ namespace KinematicCharacterController.Examples
         }
         
 
-
         private void CheckGrounded()
         {
             _wasGroundedLastFrame = _isGrounded;
@@ -251,38 +250,6 @@ namespace KinematicCharacterController.Examples
             {
                 _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
             }
-
-            // Added by Mark D. 10/28/25
-            // don't grounded if its a trigger collider
-            // so player can't stand on object SurfaceCheck colliders
-            if(hit.collider != null && hit.collider.isTrigger)
-            {
-                //this doesn't generally fix the issue as it doesn't check around crowley
-                //also stops movement immediately rather than making sure player hits the floor
-                //also doesn't check from the side - i think this is the issue with the counters
-                // _isGrounded = false;
-            }
-            
-            // if (_isGrounded && hit.collider != null)
-            // {
-            //     // _currentGroundObject = hit.collider.gameObject;
-
-            //     // // Keep player at proper height above ground **THIS IS THE SINKING ISSUE**
-            //     // float targetHeight = hit.point.y + (_capsuleCollider.height * 0.6f);
-            //     // float currentHeight = transform.position.y;
-
-            //     // // Only apply correction if significantly below target height (actually sinking)
-            //     // if (currentHeight < targetHeight - 0.01f && _rb.velocity.y <= 0)
-            //     // {
-            //     //     // Use position-based correction with physics
-            //     //     Vector3 targetPos = new Vector3(transform.position.x, targetHeight, transform.position.z);
-            //     //     _rb.MovePosition(Vector3.Lerp(transform.position, targetPos, Time.fixedDeltaTime * 10f));
-            //     // }
-            // }
-            // else
-            // {
-            //     _currentGroundObject = null;
-            // }
         }
 
         private void HandleInput()
@@ -320,23 +287,6 @@ namespace KinematicCharacterController.Examples
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
             _rb.velocity = targetVelocity;
-
-            // // Get the velocity
-            // Vector3 horizontalMove = _rb.velocity;
-            // // Don't use the vertical velocity
-            // horizontalMove.y = 0;
-            // // Calculate the approximate distance that will be traversed
-            // float distance =  horizontalMove.magnitude * Time.fixedDeltaTime;
-            // // Normalize horizontalMove since it should be used to indicate direction
-            // horizontalMove.Normalize();
-            // RaycastHit hit;
-
-            // // Check if the body's current velocity will result in a collision
-            // if(_rb.SweepTest(horizontalMove, out hit, distance))
-            // {
-            //     // If so, stop the movement
-            //     _rb.velocity = new Vector3(0, _rb.velocity.y, 0);
-            // }
         }
 
         private void HandleGravity()

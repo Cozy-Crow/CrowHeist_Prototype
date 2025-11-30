@@ -44,6 +44,10 @@ public class XrayCamera : MonoBehaviour
         raycastTransform = hit.transform;
     }
 
+    /// <summary>
+    /// Applies the mask by expanding it to the target scale.
+    /// </summary>
+    /// <param name="mask"> The mask object to apply the effect on. </param>
     private IEnumerator ApplyMask(MaskObjects mask)
     {
         if (currentCoroutine != null)
