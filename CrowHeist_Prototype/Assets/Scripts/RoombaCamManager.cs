@@ -26,6 +26,9 @@ public class RoombaCamManager : MonoBehaviour
     public RoombaDispense roombaDispense;
     public RoombaLightsOff roombaLightsOff;
 
+    // to freeze Crowley's movement during cutscenes - added 12/2/25
+    public Rigidbody playerRb;
+
     public void StartRoombaActivateSequence()
     {
         StartCoroutine(RoombaActivateSequence());
@@ -40,13 +43,20 @@ public class RoombaCamManager : MonoBehaviour
     private IEnumerator RoombaActivateSequence()
     {
         yield return new WaitForSeconds(activateDelayTime);
+        // freeze player movement
+        playerRb.constraints = RigidbodyConstraints.FreezePosition;
         SetActiveCamera(roombaCam);
         yield return new WaitForSeconds(activateTime);
+        // unfreeze player movement
+        playerRb.constraints = RigidbodyConstraints.None;
+        playerRb.constraints = RigidbodyConstraints.FreezeRotation;
         SetActiveCamera(playerCam);
     }
 
     private IEnumerator RoombaBreakSequence()
     {
+        // freeze player movement
+        playerRb.constraints = RigidbodyConstraints.FreezePosition;
         yield return new WaitForSeconds(playerCamTime);
 
         // Dock camera
@@ -69,6 +79,10 @@ public class RoombaCamManager : MonoBehaviour
 
         // Back to player camera
         SetActiveCamera(playerCam);
+
+        // unfreeze player movement
+        playerRb.constraints = RigidbodyConstraints.None;
+        playerRb.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     private void SetActiveCamera(Camera cam)
