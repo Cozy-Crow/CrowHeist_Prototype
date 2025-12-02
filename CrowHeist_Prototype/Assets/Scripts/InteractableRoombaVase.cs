@@ -42,7 +42,7 @@ public class InteractableRoombaVase : MonoBehaviour
     {
         rb.isKinematic = false;
         rb.AddForce(Vector3.left * 3f, ForceMode.Impulse);
-        roombaCamManager.StartRoombaSequence();
+        roombaCamManager.StartRoombaBreakSequence();
     }
 
     public void OnTriggerEnter(Collider other)

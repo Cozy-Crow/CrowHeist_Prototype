@@ -37,6 +37,9 @@ public class RoombAi : MonoBehaviour
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
 
+    //For roomba activation cutscene - added 12/2/25 by Mark D.
+    public RoombaCamManager roombaCamManager;
+
     public int CurrentTargetIndex
     {
         get => currentTargetIndex;
@@ -225,7 +228,11 @@ public class RoombAi : MonoBehaviour
     // Activate method added by Mark D. 9/10/25
     public void Activate()
     {
-        isActivated = true;
+        if(!isActivated)
+        {
+            isActivated = true;
+            roombaCamManager.StartRoombaActivateSequence();
+        }
     }
 
     // Activate method added by Mark D. 11/17/25

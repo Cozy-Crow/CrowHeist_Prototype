@@ -12,6 +12,9 @@ public class RoombaCamManager : MonoBehaviour
     public Camera dockCam;
     public Camera roombaCam;
 
+    public float activateDelayTime = 0.5f;
+    public float activateTime = 3f;
+
     public float playerCamTime = 1f;
     public float dockCamTime = 3f;
     public float roombaDeactivateTime = 1f;
@@ -23,13 +26,26 @@ public class RoombaCamManager : MonoBehaviour
     public RoombaDispense roombaDispense;
     public RoombaLightsOff roombaLightsOff;
 
-
-    public void StartRoombaSequence()
+    public void StartRoombaActivateSequence()
     {
-        StartCoroutine(RoombaSequence());
+        StartCoroutine(RoombaActivateSequence());
     }
 
-    private IEnumerator RoombaSequence()
+    public void StartRoombaBreakSequence()
+    {
+        StartCoroutine(RoombaBreakSequence());
+    }
+
+    // Roomba activate cutscene - added 12/2/25 by Mark D.
+    private IEnumerator RoombaActivateSequence()
+    {
+        yield return new WaitForSeconds(activateDelayTime);
+        SetActiveCamera(roombaCam);
+        yield return new WaitForSeconds(activateTime);
+        SetActiveCamera(playerCam);
+    }
+
+    private IEnumerator RoombaBreakSequence()
     {
         yield return new WaitForSeconds(playerCamTime);
 
