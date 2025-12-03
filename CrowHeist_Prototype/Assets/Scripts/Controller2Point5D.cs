@@ -246,10 +246,6 @@ namespace KinematicCharacterController.Examples
 
             // Main ground check using a raycast for more precision
             _isGrounded = Physics.Raycast(origin, Vector3.down, out hitMain, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
-            if(hitMain.transform != null)
-            {
-                Debug.Log("Raycast hit: " + hitMain.transform.name);
-            }
 
             float castDistanceForSlope = (_normalCollider.height * 0.5f) + _groundCheckDistance + 5f;
             //check for slopes
@@ -746,9 +742,7 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-
                 AIEventManager.instance.e_pickup.Invoke();
-
 
                 Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
 
@@ -772,12 +766,7 @@ namespace KinematicCharacterController.Examples
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
-                            
 
-                            
-
-                            
-                            
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
                             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
@@ -792,7 +781,18 @@ namespace KinematicCharacterController.Examples
                         {
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
-                    }
+                    }   
+                }
+
+                //knife and microwave puzzle
+                //if you're holding the knife, and in range of the microwave
+                if(heldObject.tag.Equals("Knife") && nearbyInteractables[currentTargetIndex].tag.Equals("Microwave"))
+                {
+                    GameObject knifeReference = heldObject.gameObject;
+
+                    Drop();
+                    
+
                 }
             }
 
