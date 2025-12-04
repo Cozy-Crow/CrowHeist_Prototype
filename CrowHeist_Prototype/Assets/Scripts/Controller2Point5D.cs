@@ -206,6 +206,7 @@ namespace KinematicCharacterController.Examples
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
+            PlayFootsteps();
 
             //added as a fix for now, could probably called more efficiently
             RemoveNullItems();
@@ -1070,6 +1071,25 @@ namespace KinematicCharacterController.Examples
                 Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
                 Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
             }
+        }
+
+        void PlayFootsteps()
+        {
+            if (IsGrounded == true && (_input.x != 0 || _input.y != 0))
+            {
+                PLAYBACK_STATE playbackState;
+                footstepInstance.getPlaybackState(out playbackState);
+                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
+                {
+                    footstepInstance.start();
+                }
+            }
+
+            else
+            {
+                footstepInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
+
         }
 
     }
