@@ -457,7 +457,6 @@ namespace KinematicCharacterController.Examples
             Flip(_isFlipped);
         }
 
-
         void HandleWindUp() //jack in the box
         {
             if (_isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
@@ -677,12 +676,7 @@ namespace KinematicCharacterController.Examples
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
-                            
 
-                            
-
-                            
-                            
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
                             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
@@ -901,62 +895,36 @@ namespace KinematicCharacterController.Examples
 
         private void HandleAnimation()
         {
+            Vector3 velocity = _rb.velocity.normalized;
+            _animator.SetFloat("MoveX", velocity.x);
+            _animator.SetFloat("MoveZ", velocity.z);
+
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                _animator.speed = 2f;
+            }
+            else
+            {
+                _animator.speed = 1f;
+            }
+
             if (_isThrowing)
             {
-                if (_isFacingRight)
-                {
-                    Debug.Log("ThrowRight");
-                    ChangeAnimation("ThrowRight");
-                }
-                else
-                {
-                    Debug.Log("ThrowLeft");
-                    ChangeAnimation("ThrowLeft");
-                }
+                _animator.Play("Throw");
                 return;
             }
 
             if (_rb.velocity.y > 0.1f || !_isGrounded)
             {
-                if (_isFacingRight)
-                {
-                    ChangeAnimation("JumpRight");
-                }
-                else
-                {
-                    ChangeAnimation("JumpLeft");
-                }
+                _animator.Play("Jump");
             }
             else if (_moveVelocity.magnitude > 0.1f)
             {
-                if (Input.GetKey(KeyCode.LeftShift))
-                {
-                    _animator.speed = 2f;
-                }
-                else
-                {
-                    _animator.speed = 1f;
-                }
-
-                if (_isFacingRight)
-                {
-                    ChangeAnimation("RunRight");
-                }
-                else
-                {
-                    ChangeAnimation("RunLeft");
-                }
+               _animator.Play("Walk");
             }
             else
             {
-                if (_isFacingRight)
-                {
-                    ChangeAnimation("IdleRight");
-                }
-                else
-                {
-                    ChangeAnimation("IdleLeft");
-                }
+                _animator.Play("Idle");
             }
         }
 
