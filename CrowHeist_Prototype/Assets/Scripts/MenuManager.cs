@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 
 public class PauseManager : MonoBehaviour
 {
-    
     public bool isGamePaused = false; // Variable to track pause state
 
     public GameObject PauseMenu; // UI element to show/hide Pause Menu
@@ -20,7 +19,7 @@ public class PauseManager : MonoBehaviour
     public Button LoadButton; // Reference to the "Load Button"
     public Button BackButton; // Reference to the "Back Button"
 
-    void Start() 
+    void Start()
     {
         if (ResumeButton != null)
         {
@@ -35,7 +34,7 @@ public class PauseManager : MonoBehaviour
         {
             QuitButton.onClick.AddListener(QuitGame);
         }
-        else 
+        else
         {
             Debug.Log("Quit Button is not assigned!");
         }
@@ -47,6 +46,15 @@ public class PauseManager : MonoBehaviour
         else
         {
             Debug.Log("Restart Button is not assigned!");
+        }
+
+        if (SaveButton != null)
+        {
+            SaveButton.onClick.AddListener(SaveGame);
+        }
+        else
+        {
+            Debug.Log("Save Button is not assigned!");
         }
 
         if (PlayButton != null)
@@ -107,11 +115,11 @@ public class PauseManager : MonoBehaviour
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
-        #endif
+#endif
     }
 
     public void RestartGame()
@@ -122,13 +130,54 @@ public class PauseManager : MonoBehaviour
         Debug.Log("Game is restarting...");
     }
 
+    public void SaveGame()
+    {
+        if (SaveLoadSystem.Instance != null)
+        {
+            SaveLoadSystem.Instance.SaveGame();
+            Debug.Log("Game saved from UI button!");
+        }
+        else
+        {
+            Debug.LogWarning("SaveLoadSystem not found!");
+        }
+    }
+
     public void LoadGame()
     {
-        loadSaveSlots.SetActive(true); // Show Save Slot 1 button
+        if (loadSaveSlots != null)
+        {
+            loadSaveSlots.SetActive(true); // Show Save Slot selection
+        }
+        else
+        {
+            // If no save slots UI, load directly
+            LoadGameDirect();
+        }
+    }
+
+    public void LoadGameDirect()
+    {
+        if (SaveLoadSystem.Instance != null)
+        {
+            // Resume time before loading (in case we're paused)
+            Time.timeScale = 1f;
+            isGamePaused = false;
+
+            SaveLoadSystem.Instance.LoadGame();
+            Debug.Log("Game loaded from UI button!");
+        }
+        else
+        {
+            Debug.LogWarning("SaveLoadSystem not found!");
+        }
     }
 
     public void GoBack()
     {
-        loadSaveSlots.SetActive(false); // Hide Save Slot 1 button
+        if (loadSaveSlots != null)
+        {
+            loadSaveSlots.SetActive(false); // Hide Save Slot selection
+        }
     }
 }

@@ -5,8 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-/// Handles saving and loading game data to/from disk
-
 public class SaveLoadSystem : MonoBehaviour
 {
     public static SaveLoadSystem Instance { get; private set; }
@@ -29,24 +27,7 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
-        // Save on J key
-        if (Input.GetKeyDown(KeyCode.J))
-        {
-            SaveGame();
-        }
-
-        // Load on K key
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            LoadGame();
-        }
-    }
-
-    /// <summary>
-    /// Saves the current game state
-    /// </summary>
+    
     public void SaveGame()
     {
         Debug.Log("Saving game...");
@@ -106,9 +87,7 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Loads the saved game state
-    /// </summary>
+   
     public void LoadGame()
     {
         if (!File.Exists(_saveFilePath))
@@ -171,9 +150,7 @@ public class SaveLoadSystem : MonoBehaviour
         RestoreGameState(saveData);
     }
 
-    /// <summary>
-    /// Restores the game state from save data
-    /// </summary>
+    
     private void RestoreGameState(SaveData saveData)
     {
         Debug.Log("Restoring game state...");
@@ -271,17 +248,13 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Check if a save file exists
-    /// </summary>
+    
     public bool SaveFileExists()
     {
         return File.Exists(_saveFilePath);
     }
 
-    /// <summary>
-    /// Delete the save file
-    /// </summary>
+   
     public void DeleteSave()
     {
         if (File.Exists(_saveFilePath))
