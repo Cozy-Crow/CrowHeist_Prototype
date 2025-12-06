@@ -18,14 +18,19 @@ namespace KinematicCharacterController.Examples
         [SerializeField] public float _moveSpeed = 50f;
         [SerializeField] private float _smoothTime = 0.05f;
         [SerializeField] private float _jumpForce = 40f;
+        [SerializeField] private float rotationSpeed = 10f;     // Speed of sprite rotation slerp
         [SerializeField] public float _gravityMultiplier = 2f;
         [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
         [SerializeField] private float _groundCheckDistance = 0.15f;
         [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
+        private Vector2 _input;
+        private Vector3 _faceDirection;
+        private float _faceAngle;
+        private Vector3 _moveVelocity;
+        private bool _isGrounded = false;
 
         //Sprite
         [SerializeField] GameObject playerSprite;
-        [SerializeField] Transform spriteRotator;
         
         // Soda Variables
         public bool _isSpeedBoosted = false;
@@ -63,18 +68,11 @@ namespace KinematicCharacterController.Examples
         private CapsuleCollider _normalCollider;
         private CapsuleCollider _triggerCollider;
         private string _currentAnim;
-        private Quaternion targetRotation = Quaternion.identity;
         public bool _isFacingRight = true;
-        public bool _isMovingForward = false;
-        public bool _isMovingBackward = false;
-        private bool _isFlipped = true;
         public bool _isThrowing = false;
         public bool _canJump = true;
         private bool _isJumping = false;
-        private Vector2 _input;
-        private Vector2 _lastMovementInput;
-        private Vector3 _moveVelocity;
-        private bool _isGrounded = false;
+        
         private bool _wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Animator _animator;
@@ -114,8 +112,6 @@ namespace KinematicCharacterController.Examples
 
         #region Properties
         public bool IsGrounded => _isGrounded;
-        public bool IsFlipped => _isFlipped;
-        public bool IsFacingRight => _isFacingRight;
         #endregion
 
         // Knockback
@@ -143,21 +139,6 @@ namespace KinematicCharacterController.Examples
             _normalCollider = _capsuleCollider[1];
 
             _animator = GetComponentInChildren<Animator>();
-            
-            // Configure Rigidbody for character movement
-            _rb.freezeRotation = true;
-            _rb.interpolation = RigidbodyInterpolation.Interpolate;
-            _rb.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
-            _rb.drag = 0f; // Increased drag for stability
-            _rb.angularDrag = 0f;
-            _rb.constraints = RigidbodyConstraints.FreezeRotation;
-            
-            // Set a reasonable mass
-            _rb.mass = 1f;
-            
-            // Configure solver iterations for better collision
-            _rb.solverIterations = 10;
-            _rb.solverVelocityIterations = 10;
         }
 
         public void Start()
@@ -206,7 +187,6 @@ namespace KinematicCharacterController.Examples
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
-
             //added as a fix for now, could probably called more efficiently
             RemoveNullItems();
         }
@@ -217,13 +197,9 @@ namespace KinematicCharacterController.Examples
             CheckGrounded();
             HandleGravity();
             HandleMove();
+            HandleRotation();
             HandleExternalForces();
             HandleKnockback();
-        }
-
-        void LateUpdate()
-        {
-            HandleRotation();
         }
         
 
@@ -280,9 +256,24 @@ namespace KinematicCharacterController.Examples
         private void HandleMove()
         {
             if (_isDashing) return;
+ 
+            _moveVelocity = new Vector3(_input.x, 0, _input.y) * _moveSpeed;
 
-            Vector3 moveDirection = new Vector3(_input.x, 0, _input.y);
-            _moveVelocity = moveDirection * _moveSpeed;
+            //Get the last face direction
+            // Update face direction only on the axes that have non-zero movement
+            if (_moveVelocity.x != 0f && _moveVelocity.z != 0f)
+            {
+                _faceDirection.x = _moveVelocity.normalized.x;
+                _faceDirection.z = _moveVelocity.normalized.z;
+            }
+            else if (_moveVelocity.x != 0f)
+            {
+                _faceDirection.x = _moveVelocity.normalized.x;
+                _faceDirection.z = 0;
+            }else if (_moveVelocity.z != 0f)
+            {
+                _faceDirection.z = _moveVelocity.normalized.z;
+            }
 
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
@@ -438,23 +429,7 @@ namespace KinematicCharacterController.Examples
         
         private void HandleRotation()
         {
-            _isMovingForward = (_input.y > 0);
-            _isMovingBackward = (_input.y < 0);
-            
-            // Only update facing direction if there's actual horizontal input
-            if (_input.x > 0.01f)
-            {
-                _isFlipped = true;
-                _isFacingRight = true;
-            }
-            else if (_input.x < -0.01f)
-            {
-                _isFlipped = false;
-                _isFacingRight = false;
-            }
-            // If no input, _isFlipped and _isFacingRight retain their previous values
-            
-            Flip(_isFlipped);
+            Flip(_faceDirection);
         }
 
         void HandleWindUp() //jack in the box
@@ -895,18 +870,8 @@ namespace KinematicCharacterController.Examples
 
         private void HandleAnimation()
         {
-            Vector3 velocity = _rb.velocity.normalized;
-            _animator.SetFloat("MoveX", velocity.x);
-            _animator.SetFloat("MoveZ", velocity.z);
-
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                _animator.speed = 2f;
-            }
-            else
-            {
-                _animator.speed = 1f;
-            }
+            _animator.SetFloat("MoveX", _faceDirection.x);
+            _animator.SetFloat("MoveZ", _faceDirection.z);
 
             if (_isThrowing)
             {
@@ -920,7 +885,7 @@ namespace KinematicCharacterController.Examples
             }
             else if (_moveVelocity.magnitude > 0.1f)
             {
-               _animator.Play("Walk");
+                _animator.Play("Walk");
             }
             else
             {
@@ -936,43 +901,25 @@ namespace KinematicCharacterController.Examples
             _animator.CrossFade(animation, crossfade);
         }
 
-        private void Flip(bool doFlip)
+        private void Flip(Vector3 faceDirection)
         {
-            float rotationSpeed = 10f;
+            // Convert input to planar angle
+            // (1, 0) → 0° (right)
+            // (1, 1) → 45° (back-right)
+            // (0, 1) → 90° (back)
+            // (-1, 1) → 135° (back-left)
+            // (-1, 0) → 180° (left)
+            // (-1,-1) → -135° (front-left)
+            // (0, -1) → -90° (front)
+            // (1, -1) → -45° (front-right)
+            _faceAngle = Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
+            if (_faceAngle > 70f && _faceAngle < 110f)      _faceAngle = 45;   // avoid back
+            if (_faceAngle < -70f && _faceAngle > -110f)    _faceAngle = -45;  // avoid front
 
-            // Only rotate if there's movement input
-            if (_input.magnitude < 0.01f) return;
-
-            //input:
-            // 1 - right away from camera
-            // -1 - left and towards camera
-            //slightly edited rotation system so crowley better faces which direction he's moving
-            //Rotate Sprite (1) vs rotate Player RB (2)
-
-            if (_input.x >= 0 && _input.x <= 1 && _input.y == 0) // right
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, 0, 0), Time.deltaTime * rotationSpeed);
-            }
-            else if (_input.x >= 0 && _input.x <= 1 && _input.y >= 0 && _input.y <= 1) //back right
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -45, 0), Time.deltaTime * rotationSpeed);
-            }
-            else if (_input.x >= 0 && _input.x <= 1 && _input.y <= 0 && _input.y >= -1) //front right
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -305, 0), Time.deltaTime * rotationSpeed);
-            }
-            else if (_input.x >= -1 && _input.x <= 0 && _input.y == 0) //left
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -180, 0), Time.deltaTime * rotationSpeed);
-            }
-            else if (_input.x >= -1 && _input.x <= 0 && _input.y >= 0 && _input.y <= 1) //back left
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -135, 0), Time.deltaTime * rotationSpeed);
-            }
-            else if (_input.x >= -1 && _input.x <= 0 && _input.y <= 0 && _input.y >= -1) //front left
-            {
-                playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, Quaternion.Euler(0, -215, 0), Time.deltaTime * rotationSpeed);
-            }
+            // Convert 2D angle into Y-axis facing because Atan is counter-clockwise think PI
+            float targetY = -_faceAngle;
+            Quaternion targetRot = Quaternion.Euler(0, targetY, 0);
+            playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
         }
 
         void OnDrawGizmos()
