@@ -4,6 +4,7 @@
 using System.Collections;
 using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 namespace SHG.AnimatorCoder
 {
@@ -12,15 +13,21 @@ namespace SHG.AnimatorCoder
         /// <summary> The baseline animation logic on a specific layer </summary>
         public abstract void DefaultAnimation(int layer);
         private Animator animator = null;
-        private Animations[] currentAnimation;
+        private string[] currentAnimation;
         private bool[] layerLocked;
         private ParameterDisplay[] parameters;
         private Coroutine[] currentCoroutine;
+        private const string RESET = "Reset";
+        private AnimatorValues animatorValues = new AnimatorValues();
 
         /// <summary> Sets up the Animator Brain </summary>
         public void Initialize(Animator animator = null)
         {
-            AnimatorValues.Initialize();
+            if(animatorValues.Initialized == false)
+            {
+                LogError("Please initialize Animator Values before calling Initialize() in AnimatorCoder");
+                return;
+            }
 
             if(animator == null)
                 this.animator = GetComponent<Animator>();
@@ -29,21 +36,14 @@ namespace SHG.AnimatorCoder
                 
             currentCoroutine = new Coroutine[this.animator.layerCount];
             layerLocked = new bool[this.animator.layerCount];
-            currentAnimation = new Animations[this.animator.layerCount];
+            currentAnimation = new string[this.animator.layerCount];
 
             for (int i = 0; i < this.animator.layerCount; ++i)
             {
                 layerLocked[i] = false;
 
                 int hash = this.animator.GetCurrentAnimatorStateInfo(i).shortNameHash;
-                for (int k = 0; k < AnimatorValues.Animations.Length; ++k)
-                {
-                    if (hash == AnimatorValues.Animations[k])
-                    {
-                        currentAnimation[i] = (Animations)Enum.GetValues(typeof(Animations)).GetValue(k);
-                        k = AnimatorValues.Animations.Length;
-                    }
-                }
+                currentAnimation[i] = animatorValues.GetName(hash);
             }
 
             string[] names = Enum.GetNames(typeof(Parameters));
@@ -56,7 +56,7 @@ namespace SHG.AnimatorCoder
         }
 
         /// <summary> Returns the current animation that is playing </summary>
-        public Animations GetCurrentAnimation(int layer)
+        public string GetCurrentAnimation(int layer)
         {
             try
             {
@@ -65,7 +65,7 @@ namespace SHG.AnimatorCoder
             catch
             {
                 LogError("Can't retrieve Current Animation. Fix: Initialize() in Start() and don't exceed number of animator layers");
-                return Animations.RESET;
+                return RESET;
             }
         }
 
@@ -127,7 +127,7 @@ namespace SHG.AnimatorCoder
         {
             try
             {
-                if (data.animation == Animations.RESET)
+                if (data.animation == "Reset")
                 {
                     DefaultAnimation(layer);
                     return false;
@@ -139,7 +139,7 @@ namespace SHG.AnimatorCoder
                 layerLocked[layer] = data.lockLayer;
                 currentAnimation[layer] = data.animation;
 
-                animator.CrossFade(AnimatorValues.GetHash(currentAnimation[layer]), data.crossfade, layer);
+                animator.CrossFade(animatorValues.GetHash(currentAnimation[layer]), data.crossfade, layer);
 
                 if (data.nextAnimation != null)
                 {
@@ -174,7 +174,7 @@ namespace SHG.AnimatorCoder
     [Serializable]
     public class AnimationData
     {
-        public Animations animation;
+        public string animation;
         /// <summary> Should the layer lock for this animation? </summary>
         public bool lockLayer;
         /// <summary> Should an animation play immediately after? </summary>
@@ -183,41 +183,12 @@ namespace SHG.AnimatorCoder
         public float crossfade = 0;
 
         /// <summary> Sets the animation data </summary>
-        public AnimationData(Animations animation = Animations.RESET, bool lockLayer = false, AnimationData nextAnimation = null, float crossfade = 0)
+        public AnimationData(string animation = "Reset", bool lockLayer = false, AnimationData nextAnimation = null, float crossfade = 0)
         {
             this.animation = animation;
             this.lockLayer = lockLayer;
             this.nextAnimation = nextAnimation;
             this.crossfade = crossfade;
-        }
-    }
-
-    /// <summary> Class the manages the hashes of animations and parameters </summary>
-    public class AnimatorValues
-    {
-        /// <summary> Returns the animation hash array </summary>
-        public static int[] Animations { get { return animations; } }
-
-        private static int[] animations;
-        private static bool initialized = false;
-
-        /// <summary> Initializes the animator state names </summary>
-        public static void Initialize()
-        {
-            if (initialized) return;
-            initialized = true;
-
-            string[] names = Enum.GetNames(typeof(Animations));
-
-            animations = new int[names.Length];
-            for (int i = 0; i < names.Length; i++)
-                animations[i] = Animator.StringToHash(names[i]);
-        }
-
-        /// <summary> Gets the animator hash value of an animation </summary>
-        public static int GetHash(Animations animation)
-        {
-            return animations[(int)animation];
         }
     }
 
