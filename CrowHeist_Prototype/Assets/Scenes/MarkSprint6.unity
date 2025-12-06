@@ -7118,6 +7118,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 785464269}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!20 &796229856 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5077709139484783650, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
+  m_PrefabInstance: {fileID: 31791957076476978}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &797970049
 GameObject:
   m_ObjectHideFlags: 0
@@ -8810,7 +8815,7 @@ MonoBehaviour:
   playerCam: {fileID: 1927751395}
   dockCam: {fileID: 940946647}
   roombaCam: {fileID: 887452162}
-  doorCam: {fileID: 0}
+  doorCam: {fileID: 796229856}
   activateDelayTime: 0.5
   activateTime: 3
   playerCamTime: 1
@@ -8822,6 +8827,7 @@ MonoBehaviour:
   roombAi: {fileID: 1848783564}
   roombaDispense: {fileID: 1848783562}
   roombaLightsOff: {fileID: 1848783561}
+  doorOpen: {fileID: 919132147695235051}
   playerRb: {fileID: 2074509613}
 --- !u!1001 &1013296400
 PrefabInstance:
@@ -20226,18 +20232,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1371138797850375870, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.65
-      objectReference: {fileID: 0}
-    - target: {fileID: 1371138797850375870, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1.8
-      objectReference: {fileID: 0}
-    - target: {fileID: 1371138797850375870, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1371138797850375870, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
       propertyPath: m_LocalPosition.x
       value: 51
       objectReference: {fileID: 0}
@@ -20286,6 +20280,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
+--- !u!114 &919132147695235051 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2888124931072908098, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
+  m_PrefabInstance: {fileID: 31791957076476978}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd498d12e36b4a708e291f8dabd6df5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2430776370606408971 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7296487973774563666, guid: ff79993787e3f44309a3087e5800d89e, type: 3}
