@@ -40,6 +40,7 @@ public class RoombAi : MonoBehaviour
 
     //For roomba activation cutscene - added 12/2/25 by Mark D.
     public RoombaCamManager roombaCamManager;
+    public VirtualCamManager virtualCamManager;
 
     public int CurrentTargetIndex
     {
@@ -232,7 +233,7 @@ public class RoombAi : MonoBehaviour
         if(!isActivated && !isBroken)
         {
             isActivated = true;
-            roombaCamManager.StartRoombaActivateSequence();
+            virtualCamManager.StartRoombaActivateSequence();
         }
     }
 
