@@ -3,7 +3,8 @@ using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
 
-public class PixieDust : MonoBehaviour, IPickupable
+// ADDED: Implement ICustomSaveable to save/load the used state
+public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 {
     [Header("Levitation Settings")]
     [SerializeField] private float levitationDuration = 5f;
@@ -28,7 +29,7 @@ public class PixieDust : MonoBehaviour, IPickupable
     [SerializeField] private float shaderEffectDuration = 1f;
     [SerializeField] private AnimationClip levitationAnimation;
 
-    [Header("Used Item Appearance")] // New section
+    [Header("Used Item Appearance")]
     [SerializeField] private Color usedItemColor = Color.gray;
     [SerializeField] private Material usedItemMaterial; // Optional: specific material for used items
 
@@ -50,6 +51,7 @@ public class PixieDust : MonoBehaviour, IPickupable
     // Item's own renderer and materials for color changes
     private Renderer itemRenderer;
     private Material[] itemOriginalMaterials;
+    private Material[] itemUsedMaterials; // Store the used materials so we can restore them
 
     // Track when the item was picked up to prevent immediate use
     private float pickupTime = -1f;
@@ -88,7 +90,10 @@ public class PixieDust : MonoBehaviour, IPickupable
         }
 
         player = GameObject.FindWithTag("Player");
-        playerController = player.GetComponent<Controller2Point5D>();
+        if (player != null)
+        {
+            playerController = player.GetComponent<Controller2Point5D>();
+        }
 
         // Initialize audio instances
         InitializeAudio();
@@ -226,6 +231,7 @@ public class PixieDust : MonoBehaviour, IPickupable
                 {
                     newMaterials[i] = usedItemMaterial;
                 }
+                itemUsedMaterials = newMaterials;
                 itemRenderer.materials = newMaterials;
             }
             else
@@ -237,12 +243,21 @@ public class PixieDust : MonoBehaviour, IPickupable
                     newMaterials[i] = new Material(itemOriginalMaterials[i]);
                     newMaterials[i].color = usedItemColor;
                 }
+                itemUsedMaterials = newMaterials;
                 itemRenderer.materials = newMaterials;
             }
         }
 
         // Keep the same tag so it can still be picked up and thrown
         // gameObject.tag remains "PixieDust" for pickup/throw functionality
+    }
+
+    private void RestoreOriginalAppearance()
+    {
+        if (itemRenderer != null && itemOriginalMaterials != null)
+        {
+            itemRenderer.materials = itemOriginalMaterials;
+        }
     }
 
     private void PlayUseExplosionEffect()
@@ -546,5 +561,31 @@ public class PixieDust : MonoBehaviour, IPickupable
     public void Consume()
     {
         return;
+    }
+
+    // ADDED: ICustomSaveable implementation to save/load the used state
+    public void SaveCustomData(SaveableObjectData data)
+    {
+        // Save the isUsed flag
+        data.customBool1 = isUsed;
+        Debug.Log($"Saving PixieDust state: isUsed = {isUsed}");
+    }
+
+    public void LoadCustomData(SaveableObjectData data)
+    {
+        // Restore the isUsed flag
+        isUsed = data.customBool1;
+
+        // Restore the appropriate appearance based on the loaded state
+        if (isUsed)
+        {
+            ChangeToUsedAppearance();
+        }
+        else
+        {
+            RestoreOriginalAppearance();
+        }
+
+        Debug.Log($"Loading PixieDust state: isUsed = {isUsed}");
     }
 }

@@ -27,7 +27,7 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    
+
     public void SaveGame()
     {
         Debug.Log("Saving game...");
@@ -64,8 +64,8 @@ public class SaveLoadSystem : MonoBehaviour
             }
         }
 
-        // Save all saveable objects in the scene
-        SaveableObject[] saveableObjects = FindObjectsOfType<SaveableObject>();
+        // Save all saveable objects in the scene (including inactive ones like collected coins)
+        SaveableObject[] saveableObjects = FindObjectsOfType<SaveableObject>(true);
         foreach (SaveableObject obj in saveableObjects)
         {
             SaveableObjectData objectData = obj.GetSaveData();
@@ -87,7 +87,7 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-   
+
     public void LoadGame()
     {
         if (!File.Exists(_saveFilePath))
@@ -150,7 +150,7 @@ public class SaveLoadSystem : MonoBehaviour
         RestoreGameState(saveData);
     }
 
-    
+
     private void RestoreGameState(SaveData saveData)
     {
         Debug.Log("Restoring game state...");
@@ -180,8 +180,8 @@ public class SaveLoadSystem : MonoBehaviour
             }
         }
 
-        // First, collect all existing saveable objects
-        SaveableObject[] existingObjects = FindObjectsOfType<SaveableObject>();
+        // First, collect all existing saveable objects (including inactive ones so we can reactivate them)
+        SaveableObject[] existingObjects = FindObjectsOfType<SaveableObject>(true);
         Dictionary<string, SaveableObject> existingObjectsDict = new Dictionary<string, SaveableObject>();
 
         foreach (SaveableObject obj in existingObjects)
@@ -231,7 +231,7 @@ public class SaveLoadSystem : MonoBehaviour
         // Wait a frame for objects to be fully initialized
         yield return new WaitForEndOfFrame();
 
-        SaveableObject[] objects = FindObjectsOfType<SaveableObject>();
+        SaveableObject[] objects = FindObjectsOfType<SaveableObject>(true);
         foreach (SaveableObject obj in objects)
         {
             if (obj.UniqueId == objectId)
@@ -248,13 +248,13 @@ public class SaveLoadSystem : MonoBehaviour
         }
     }
 
-    
+
     public bool SaveFileExists()
     {
         return File.Exists(_saveFilePath);
     }
 
-   
+
     public void DeleteSave()
     {
         if (File.Exists(_saveFilePath))

@@ -73,6 +73,12 @@ public class SaveableObjectData
     public bool boolValue; // For states
     public string stringValue; // For tags or special data
 
+    // ADDED: Custom state fields for special items (like PixieDust)
+    public bool customBool1; // For isUsed flag, etc.
+    public bool customBool2; // Additional boolean state
+    public string customString1; // For custom state data
+    public string customString2; // Additional string data
+
     public SaveableObjectData()
     {
         position = new Vector3Data();

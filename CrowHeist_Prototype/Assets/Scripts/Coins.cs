@@ -84,6 +84,7 @@ public class Coins : MonoBehaviour
     
     void KillObject()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }
