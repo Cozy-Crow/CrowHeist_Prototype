@@ -6,7 +6,7 @@ namespace KinematicCharacterController.Examples
 {
     public class SodaCanDash : MonoBehaviour
     {
-        //private int dashCount = 4;
+        [SerializeField] private float dashForce = 10f;
         private float lastDashTime = -1f;
 
         private Controller2Point5D controller;
@@ -35,33 +35,30 @@ namespace KinematicCharacterController.Examples
 
         private IEnumerator Dash()
         {
-            //dashCount--;
-            
             lastDashTime = Time.time;
             controller._canDash = false;
             controller._isDashing = true;
 
             float dashDirection;
-            Vector3 dashForce;
+            Vector3 force;
 
             Vector3 inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
             if (inputDirection != Vector3.zero)
             {
-                dashForce = inputDirection * controller._dashSpeed;
+                force = inputDirection * dashForce;
             }
             else
             {
                 dashDirection = controller._isFacingRight ? 1f : -1f;
-                dashForce = new Vector3(dashDirection * controller._dashSpeed, 0, 0);
+                force = new Vector3(dashDirection * dashForce, 0, 0);
             }
 
-            controller._rb.AddForce(dashForce, ForceMode.Impulse);
+            controller._rb.AddForce(force, ForceMode.Impulse);
 
-            // Gradual slowdown
             float dashTime = 0f;
-            while (dashTime < controller._dashDuration && controller._isDashing)
+            while (dashTime < controller._dashDuration)
             {
-                controller._rb.velocity = Vector3.Lerp(controller._rb.velocity, new Vector3(0, controller._rb.velocity.y, 0), Time.deltaTime * 3f);
+                controller._rb.velocity = Vector3.Lerp(controller._rb.velocity, new Vector3(0, controller._rb.velocity.y, 0), Time.deltaTime * 2f);
                 dashTime += Time.deltaTime;
                 yield return null;
             }
