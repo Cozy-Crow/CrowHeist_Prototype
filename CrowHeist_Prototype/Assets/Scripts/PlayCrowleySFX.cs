@@ -17,10 +17,13 @@ public class PlayCrowleySFX : MonoBehaviour
             .Replace(" ", "")                // Remove spaces
             .Replace("_", "")                // Remove underscores
             .Replace("-", "")                // Remove dashes
-            .ToUpperInvariant();             // Uppercase consistently
+            .ToUpper();             // Uppercase consistently
 
             soundDictionary.Add(key, sfx.sound);
         }
+
+        Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
+        Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
     }
     public void PlaySFX(String sfx)
     {
@@ -29,7 +32,7 @@ public class PlayCrowleySFX : MonoBehaviour
         .Replace(" ", "")                // Remove spaces
         .Replace("_", "")                // Remove underscores
         .Replace("-", "")                // Remove dashes
-        .ToUpperInvariant();             // Uppercase consistently
+        .ToUpper();             // Uppercase consistently
         
         soundDictionary.TryGetValue(key, out EventReference sound);
         if (sound.Equals(null))
