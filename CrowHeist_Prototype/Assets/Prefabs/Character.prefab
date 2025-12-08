@@ -32,7 +32,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2501922218016061977}
+  m_Father: {fileID: 631451988467006383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1042615545658782635
 Animator:
@@ -229,38 +229,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 631451988467006383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5129602260246339436
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2501922218016061977}
-  m_Layer: 9
-  m_Name: SpriteRotator
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2501922218016061977
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5129602260246339436}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5843309656202178542}
-  m_Father: {fileID: 631451988467006383}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8830650885409167177
 GameObject:
   m_ObjectHideFlags: 0
@@ -295,7 +263,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2501922218016061977}
+  - {fileID: 5843309656202178542}
   - {fileID: 7843053465694190917}
   - {fileID: 2564438339915437367}
   - {fileID: 5167104243750956226}
@@ -313,17 +281,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 361356ee28a11564aa6d12a52d499704, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 5
-  _smoothTime: 0.05
-  _jumpForce: 5.3
+  moveSpeed: 5
+  smoothTime: 0.05
+  jumpForce: 20
   rotationSpeed: 10
-  _gravityMultiplier: 1.5
-  _groundLayer:
+  gravityMultiplier: 2
+  groundLayer:
     serializedVersion: 2
     m_Bits: 4294967295
-  _groundCheckDistance: 0.1
-  _skinWidth: 0.02
+  groundCheckDistance: 0.15
+  skinWidth: 0.02
   playerSprite: {fileID: 61817540364832675}
+  animatorCoder: {fileID: 0}
   _isSpeedBoosted: 0
   _speedBoostDuration: 5
   _normalMoveSpeed: 0
@@ -343,7 +312,7 @@ MonoBehaviour:
   _jumpBufferTime: 0.2
   _rb: {fileID: 0}
   _isFacingRight: 1
-  _isThrowing: 0
+  isThrowing: 0
   _canJump: 1
   throwDirection: {x: 0, y: 0, z: 0}
   maxThrowForce: 20
