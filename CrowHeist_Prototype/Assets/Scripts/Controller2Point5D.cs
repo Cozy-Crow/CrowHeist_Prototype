@@ -274,9 +274,6 @@ namespace KinematicCharacterController.Examples
                     }
                     else
                         _isGrounded = true; // => making you stop
-
-                    //show distance from player origin to hit pos
-                    // Debug.Log("distancetoobj " + distanceToObject);
                 }
                 else
                     _onSlope = false;
@@ -783,17 +780,6 @@ namespace KinematicCharacterController.Examples
                         }
                     }   
                 }
-
-                //knife and microwave puzzle
-                //if you're holding the knife, and in range of the microwave
-                if(heldObject.tag.Equals("Knife") && nearbyInteractables[currentTargetIndex].tag.Equals("Microwave"))
-                {
-                    GameObject knifeReference = heldObject.gameObject;
-
-                    Drop();
-                    
-
-                }
             }
 
             // Paint bucket logic
@@ -1013,12 +999,10 @@ namespace KinematicCharacterController.Examples
             {
                 if (_isFacingRight)
                 {
-                    Debug.Log("ThrowRight");
                     ChangeAnimation("ThrowRight", .5f);
                 }
                 else
                 {
-                    Debug.Log("ThrowLeft");
                     ChangeAnimation("ThrowLeft", .5f);
                 }
                 return;
