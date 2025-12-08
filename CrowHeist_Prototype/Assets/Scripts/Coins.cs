@@ -51,7 +51,7 @@ public class Coins : MonoBehaviour
             //SoundManager.instance.PlaySFX();
 
             #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
-            // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
+             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
             // float currentValue;
 
             
