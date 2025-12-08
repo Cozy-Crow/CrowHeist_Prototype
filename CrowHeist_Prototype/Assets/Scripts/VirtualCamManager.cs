@@ -38,6 +38,7 @@ public class VirtualCamManager : MonoBehaviour
     private void Awake()
     {
         allCams = new CinemachineVirtualCamera[] {playerCam, dockCam, roombaCam, doorCam};
+        ActivateVcam(playerCam);
     }
 
     public void StartRoombaActivateSequence() =>

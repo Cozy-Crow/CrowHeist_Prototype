@@ -39,7 +39,7 @@ public class RoombAi : MonoBehaviour
     private bool anyObjectDirty = false;
 
     //For roomba activation cutscene - added 12/2/25 by Mark D.
-    public RoombaCamManager roombaCamManager;
+    // public RoombaCamManager roombaCamManager;
     public VirtualCamManager virtualCamManager;
 
     public int CurrentTargetIndex
