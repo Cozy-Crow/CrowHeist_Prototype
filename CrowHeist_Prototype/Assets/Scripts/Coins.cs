@@ -26,6 +26,12 @@ public class Coins : MonoBehaviour
     void Update()
     {
         //transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
+        
+        // Prevent coin from becoming dirty
+        if (pickableUpScript != null)
+        {
+            pickableUpScript._isDirty = false;
+        }
     }
 
     private void Awake()
@@ -45,8 +51,10 @@ public class Coins : MonoBehaviour
             //SoundManager.instance.PlaySFX();
 
             #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
-            // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
+             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
             // float currentValue;
+
+            
             // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
             // float newValue = currentValue += 1;
             // MusicManager.SetParameterByName("TrinketsCollected", + newValue);
@@ -76,6 +84,7 @@ public class Coins : MonoBehaviour
     
     void KillObject()
     {
-        Destroy(gameObject);
+        //Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

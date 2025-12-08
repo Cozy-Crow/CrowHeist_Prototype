@@ -150,7 +150,6 @@ namespace KinematicCharacterController.Examples
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
-            footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
         void Update()
@@ -163,6 +162,7 @@ namespace KinematicCharacterController.Examples
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
+
         }
 
         void FixedUpdate()
@@ -1000,6 +1000,11 @@ namespace KinematicCharacterController.Examples
             }
             
             Drop();
+        }
+
+        private void PlayFootsteps()
+        {
+            
         }
     }
 }

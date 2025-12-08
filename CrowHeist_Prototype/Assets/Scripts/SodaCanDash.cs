@@ -6,7 +6,7 @@ namespace KinematicCharacterController.Examples
 {
     public class SodaCanDash : MonoBehaviour
     {
-        [SerializeField] private float dashCooldown = 1f;
+        [SerializeField] private float dashForce = 10f;
         private float lastDashTime = -1f;
 
         private Controller2Point5D controller;
@@ -19,19 +19,17 @@ namespace KinematicCharacterController.Examples
 
         public void HandleDash()
         {
-            if (controller == null)
-            {
-                return;
-            }
-            else if ((controller.heldObject == this.GetComponent<Rigidbody>()) && Input.GetKeyDown(KeyCode.E) && CanDash())
             if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && controller._canDash)
             {
                 StartCoroutine(Dash());
             }
         }
 
-        private bool CanDash()
+        private bool CanDash(int dashCount)
         {
+            // return statement meant for limited dashes
+            //return dashCount > 0 && Time.time >= lastDashTime + controller._dashCooldown;
+
             return Time.time >= lastDashTime + controller._dashCooldown;
         }
 
@@ -42,23 +40,25 @@ namespace KinematicCharacterController.Examples
             controller._isDashing = true;
 
             float dashDirection;
-            Vector3 dashVelocity;
+            Vector3 force;
 
             Vector3 inputDirection = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized;
             if (inputDirection != Vector3.zero)
             {
-                dashVelocity = inputDirection * controller._dashSpeed;
+                force = inputDirection * dashForce;
             }
             else
             {
                 dashDirection = controller._isFacingRight ? 1f : -1f;
-                dashVelocity = new Vector3(dashDirection * controller._dashSpeed, 0, 0);
+                force = new Vector3(dashDirection * dashForce, 0, 0);
             }
 
+            controller._rb.AddForce(force, ForceMode.Impulse);
+
             float dashTime = 0f;
-            while (dashTime < controller._dashDuration && controller._isDashing)
+            while (dashTime < controller._dashDuration)
             {
-                controller._rb.velocity = new Vector3(dashVelocity.x, controller._rb.velocity.y, dashVelocity.z);
+                controller._rb.velocity = Vector3.Lerp(controller._rb.velocity, new Vector3(0, controller._rb.velocity.y, 0), Time.deltaTime * 2f);
                 dashTime += Time.deltaTime;
                 yield return null;
             }

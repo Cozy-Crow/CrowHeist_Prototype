@@ -15,6 +15,9 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private Rigidbody rb;
 
+    public VirtualCamManager virtualCamManager;
+    
+
     void Start()
     {
         interactDistance = 2.6f;
@@ -40,6 +43,7 @@ public class InteractableRoombaVase : MonoBehaviour
     {
         rb.isKinematic = false;
         rb.AddForce(Vector3.left * 3f, ForceMode.Impulse);
+        virtualCamManager.StartRoombaBreakSequence();
     }
 
     public void OnTriggerEnter(Collider other)

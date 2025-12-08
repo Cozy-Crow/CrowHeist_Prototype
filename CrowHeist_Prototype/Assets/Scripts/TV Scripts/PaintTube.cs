@@ -87,7 +87,6 @@ public class PaintTube : MonoBehaviour
 
     public float GetPaintRemainingFraction()
     {
-        // returns 0–1
         return Mathf.Clamp01(_paintInBucket / 100f);
     }
 
