@@ -21,7 +21,7 @@ namespace KinematicCharacterController.Examples
             if (controller._rb.velocity.y < 0)
             {
                 // Reduced gravity for gliding
-                float gravityForce = Physics.gravity.y * controller._gravityMultiplier * 0.1f;
+                float gravityForce = Physics.gravity.y * controller.gravityMultiplier * 0.1f;
                 controller._rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
                 
                 // Set glide fall speed

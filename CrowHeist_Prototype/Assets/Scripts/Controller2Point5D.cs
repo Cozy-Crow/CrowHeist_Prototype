@@ -1,12 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using FMODUnity;
 using FMOD.Studio;
-using Unity.VisualScripting;
-using JetBrains.Annotations;
-using UnityEngine.TextCore.Text;
+using SHG.AnimatorCoder;
 
 namespace KinematicCharacterController.Examples
 {
@@ -15,22 +12,27 @@ namespace KinematicCharacterController.Examples
     public class Controller2Point5D : MonoBehaviour
     {
         [Header("Movement")]
-        [SerializeField] public float _moveSpeed = 50f;
-        [SerializeField] private float _smoothTime = 0.05f;
-        [SerializeField] private float _jumpForce = 40f;
+        [SerializeField] public float moveSpeed = 5;
+        [SerializeField] private float smoothTime = 0.05f;
+        [SerializeField] private float jumpForce = 20f;
         [SerializeField] private float rotationSpeed = 10f;     // Speed of sprite rotation slerp
-        [SerializeField] public float _gravityMultiplier = 2f;
-        [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
-        [SerializeField] private float _groundCheckDistance = 0.15f;
-        [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
-        private Vector2 _input;
-        private Vector3 _faceDirection;
-        private float _faceAngle;
-        private Vector3 _moveVelocity;
-        private bool _isGrounded = false;
+        [SerializeField] public float gravityMultiplier = 2f;
+        [SerializeField] private LayerMask groundLayer = -1; // Set in inspector for ground detection
+        [SerializeField] private float groundCheckDistance = 0.15f;
+        [SerializeField] private float skinWidth = 0.02f; // Smaller value to prevent bouncing
+        private Vector2 input;
+        private Vector3 faceDirection;
+        private float faceAngle;
+        private Vector3 velocity;
+        private bool isGrounded = false;
+        public Vector3 Velocity => velocity;
+        public Vector3 FaceDirection => faceDirection;
+        public bool IsGrounded => isGrounded;
+        public bool IsThrowing => isThrowing;
 
         //Sprite
         [SerializeField] GameObject playerSprite;
+        [SerializeField] AnimatorCoder animatorCoder;
         
         // Soda Variables
         public bool _isSpeedBoosted = false;
@@ -67,15 +69,12 @@ namespace KinematicCharacterController.Examples
         private CapsuleCollider[] _capsuleCollider; //stores both colliders
         private CapsuleCollider _normalCollider;
         private CapsuleCollider _triggerCollider;
-        private string _currentAnim;
         public bool _isFacingRight = true;
-        public bool _isThrowing = false;
+        public bool isThrowing = false;
         public bool _canJump = true;
         private bool _isJumping = false;
-        
         private bool _wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
-        private Animator _animator;
 
         //Charged Throw
         public Vector3 throwDirection;
@@ -111,7 +110,6 @@ namespace KinematicCharacterController.Examples
         public Vector3 endPoint;
 
         #region Properties
-        public bool IsGrounded => _isGrounded;
         #endregion
 
         // Knockback
@@ -130,15 +128,13 @@ namespace KinematicCharacterController.Examples
 
         private void Awake()
         {
-            _normalMoveSpeed = _moveSpeed;
+            _normalMoveSpeed = moveSpeed;
             _rb = GetComponent<Rigidbody>();
             _capsuleCollider = GetComponents<CapsuleCollider>();
             //0 and 1 based on order in inspector
             // - trigger is listed first in inspector 
             _triggerCollider = _capsuleCollider[0];
             _normalCollider = _capsuleCollider[1];
-
-            _animator = GetComponentInChildren<Animator>();
         }
 
         public void Start()
@@ -147,7 +143,7 @@ namespace KinematicCharacterController.Examples
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
-            footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
+            animatorCoder = GetComponentInChildren<AnimatorCoder>();
         }
 
         void Update()
@@ -183,7 +179,6 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-            HandleAnimation();
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
@@ -205,7 +200,7 @@ namespace KinematicCharacterController.Examples
 
         private void CheckGrounded()
         {
-            _wasGroundedLastFrame = _isGrounded;
+            _wasGroundedLastFrame = isGrounded;
 
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
@@ -216,21 +211,21 @@ namespace KinematicCharacterController.Examples
 
             RaycastHit hit;
             // Cast distance should reach just below the feet
-            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance;
+            float castDistance = (_normalCollider.height * 0.5f) + groundCheckDistance;
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
+            isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, groundLayer,QueryTriggerInteraction.Ignore);
 
             // Additional check with spherecast for better edge detection
-            if (!_isGrounded)
+            if (!isGrounded)
             {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+                isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
             }
         }
 
         private void HandleInput()
         {
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -240,7 +235,7 @@ namespace KinematicCharacterController.Examples
             // Handle jump buffering and coyote time
             if (_jumpBufferCounter > 0f)
             {
-                if ((_isGrounded || _coyoteTimeCounter > 0f) && !_isJumping)
+                if ((isGrounded || _coyoteTimeCounter > 0f) && !_isJumping)
                 {
                     Jump();
                     _jumpBufferCounter = 0f;
@@ -257,35 +252,35 @@ namespace KinematicCharacterController.Examples
         {
             if (_isDashing) return;
  
-            _moveVelocity = new Vector3(_input.x, 0, _input.y) * _moveSpeed;
+            velocity = new Vector3(input.x, 0, input.y) * moveSpeed;
 
             //Get the last face direction
             // Update face direction only on the axes that have non-zero movement
-            if (_moveVelocity.x != 0f && _moveVelocity.z != 0f)
+            if (velocity.x != 0f && velocity.z != 0f)
             {
-                _faceDirection.x = _moveVelocity.normalized.x;
-                _faceDirection.z = _moveVelocity.normalized.z;
+                faceDirection.x = velocity.normalized.x;
+                faceDirection.z = velocity.normalized.z;
             }
-            else if (_moveVelocity.x != 0f)
+            else if (velocity.x != 0f)
             {
-                _faceDirection.x = _moveVelocity.normalized.x;
-                _faceDirection.z = 0;
-            }else if (_moveVelocity.z != 0f)
+                faceDirection.x = velocity.normalized.x;
+                faceDirection.z = 0;
+            }else if (velocity.z != 0f)
             {
-                _faceDirection.z = _moveVelocity.normalized.z;
+                faceDirection.z = velocity.normalized.z;
             }
 
             // Set velocity directly instead of using MovePosition
-            Vector3 targetVelocity = new Vector3(_moveVelocity.x, _rb.velocity.y, _moveVelocity.z);
+            Vector3 targetVelocity = new Vector3(velocity.x, _rb.velocity.y, velocity.z);
             _rb.velocity = targetVelocity;
         }
 
         private void HandleGravity()
         {
-            if (!_isGrounded)
+            if (!isGrounded)
             {
                 // Apply normal gravity
-                float gravityForce = Physics.gravity.y * _gravityMultiplier;
+                float gravityForce = Physics.gravity.y * gravityMultiplier;
                 _rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
 
                 // Clamp fall speed
@@ -318,13 +313,13 @@ namespace KinematicCharacterController.Examples
                 return;
             }
             _isJumping = true;
-            _isGrounded = false;
+            isGrounded = false;
             _coyoteTimeCounter = 0f;
             _canJump = false;
 
             // Reset vertical velocity before jump
             _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
-            _rb.AddForce(Vector3.up * _jumpForce, ForceMode.VelocityChange);
+            _rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
             // Re-enable jumping only when grounded again
             StartCoroutine(ResetJumpFlag());
@@ -333,7 +328,7 @@ namespace KinematicCharacterController.Examples
         private IEnumerator ResetJumpFlag()
         {
             // Adds small delay so that we do not re-enable jump mid-air
-            yield return new WaitUntil(() => _isGrounded);
+            yield return new WaitUntil(() => isGrounded);
             _isJumping = false;
             _canJump = true;
         }        
@@ -341,7 +336,7 @@ namespace KinematicCharacterController.Examples
         private void UpdateCoyoteTime()
         {
             // If grounded, reset coyote time
-            if (_isGrounded)
+            if (isGrounded)
             {
                 _coyoteTimeCounter = _coyoteTime;
             }
@@ -429,12 +424,12 @@ namespace KinematicCharacterController.Examples
         
         private void HandleRotation()
         {
-            Flip(_faceDirection);
+            Flip(faceDirection);
         }
 
         void HandleWindUp() //jack in the box
         {
-            if (_isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
+            if (isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
             {
                 GameObject jack = _touchingObject;
                 GameObject jackInTheBox = null;
@@ -483,7 +478,7 @@ namespace KinematicCharacterController.Examples
 
         void HandleBounce() //jack in the box
         {
-            if (canBounce && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            if (canBounce && isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
             {
                 GameObject jack = _currentGroundObject;
                 GameObject jackInTheBox = null;
@@ -542,14 +537,14 @@ namespace KinematicCharacterController.Examples
                 Debug.Log("Entered Jack In The Box trigger.");
             }
             
-            if (other.CompareTag("OffSwitch") && !_isGrounded)
+            if (other.CompareTag("OffSwitch") && !isGrounded)
             {
                 Debug.Log("Off Switch");
                 var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
                 offSwitchToOn.ToggleSwitchOn();
             }
             
-            if (other.CompareTag("OnSwitch") && _isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
+            if (other.CompareTag("OnSwitch") && isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
             {
                 Debug.Log("On Switch");
                 var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
@@ -868,38 +863,6 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        private void HandleAnimation()
-        {
-            _animator.SetFloat("MoveX", _faceDirection.x);
-            _animator.SetFloat("MoveZ", _faceDirection.z);
-
-            if (_isThrowing)
-            {
-                _animator.Play("Throw");
-                return;
-            }
-
-            if (_rb.velocity.y > 0.1f || !_isGrounded)
-            {
-                _animator.Play("Jump");
-            }
-            else if (_moveVelocity.magnitude > 0.1f)
-            {
-                _animator.Play("Walk");
-            }
-            else
-            {
-                _animator.Play("Idle");
-            }
-        }
-
-        private void ChangeAnimation(string animation, float crossfade = 0.2f)
-        {
-            if (_currentAnim == animation) return;
-            
-            _currentAnim = animation;
-            _animator.CrossFade(animation, crossfade);
-        }
 
         private void Flip(Vector3 faceDirection)
         {
@@ -912,12 +875,12 @@ namespace KinematicCharacterController.Examples
             // (-1,-1) → -135° (front-left)
             // (0, -1) → -90° (front)
             // (1, -1) → -45° (front-right)
-            _faceAngle = Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
-            if (_faceAngle > 70f && _faceAngle < 110f)      _faceAngle = 45;   // avoid back
-            if (_faceAngle < -70f && _faceAngle > -110f)    _faceAngle = -45;  // avoid front
+            faceAngle = Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
+            if (faceAngle > 70f && faceAngle < 110f)      faceAngle = 45;   // avoid back
+            if (faceAngle < -70f && faceAngle > -110f)    faceAngle = -45;  // avoid front
 
             // Convert 2D angle into Y-axis facing because Atan is counter-clockwise think PI
-            float targetY = -_faceAngle;
+            float targetY = -faceAngle;
             Quaternion targetRot = Quaternion.Euler(0, targetY, 0);
             playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
         }
@@ -931,9 +894,9 @@ namespace KinematicCharacterController.Examples
             // Draw ground check
             if (_normalCollider != null)
             {
-                Gizmos.color = _isGrounded ? Color.green : Color.yellow;
+                Gizmos.color = isGrounded ? Color.green : Color.yellow;
                 Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
-                Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
+                Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + groundCheckDistance), _normalCollider.radius * 0.9f);
             }
         }
 

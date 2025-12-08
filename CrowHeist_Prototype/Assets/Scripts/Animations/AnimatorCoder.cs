@@ -12,22 +12,16 @@ namespace SHG.AnimatorCoder
     {
         /// <summary> The baseline animation logic on a specific layer </summary>
         public abstract void DefaultAnimation(int layer);
-        private Animator animator = null;
+        protected Animator animator = null;
         private string[] currentAnimation;
         private bool[] layerLocked;
         private ParameterDisplay[] parameters;
         private Coroutine[] currentCoroutine;
         private const string RESET = "Reset";
-        private AnimatorValues animatorValues = new AnimatorValues();
 
         /// <summary> Sets up the Animator Brain </summary>
         public void Initialize(Animator animator = null)
         {
-            if(animatorValues.Initialized == false)
-            {
-                LogError("Please initialize Animator Values before calling Initialize() in AnimatorCoder");
-                return;
-            }
 
             if(animator == null)
                 this.animator = GetComponent<Animator>();
@@ -41,9 +35,6 @@ namespace SHG.AnimatorCoder
             for (int i = 0; i < this.animator.layerCount; ++i)
             {
                 layerLocked[i] = false;
-
-                int hash = this.animator.GetCurrentAnimatorStateInfo(i).shortNameHash;
-                currentAnimation[i] = animatorValues.GetName(hash);
             }
 
             string[] names = Enum.GetNames(typeof(Parameters));
@@ -139,7 +130,7 @@ namespace SHG.AnimatorCoder
                 layerLocked[layer] = data.lockLayer;
                 currentAnimation[layer] = data.animation;
 
-                animator.CrossFade(animatorValues.GetHash(currentAnimation[layer]), data.crossfade, layer);
+                animator.CrossFade(data.hash, data.crossfade, layer);
 
                 if (data.nextAnimation != null)
                 {
@@ -181,6 +172,7 @@ namespace SHG.AnimatorCoder
         public AnimationData nextAnimation;
         /// <summary> Should there be a transition time into this animation? </summary>
         public float crossfade = 0;
+        public int hash;
 
         /// <summary> Sets the animation data </summary>
         public AnimationData(string animation = "Reset", bool lockLayer = false, AnimationData nextAnimation = null, float crossfade = 0)
@@ -189,6 +181,7 @@ namespace SHG.AnimatorCoder
             this.lockLayer = lockLayer;
             this.nextAnimation = nextAnimation;
             this.crossfade = crossfade;
+            this.hash = Animator.StringToHash(animation);
         }
     }
 

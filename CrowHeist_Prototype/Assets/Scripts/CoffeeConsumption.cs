@@ -45,11 +45,11 @@ namespace KinematicCharacterController.Examples
             }
 
             controller._isSpeedBoosted = true;
-            controller._moveSpeed *= controller._speedBoostMultiplier;
+            controller.moveSpeed *= controller._speedBoostMultiplier;
 
             yield return new WaitForSeconds(controller._speedBoostDuration);
 
-            controller._moveSpeed = controller._normalMoveSpeed;
+            controller.moveSpeed = controller._normalMoveSpeed;
             controller._isSpeedBoosted = false;
             
             if (coffee != null)

@@ -29,8 +29,8 @@ namespace KinematicCharacterController.Examples
                     controller = other.GetComponent<Controller2Point5D>();
                     if (controller)
                     {
-                        originalSpeed = controller._moveSpeed;
-                        controller._moveSpeed *= slowdownFactor;
+                        originalSpeed = controller.moveSpeed;
+                        controller.moveSpeed *= slowdownFactor;
                         playerInWeb = true;
                         controller._canJump = false;
                         
@@ -44,7 +44,7 @@ namespace KinematicCharacterController.Examples
             {
                 if (controller)
                 {
-                    controller._moveSpeed = originalSpeed;
+                    controller.moveSpeed = originalSpeed;
                     playerInWeb = false;
                     controller._canJump = true;
                 }
@@ -55,7 +55,7 @@ namespace KinematicCharacterController.Examples
         {
             if (playerInWeb && controller)
             {
-                controller._moveSpeed = originalSpeed;
+                controller.moveSpeed = originalSpeed;
                 playerInWeb = false;
             }
 
