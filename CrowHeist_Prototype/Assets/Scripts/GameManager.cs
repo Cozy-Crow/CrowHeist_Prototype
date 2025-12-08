@@ -83,11 +83,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();
-        }
-
         // Check win condition
         if (_score >= 5 || altCoinsScore >= 5)
         {
