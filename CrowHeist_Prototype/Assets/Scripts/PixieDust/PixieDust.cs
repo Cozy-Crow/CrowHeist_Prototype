@@ -1,9 +1,9 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
 
-// ADDED: Implement ICustomSaveable to save/load the used state
+
 public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 {
     [Header("Levitation Settings")]
@@ -104,6 +104,15 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
         // Only allow E key usage if item hasn't been used yet
         if (isUsed) return;
 
+        // DEBUG: Log E key press to see if it's being detected
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            if (transform.parent == null)
+            {
+                return; 
+            }
+        }
+
         if (transform.parent != null)
         {
             if (playerController == null)
@@ -125,10 +134,18 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             // Check if enough time has passed since pickup before allowing use
             bool canUse = !wasPickedUp || (Time.time - pickupTime >= pickupCooldown);
 
-            if (Input.GetKeyDown(KeyCode.E) && playerController != null && canUse)
+            
+            bool isProperlyHeld = transform.parent != null &&
+                                  transform.parent.name == "Head" &&
+                                  playerController != null;
+
+            if (Input.GetKeyDown(KeyCode.E) && isProperlyHeld && canUse)
             {
-                Debug.Log("Using Enhanced Pixie Dust!");
                 Use();
+            }
+            else if (Input.GetKeyDown(KeyCode.E) && !isProperlyHeld)
+            {
+                Debug.LogWarning($"[PixieDust {gameObject.name}]  Cannot use - not properly held. Parent: {transform.parent?.name ?? "null"}, playerController: {playerController != null}");
             }
         }
     }
@@ -145,7 +162,7 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 
     public void PickUP(Transform parent)
     {
-        Debug.Log(isUsed ? "Picking up Used Pixie Dust" : "Picking up Enhanced Pixie Dust");
+        Debug.Log(isUsed ? "Picking up Used Pixie Dust" : "Picking up Pixie Dust");
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -198,7 +215,15 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 
     public void Use()
     {
-        if (isUsed || playerController == null) return;
+        bool canUse = !wasPickedUp || (Time.time - pickupTime >= pickupCooldown);
+        if (!canUse)
+        {
+            float timeRemaining = pickupCooldown - (Time.time - pickupTime);
+            Debug.LogWarning($"[PixieDust {gameObject.name}]  BLOCKED: Pickup cooldown active! Wait {timeRemaining:F1}s");
+            return;
+        }
+
+        
 
         isUsed = true;
         Debug.Log("Using Enhanced Pixie Dust - item will remain as cosmetic after use");
@@ -573,6 +598,35 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 
     public void LoadCustomData(SaveableObjectData data)
     {
+        // CRITICAL: Stop any active effects before restoring state
+        ClearActiveEffects();
+
+        // CRITICAL: Reset pickup state to prevent using item without holding it
+        wasPickedUp = false;
+        pickupTime = -1f;
+
+        // CRITICAL: If being held, properly drop it
+        if (transform.parent != null)
+        {
+            Debug.Log($"[PixieDust] Object was being held during load, dropping it properly");
+
+            // Clear the player's held object reference if this was being held
+            if (player != null && playerController != null)
+            {
+                if (playerController.heldObject != null &&
+                    playerController.heldObject.gameObject == gameObject)
+                {
+                    playerController.heldObject = null;
+                    Debug.Log($"[PixieDust] Cleared player's held object reference");
+                }
+            }
+
+            // Properly drop using Drop() method (will restore collider, rigidbody, etc.)
+            Vector3 dropPos = transform.position;
+            Drop(dropPos);
+            Debug.Log($"[PixieDust] Properly dropped at {dropPos}");
+        }
+
         // Restore the isUsed flag
         isUsed = data.customBool1;
 
@@ -586,6 +640,26 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             RestoreOriginalAppearance();
         }
 
-        Debug.Log($"Loading PixieDust state: isUsed = {isUsed}");
+        Debug.Log($"Loading PixieDust state: isUsed = {isUsed}, pickup state cleared, parent cleared");
+    }
+
+    
+    private void ClearActiveEffects()
+    {
+        // Stop all running coroutines on this PixieDust
+        StopAllCoroutines();
+
+        // End any active audio
+        if (levitationInstance.isValid())
+        {
+            levitationInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            levitationInstance.release();
+        }
+
+        // Stop particle effects
+        if (levitatingTrailParticles != null && levitatingTrailParticles.isPlaying)
+        {
+            levitatingTrailParticles.Stop();
+        }
     }
 }
