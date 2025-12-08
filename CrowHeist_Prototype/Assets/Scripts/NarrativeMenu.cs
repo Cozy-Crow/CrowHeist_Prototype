@@ -7,12 +7,25 @@ public class NarrativeMenu : MonoBehaviour
 {
     [SerializeField] private GameObject NarrativeMenuFirst;
     [SerializeField] private GameObject NarrativeMenuSecond;
-    private bool on = false;
+    [SerializeField] private Button ItemSelectButton;
+    
+    private bool isFirstMenuActive = false;
+    private bool isSecondMenuActive = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        on = false;
+        if (ItemSelectButton != null)
+        {
+            ItemSelectButton.onClick.AddListener(ItemSelected);
+        }
+        else
+        {
+            Debug.Log("Item Button is not assigned!");
+        }
+        
+        isFirstMenuActive = false;
+        isSecondMenuActive = false;
         NarrativeMenuFirst.SetActive(false);
         NarrativeMenuSecond.SetActive(false);
     }
@@ -28,9 +41,32 @@ public class NarrativeMenu : MonoBehaviour
 
     private void ToggleMenu()
     {
-        on = !on; // Flip the boolean
-        NarrativeMenuFirst.SetActive(on);
-        // Also toggle the second menu if needed
-        // NarrativeMenuSecond.SetActive(on);
+        // If second menu is active, turn it off
+        if (isSecondMenuActive)
+        {
+            isSecondMenuActive = false;
+            NarrativeMenuSecond.SetActive(false);
+        }
+        // If first menu is active, turn it off
+        else if (isFirstMenuActive)
+        {
+            isFirstMenuActive = false;
+            NarrativeMenuFirst.SetActive(false);
+        }
+        // If both are off, turn on the first menu
+        else
+        {
+            isFirstMenuActive = true;
+            NarrativeMenuFirst.SetActive(true);
+        }
+    }
+
+    public void ItemSelected()
+    {
+        // Switch from first menu to second menu
+        isFirstMenuActive = false;
+        isSecondMenuActive = true;
+        NarrativeMenuFirst.SetActive(false);
+        NarrativeMenuSecond.SetActive(true);
     }
 }
