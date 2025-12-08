@@ -21,11 +21,15 @@ public class Sink : MonoBehaviour
     [Header("Processing Settings")]
     public float processingTime = 1f;
     private List<Pickable> itemsBeingCleaned = new List<Pickable>();
-    private List<Pickable> processedItems = new List<Pickable>();
+    private Dictionary<Pickable, float> itemLaunchCooldowns = new Dictionary<Pickable, float>();
+    private float launchCooldownDuration = 3f; // Time before an item can be processed again
 
     [Header("Launch Settings")]
     public float launchForce = 10f;
     public Vector3 launchDirection = Vector3.up;
+    public float randomnessX = 0.3f; // Random variation in X direction (-randomnessX to +randomnessX)
+    public float randomnessY = 0.2f; // Random variation in Y direction
+    public float randomnessZ = 0.3f; // Random variation in Z direction
 
     private Vector3 waterInitialScale;
 
@@ -55,6 +59,20 @@ public class Sink : MonoBehaviour
 
     void Update()
     {
+        // Update cooldown timers
+        List<Pickable> itemsToRemove = new List<Pickable>();
+        foreach (var kvp in itemLaunchCooldowns)
+        {
+            if (Time.time >= kvp.Value)
+            {
+                itemsToRemove.Add(kvp.Key);
+            }
+        }
+        foreach (var item in itemsToRemove)
+        {
+            itemLaunchCooldowns.Remove(item);
+        }
+
         // Fill water when needed
         if (isFilling && !isFilled)
         {
@@ -119,6 +137,23 @@ public class Sink : MonoBehaviour
         }
     }
 
+    bool CanProcessItem(Pickable pickable)
+    {
+        // Check if item is on cooldown
+        if (itemLaunchCooldowns.ContainsKey(pickable))
+        {
+            return false;
+        }
+
+        // Check if item is already being cleaned
+        if (itemsBeingCleaned.Contains(pickable))
+        {
+            return false;
+        }
+
+        return true;
+    }
+
     void OnTriggerEnter(Collider other)
     {
         // Check if the object has the Pickable component (check parent objects too)
@@ -129,10 +164,10 @@ public class Sink : MonoBehaviour
             // Start filling water when item enters
             StartFilling();
 
-            // If the sink is filled and item hasn't been processed yet, process it
-            if (isFilled && !processedItems.Contains(pickable) && !itemsBeingCleaned.Contains(pickable))
+            // If the sink is filled and item can be processed, process it
+            if (isFilled && CanProcessItem(pickable))
             {
-                itemsBeingCleaned.Add(pickable); // Add immediately to prevent double processing
+                itemsBeingCleaned.Add(pickable);
                 StartCoroutine(ProcessItem(pickable));
             }
         }
@@ -143,9 +178,9 @@ public class Sink : MonoBehaviour
         // Check if water just finished filling (check parent objects too)
         Pickable pickable = other.GetComponentInParent<Pickable>();
 
-        if (pickable != null && isFilled && !itemsBeingCleaned.Contains(pickable) && !processedItems.Contains(pickable))
+        if (pickable != null && isFilled && CanProcessItem(pickable))
         {
-            itemsBeingCleaned.Add(pickable); // Add immediately to prevent double processing
+            itemsBeingCleaned.Add(pickable);
             StartCoroutine(ProcessItem(pickable));
         }
     }
@@ -197,8 +232,8 @@ public class Sink : MonoBehaviour
 
         itemsBeingCleaned.Remove(item);
 
-        // Mark this item as processed so it won't be processed again until it exits
-        processedItems.Add(item);
+        // Add item to cooldown to prevent immediate reprocessing
+        itemLaunchCooldowns[item] = Time.time + launchCooldownDuration;
     }
 
     void OnTriggerExit(Collider other)
@@ -211,11 +246,7 @@ public class Sink : MonoBehaviour
             {
                 itemsBeingCleaned.Remove(pickable);
             }
-
-            if (processedItems.Contains(pickable))
-            {
-                processedItems.Remove(pickable);
-            }
+            // Note: We don't remove from cooldown on exit - the cooldown timer handles that
         }
     }
 
@@ -232,14 +263,40 @@ public class Sink : MonoBehaviour
             rb.velocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
 
-            // Apply launch force
-            rb.AddForce(launchDirection.normalized * launchForce, ForceMode.Impulse);
+            // Calculate randomized launch direction
+            Vector3 randomizedDirection = GetRandomizedLaunchDirection();
 
-            Debug.Log(item.gameObject.name + " launched into the air!");
+            // Apply launch force
+            rb.AddForce(randomizedDirection * launchForce, ForceMode.Impulse);
+
+            // Add some random torque for more natural movement
+            Vector3 randomTorque = new Vector3(
+                Random.Range(-1f, 1f),
+                Random.Range(-1f, 1f),
+                Random.Range(-1f, 1f)
+            ).normalized * launchForce * 0.5f;
+            rb.AddTorque(randomTorque, ForceMode.Impulse);
+
+            Debug.Log($"{item.gameObject.name} launched with direction {randomizedDirection}!");
 
             // Drain the sink after a short delay
             StartCoroutine(DrainAfterDelay(drainDelay));
         }
+    }
+
+    Vector3 GetRandomizedLaunchDirection()
+    {
+        // Add random variation to each component of the launch direction
+        Vector3 randomOffset = new Vector3(
+            Random.Range(-randomnessX, randomnessX),
+            Random.Range(-randomnessY, randomnessY),
+            Random.Range(-randomnessZ, randomnessZ)
+        );
+
+        // Combine base direction with random offset and normalize
+        Vector3 finalDirection = (launchDirection + randomOffset).normalized;
+
+        return finalDirection;
     }
 
     IEnumerator DrainAfterDelay(float delay)
