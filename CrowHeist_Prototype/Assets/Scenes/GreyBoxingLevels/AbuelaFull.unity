@@ -7081,7 +7081,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 692427679}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11855,6 +11855,7 @@ MonoBehaviour:
     _camera: {fileID: 0}
   endCutsceneScene: EndingScene
   gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1 &1111865652 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 87fd9dc3d14c1a446958bc5802fc4eda, type: 3}
@@ -13710,6 +13711,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5269614778711817667, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+      propertyPath: CubeCollectedSound.Path
+      value: event:/SFX/Crow
+      objectReference: {fileID: 0}
+    - target: {fileID: -5269614778711817667, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+      propertyPath: CubeCollectedSound.Guid.Data1
+      value: -23975784
+      objectReference: {fileID: 0}
+    - target: {fileID: -5269614778711817667, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+      propertyPath: CubeCollectedSound.Guid.Data2
+      value: 1338355012
+      objectReference: {fileID: 0}
+    - target: {fileID: -5269614778711817667, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+      propertyPath: CubeCollectedSound.Guid.Data3
+      value: 1227322515
+      objectReference: {fileID: 0}
+    - target: {fileID: -5269614778711817667, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+      propertyPath: CubeCollectedSound.Guid.Data4
+      value: 1079479445
+      objectReference: {fileID: 0}
     - target: {fileID: 96580106412757722, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
       propertyPath: m_LocalPosition.x
       value: 35.821404
@@ -13846,9 +13867,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isGamePaused: 0
   PauseMenu: {fileID: 1255508500}
+  loadSaveSlots: {fileID: 0}
   QuitButton: {fileID: 1169357294}
   ResumeButton: {fileID: 297248186}
   RestartButton: {fileID: 0}
+  SaveButton: {fileID: 0}
+  PlayButton: {fileID: 0}
+  LoadButton: {fileID: 0}
+  BackButton: {fileID: 0}
 --- !u!1 &1281182163 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6300575232250048599, guid: 2315571ba9134e946bc87d7e0e573f94, type: 3}
@@ -23889,23 +23915,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Path
-      value: event:/Empty
+      value: event:/SFX/Crow
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data1
-      value: -2108607817
+      value: -23975784
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data2
-      value: 1280256464
+      value: 1338355012
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data3
-      value: -779780991
+      value: 1227322515
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data4
-      value: -1785143012
+      value: 1079479445
       objectReference: {fileID: 0}
     - target: {fileID: 4752121033635030517, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: m_Enabled

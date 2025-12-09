@@ -21,6 +21,7 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private List<Transform> patrolPoints;
     private int currentPatrolIndex = 0;
     public bool isActivated = false;
+    public bool isBroken = false;
 
     private int currentTargetIndex = 0;
     private bool isDocked = true;
@@ -36,6 +37,10 @@ public class RoombAi : MonoBehaviour
 
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
+
+    //For roomba activation cutscene - added 12/2/25 by Mark D.
+    // public RoombaCamManager roombaCamManager;
+    public VirtualCamManager virtualCamManager;
 
     public int CurrentTargetIndex
     {
@@ -225,13 +230,18 @@ public class RoombAi : MonoBehaviour
     // Activate method added by Mark D. 9/10/25
     public void Activate()
     {
-        isActivated = true;
+        if(!isActivated && !isBroken)
+        {
+            isActivated = true;
+            virtualCamManager.StartRoombaActivateSequence();
+        }
     }
 
     // Activate method added by Mark D. 11/17/25
     public void Deactivate()
     {
         isActivated = false;
+        isBroken = true;
         agent.isStopped = true;
     }
 
