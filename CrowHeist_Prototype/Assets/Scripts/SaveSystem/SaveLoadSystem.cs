@@ -50,8 +50,8 @@ public class SaveLoadSystem : MonoBehaviour
             var controller = player.GetComponent<KinematicCharacterController.Examples.Controller2Point5D>();
             if (controller != null)
             {
-                saveData.playerData.isFacingRight = controller._isFacingRight;
-                saveData.playerData.isDirty = controller._isDirty;
+                saveData.playerData.isFacingRight = controller.isFacingRight;
+                saveData.playerData.isDirty = controller.isDirty;
 
                 // Save held object if any
                 if (controller.heldObject != null)
@@ -233,8 +233,8 @@ public class SaveLoadSystem : MonoBehaviour
             // Restore controller state
             if (controller != null)
             {
-                controller._isFacingRight = saveData.playerData.isFacingRight;
-                controller._isDirty = saveData.playerData.isDirty;
+                controller.isFacingRight = saveData.playerData.isFacingRight;
+                controller.isDirty = saveData.playerData.isDirty;
 
               
                 if (string.IsNullOrEmpty(saveData.playerData.heldObjectId))

@@ -36,50 +36,46 @@ namespace KinematicCharacterController.Examples
         [SerializeField] AnimatorCoder animatorCoder;
         
         // Soda Variables
-        public bool _isSpeedBoosted = false;
-        public float _speedBoostDuration = 5f;
-        public float _normalMoveSpeed;
-        public float _speedBoostMultiplier = 5f;
+        public bool isSpeedBoosted = false;
+        public float speedBoostDuration = 5f;
+        public float normalMoveSpeed;
+        public float speedBoostMultiplier = 5f;
 
         //Falling
-        public float _fallingTime = 0f;
-        private float _maxFallSpeed = 20f;
+        public float fallingTime = 0f;
+        private float maxFallSpeed = 20f;
 
         [Header("PickUP")]
-        [SerializeField] private Transform _pickUpPoint;
-        [SerializeField] private Transform _handPoint;
-        [SerializeField] private Transform _dropPoint;
-        public bool _isDirty = false;
+        [SerializeField] private Transform pickUpPoint;
+        [SerializeField] private Transform handPoint;
+        [SerializeField] private Transform dropPoint;
+        public bool isDirty = false;
 
         [Header("Dash")]
-        [SerializeField] public float _dashSpeed = 40f;
-        [SerializeField] public float _dashDuration = 0.3f;
-        [SerializeField] public float _dashForce = 10f;
-        public float _dashCooldown = 1f;
-        public bool _canDash = true;
-        public bool _isDashing = false;
+        [SerializeField] public float dashSpeed = 40f;
+        [SerializeField] public float dashDuration = 0.3f;
+        [SerializeField] public float dashForce = 10f;
+        public float dashCooldown = 1f;
+        public bool canDash = true;
+        public bool isDashing = false;
 
         [Header("Added Jump Features")]
-        [SerializeField] private float _coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
-        [SerializeField] private float _jumpBufferTime = 0.2f; // Time before landing where jump input is remembered
-        private float _coyoteTimeCounter = 0f;
-        private float _jumpBufferCounter = 0f;
+        [SerializeField] private float coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
+        [SerializeField] private float jumpBufferTime = 0.2f; // Time before landing where jump input is remembered
+        private float coyoteTimeCounter = 0f;
+        private float jumpBufferCounter = 0f;
 
         //Physics/Direction
-        public Rigidbody _rb;
-        private CapsuleCollider[] _capsuleCollider; //stores both colliders
-        private CapsuleCollider _normalCollider;
-        private CapsuleCollider _triggerCollider;
-        public bool _isFacingRight = true;
+        public Rigidbody rb;
+        private CapsuleCollider[] capsuleCollider; //stores both colliders
+        private CapsuleCollider normalCollider;
+        private CapsuleCollider triggerCollider;
+        public bool isFacingRight = true;
         public bool isThrowing = false;
-        public bool _canJump = true;
-        private bool _isJumping = false;
-        private bool _onSlope = false;
-        private Vector2 _input;
-        private Vector2 _lastMovementInput;
-        private Vector3 _moveVelocity;
-        private bool _isGrounded = false;
-        private bool _wasGroundedLastFrame = false;
+        public bool canJump = true;
+        private bool isJumping = false;
+        private bool onSlope = false;
+        private bool wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         [Header("Charged Throw Settings")]
@@ -106,9 +102,9 @@ namespace KinematicCharacterController.Examples
 
 
         //Jack in the Box
-        private GameObject _touchingObject;
-        private GameObject _currentGroundObject;
-        private GameObject _currentHeadbuttObject;
+        private GameObject touchingObject;
+        private GameObject currentGroundObject;
+        private GameObject currentHeadbuttObject;
         private bool isWindingUp = false;
         private float windUpTime = 1f;
         private float windUpTimer = 0f;
@@ -136,19 +132,15 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
 
-        //Audio
-        [SerializeField] private EventReference playerFootsteps;
-        private EventInstance footstepInstance;
-
         private void Awake()
         {
-            _normalMoveSpeed = moveSpeed;
-            _rb = GetComponent<Rigidbody>();
-            _capsuleCollider = GetComponents<CapsuleCollider>();
+            normalMoveSpeed = moveSpeed;
+            rb = GetComponent<Rigidbody>();
+            capsuleCollider = GetComponents<CapsuleCollider>();
             //0 and 1 based on order in inspector
             // - trigger is listed first in inspector 
-            _triggerCollider = _capsuleCollider[0];
-            _normalCollider = _capsuleCollider[1];
+            triggerCollider = capsuleCollider[0];
+            normalCollider = capsuleCollider[1];
         }
 
         public void Start()
@@ -210,59 +202,50 @@ namespace KinematicCharacterController.Examples
             HandleExternalForces();
             HandleKnockback();
         }
-        
-
+    
         private void CheckGrounded()
         {
-            _wasGroundedLastFrame = isGrounded;
+            wasGroundedLastFrame = isGrounded;
 
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
-            float radius = _normalCollider.radius * 0.9f;
+            float radius = normalCollider.radius * 0.9f;
 
-            RaycastHit hitMain;
-            RaycastHit hitSlope;
 
             // Cast distance should reach just below the feet
-            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance; //1.215
+            float castDistance = (normalCollider.height * 0.5f) + groundCheckDistance; //1.215
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(origin, Vector3.down, out hitMain, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
-
-            // Additional check with spherecast for better edge detection
-            if (!_isGrounded)
-            {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
-            }
-
+            isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
+        }
         private void HandleInput()
         {
             input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
-                _jumpBufferCounter = _jumpBufferTime;
+                jumpBufferCounter = jumpBufferTime;
             }
 
             // Handle jump buffering and coyote time
-            if (_jumpBufferCounter > 0f)
+            if (jumpBufferCounter > 0f)
             {
-                if ((isGrounded || _coyoteTimeCounter > 0f) && !_isJumping)
+                if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 {
                     Jump();
-                    _jumpBufferCounter = 0f;
+                    jumpBufferCounter = 0f;
                 }
             }
 
-            if (_jumpBufferCounter > 0f)
+            if (jumpBufferCounter > 0f)
             {
-                _jumpBufferCounter -= Time.deltaTime;
+                jumpBufferCounter -= Time.deltaTime;
             }
         }
 
         private void HandleMove()
         {
-            if (_isDashing) return;
+            if (isDashing) return;
  
             velocity = new Vector3(input.x, 0, input.y) * moveSpeed;
 
@@ -283,8 +266,8 @@ namespace KinematicCharacterController.Examples
             }
 
             // Set velocity directly instead of using MovePosition
-            Vector3 targetVelocity = new Vector3(velocity.x, _rb.velocity.y, velocity.z);
-            _rb.velocity = targetVelocity;
+            Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            rb.velocity = targetVelocity;
         }
 
         private void HandleGravity()
@@ -293,45 +276,45 @@ namespace KinematicCharacterController.Examples
             {
                 // Apply normal gravity
                 float gravityForce = Physics.gravity.y * gravityMultiplier;
-                _rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
+                rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
 
                 // Clamp fall speed
-                if (_rb.velocity.y < -_maxFallSpeed)
+                if (rb.velocity.y < -maxFallSpeed)
                 {
-                    _rb.velocity = new Vector3(_rb.velocity.x, -_maxFallSpeed, _rb.velocity.z);
+                    rb.velocity = new Vector3(rb.velocity.x, -maxFallSpeed, rb.velocity.z);
                 }
 
-                _fallingTime += Time.fixedDeltaTime;
+                fallingTime += Time.fixedDeltaTime;
             }
             else
             {
-                _fallingTime = 0f;
+                fallingTime = 0f;
 
                 // When grounded, stop excessive downward velocity
-                if (_rb.velocity.y < -0.5f)
+                if (rb.velocity.y < -0.5f)
                 {
-                    _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
+                    rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
                 }
 
-                _isJumping = false;
+                isJumping = false;
             }
         }
 
         private void Jump()
         {
             // Prevent jumping if already airborne
-            if (_isJumping || !_canJump)
+            if (isJumping || !canJump)
             {
                 return;
             }
-            _isJumping = true;
+            isJumping = true;
             isGrounded = false;
-            _coyoteTimeCounter = 0f;
-            _canJump = false;
+            coyoteTimeCounter = 0f;
+            canJump = false;
 
             // Reset vertical velocity before jump
-            _rb.velocity = new Vector3(_rb.velocity.x, 0f, _rb.velocity.z);
-            _rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
+            rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.VelocityChange);
 
             // Re-enable jumping only when grounded again
             StartCoroutine(ResetJumpFlag());
@@ -341,8 +324,8 @@ namespace KinematicCharacterController.Examples
         {
             // Adds small delay so that we do not re-enable jump mid-air
             yield return new WaitUntil(() => isGrounded);
-            _isJumping = false;
-            _canJump = true;
+            isJumping = false;
+            canJump = true;
         }        
 
         private void UpdateCoyoteTime()
@@ -350,14 +333,14 @@ namespace KinematicCharacterController.Examples
             // If grounded, reset coyote time
             if (isGrounded)
             {
-                _coyoteTimeCounter = _coyoteTime;
+                coyoteTimeCounter = coyoteTime;
             }
             else
             {
                 // Count down coyote time when not grounded
-                if (_coyoteTimeCounter > 0)
+                if (coyoteTimeCounter > 0)
                 {
-                    _coyoteTimeCounter -= Time.deltaTime;
+                    coyoteTimeCounter -= Time.deltaTime;
                 }
             }
         }
@@ -366,7 +349,7 @@ namespace KinematicCharacterController.Examples
         {
             if (externalForce.magnitude > 0.01f)
             {
-                _rb.AddForce(externalForce, ForceMode.Force);
+                rb.AddForce(externalForce, ForceMode.Force);
                 externalForce *= externalForceDamping;
 
                 if (externalForce.magnitude < 0.01f)
@@ -380,7 +363,7 @@ namespace KinematicCharacterController.Examples
         {
             if (knockbackTimer > 0)
             {
-                _rb.AddForce(knockbackVelocity, ForceMode.Force);
+                rb.AddForce(knockbackVelocity, ForceMode.Force);
                 knockbackTimer -= Time.fixedDeltaTime;
             }
         }
@@ -397,7 +380,7 @@ namespace KinematicCharacterController.Examples
             {
                 if (Vector3.Dot(contact.normal, Vector3.up) > 0.5f)
                 {
-                    _currentGroundObject = collision.gameObject;
+                    currentGroundObject = collision.gameObject;
                 }
             }
         }
@@ -409,7 +392,7 @@ namespace KinematicCharacterController.Examples
                 Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
             }
 
-            if (_isDashing)
+            if (isDashing)
             {
                 Rigidbody otherRb = collision.rigidbody;
                 if (otherRb != null && !otherRb.isKinematic)
@@ -420,7 +403,7 @@ namespace KinematicCharacterController.Examples
                     float forceAmount = 20f;
                     otherRb.AddForce(forceDirection * forceAmount, ForceMode.Impulse);
                     
-                    _isDashing = false;
+                    isDashing = false;
                 }
             }
             
@@ -429,7 +412,7 @@ namespace KinematicCharacterController.Examples
             {
                 if (Vector3.Dot(contact.normal, Vector3.down) > 0.5f)
                 {
-                    _currentHeadbuttObject = collision.gameObject;
+                    currentHeadbuttObject = collision.gameObject;
                 }
             }
         }
@@ -441,9 +424,9 @@ namespace KinematicCharacterController.Examples
 
         void HandleWindUp() //jack in the box
         {
-            if (isGrounded && _touchingObject != null && _touchingObject.CompareTag("JackInTheBox"))
+            if (isGrounded && touchingObject != null && touchingObject.CompareTag("JackInTheBox"))
             {
-                GameObject jack = _touchingObject;
+                GameObject jack = touchingObject;
                 GameObject jackInTheBox = null;
                 
                 foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
@@ -490,9 +473,9 @@ namespace KinematicCharacterController.Examples
 
         void HandleBounce() //jack in the box
         {
-            if (canBounce && isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("JackInTheBox"))
+            if (canBounce && isGrounded && currentGroundObject != null && currentGroundObject.CompareTag("JackInTheBox"))
             {
-                GameObject jack = _currentGroundObject;
+                GameObject jack = currentGroundObject;
                 GameObject jackInTheBox = null;
                 
                 foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
@@ -516,8 +499,8 @@ namespace KinematicCharacterController.Examples
 
         public void ApplyBounce(float bounceStrength)
         {
-            _rb.velocity = new Vector3(_rb.velocity.x, 0, _rb.velocity.z);
-            _rb.AddForce(Vector3.up * bounceStrength, ForceMode.VelocityChange);
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(Vector3.up * bounceStrength, ForceMode.VelocityChange);
         }
 
         void OnTriggerEnter(Collider other)
@@ -545,7 +528,7 @@ namespace KinematicCharacterController.Examples
             if (other.CompareTag("JackInTheBox"))
             {
                 isInTrigger = true;
-                _touchingObject = other.gameObject;
+                touchingObject = other.gameObject;
                 Debug.Log("Entered Jack In The Box trigger.");
             }
             
@@ -556,7 +539,7 @@ namespace KinematicCharacterController.Examples
                 offSwitchToOn.ToggleSwitchOn();
             }
             
-            if (other.CompareTag("OnSwitch") && isGrounded && _currentGroundObject != null && _currentGroundObject.CompareTag("OnSwitch"))
+            if (other.CompareTag("OnSwitch") && isGrounded && currentGroundObject != null && currentGroundObject.CompareTag("OnSwitch"))
             {
                 Debug.Log("On Switch");
                 var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
@@ -647,7 +630,7 @@ namespace KinematicCharacterController.Examples
                         {
                             if (_pickUpsList.Count > 0) return;
                             selected.SetOutline(false);
-                            pickUp.PickUP(_pickUpPoint);
+                            pickUp.PickUP(pickUpPoint);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
                             foreach (var interactable in nearbyInteractables)
@@ -735,7 +718,7 @@ namespace KinematicCharacterController.Examples
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
                     //Vector3 playerPosition = transform.position;
-                    Vector3 playerPosition = _handPoint.position;
+                    Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
@@ -743,7 +726,7 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
-                    _isThrowing = true; //start throw animation
+                    isThrowing = true; //start throw animation
                     StartCoroutine(ThrowAnimRoutine()); // used to stop the animation after x seconds
 
                     isCharging = false;
@@ -802,7 +785,7 @@ namespace KinematicCharacterController.Examples
         IEnumerator ThrowAnimRoutine()
         {
             yield return new WaitForSeconds(.5f);
-            _isThrowing = false;
+            isThrowing = false;
         }
 
         public void Drop()
@@ -810,7 +793,7 @@ namespace KinematicCharacterController.Examples
 
             foreach (IPickupable pickUp in _pickUpsList)
             {
-                pickUp.Drop(_dropPoint.position);
+                pickUp.Drop(dropPoint.position);
             }
 
             _pickUpsList.Clear();
@@ -818,14 +801,6 @@ namespace KinematicCharacterController.Examples
 
             //reset line renderer
             lineRenderer.positionCount = 0;
-
-            // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), false);
-            // if(heldObject.gameObject.GetComponentInChildren<Collider>())
-            // {
-            //     
-            //     Debug.Log("Child collider: " + heldObject.gameObject.GetComponent<Collider>());
-            //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), false);
-            // }
         }
         
         public void RemoveNullItems()
@@ -873,7 +848,7 @@ namespace KinematicCharacterController.Examples
             int resolution = 50;
             float timeStep = 0.08f;
 
-            Vector3 startPosition = _handPoint.position;
+            Vector3 startPosition = handPoint.position;
             Vector3 velocity = curvedDirection * throwForce;
             
             // Scale down the velocity for the actual throw
@@ -922,32 +897,12 @@ namespace KinematicCharacterController.Examples
             // Gizmos.DrawWireSphere(transform.position, 2);
             
             // Draw ground check -- is this supposed to show the collider size? doesn't work with a capsule
-            if (_normalCollider != null)
+            if (normalCollider != null)
             {
                 Gizmos.color = isGrounded ? Color.green : Color.yellow;
-                Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
-                Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + groundCheckDistance), _normalCollider.radius * 0.9f);
+                Vector3 origin = transform.position + Vector3.up * (normalCollider.height * 0.5f);
+                Gizmos.DrawWireSphere(origin - Vector3.up * ((normalCollider.height * 0.5f) + groundCheckDistance), normalCollider.radius * 0.9f);
             }
         }
-
-        void PlayFootsteps()
-        {
-            if (IsGrounded == true && (_input.x != 0 || _input.y != 0))
-            {
-                PLAYBACK_STATE playbackState;
-                footstepInstance.getPlaybackState(out playbackState);
-                if (playbackState.Equals(PLAYBACK_STATE.STOPPED))
-                {
-                    footstepInstance.start();
-                }
-            }
-
-            else
-            {
-                footstepInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            }
-
-        }
-
     }
 }

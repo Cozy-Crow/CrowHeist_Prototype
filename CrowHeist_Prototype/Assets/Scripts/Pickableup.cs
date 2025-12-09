@@ -70,7 +70,7 @@ public class Pickable : MonoBehaviour, IPickupable
             //Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
             if (_isDirty)
             {
-                player._isDirty = true;
+                player.isDirty = true;
                 aiEventManager.PlayerDirty(player.transform.position);
                 Debug.Log("Player is dirty");
             }

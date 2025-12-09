@@ -14,7 +14,7 @@ namespace KinematicCharacterController.Examples
 
         public void TryConsumeCoffee()
         {
-            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isSpeedBoosted)
+            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller.isSpeedBoosted)
         {
             StartCoroutine(SpeedBoost());
         }
@@ -44,13 +44,13 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            controller._isSpeedBoosted = true;
-            controller.moveSpeed *= controller._speedBoostMultiplier;
+            controller.isSpeedBoosted = true;
+            controller.moveSpeed *= controller.speedBoostMultiplier;
 
-            yield return new WaitForSeconds(controller._speedBoostDuration);
+            yield return new WaitForSeconds(controller.speedBoostDuration);
 
-            controller.moveSpeed = controller._normalMoveSpeed;
-            controller._isSpeedBoosted = false;
+            controller.moveSpeed = controller.normalMoveSpeed;
+            controller.isSpeedBoosted = false;
             
             if (coffee != null)
             {

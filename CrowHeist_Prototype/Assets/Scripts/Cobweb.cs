@@ -32,7 +32,7 @@ namespace KinematicCharacterController.Examples
                         originalSpeed = controller.moveSpeed;
                         controller.moveSpeed *= slowdownFactor;
                         playerInWeb = true;
-                        controller._canJump = false;
+                        controller.canJump = false;
                         
                     }
                 }
@@ -46,7 +46,7 @@ namespace KinematicCharacterController.Examples
                 {
                     controller.moveSpeed = originalSpeed;
                     playerInWeb = false;
-                    controller._canJump = true;
+                    controller.canJump = true;
                 }
             }
         }

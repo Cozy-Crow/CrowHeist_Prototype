@@ -37,11 +37,11 @@ public class BreakableCube : MonoBehaviour
         {
             // Break if player is dashing
             Controller2Point5D player = other.GetComponent<Controller2Point5D>();
-            if (player != null && player._isDashing) // Ensure your script has isDashing
+            if (player != null && player.isDashing) // Ensure your script has isDashing
             {
                 Break();
             }
-            if(player != null && player._fallingTime >= 0.4f)
+            if(player != null && player.fallingTime >= 0.4f)
             {
                 Break();
             }
