@@ -22,8 +22,8 @@ public class PlayCrowleySFX : MonoBehaviour
             soundDictionary.Add(key, sfx.sound);
         }
 
-        Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
-        Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
+        // Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
+        // Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
     }
     public void PlaySFX(String sfx)
     {

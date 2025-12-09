@@ -9,8 +9,8 @@ public class CrowleyAnimator : AnimatorCoder
     [SerializeField] private Controller2Point5D controller;
     private AnimationData WALK = new AnimationData("Walk");
     private AnimationData IDLE = new AnimationData("Idle");
-    private AnimationData JUMP = new AnimationData("Jump", true, new AnimationData(), 0.2f);
-    private AnimationData THROW = new AnimationData("Throw", true, new AnimationData(), 0.5f);
+    private AnimationData JUMP = new AnimationData("Jump", true, new AnimationData());
+    private AnimationData THROW = new AnimationData("Throw", true, new AnimationData());
 
     void Awake()
     {
@@ -35,18 +35,19 @@ public class CrowleyAnimator : AnimatorCoder
             if (controller.IsThrowing)
             {
                 Play(THROW);
-                return;
-            }
-
-            if (controller.Velocity.magnitude < 0.1f && controller.IsGrounded)
-            {
-                Play(IDLE);
+                controller.IsThrowing = false;
                 return;
             }
 
             if (controller.Velocity.y > 0.1f || !controller.IsGrounded)
             {
                 Play(JUMP);
+                return;
+            }
+
+            if (controller.Velocity.magnitude < 0.1f && controller.IsGrounded)
+            {
+                Play(IDLE);
             }
             else if (controller.Velocity.magnitude > 0.1f)
             {

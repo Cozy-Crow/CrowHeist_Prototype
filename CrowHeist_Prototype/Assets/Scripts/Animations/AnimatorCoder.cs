@@ -113,6 +113,11 @@ namespace SHG.AnimatorCoder
             }
         }
 
+        public void SetAnimatorBool(string id, bool value)
+        {
+            animator.SetBool(id, value);
+        }
+
         /// <summary> Takes in the animation details and the animation layer, then attempts to play the animation </summary>
         public bool Play(AnimationData data, int layer = 0)
         {

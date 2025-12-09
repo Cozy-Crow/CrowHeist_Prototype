@@ -76,9 +76,7 @@ public class Pickable : MonoBehaviour, IPickupable
             }
         }
 
-        TooltipManager.Instance.ShowTooltip(tag);
-
-
+        //TooltipManager.Instance.ShowTooltip(tag);
     }
     
     public void Drop(Vector3 position)
@@ -95,7 +93,7 @@ public class Pickable : MonoBehaviour, IPickupable
         pickedUp = false;
         MusicManager.SetParameterByName("ItemYes", 0);
 
-        TooltipManager.Instance.HideTooltip(tag);
+        //TooltipManager.Instance.HideTooltip(tag);
     }
 
 

@@ -25,37 +25,37 @@ public class PauseManager : MonoBehaviour
         {
             ResumeButton.onClick.AddListener(ResumeGame);
         }
-        else
-        {
-            Debug.Log("Resume Button is not assigned!");
-        }
+        // else
+        // {
+        //     Debug.Log("Resume Button is not assigned!");
+        // }
 
         if (QuitButton != null)
         {
             QuitButton.onClick.AddListener(QuitGame);
         }
-        else
-        {
-            Debug.Log("Quit Button is not assigned!");
-        }
+        // else
+        // {
+        //     Debug.Log("Quit Button is not assigned!");
+        // }
 
         if (RestartButton != null)
         {
             RestartButton.onClick.AddListener(RestartGame);
         }
-        else
-        {
-            Debug.Log("Restart Button is not assigned!");
-        }
+        // else
+        // {
+        //     Debug.Log("Restart Button is not assigned!");
+        // }
 
         if (SaveButton != null)
         {
             SaveButton.onClick.AddListener(SaveGame);
         }
-        else
-        {
-            Debug.Log("Save Button is not assigned!");
-        }
+        // else
+        // {
+        //     Debug.Log("Save Button is not assigned!");
+        // }
 
         if (PlayButton != null)
         {

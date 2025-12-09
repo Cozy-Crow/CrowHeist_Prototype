@@ -22,14 +22,14 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float groundCheckDistance = 0.15f;
         [SerializeField] private float skinWidth = 0.02f; // Smaller value to prevent bouncing
         private Vector2 input;
-        private Vector3 faceDirection;
+        private Vector3 faceDirection = Vector3.forward;
         private float faceAngle;
         private Vector3 velocity;
         private bool isGrounded = false;
         public Vector3 Velocity => velocity;
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
-        public bool IsThrowing => isThrowing;
+        public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
 
         //Sprite
         [SerializeField] GameObject playerSprite;
@@ -185,10 +185,11 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
+            HandleMove();
+            HandleRotation();
             HandlePickUP();
             HandleWindUp();
             HandleBounce();
-            //added as a fix for now, could probably called more efficiently
             RemoveNullItems();
         }
 
@@ -197,8 +198,6 @@ namespace KinematicCharacterController.Examples
             // Physics in FixedUpdate
             CheckGrounded();
             HandleGravity();
-            HandleMove();
-            HandleRotation();
             HandleExternalForces();
             HandleKnockback();
         }
@@ -251,18 +250,14 @@ namespace KinematicCharacterController.Examples
 
             //Get the last face direction
             // Update face direction only on the axes that have non-zero movement
-            if (velocity.x != 0f && velocity.z != 0f)
+            if(input.x == 0 && input.y != 0)
             {
-                faceDirection.x = velocity.normalized.x;
-                faceDirection.z = velocity.normalized.z;
+                faceDirection.z = input.y;
             }
-            else if (velocity.x != 0f)
+            else if(input.magnitude > 0.1f)
             {
-                faceDirection.x = velocity.normalized.x;
-                faceDirection.z = 0;
-            }else if (velocity.z != 0f)
-            {
-                faceDirection.z = velocity.normalized.z;
+                faceDirection.x = input.x;
+                faceDirection.z = input.y;
             }
 
             // Set velocity directly instead of using MovePosition
@@ -639,16 +634,6 @@ namespace KinematicCharacterController.Examples
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
-
-                            // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
-                            // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
-                            // if(heldObject.gameObject.GetComponentInChildren<Collider>())
-                            // {
-                            //
-                            //     //Debug.Log("Child collider: " + heldObject.gameObject.GetComponent<Collider>());
-                            //     Physics.IgnoreCollision(heldObject.gameObject.GetComponentInChildren<Collider>(), this.GetComponent<Collider>(), true);
-                            // }
-
                         }
                         else
                         {
@@ -726,8 +711,7 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
-                    isThrowing = true; //start throw animation
-                    StartCoroutine(ThrowAnimRoutine()); // used to stop the animation after x seconds
+                    isThrowing = true;
 
                     isCharging = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
@@ -779,18 +763,8 @@ namespace KinematicCharacterController.Examples
             } 
         }
 
-        //Throw Coroutine to time the animation correctly
-        //Note: No charge animation
-        //   so you only need it to play when crowley throws the item
-        IEnumerator ThrowAnimRoutine()
-        {
-            yield return new WaitForSeconds(.5f);
-            isThrowing = false;
-        }
-
         public void Drop()
         {
-
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(dropPoint.position);
@@ -866,9 +840,6 @@ namespace KinematicCharacterController.Examples
             throwDirection = curvedDirection;
         }
 
-
-
-
         private void Flip(Vector3 faceDirection)
         {
             // Convert input to planar angle
@@ -880,6 +851,7 @@ namespace KinematicCharacterController.Examples
             // (-1,-1) → -135° (front-left)
             // (0, -1) → -90° (front)
             // (1, -1) → -45° (front-right)
+            
             faceAngle = Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
             if (faceAngle > 70f && faceAngle < 110f)      faceAngle = 45;   // avoid back
             if (faceAngle < -70f && faceAngle > -110f)    faceAngle = -45;  // avoid front

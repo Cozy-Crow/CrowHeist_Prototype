@@ -10,7 +10,8 @@ namespace SHG.AnimatorCoder
     {
         //Change the list below to your animator parameters
         GROUNDED,
-        FALLING
+        FALLING,
+        THROWING
     }
 }
 
