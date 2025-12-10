@@ -99,25 +99,25 @@ public class KnifeStick : MonoBehaviour
 
         }
 
-        if (isStuck && other.CompareTag("Player"))
-        {
-            //bouncer.isTrigger = true;
-            Controller2Point5D playerController = other.GetComponent<Controller2Point5D>();
+        // if (isStuck && other.CompareTag("Player"))
+        // {
+        //     //bouncer.isTrigger = true;
+        //     Controller2Point5D playerController = other.GetComponent<Controller2Point5D>();
 
-            if (playerController != null && playerController.IsGrounded && Input.GetButton("Jump"))
-            {
-                Debug.Log("Player Bounced on Knife!");
-                playerController.ApplyBounce(bounceForce);
+        //     if (playerController != null && playerController.IsGrounded && Input.GetButton("Jump"))
+        //     {
+        //         Debug.Log("Player Bounced on Knife!");
+        //         playerController.ApplyBounce(bounceForce);
 
-                // Increase bounce force, capped at maxBounceForce
-                bounceForce = Mathf.Min(bounceForce + bounceIncrease, maxBounceForce);
+        //         // Increase bounce force, capped at maxBounceForce
+        //         bounceForce = Mathf.Min(bounceForce + bounceIncrease, maxBounceForce);
 
-                // Reset bounce force if player stops bouncing
-                if (resetCoroutine != null)
-                    StopCoroutine(resetCoroutine);
-                resetCoroutine = StartCoroutine(ResetBounceForce());
-            }
-        }
+        //         // Reset bounce force if player stops bouncing
+        //         if (resetCoroutine != null)
+        //             StopCoroutine(resetCoroutine);
+        //         resetCoroutine = StartCoroutine(ResetBounceForce());
+        //     }
+        // }
        
     }
 
