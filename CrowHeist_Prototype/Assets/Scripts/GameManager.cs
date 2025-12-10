@@ -84,10 +84,10 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         // Check win condition
-        if (_score >= 5 || altCoinsScore >= 5)
-        {
-            TriggerGameEnd();
-        }
+        // if (_score >= 5 || altCoinsScore >= 5)
+        // {
+        //     TriggerGameEnd();
+        // }
     }
 
     private void RestartGame()
