@@ -7,6 +7,12 @@ public class Escape : MonoBehaviour
     [SerializeField] private GameObject Blocker;
     [SerializeField] private CanvasGroup FadeCanvasGroup; // Assign in inspector
 
+    void Start()
+    {
+        FadeCanvasGroup.gameObject.SetActive(false);
+
+    }
+
     void Update()
     {
         if(GameManager.Score >= 5 || GameManager.AltCoinsScore >= 5)
@@ -31,6 +37,7 @@ public class Escape : MonoBehaviour
 
     private IEnumerator FadeToBlack(float duration)
     {
+        FadeCanvasGroup.gameObject.SetActive(true);
         float elapsed = 0f;
         while (elapsed < duration)
         {
