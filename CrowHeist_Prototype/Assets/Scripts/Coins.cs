@@ -52,13 +52,13 @@ public class Coins : MonoBehaviour
 
             #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
              // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
-            // float currentValue;
+             float currentValue;
 
             
-            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
-            // float newValue = currentValue += 1;
-            // MusicManager.SetParameterByName("TrinketsCollected", + newValue);
-            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float value1);
+            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
+            float newValue = currentValue += 1;
+            MusicManager.SetParameterByName("TrinketsCollected", + newValue);
+            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float value1);
 
             //works if player runs into heist zone
             //if player throws coin and picks up another item, it will drop what they pick up
