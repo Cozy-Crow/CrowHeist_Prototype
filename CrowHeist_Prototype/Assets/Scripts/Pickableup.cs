@@ -80,6 +80,7 @@ public class Pickable : MonoBehaviour, IPickupable
 
 
     }
+    
     public void Drop(Vector3 position)
     {
         transform.SetParent(null);

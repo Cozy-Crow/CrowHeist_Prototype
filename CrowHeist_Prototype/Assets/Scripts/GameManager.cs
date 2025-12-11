@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<CameraObject> _cameras;
 
     private static Dictionary<string, CinemachineVirtualCamera> _cameraDictionary = new Dictionary<string, CinemachineVirtualCamera>();
-    private static int _score = 0;
-    private static int altCoinsScore = 0;
+    [SerializeField] private static int _score = 0;
+    [SerializeField] private static int altCoinsScore = 0;
     public static int Score { get => _score; set => _score = value; }
     public static int AltCoinsScore { get => altCoinsScore; set => altCoinsScore = value; }
     [SerializeField] private string endCutsceneScene = "EndCutsceneScene";
@@ -83,16 +83,11 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            RestartGame();
-        }
-
         // Check win condition
-        if (_score >= 5 || altCoinsScore >= 5)
-        {
-            TriggerGameEnd();
-        }
+        // if (_score >= 5 || altCoinsScore >= 5)
+        // {
+        //     TriggerGameEnd();
+        // }
     }
 
     private void RestartGame()

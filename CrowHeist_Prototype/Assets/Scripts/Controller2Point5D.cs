@@ -7,6 +7,7 @@ using FMOD.Studio;
 using Unity.VisualScripting;
 using JetBrains.Annotations;
 using UnityEngine.TextCore.Text;
+using System;
 
 namespace KinematicCharacterController.Examples
 {
@@ -20,7 +21,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float _jumpForce = 40f;
         [SerializeField] public float _gravityMultiplier = 2f;
         [SerializeField] private LayerMask _groundLayer = -1; // Set in inspector for ground detection
-        [SerializeField] private float _groundCheckDistance = 0.15f;
+        [SerializeField] private float _groundCheckDistance = .15f;
         [SerializeField] private float _skinWidth = 0.02f; // Smaller value to prevent bouncing
 
         //Sprite
@@ -71,6 +72,7 @@ namespace KinematicCharacterController.Examples
         public bool _isThrowing = false;
         public bool _canJump = true;
         private bool _isJumping = false;
+        private bool _onSlope = false;
         private Vector2 _input;
         private Vector2 _lastMovementInput;
         private Vector3 _moveVelocity;
@@ -79,7 +81,7 @@ namespace KinematicCharacterController.Examples
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
         private Animator _animator;
 
-        //Charged Throw
+        [Header("Charged Throw Settings")]
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -87,12 +89,20 @@ namespace KinematicCharacterController.Examples
         private bool isCharging = false;
         private bool isCanceled = false;
         private float chargeStartTime;
+        private Vector3 storedThrowVelocity;
         private LineRenderer lineRenderer;
         public Rigidbody heldObject;
         private Vector3 storedThrowDirection = Vector3.zero;
         private List<Interactable> nearbyInteractables = new List<Interactable>();
         private int currentTargetIndex = 0;
         private int previousTargetIndex = 0;
+
+        //Charged Throw Arc Settings
+        [SerializeField] private float minArc = 0.2f;
+        [SerializeField] private float maxArc = 0.8f;
+        [SerializeField] private AnimationCurve arcCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
+        [SerializeField] private float throwPowerScaler = 1f;
+
 
         //Jack in the Box
         private GameObject _touchingObject;
@@ -227,7 +237,7 @@ namespace KinematicCharacterController.Examples
             HandleRotation();
         }
         
-
+        [SerializeField] float angleTest = 30f;
 
         private void CheckGrounded()
         {
@@ -237,33 +247,70 @@ namespace KinematicCharacterController.Examples
             Vector3 origin = transform.position;
             float radius = _normalCollider.radius * 0.9f;
 
-            // Start the cast from just below the center
-            Vector3 castOrigin = origin;
+            RaycastHit hitMain;
+            RaycastHit hitSlope;
 
-            RaycastHit hit;
             // Cast distance should reach just below the feet
-            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance;
+            float castDistance = (_normalCollider.height * 0.5f) + _groundCheckDistance; //1.215
 
             // Main ground check using a raycast for more precision
-            _isGrounded = Physics.Raycast(castOrigin, Vector3.down, out hit, castDistance, _groundLayer,QueryTriggerInteraction.Ignore);
+            _isGrounded = Physics.Raycast(origin, Vector3.down, out hitMain, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+
+            float castDistanceForSlope = (_normalCollider.height * 0.5f) + _groundCheckDistance + 5f;
+            //check for slopes
+            if(Physics.Raycast(origin, Vector3.down, out hitSlope, castDistanceForSlope, _groundLayer, QueryTriggerInteraction.Ignore))
+            {
+                //if you're on a slope, set variables to let player know
+                //you want to stop gravity if you're on a slope
+
+                float distanceToObject = Vector3.Distance (transform.position, hitSlope.point);
+                float angle = Vector3.Angle(hitSlope.normal, Vector3.up);
+                if(angle > 0.2) // && distanceToObject <= _groundCheckDistance
+                {
+                    _onSlope = true;
+
+                    if(distanceToObject > castDistance) //NOTE >30* IS CUTOFF
+                    {
+                        //when ray recognizes a slope, but you are too high to collide correctly
+                        if(angle >= angleTest)
+                        {
+                            //if it's too steep, make gravity stop
+                            if(distanceToObject < 2.5) // have to hard code 2.5 to still be able to get on the open oven
+                                _isGrounded = true;
+                        }
+                        else
+                            _isGrounded = false; // => making you fall
+                    }
+                    else
+                        _isGrounded = true; // => making you stop
+                }
+                else
+                    _onSlope = false;
+                    
+                //angle debugs
+                // Debug.Log("Raycast hit: " + hitSecond.transform.name);
+                // Debug.Log("on slope: " + _onSlope);
+                // Debug.Log("angle: " + angle);
+            }
 
             // Additional check with spherecast for better edge detection
             if (!_isGrounded)
             {
-                _isGrounded = Physics.SphereCast(castOrigin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
+                // _isGrounded = Physics.SphereCast(origin, radius * .1f, Vector3.down, out hit, castDistance, _groundLayer, QueryTriggerInteraction.Ignore);
             }
 
             // Added by Mark D. 10/28/25
             // don't grounded if its a trigger collider
             // so player can't stand on object SurfaceCheck colliders
-            if(hit.collider != null && hit.collider.isTrigger)
-            {
+            // if(hit.collider != null && hit.collider.isTrigger)
+            // {
                 //this doesn't generally fix the issue as it doesn't check around crowley
                 //also stops movement immediately rather than making sure player hits the floor
                 //also doesn't check from the side - i think this is the issue with the counters
                 // _isGrounded = false;
-            }
+            // }
             
+
             // if (_isGrounded && hit.collider != null)
             // {
             //     // _currentGroundObject = hit.collider.gameObject;
@@ -288,7 +335,7 @@ namespace KinematicCharacterController.Examples
 
         private void HandleInput()
         {
-            _input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            _input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -378,7 +425,6 @@ namespace KinematicCharacterController.Examples
                 return;
             }
             _isJumping = true;
-            _isGrounded = false;
             _coyoteTimeCounter = 0f;
             _canJump = false;
 
@@ -702,9 +748,7 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-
                 AIEventManager.instance.e_pickup.Invoke();
-
 
                 Debug.Log("NearbyInteractablesCount: " + nearbyInteractables.Count + "\n CurrentTargetIndex: " + currentTargetIndex);
 
@@ -728,12 +772,7 @@ namespace KinematicCharacterController.Examples
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
-                            
 
-                            
-
-                            
-                            
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
                             // Debug.Log("Held Object: " + heldObject.name + "\n Game Object: " + heldObject.gameObject.name);
                             // if(heldObject.gameObject.GetComponentInChildren<Collider>())
@@ -748,7 +787,7 @@ namespace KinematicCharacterController.Examples
                         {
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
-                    }
+                    }   
                 }
             }
 
@@ -820,42 +859,41 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonUp(0) && !isCanceled)
                 {
+                    _isThrowing = true; //start throw animation
+                    StartCoroutine(ThrowAnimRoutine()); // used to stop the animation after x seconds
+
                     isCharging = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+
                     if (rigidbody != null)
                     {
                         rigidbody.isKinematic = false;
 
-                        Vector3 mousePosition = Input.mousePosition;
-                        mousePosition.z = 10f;
-                        Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
-
-                        Vector3 playerPosition = transform.position;
-                        Vector3 throwDirection = (worldMousePos - playerPosition);
-                        throwDirection.y = Mathf.Clamp(throwDirection.y, -0.2f, 0.2f);
-                        throwDirection = throwDirection.normalized;
-
-                        Vector3 startPoint = lineRenderer.GetPosition(pointCount - 2);
-                        Vector3 endPoint = lineRenderer.GetPosition(pointCount - 1);
-                        Vector3 rotationDirection = (endPoint - startPoint).normalized;
-
-                        rigidbody.AddForce(storedThrowDirection * throwForce, ForceMode.Impulse);
-                        if (heldObject.CompareTag("Glider"))
+                        // Use the stored velocity from the preview
+                        rigidbody.velocity = storedThrowVelocity;
+                        if (lineRenderer.positionCount >= 2)
                         {
-                            //static falling motion
-                            //heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, 0, rotationDirection.z));
+                            Vector3 startPoint = lineRenderer.GetPosition(lineRenderer.positionCount - 2);
+                            Vector3 endPoint = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+                            Vector3 rotationDirection = (endPoint - startPoint).normalized;
 
-                            //rotating falling motion
-                            Rigidbody rb = heldObject.GetComponent<Rigidbody>();
-                            if (rb != null)
+                            if (heldObject.CompareTag("Glider"))
                             {
-                                Vector3 spinForce = new Vector3(-15f, 0, 0);
-                                rb.angularVelocity = spinForce;
-                                heldObject.transform.rotation = Quaternion.LookRotation(rotationDirection);
+                                Rigidbody rb = heldObject.GetComponent<Rigidbody>();
+                                if (rb != null)
+                                {
+                                    Vector3 spinForce = new Vector3(-15f, 0, 0);
+                                    rb.angularVelocity = spinForce;
+                                    heldObject.transform.rotation = Quaternion.LookRotation(rotationDirection);
+                                }
+                            }
+                            else
+                            {
+                                heldObject.transform.rotation = Quaternion.LookRotation(
+                                    new Vector3(rotationDirection.x, -90, rotationDirection.z)
+                                );
                             }
                         }
-                        else
-                            heldObject.transform.rotation = Quaternion.LookRotation(new Vector3(rotationDirection.x, -90, rotationDirection.z));
                     }
 
                     Drop();
@@ -871,8 +909,18 @@ namespace KinematicCharacterController.Examples
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
                 }
-            }
+            } 
         }
+
+        //Throw Coroutine to time the animation correctly
+        //Note: No charge animation
+        //   so you only need it to play when crowley throws the item
+        IEnumerator ThrowAnimRoutine()
+        {
+            yield return new WaitForSeconds(.5f);
+            _isThrowing = false;
+        }
+
         public void Drop()
         {
 
@@ -932,23 +980,34 @@ namespace KinematicCharacterController.Examples
 
         void DrawThrowTrajectory(Vector3 direction)
         {
-            int resolution = 20;
-            float timeStep = 0.1f;
-            //Vector3 startPosition = transform.position;
+            float chargePercent = throwForce / maxThrowForce;
+            float scaledArc = Mathf.Lerp(minArc, maxArc, arcCurve.Evaluate(chargePercent));
+            Vector3 curvedDirection = direction;
+            curvedDirection.y += scaledArc * 1f;
+            curvedDirection = curvedDirection.normalized;
+            
+            int resolution = 50;
+            float timeStep = 0.08f;
+
             Vector3 startPosition = _handPoint.position;
-            Vector3 velocity = direction * throwForce;
-            throwDirection = direction;
-            pointCount = lineRenderer.positionCount;
+            Vector3 velocity = curvedDirection * throwForce;
+            
+            // Scale down the velocity for the actual throw
+            storedThrowVelocity = velocity * throwPowerScaler; // Try 0.5f, adjust to taste
 
             lineRenderer.positionCount = resolution;
 
             for (int i = 0; i < resolution; i++)
             {
                 float time = i * timeStep;
-                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * time * time;
+                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
                 lineRenderer.SetPosition(i, point);
             }
+
+            throwDirection = curvedDirection;
         }
+
+
 
         private void HandleAnimation()
         {
@@ -956,13 +1015,11 @@ namespace KinematicCharacterController.Examples
             {
                 if (_isFacingRight)
                 {
-                    Debug.Log("ThrowRight");
-                    ChangeAnimation("ThrowRight");
+                    ChangeAnimation("ThrowRight", .5f);
                 }
                 else
                 {
-                    Debug.Log("ThrowLeft");
-                    ChangeAnimation("ThrowLeft");
+                    ChangeAnimation("ThrowLeft", .5f);
                 }
                 return;
             }
@@ -971,11 +1028,11 @@ namespace KinematicCharacterController.Examples
             {
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("JumpRight");
+                    ChangeAnimation("JumpRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("JumpLeft");
+                    ChangeAnimation("JumpLeft", 0);
                 }
             }
             else if (_moveVelocity.magnitude > 0.1f)
@@ -991,32 +1048,37 @@ namespace KinematicCharacterController.Examples
 
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("RunRight");
+                    ChangeAnimation("RunRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("RunLeft");
+                    ChangeAnimation("RunLeft", 0);
                 }
             }
             else
             {
                 if (_isFacingRight)
                 {
-                    ChangeAnimation("IdleRight");
+                    ChangeAnimation("IdleRight", 0);
                 }
                 else
                 {
-                    ChangeAnimation("IdleLeft");
+                    ChangeAnimation("IdleLeft", 0);
                 }
             }
         }
 
-        private void ChangeAnimation(string animation, float crossfade = 0.2f)
+        //added by Zack H. 11/26
+        //added float startTime, to allow us to change/transition animations at certain times in the animation
+        //ex the throw animation needs to be started halfway through to function correctly
+        //use 0 on animations to start at their first frame
+        //start time is a measure of time I believe not frames.
+        private void ChangeAnimation(string animation, float startTime, float crossfade = 0.2f, int layer = 0)
         {
             if (_currentAnim == animation) return;
             
             _currentAnim = animation;
-            _animator.CrossFade(animation, crossfade);
+            _animator.CrossFade(animation, crossfade, layer, startTime);
         }
 
         private void Flip(bool doFlip)
@@ -1064,10 +1126,10 @@ namespace KinematicCharacterController.Examples
             // Gizmos.color = Color.red;
             // Gizmos.DrawWireSphere(transform.position, 2);
             
-            // Draw ground check
+            // Draw ground check -- is this supposed to show the collider size? doesn't work with a capsule
             if (_normalCollider != null)
             {
-                Gizmos.color = _isGrounded ? Color.green : Color.yellow;
+                Gizmos.color = _isGrounded ? Color.red : Color.yellow;
                 Vector3 origin = transform.position + Vector3.up * (_normalCollider.height * 0.5f);
                 Gizmos.DrawWireSphere(origin - Vector3.up * ((_normalCollider.height * 0.5f) + _groundCheckDistance), _normalCollider.radius * 0.9f);
             }

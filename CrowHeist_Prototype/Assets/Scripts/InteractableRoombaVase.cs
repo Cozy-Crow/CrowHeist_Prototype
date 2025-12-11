@@ -15,7 +15,8 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private Rigidbody rb;
 
-    public RoombaCamManager roombaCamManager;
+    public VirtualCamManager virtualCamManager;
+    
 
     void Start()
     {
@@ -41,8 +42,8 @@ public class InteractableRoombaVase : MonoBehaviour
     private void TipVase()
     {
         rb.isKinematic = false;
-        rb.AddForce(Vector3.left * 3f, ForceMode.Impulse);
-        roombaCamManager.StartRoombaSequence();
+        rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
+        virtualCamManager.StartRoombaBreakSequence();
     }
 
     public void OnTriggerEnter(Collider other)

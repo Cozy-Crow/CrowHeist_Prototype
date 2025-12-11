@@ -30,9 +30,7 @@ public class SaveData
     }
 }
 
-/// <summary>
-/// Player-specific data
-/// </summary>
+
 [System.Serializable]
 public class PlayerData
 {
@@ -41,22 +39,23 @@ public class PlayerData
     public bool isFacingRight;
     public bool isDirty;
 
-    // Held item data
+    
     public string heldObjectId;
+
+    
+    public Vector3Data velocity; // Character controller velocity
 
     public PlayerData()
     {
         position = new Vector3Data();
         rotation = new Vector3Data();
+        velocity = new Vector3Data();
         isFacingRight = true;
         isDirty = false;
         heldObjectId = "";
     }
 }
 
-/// <summary>
-/// Data for saveable objects in the scene
-/// </summary>
 [System.Serializable]
 public class SaveableObjectData
 {
@@ -67,24 +66,37 @@ public class SaveableObjectData
     public Vector3Data scale;
     public bool isActive;
 
-    // Additional properties that can be expanded
     public int intValue; // For coin values, etc.
     public float floatValue; // For speeds, durations, etc.
     public bool boolValue; // For states
     public string stringValue; // For tags or special data
+
+ 
+    public bool customBool1; // For isUsed flag, etc.
+    public bool customBool2; // Additional boolean state
+    public string customString1; // For custom state data
+    public string customString2; // Additional string data
+
+   
+    public Vector3Data velocity; // For objects in motion
+    public Vector3Data angularVelocity; // For rotating objects
+    public bool hadVelocity; // Track if object had velocity when saved
+    public bool wasKinematic; // CRITICAL: Save original kinematic state!
 
     public SaveableObjectData()
     {
         position = new Vector3Data();
         rotation = new Vector3Data();
         scale = new Vector3Data(1, 1, 1);
+        velocity = new Vector3Data();
+        angularVelocity = new Vector3Data();
         isActive = true;
+        hadVelocity = false;
+        wasKinematic = false;
     }
 }
 
-/// <summary>
-/// Serializable Vector3 (Unity's Vector3 isn't directly serializable by JsonUtility)
-/// </summary>
+
 [System.Serializable]
 public class Vector3Data
 {

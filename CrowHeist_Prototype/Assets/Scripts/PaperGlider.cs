@@ -25,7 +25,7 @@ namespace KinematicCharacterController.Examples
                 controller._rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
                 
                 // Set glide fall speed
-                float glideFallSpeed = -3f;
+                float glideFallSpeed = -1f;
                 if (controller._rb.velocity.y < glideFallSpeed)
                 {
                     controller._rb.velocity = new Vector3(controller._rb.velocity.x, glideFallSpeed, controller._rb.velocity.z);
