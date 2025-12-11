@@ -33,6 +33,7 @@ public class Escape : MonoBehaviour
     {
         yield return StartCoroutine(FadeToBlack(3f));
         GameManager.Instance.TriggerGameEnd();
+        MusicManager.Instance.StopMusic();
     }
 
     private IEnumerator FadeToBlack(float duration)
