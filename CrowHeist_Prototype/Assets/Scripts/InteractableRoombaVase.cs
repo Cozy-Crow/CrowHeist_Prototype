@@ -42,7 +42,7 @@ public class InteractableRoombaVase : MonoBehaviour
     private void TipVase()
     {
         rb.isKinematic = false;
-        rb.AddForce(Vector3.left * 3f, ForceMode.Impulse);
+        rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
         virtualCamManager.StartRoombaBreakSequence();
     }
 

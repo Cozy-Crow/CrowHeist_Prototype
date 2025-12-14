@@ -90,6 +90,7 @@ public class PauseManager : MonoBehaviour
 
     public void PlayGame()
     {
+        MusicManager.Instance.StopMusic();
         SceneManager.LoadSceneAsync(1);
     }
 

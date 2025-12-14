@@ -10,6 +10,7 @@ public class BreakableCube : MonoBehaviour
     public GameObject brokenPrefab; // Assign the broken cube prefab in the Inspector
     public float breakForce = 5f; // Velocity needed to break
     public Vector3[] velocities = new Vector3[3] { Vector3.zero, Vector3.zero, Vector3.zero };
+    [SerializeField] private GameObject coin;
 
     private void FixedUpdate()
     {
@@ -55,6 +56,7 @@ public class BreakableCube : MonoBehaviour
     {
         // Spawn the broken version
         GameObject broken = Instantiate(brokenPrefab, transform.position, transform.rotation);
+        Instantiate(coin, transform.position, transform.rotation);
 
         Vector3 max = Vector3.zero;
 
