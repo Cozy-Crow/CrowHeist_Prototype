@@ -5,6 +5,7 @@ using FMODUnity;
 using FMOD.Studio;
 using SHG.AnimatorCoder;
 using System;
+using Unity.Mathematics;
 
 namespace KinematicCharacterController.Examples
 {
@@ -16,14 +17,17 @@ namespace KinematicCharacterController.Examples
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
         [SerializeField] private float jumpForce = 20f;
-        [SerializeField] private float rotationSpeed = 10f;     // Speed of sprite rotation slerp
+        [SerializeField] private float rotationSpeed = 10f;       // Speed of sprite rotation slerp
+        [SerializeField] private float step = 45f;                // Angle step for slerp
+        [SerializeField] private float flipPadding = 1.5f;        // Padding for slerp blur
         [SerializeField] public float gravityMultiplier = 2f;
         [SerializeField] private LayerMask groundLayer = -1; // Set in inspector for ground detection
         [SerializeField] private float groundCheckDistance = 0.15f;
         [SerializeField] private float skinWidth = 0.02f; // Smaller value to prevent bouncing
         private Vector2 input;
         private Vector3 faceDirection = Vector3.forward;
-        private float faceAngle;
+        private float faceAngle = 0f;
+        private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
         public Vector3 Velocity => velocity;
@@ -99,7 +103,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float maxArc = 0.8f;
         [SerializeField] private AnimationCurve arcCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
         [SerializeField] private float throwPowerScaler = 1f;
-
 
         //Jack in the Box
         private GameObject touchingObject;
@@ -851,15 +854,27 @@ namespace KinematicCharacterController.Examples
             // (-1,-1) → -135° (front-left)
             // (0, -1) → -90° (front)
             // (1, -1) → -45° (front-right)
-            
-            faceAngle = Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
-            if (faceAngle > 70f && faceAngle < 110f)      faceAngle = 45;   // avoid back
-            if (faceAngle < -70f && faceAngle > -110f)    faceAngle = -45;  // avoid front
 
-            // Convert 2D angle into Y-axis facing because Atan is counter-clockwise think PI
-            float targetY = -faceAngle;
-            Quaternion targetRot = Quaternion.Euler(0, targetY, 0);
-            playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, targetRot, Time.deltaTime * rotationSpeed);
+
+            // radians is ccw, unity is cw
+            // Raw angle from input -> radians -> degrees
+            float rawAngle = -Mathf.Atan2(faceDirection.z, faceDirection.x) * Mathf.Rad2Deg;
+
+            // Snap to 45 degrees
+            newFaceAngle = Mathf.Round(rawAngle / 45f) * 45f;
+
+            // Avoid pure front/back facings
+            if (newFaceAngle == 90f)  newFaceAngle = 45f;
+            if (newFaceAngle == -90f) newFaceAngle = -45f;
+
+            if (Mathf.Abs(newFaceAngle - faceAngle) < flipPadding)
+            {
+                return;
+            }
+
+            Quaternion targetRotation = Quaternion.Euler(0f, newFaceAngle, 0f);
+            playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            faceAngle = Mathf.Round(playerSprite.transform.rotation.eulerAngles.y);
         }
 
         void OnDrawGizmos()

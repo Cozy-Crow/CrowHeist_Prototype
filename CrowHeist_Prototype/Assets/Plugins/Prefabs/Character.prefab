@@ -31,7 +31,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 4571229150634438458}
   m_Father: {fileID: 631451988467006383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &1042615545658782635
@@ -160,12 +161,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 192802651981614571}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.15, y: -0.25, z: -0.2}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.14999986, y: -0.24999999, z: -0.2000004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 631451988467006383}
+  m_Father: {fileID: 4571229150634438458}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3315537436146992837
 GameObject:
@@ -198,6 +199,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 631451988467006383}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3932518241594037907
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4571229150634438458}
+  m_Layer: 9
+  m_Name: Sockets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4571229150634438458
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3932518241594037907}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7843053465694190917}
+  - {fileID: 2564438339915437367}
+  m_Father: {fileID: 5843309656202178542}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4768229385078276745
 GameObject:
   m_ObjectHideFlags: 0
@@ -222,12 +256,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4768229385078276745}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.64, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.6400001, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 631451988467006383}
+  m_Father: {fileID: 4571229150634438458}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8830650885409167177
 GameObject:
@@ -264,8 +298,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5843309656202178542}
-  - {fileID: 7843053465694190917}
-  - {fileID: 2564438339915437367}
   - {fileID: 5167104243750956226}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -293,31 +325,58 @@ MonoBehaviour:
   skinWidth: 0.02
   playerSprite: {fileID: 61817540364832675}
   animatorCoder: {fileID: 0}
-  _isSpeedBoosted: 0
-  _speedBoostDuration: 5
-  _normalMoveSpeed: 0
-  _speedBoostMultiplier: 5
-  _fallingTime: 0
-  _pickUpPoint: {fileID: 7843053465694190917}
-  _handPoint: {fileID: 2564438339915437367}
-  _dropPoint: {fileID: 5167104243750956226}
-  _isDirty: 0
-  _dashSpeed: 40
-  _dashDuration: 0.2
-  _dashForce: 10
-  _dashCooldown: 1
-  _canDash: 1
-  _isDashing: 0
-  _coyoteTime: 0.15
-  _jumpBufferTime: 0.2
-  _rb: {fileID: 0}
-  _isFacingRight: 1
+  isSpeedBoosted: 0
+  speedBoostDuration: 5
+  normalMoveSpeed: 0
+  speedBoostMultiplier: 5
+  fallingTime: 0
+  pickUpPoint: {fileID: 0}
+  handPoint: {fileID: 0}
+  dropPoint: {fileID: 0}
+  isDirty: 0
+  dashSpeed: 40
+  dashDuration: 0.3
+  dashForce: 10
+  dashCooldown: 1
+  canDash: 1
+  isDashing: 0
+  coyoteTime: 0.15
+  jumpBufferTime: 0.2
+  rb: {fileID: 0}
+  isFacingRight: 1
   isThrowing: 0
-  _canJump: 1
+  canJump: 1
   throwDirection: {x: 0, y: 0, z: 0}
   maxThrowForce: 20
   chargeTime: 2
   heldObject: {fileID: 0}
+  minArc: 0.2
+  maxArc: 0.8
+  arcCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 1
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  throwPowerScaler: 1
   bounceDelay: 2
   canBounce: 0
   pointCount: 0
@@ -326,13 +385,6 @@ MonoBehaviour:
   knockbackDuration: 0.3
   externalForceDecay: 5
   externalForceDamping: 0.9
-  playerFootsteps:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
 --- !u!54 &5211487340551427737
 Rigidbody:
   m_ObjectHideFlags: 0

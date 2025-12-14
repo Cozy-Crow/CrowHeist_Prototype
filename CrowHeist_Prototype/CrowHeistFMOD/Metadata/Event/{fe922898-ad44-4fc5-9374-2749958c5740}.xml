@@ -56,7 +56,14 @@
 			<destination>{40f81fd6-34fc-4b63-92d4-1297dff55142}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{c0630e9e-8370-4428-99cd-fdde9e2b6a86}" />
+	<object class="EventAutomatableProperties" id="{c0630e9e-8370-4428-99cd-fdde9e2b6a86}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+		<property name="triggerCooldown">
+			<value>3200</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{7da5e1c3-e865-4fef-a166-0b10472a7355}" />
 	<object class="GroupTrack" id="{b8602150-7176-43c2-bd30-4705cc1441df}">
 		<relationship name="modules">
@@ -199,6 +206,17 @@
 		</property>
 		<property name="overlap">
 			<value>7</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{263f07c3-264f-49af-b612-56547a76bae0}</destination>
+		</relationship>
+	</object>
+	<object class="RandomizerModulator" id="{263f07c3-264f-49af-b612-56547a76bae0}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>3.33333349</value>
 		</property>
 	</object>
 </objects>
