@@ -384,7 +384,7 @@ public class SaveLoadSystem : MonoBehaviour
                 if (pickupable != null)
                 {
                     // Simulate picking up the object
-                    pickupable.PickUP(controller.transform.Find("Head"));
+                    pickupable.PickUp(controller.transform.Find("Head"));
                     controller.heldObject = obj.GetComponent<Rigidbody>();
                 }
                 break;

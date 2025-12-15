@@ -4,6 +4,7 @@ using UnityEngine;
 // Simple debug version to test just the levitation without audio/particles
 public class PixieDustSimpleDebug : MonoBehaviour, IPickupable
 {
+    [SerializeField] private Enum_Sockets socketType;
     [Header("Debug Settings")]
     [SerializeField] private float levitationDuration = 5f;
     [SerializeField] private float levitationForce = 50f; // Increased force for testing
@@ -11,8 +12,7 @@ public class PixieDustSimpleDebug : MonoBehaviour, IPickupable
     private GameObject item;
     private bool isUsed = false;
     private KinematicCharacterController.Examples.Controller2Point5D playerController;
-
-    public GameObject Item => item;
+    public Enum_Sockets SocketType { get => socketType; }
 
     void Awake()
     {
@@ -37,7 +37,7 @@ public class PixieDustSimpleDebug : MonoBehaviour, IPickupable
         }
     }
 
-    public void PickUP(Transform parent)
+    public void PickUp(Transform parent)
     {
         if (isUsed) return;
 

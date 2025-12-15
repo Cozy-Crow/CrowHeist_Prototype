@@ -13,6 +13,8 @@ namespace KinematicCharacterController.Examples
     [RequireComponent(typeof(CapsuleCollider))]
     public class Controller2Point5D : MonoBehaviour
     {
+        [SerializeField] private Sockets sockets;
+
         [Header("Movement")]
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
@@ -190,7 +192,7 @@ namespace KinematicCharacterController.Examples
             }
             HandleMove();
             HandleRotation();
-            HandlePickUP();
+            HandlePickUp();
             HandleWindUp();
             HandleBounce();
             RemoveNullItems();
@@ -608,7 +610,7 @@ namespace KinematicCharacterController.Examples
             }
         }
 
-        private void HandlePickUP()
+        private void HandlePickUp()
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
@@ -627,7 +629,9 @@ namespace KinematicCharacterController.Examples
                         {
                             if (_pickUpsList.Count > 0) return;
                             selected.SetOutline(false);
-                            pickUp.PickUP(pickUpPoint);
+                            Transform transform = sockets.GetSockets(pickUp.SocketType);
+                            Debug.Log("Picking up: " + pickUp + " at socket: " + transform.name);
+                            pickUp.PickUp(transform);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
                             foreach (var interactable in nearbyInteractables)

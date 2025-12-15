@@ -2,10 +2,14 @@
 using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
+using FMOD.Studio;
+using System.Net.Sockets;
 
 
 public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 {
+    [SerializeField] private Enum_Sockets socketType;
+
     [Header("Levitation Settings")]
     [SerializeField] private float levitationDuration = 5f;
     [SerializeField] private float levitationForce = 15f; // Reduced default value
@@ -62,11 +66,11 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
         new System.Collections.Generic.List<GameObject>();
 
     // Audio instances
-    private FMOD.Studio.EventInstance shimmerInstance;
-    private FMOD.Studio.EventInstance levitationInstance;
-    private FMOD.Studio.EventInstance dustEndInstance;
+    private EventInstance shimmerInstance;
+    private EventInstance levitationInstance;
+    private EventInstance dustEndInstance;
 
-    public GameObject Item => item;
+    public Enum_Sockets SocketType {get => SocketType;}
 
     void Awake()
     {
@@ -160,7 +164,7 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             dustEndInstance = RuntimeManager.CreateInstance(dustEndSFX);
     }
 
-    public void PickUP(Transform parent)
+    public void PickUp(Transform parent)
     {
         Debug.Log(isUsed ? "Picking up Used Pixie Dust" : "Picking up Pixie Dust");
         transform.SetParent(parent);

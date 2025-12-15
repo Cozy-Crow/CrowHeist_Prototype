@@ -15,6 +15,19 @@ public class Sockets : MonoBehaviour
             socketDict.Add(socketArr[i].socketType, socketArr[i].socketTransform);
         }
     }
+
+    public Transform GetSockets(Enum_Sockets socketType)
+    {
+        if(socketDict.TryGetValue(socketType, out Transform transform))
+        {
+            return transform;
+        }
+        else
+        {
+            Debug.LogWarning("Enum_SocketType not added to the dictionary");
+            return null;
+        }        
+    }
 }
 
 [Serializable]
