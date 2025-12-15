@@ -10,6 +10,8 @@ public class CrowleyAnimator : AnimatorCoder
     private AnimationData WALK = new AnimationData("Walk");
     private AnimationData IDLE = new AnimationData("Idle");
     private AnimationData JUMP = new AnimationData("Jump", true, new AnimationData());
+    private AnimationData THROWREADY = new AnimationData("ThrowReady");
+    private AnimationData CHARGETHROW = new AnimationData("ChargeThrow");
     private AnimationData THROW = new AnimationData("Throw", true, new AnimationData());
 
     void Awake()
@@ -31,6 +33,12 @@ public class CrowleyAnimator : AnimatorCoder
     {
             animator.SetFloat("MoveX", controller.FaceDirection.x);
             animator.SetFloat("MoveZ", controller.FaceDirection.z);
+
+            if (controller.ChargeThrowing)
+            {
+                Play(CHARGETHROW);
+                return;
+            }
 
             if (controller.IsThrowing)
             {

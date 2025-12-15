@@ -135,4 +135,15 @@ public class Pickable : MonoBehaviour, IPickupable
             }
         }
     }
+
+    public void Equip(Enum_Sockets socket)
+    {
+        //throw new System.NotImplementedException();
+    }
+}
+
+public enum Enum_Sockets
+{
+    HEAD,
+    HAND
 }

@@ -17,13 +17,12 @@ namespace KinematicCharacterController.Examples
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
         [SerializeField] private float jumpForce = 20f;
-        [SerializeField] private float rotationSpeed = 10f;       // Speed of sprite rotation slerp
-        [SerializeField] private float step = 45f;                // Angle step for slerp
-        [SerializeField] private float flipPadding = 1.5f;        // Padding for slerp blur
+        [SerializeField] private float rotationSpeed = 10f;         // Speed of sprite rotation slerp
+        [SerializeField] private float flipPadding = 1.5f;          // Padding for slerp blur
         [SerializeField] public float gravityMultiplier = 2f;
-        [SerializeField] private LayerMask groundLayer = -1; // Set in inspector for ground detection
+        [SerializeField] private LayerMask groundLayer = -1;        // Set in inspector for ground detection
         [SerializeField] private float groundCheckDistance = 0.15f;
-        [SerializeField] private float skinWidth = 0.02f; // Smaller value to prevent bouncing
+        [SerializeField] private float skinWidth = 0.02f;           // Smaller value to prevent bouncing
         private Vector2 input;
         private Vector3 faceDirection = Vector3.forward;
         private float faceAngle = 0f;
@@ -34,6 +33,7 @@ namespace KinematicCharacterController.Examples
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
+        public bool ChargeThrowing { get => chargingThrow;}
 
         //Sprite
         [SerializeField] GameObject playerSprite;
@@ -87,8 +87,8 @@ namespace KinematicCharacterController.Examples
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
         private float throwForce = 0f;
-        private bool isCharging = false;
-        private bool isCanceled = false;
+        private bool chargingThrow = false;
+        private bool cancelThrow = false;
         private float chargeStartTime;
         private Vector3 storedThrowVelocity;
         private LineRenderer lineRenderer;
@@ -212,7 +212,6 @@ namespace KinematicCharacterController.Examples
             // Cast from the center of the character downward
             Vector3 origin = transform.position;
             float radius = normalCollider.radius * 0.9f;
-
 
             // Cast distance should reach just below the feet
             float castDistance = (normalCollider.height * 0.5f) + groundCheckDistance; //1.215
@@ -690,12 +689,12 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonDown(0))
                 {
-                    isCharging = true;
-                    isCanceled = false;
+                    chargingThrow = true;
+                    cancelThrow = false;
                     chargeStartTime = Time.time;
                 }
 
-                if (Input.GetMouseButton(0) && !isCanceled)
+                if (Input.GetMouseButton(0) && !cancelThrow)
                 {
                     throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
 
@@ -712,11 +711,10 @@ namespace KinematicCharacterController.Examples
                     DrawThrowTrajectory(storedThrowDirection);
                 }
 
-                if (Input.GetMouseButtonUp(0) && !isCanceled)
+                if (Input.GetMouseButtonUp(0) && !cancelThrow)
                 {
                     isThrowing = true;
-
-                    isCharging = false;
+                    chargingThrow = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     if (rigidbody != null)
@@ -757,8 +755,8 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    isCharging = false;
-                    isCanceled = true;
+                    chargingThrow = false;
+                    cancelThrow = true;
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
@@ -845,16 +843,7 @@ namespace KinematicCharacterController.Examples
 
         private void Flip(Vector3 faceDirection)
         {
-            // Convert input to planar angle
-            // (1, 0) → 0° (right)
-            // (1, 1) → 45° (back-right)
-            // (0, 1) → 90° (back)
-            // (-1, 1) → 135° (back-left)
-            // (-1, 0) → 180° (left)
-            // (-1,-1) → -135° (front-left)
-            // (0, -1) → -90° (front)
-            // (1, -1) → -45° (front-right)
-
+            if (input.magnitude <= 0.1f) return;
 
             // radians is ccw, unity is cw
             // Raw angle from input -> radians -> degrees
@@ -867,13 +856,33 @@ namespace KinematicCharacterController.Examples
             if (newFaceAngle == 90f)  newFaceAngle = 45f;
             if (newFaceAngle == -90f) newFaceAngle = -45f;
 
-            if (Mathf.Abs(newFaceAngle - faceAngle) < flipPadding)
+            if (Mathf.Abs(Mathf.DeltaAngle(newFaceAngle, faceAngle)) < flipPadding)
             {
                 return;
             }
 
-            Quaternion targetRotation = Quaternion.Euler(0f, newFaceAngle, 0f);
+            Quaternion targetRotation = Quaternion.identity;
+            if(newFaceAngle == 0f)
+            {
+                targetRotation = Quaternion.Euler(0, 0, 0);
+            }else if(newFaceAngle == 45f)
+            {
+                targetRotation = Quaternion.Euler(0, 45f, 0);
+            }else if(newFaceAngle == 135f)
+            {
+                targetRotation = Quaternion.Euler(0, 135f, 0);  
+            }else if(newFaceAngle == 180f || newFaceAngle == -180f)
+            {
+                targetRotation = Quaternion.Euler(0, 180f, 0);
+            }else if(newFaceAngle == -135f)
+            {
+                targetRotation = Quaternion.Euler(0, -135f, 0);
+            }else if(newFaceAngle == -45f)
+            {
+                targetRotation = Quaternion.Euler(0, -45f, 0);
+            }
             playerSprite.transform.rotation = Quaternion.Slerp(playerSprite.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
             faceAngle = Mathf.Round(playerSprite.transform.rotation.eulerAngles.y);
         }
 
