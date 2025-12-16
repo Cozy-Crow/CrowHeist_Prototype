@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TestPickableObject : Pickable
 {
+    [SerializeField] private UnityEvent onPickUp;
     [SerializeField] private Collider objectCollider;
     public override void PickUp(Transform parent)
     {
@@ -13,6 +15,8 @@ public class TestPickableObject : Pickable
 
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
+
+        onPickUp?.Invoke();
     }
 
     public override void Drop(Vector3 position)
