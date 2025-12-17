@@ -612,6 +612,11 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUp()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                TrinketMenu.instance.ToggleMenu();
+            }
+
             if (Input.GetKeyDown(KeyCode.E))
             {
                 AIEventManager.instance.e_pickup.Invoke();
@@ -630,7 +635,6 @@ namespace KinematicCharacterController.Examples
                             if (_pickUpsList.Count > 0) return;
                             selected.SetOutline(false);
                             Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            Debug.Log("Picking up: " + pickUp + " at socket: " + transform.name);
                             pickUp.PickUp(transform);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
@@ -765,7 +769,22 @@ namespace KinematicCharacterController.Examples
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
                 }
-            } 
+            }
+
+            if(Input.GetKeyDown(KeyCode.T) && heldObject != null)
+            {
+                Debug.Log("Trinket Registered: " + heldObject.name);
+                //Testing Trinket System
+                //Should be refactored to narrative later
+                if (heldObject.TryGetComponent(out Trinket trinket))
+                {
+                    TrinketMenu.instance.UpdateItem(trinket.Name);
+                }
+                else
+                {
+                    Debug.Log("Missing trinket component");    
+                }
+            }
         }
 
         public void Drop()

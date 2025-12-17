@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Trinket : MonoBehaviour
+public class Trinket : MonoBehaviour,INarrative
 {
-    [SerializeField] private TrinketsSO trinketData;
+    [SerializeField] private string trinketName;
+    public string Name {get => trinketName;}
 }
