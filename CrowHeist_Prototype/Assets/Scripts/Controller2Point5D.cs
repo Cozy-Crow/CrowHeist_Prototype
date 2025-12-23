@@ -510,13 +510,13 @@ namespace KinematicCharacterController.Examples
                 {
                     if (heldObject == null || interactable.realObject != heldObject.gameObject)
                     {
-                        Debug.Log("Added Interactable: " + interactable.gameObject.name);
+                        // Debug.Log("Added Interactable: " + interactable.gameObject.name);
                         nearbyInteractables.Add(interactable);
-                        Debug.Log("Interactables: ");
-                        foreach (Interactable item in nearbyInteractables)
-                        {
-                            Debug.Log(item.gameObject.name + "\n");
-                        }
+                        // Debug.Log("Interactables: ");
+                        // foreach (Interactable item in nearbyInteractables)
+                        // {
+                        //     Debug.Log(item.gameObject.name + "\n");
+                        // }
 
                         UpdateHighlightedInteractable();
                     }
@@ -567,13 +567,13 @@ namespace KinematicCharacterController.Examples
             {
                 if (nearbyInteractables.Contains(interactable))
                 {
-                    Debug.Log("Removed " + interactable.gameObject.name);
+                    // Debug.Log("Removed " + interactable.gameObject.name);
                     nearbyInteractables.Remove(interactable);
-                    Debug.Log("Interactables: ");
-                    foreach (Interactable item in nearbyInteractables)
-                    {
-                        Debug.Log(item.gameObject.name + "\n");
-                    }
+                    // Debug.Log("Interactables: ");
+                    // foreach (Interactable item in nearbyInteractables)
+                    // {
+                    //     Debug.Log(item.gameObject.name + "\n");
+                    // }
 
                     UpdateHighlightedInteractable();
                 }
@@ -582,7 +582,7 @@ namespace KinematicCharacterController.Examples
             if (other.CompareTag("JackInTheBox"))
             {
                 isInTrigger = false;
-                Debug.Log("Exited Jack In The Box trigger.");
+                // Debug.Log("Exited Jack In The Box trigger.");
             }
         }
 
@@ -638,10 +638,10 @@ namespace KinematicCharacterController.Examples
                             pickUp.PickUp(transform);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
-                            foreach (var interactable in nearbyInteractables)
-                            {
-                                Debug.Log("Item: " + interactable.transform.name);
-                            }
+                            // foreach (var interactable in nearbyInteractables)
+                            // {
+                            //     Debug.Log("Item: " + interactable.transform.name);
+                            // }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
                         }
@@ -649,6 +649,15 @@ namespace KinematicCharacterController.Examples
                         {
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
+                    }
+
+                    if (heldObject.TryGetComponent(out Trinket trinket))
+                    {
+                        TrinketMenu.instance.UpdateItem(trinket.Name);
+                    }
+                    else
+                    {
+                        Debug.Log("Missing trinket component");    
                     }   
                 }
             }
@@ -768,21 +777,6 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
-                }
-            }
-
-            if(Input.GetKeyDown(KeyCode.T) && heldObject != null)
-            {
-                Debug.Log("Trinket Registered: " + heldObject.name);
-                //Testing Trinket System
-                //Should be refactored to narrative later
-                if (heldObject.TryGetComponent(out Trinket trinket))
-                {
-                    TrinketMenu.instance.UpdateItem(trinket.Name);
-                }
-                else
-                {
-                    Debug.Log("Missing trinket component");    
                 }
             }
         }

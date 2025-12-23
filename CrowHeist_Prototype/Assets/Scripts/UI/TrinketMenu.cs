@@ -18,7 +18,7 @@ public class TrinketMenu : MonoBehaviour
 
     [Header("Data References")]
     [SerializeField]private List<TrinketsSO> trinketsDataLst = new();
-    private Dictionary<string, TrinketsSO> trinketsDataDict = new();
+    private Dictionary<string, TrinketsSO> trinketsDataDict = new();  //Convert this to TrinketSO to Image and populate it with the current
     private int selectedID = 0;
     private int minIndex = 0;
     private int maxIndex = 8;
@@ -66,11 +66,11 @@ public class TrinketMenu : MonoBehaviour
 
     private void UpdateMenu()
     {
-        for (int i = 0; i <= trinketsDataLst.Count - 1; i++)
+        for (int i = 0; i < trinketImageArray.Length; i++)
         {
             trinketImageArray[i].sprite = trinketsDataLst[i].DisplayIcon;
         }
-
+        Debug.Log($"Selected Display: {trinketsDataLst[selectedID].DisplayIcon}");
         displayImage.sprite = trinketsDataLst[selectedID].DisplayIcon;
         displayName.text = trinketsDataLst[selectedID].DispayName;
         displayDescription.text = trinketsDataLst[selectedID].DisplayDescritpion;
@@ -99,6 +99,20 @@ public class TrinketMenu : MonoBehaviour
         {
             Debug.Log($"Trinket {name} not found in dict!");
         }
+    }
+
+    public void SelectItem(int id)
+    {
+        if (id < minIndex || id > maxIndex)
+        {
+            Debug.Log("Selected ID out of range");
+            return;
+        }
+
+        selectedID = id;
+        displayImage.sprite = trinketsDataLst[selectedID].DisplayIcon;
+        displayName.text = trinketsDataLst[selectedID].DispayName;
+        displayDescription.text = trinketsDataLst[selectedID].DisplayDescritpion;
     }
 
 
