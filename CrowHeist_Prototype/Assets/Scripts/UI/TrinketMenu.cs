@@ -48,7 +48,7 @@ public class TrinketMenu : MonoBehaviour
 
         for (int i = 0; i < trinketsDataLst.Count; i++)
         {
-            trinketsDataDict.Add(trinketsDataLst[i].Name, trinketsDataLst[i]);
+            trinketsDataDict.Add(trinketsDataLst[i].TrinketName, trinketsDataLst[i]);
         }
 
         Debug.Log($"Trinket Dict Count: {trinketsDataDict.Count}");

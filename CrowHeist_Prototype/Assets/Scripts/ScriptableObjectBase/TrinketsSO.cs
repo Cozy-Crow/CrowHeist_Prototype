@@ -6,12 +6,17 @@ using UnityEngine;
 public class TrinketsSO : ScriptableObject
 {
     [SerializeField] private string trinketName;
+    [SerializeField, TextArea(3,5)] private string description;
     [SerializeField] private Sprite lockedIcon;
     [SerializeField] private Sprite unlockedIcon;
-    [SerializeField, TextArea(3,5)] private string description;
     private const string DEFAULT_TEXT = "???";
     public bool isUnlocked = false;
-    public string Name => trinketName;
+    public string TrinketName {get => trinketName; set => trinketName = value; }
+    //For creating trinket
+    public Sprite LockedIcon {get => lockedIcon; set => lockedIcon = value; }
+    public Sprite UnlockedIcon {get => unlockedIcon; set => unlockedIcon = value; }
+    public string Description {get => description; set => description = value; }
+    //For displaying trinket
     public string DispayName {
         get
         {
