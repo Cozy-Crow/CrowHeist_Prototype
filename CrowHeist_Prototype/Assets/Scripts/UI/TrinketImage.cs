@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private TrinketMenu trinketMenu;
-    [SerializeField] private int selectedID;
+    [SerializeField] private int index;
     private Image image;
 
     void Awake()
@@ -27,6 +27,7 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        trinketMenu.SelectItem(selectedID);
+        trinketMenu.SelectItem(index);
+        Debug.Log($"Trinket Image Clicked: {index}");
     }
 }

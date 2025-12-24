@@ -15,5 +15,15 @@ public class TrinkerReaderEditor : Editor
         {
             trinketReader.UpdateTrinketData();
         }
+
+        if (GUILayout.Button("Unlock All Trinkets"))
+        {
+            trinketReader.UnlockAll();
+        }
+
+        if (GUILayout.Button("Lock All Trinkets"))
+        {
+            trinketReader.LockAll();
+        }
     }
 }

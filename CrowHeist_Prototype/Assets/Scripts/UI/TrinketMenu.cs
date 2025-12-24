@@ -18,11 +18,12 @@ public class TrinketMenu : MonoBehaviour
 
     [Header("Data References")]
     [SerializeField]private List<TrinketsSO> trinketsDataLst = new();
-    private Dictionary<string, TrinketsSO> trinketsDataDict = new();  //Convert this to TrinketSO to Image and populate it with the current
     private int selectedID = 0;
-    private int minIndex = 0;
-    private int maxIndex = 8;
-
+    private int pageIndex = 0;
+    private int maxPageIndex = 0;
+    public int SelectedID { get => selectedID; }
+    public int PageIndex { get => pageIndex; }
+    public int MaxPageIndex { get => maxPageIndex; }
     private void Awake()
     {
         if (instance != null )
@@ -41,20 +42,15 @@ public class TrinketMenu : MonoBehaviour
     {
         container.gameObject.SetActive(false);
 
+        if(trinketsDataLst.Count == 0)
+        {
+            Debug.LogWarning("Trinket Data List is Empty");
+            return;
+        }
+
         for(int i = 0; i < trinketImageArray.Length; i++)
         {
             trinketImageArray[i].sprite = null;
-        }
-
-        for (int i = 0; i < trinketsDataLst.Count; i++)
-        {
-            trinketsDataDict.Add(trinketsDataLst[i].TrinketName, trinketsDataLst[i]);
-        }
-
-        Debug.Log($"Trinket Dict Count: {trinketsDataDict.Count}");
-        foreach (var item in trinketsDataDict)
-        {
-            Debug.Log($"Trinket Dict Item: {item.Key}");
         }
 
         displayImage.sprite = null;
@@ -62,14 +58,16 @@ public class TrinketMenu : MonoBehaviour
         displayDescription.text = "";
 
         selectedID = 0;
+        maxPageIndex = Mathf.CeilToInt(trinketsDataLst.Count / 8f) - 1;
     }
 
     private void UpdateMenu()
     {
         for (int i = 0; i < trinketImageArray.Length; i++)
         {
-            trinketImageArray[i].sprite = trinketsDataLst[i].DisplayIcon;
+            trinketImageArray[i].sprite = trinketsDataLst[i + pageIndex * 8].DisplayIcon;
         }
+
         Debug.Log($"Selected Display: {trinketsDataLst[selectedID].DisplayIcon}");
         displayImage.sprite = trinketsDataLst[selectedID].DisplayIcon;
         displayName.text = trinketsDataLst[selectedID].DispayName;
@@ -89,52 +87,41 @@ public class TrinketMenu : MonoBehaviour
         }
     }
 
-    public void UpdateItem(string name)
+    public void UpdateItem(TrinketsSO trinket)
     {
-        if(trinketsDataDict.TryGetValue(name, out TrinketsSO trinketData))
+        if(trinket != null)
         {
-            trinketData.isUnlocked = true;
-            Debug.Log($"Trinket {name} {trinketData.isUnlocked}!");
-        }else
+            trinket.isUnlocked = true;
+            Debug.Log($"Trinket Unlocked: {trinket.DispayName}");
+        }
+        else
         {
-            Debug.Log($"Trinket {name} not found in dict!");
+            Debug.Log("Trinket to unlock is null");
         }
     }
 
-    public void SelectItem(int id)
+    public void SelectItem(int index)
     {
-        if (id < minIndex || id > maxIndex)
-        {
-            Debug.Log("Selected ID out of range");
-            return;
-        }
+        selectedID = index;
+        int arrayIndex = selectedID + pageIndex * 8;
+        Debug.Log($"Selected Item Index: {arrayIndex}");
 
-        selectedID = id;
-        displayImage.sprite = trinketsDataLst[selectedID].DisplayIcon;
-        displayName.text = trinketsDataLst[selectedID].DispayName;
-        displayDescription.text = trinketsDataLst[selectedID].DisplayDescritpion;
+        displayImage.sprite = trinketsDataLst[arrayIndex].DisplayIcon;
+        displayName.text = trinketsDataLst[arrayIndex].DispayName;
+        displayDescription.text = trinketsDataLst[arrayIndex].DisplayDescritpion;
     }
 
-
-    /// <summary>
-    /// Scroll the narrative menu x amount of page
-    /// - -> move left
-    /// + -> move right
-    /// </summary>
-    /// <param name="page">Number of pages to scroll</param>
-    public void ScrollPage(int page)
+    public void PageUp()
     {
-        minIndex += page*8;
-        maxIndex += page*8;
+        if (pageIndex >= maxPageIndex) return;
+        pageIndex++;
+        UpdateMenu();
+    }
 
-        if (minIndex < 0)
-        {
-            minIndex = 0;
-        }
-        if (maxIndex > trinketsDataLst.Count - 1)
-        {
-            minIndex = trinketsDataLst.Count - 8;
-            maxIndex = trinketsDataLst.Count - 1;
-        }
+    public void PageDown()
+    {
+        if (pageIndex <= 0) return;
+        pageIndex--;
+        UpdateMenu();
     }
 }

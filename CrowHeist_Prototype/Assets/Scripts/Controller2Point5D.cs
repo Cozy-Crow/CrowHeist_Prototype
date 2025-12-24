@@ -653,7 +653,7 @@ namespace KinematicCharacterController.Examples
 
                     if (heldObject.TryGetComponent(out Trinket trinket))
                     {
-                        TrinketMenu.instance.UpdateItem(trinket.Name);
+                        TrinketMenu.instance.UpdateItem(trinket.TrinketData);
                     }
                     else
                     {

@@ -8,7 +8,7 @@ using UnityEditor;
 
 public class TrinketReader : MonoBehaviour
 {
-    [SerializeField] private TrinketsSO[] trinketSO;
+    [SerializeField] private TrinketsSO[] trinketSOArray;
     [SerializeField] private TextAsset trinketCSV;
 
     [SerializeField] private string trinketAssetFolder = "Assets/Data/Trinkets";
@@ -22,9 +22,9 @@ public class TrinketReader : MonoBehaviour
         trinketDict.Clear();
 
         //Load existing trinkets into dictionary
-        for(int i = 0; i < trinketSO.Length; i++)
+        for(int i = 0; i < trinketSOArray.Length; i++)
         {
-            trinketDict.Add(trinketSO[i].TrinketName, trinketSO[i]);
+            trinketDict.Add(trinketSOArray[i].TrinketName, trinketSOArray[i]);
         }
 
         //Read from CSV
@@ -77,7 +77,7 @@ public class TrinketReader : MonoBehaviour
     }
 
 #if UNITY_EDITOR
-    private static void EnsureFolderExists(string path)
+    private void EnsureFolderExists(string path)
     {
         if (AssetDatabase.IsValidFolder(path))
             return;
@@ -95,4 +95,24 @@ public class TrinketReader : MonoBehaviour
         }
     }
 #endif
+
+    public void UnlockAll()
+    {
+        if (trinketSOArray == null || trinketSOArray.Length == 0) return;
+
+        foreach (var trinket in trinketSOArray)
+        {
+            trinket.isUnlocked = true;
+        }
+    }
+
+    public void LockAll()
+    {
+        if (trinketSOArray == null || trinketSOArray.Length == 0) return;
+        
+        foreach (var trinket in trinketSOArray)
+        {
+            trinket.isUnlocked = false;
+        }
+    }
 }
