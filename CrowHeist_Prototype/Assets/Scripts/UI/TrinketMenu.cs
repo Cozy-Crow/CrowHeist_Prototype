@@ -14,6 +14,7 @@ public class TrinketMenu : MonoBehaviour
     [SerializeField] private Image displayImage;
     [SerializeField] private TextMeshProUGUI displayName;
     [SerializeField] private TextMeshProUGUI displayDescription;
+    [SerializeField] private TextMeshProUGUI pageNumber;
     [SerializeField] private Image[] trinketImageArray;
 
     [Header("Data References")]
@@ -65,6 +66,11 @@ public class TrinketMenu : MonoBehaviour
     {
         for (int i = 0; i < trinketImageArray.Length; i++)
         {
+            if (i + pageIndex * 8 >= trinketsDataLst.Count)
+            {
+                trinketImageArray[i].sprite = null;
+                continue;
+            }
             trinketImageArray[i].sprite = trinketsDataLst[i + pageIndex * 8].DisplayIcon;
         }
 
@@ -72,6 +78,8 @@ public class TrinketMenu : MonoBehaviour
         displayImage.sprite = trinketsDataLst[selectedID].DisplayIcon;
         displayName.text = trinketsDataLst[selectedID].DispayName;
         displayDescription.text = trinketsDataLst[selectedID].DisplayDescritpion;
+
+        pageNumber.text = $"Page {pageIndex + 1} / {maxPageIndex + 1}";
     }
 
     public void ToggleMenu()
