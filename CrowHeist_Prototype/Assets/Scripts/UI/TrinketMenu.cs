@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,13 +19,24 @@ public class TrinketMenu : MonoBehaviour
     [SerializeField] private Image[] trinketImageArray;
 
     [Header("Data References")]
-    [SerializeField]private List<TrinketsSO> trinketsDataLst = new();
+    [SerializeField] private List<TrinketsSO> trinketsDataLst = new();
+    [SerializeField] private Sprite defaultSprite;
+
+    [Header("SFX")]
+    public EventReference openMenu;
+    public EventReference closeMenu;
+    public EventReference selectTrinket;
+    public EventReference hoverTrinket;
+    public EventReference lockTrinket;
+    public EventReference pageUp;
+    public EventReference pageDown;
     private int selectedID = 0;
     private int pageIndex = 0;
     private int maxPageIndex = 0;
     public int SelectedID { get => selectedID; }
     public int PageIndex { get => pageIndex; }
     public int MaxPageIndex { get => maxPageIndex; }
+    public Sprite DefaultSprite { get => defaultSprite; }
     private void Awake()
     {
         if (instance != null )
@@ -54,7 +66,7 @@ public class TrinketMenu : MonoBehaviour
             trinketImageArray[i].sprite = null;
         }
 
-        displayImage.sprite = null;
+        displayImage.sprite = defaultSprite;
         displayName.text = "";
         displayDescription.text = "";
 
@@ -68,10 +80,11 @@ public class TrinketMenu : MonoBehaviour
         {
             if (i + pageIndex * 8 >= trinketsDataLst.Count)
             {
-                trinketImageArray[i].sprite = null;
+                trinketImageArray[i].sprite = defaultSprite;
                 continue;
             }
             trinketImageArray[i].sprite = trinketsDataLst[i + pageIndex * 8].DisplayIcon;
+            trinketImageArray[i].GetComponent<TrinketImage>().IsUnlocked = trinketsDataLst[i + pageIndex * 8].isUnlocked;
         }
 
         Debug.Log($"Selected Display: {trinketsDataLst[selectedID].DisplayIcon}");
@@ -86,10 +99,12 @@ public class TrinketMenu : MonoBehaviour
     {
         if (container.gameObject.activeSelf)
         {
+            AudioManager.Instance.PlayOneShot(closeMenu);
             container.gameObject.SetActive(false);
         }
         else
         {  
+            AudioManager.Instance.PlayOneShot(openMenu);
             container.gameObject.SetActive(true);
             UpdateMenu();
         }
@@ -122,6 +137,7 @@ public class TrinketMenu : MonoBehaviour
     public void PageUp()
     {
         if (pageIndex >= maxPageIndex) return;
+        AudioManager.Instance.PlayOneShot(pageUp);
         pageIndex++;
         UpdateMenu();
     }
@@ -129,6 +145,7 @@ public class TrinketMenu : MonoBehaviour
     public void PageDown()
     {
         if (pageIndex <= 0) return;
+        AudioManager.Instance.PlayOneShot(pageDown);
         pageIndex--;
         UpdateMenu();
     }
