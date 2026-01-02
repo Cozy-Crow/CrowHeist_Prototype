@@ -9,6 +9,7 @@ using UnityEngine.UI;
 public class TrinketMenu : MonoBehaviour
 {
     public static TrinketMenu instance;
+    [SerializeField] private Animator animator;
 
     [Header("UI References")]
     [SerializeField] private Transform container;
@@ -37,6 +38,7 @@ public class TrinketMenu : MonoBehaviour
     public int PageIndex { get => pageIndex; }
     public int MaxPageIndex { get => maxPageIndex; }
     public Sprite DefaultSprite { get => defaultSprite; }
+    public Animator Animator { get => animator; }
     private void Awake()
     {
         if (instance != null )
@@ -48,6 +50,8 @@ public class TrinketMenu : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         SetUp();
+
+        animator = GetComponent<Animator>();
     }
 
 
@@ -107,6 +111,7 @@ public class TrinketMenu : MonoBehaviour
             AudioManager.Instance.PlayOneShot(openMenu);
             container.gameObject.SetActive(true);
             UpdateMenu();
+            animator.Play("Open");
         }
     }
 

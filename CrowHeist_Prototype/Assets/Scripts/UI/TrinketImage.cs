@@ -45,5 +45,6 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
             AudioManager.Instance.PlayOneShot(trinketMenu.selectTrinket);
         }
         trinketMenu.SelectItem(index);
+        trinketMenu.Animator.Play("Select");
     }
 }
