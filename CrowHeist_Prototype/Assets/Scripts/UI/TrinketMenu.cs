@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
@@ -9,10 +10,9 @@ using UnityEngine.UI;
 public class TrinketMenu : MonoBehaviour
 {
     public static TrinketMenu instance;
-    [SerializeField] private Animator animator;
-
     [Header("UI References")]
     [SerializeField] private Transform container;
+    [SerializeField] private Transform displayImageContainer;
     [SerializeField] private Image displayImage;
     [SerializeField] private TextMeshProUGUI displayName;
     [SerializeField] private TextMeshProUGUI displayDescription;
@@ -38,7 +38,6 @@ public class TrinketMenu : MonoBehaviour
     public int PageIndex { get => pageIndex; }
     public int MaxPageIndex { get => maxPageIndex; }
     public Sprite DefaultSprite { get => defaultSprite; }
-    public Animator Animator { get => animator; }
     private void Awake()
     {
         if (instance != null )
@@ -50,8 +49,6 @@ public class TrinketMenu : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
         SetUp();
-
-        animator = GetComponent<Animator>();
     }
 
 
@@ -110,8 +107,8 @@ public class TrinketMenu : MonoBehaviour
         {  
             AudioManager.Instance.PlayOneShot(openMenu);
             container.gameObject.SetActive(true);
+            PlayOpenAnimation();
             UpdateMenu();
-            animator.Play("Open");
         }
     }
 
@@ -153,5 +150,17 @@ public class TrinketMenu : MonoBehaviour
         AudioManager.Instance.PlayOneShot(pageDown);
         pageIndex--;
         UpdateMenu();
+    }
+
+    public void PlayOpenAnimation()
+    {
+        Vector3 test = new Vector3(10,0,0);
+        displayImageContainer.transform.DOMove(test, 3f);
+        //animator.Play("TrinketMenu_Open");
+    }
+
+    public void PlaySelectAnimation()
+    {
+        //animator.Play("TrinketMenu_Close");
     }
 }

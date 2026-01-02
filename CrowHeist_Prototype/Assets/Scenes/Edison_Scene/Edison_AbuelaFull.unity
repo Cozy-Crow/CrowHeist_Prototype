@@ -4474,32 +4474,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 431129928}
   m_CullTransparentMesh: 1
---- !u!1 &431443225 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6274777110284073889, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
-  m_PrefabInstance: {fileID: 4928533896592430163}
-  m_PrefabAsset: {fileID: 0}
---- !u!95 &431443228
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 431443225}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2be3d611f4582ad4fa6e016cd5592b7d, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &452186932
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13061,6 +13035,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1214932441}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!224 &1218083820 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1002435317498051194, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
+  m_PrefabInstance: {fileID: 4928533896592430163}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1218509495
 GameObject:
   m_ObjectHideFlags: 0
@@ -24585,7 +24564,11 @@ PrefabInstance:
     - target: {fileID: 4870355473702905695, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
       propertyPath: animator
       value: 
-      objectReference: {fileID: 431443228}
+      objectReference: {fileID: 0}
+    - target: {fileID: 4870355473702905695, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
+      propertyPath: displayImageContainer
+      value: 
+      objectReference: {fileID: 1218083820}
     - target: {fileID: 6274777110284073889, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
       propertyPath: m_Name
       value: TrinketMenu
@@ -24632,10 +24615,7 @@ PrefabInstance:
     - {fileID: 3185977836098992730, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6274777110284073889, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 431443228}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a2f072199a63886468a29bfa20c1b553, type: 3}
 --- !u!1001 &5475488190771982796
 PrefabInstance:
