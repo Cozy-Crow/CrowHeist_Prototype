@@ -159,6 +159,11 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Debug.Log("Toggling Trinket Menu");
+                TrinketMenu.instance.ToggleMenu();
+            }
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
@@ -510,14 +515,7 @@ namespace KinematicCharacterController.Examples
                 {
                     if (heldObject == null || interactable.realObject != heldObject.gameObject)
                     {
-                        // Debug.Log("Added Interactable: " + interactable.gameObject.name);
                         nearbyInteractables.Add(interactable);
-                        // Debug.Log("Interactables: ");
-                        // foreach (Interactable item in nearbyInteractables)
-                        // {
-                        //     Debug.Log(item.gameObject.name + "\n");
-                        // }
-
                         UpdateHighlightedInteractable();
                     }
 
@@ -612,11 +610,6 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUp()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                TrinketMenu.instance.ToggleMenu();
-            }
-
             if (Input.GetKeyDown(KeyCode.E))
             {
                 AIEventManager.instance.e_pickup.Invoke();

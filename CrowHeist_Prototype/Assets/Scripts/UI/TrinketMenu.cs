@@ -5,13 +5,14 @@ using DG.Tweening;
 using FMODUnity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class TrinketMenu : MonoBehaviour
 {
     public static TrinketMenu instance;
     [Header("UI References")]
-    [SerializeField] private Transform container;
+    [SerializeField] private CanvasGroup container;
     [SerializeField] private Transform displayImageContainer;
     [SerializeField] private Image displayImage;
     [SerializeField] private TextMeshProUGUI displayName;
@@ -19,18 +20,23 @@ public class TrinketMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI pageNumber;
     [SerializeField] private Image[] trinketImageArray;
 
+    [Header("UI Events")]
+    public UnityEvent open;
+    public UnityEvent close;
+
     [Header("Data References")]
     [SerializeField] private List<TrinketsSO> trinketsDataLst = new();
     [SerializeField] private Sprite defaultSprite;
 
     [Header("SFX")]
-    public EventReference openMenu;
-    public EventReference closeMenu;
-    public EventReference selectTrinket;
-    public EventReference hoverTrinket;
-    public EventReference lockTrinket;
-    public EventReference pageUp;
-    public EventReference pageDown;
+    public EventReference openMenuSFX;
+    public EventReference closeMenuSFX;
+    public EventReference selectTrinketSFX;
+    public EventReference hoverTrinketSFX;
+    public EventReference lockTrinketSFX;
+    public EventReference pageUpSFX;
+    public EventReference pageDownSFX;
+    private bool isOpen = false;
     private int selectedID = 0;
     private int pageIndex = 0;
     private int maxPageIndex = 0;
@@ -54,7 +60,9 @@ public class TrinketMenu : MonoBehaviour
 
     private void SetUp()
     {
-        container.gameObject.SetActive(false);
+        // container.alpha = 0;
+        // container.interactable = false;
+        // container.blocksRaycasts = false;
 
         if(trinketsDataLst.Count == 0)
         {
@@ -98,17 +106,32 @@ public class TrinketMenu : MonoBehaviour
 
     public void ToggleMenu()
     {
-        if (container.gameObject.activeSelf)
+        if (isOpen == false)
         {
-            AudioManager.Instance.PlayOneShot(closeMenu);
-            container.gameObject.SetActive(false);
+            //Open Menu
+            container.alpha = 1;
+            container.interactable = true;
+            container.blocksRaycasts = true;
+
+            Debug.Log("Opening Trinket Menu");
+            AudioManager.Instance.PlayOneShot(openMenuSFX);
+            UpdateMenu();
+
+            open.Invoke();
+            isOpen = true;
         }
         else
         {  
-            AudioManager.Instance.PlayOneShot(openMenu);
-            container.gameObject.SetActive(true);
-            PlayOpenAnimation();
-            UpdateMenu();
+            //Close Menu
+            // container.alpha = 0;
+            // container.interactable = false;
+            // container.blocksRaycasts = false;
+
+            Debug.Log("Closing Trinket Menu");
+            AudioManager.Instance.PlayOneShot(closeMenuSFX);
+
+            close.Invoke();
+            isOpen = false;
         }
     }
 
@@ -139,7 +162,7 @@ public class TrinketMenu : MonoBehaviour
     public void PageUp()
     {
         if (pageIndex >= maxPageIndex) return;
-        AudioManager.Instance.PlayOneShot(pageUp);
+        AudioManager.Instance.PlayOneShot(pageUpSFX);
         pageIndex++;
         UpdateMenu();
     }
@@ -147,20 +170,8 @@ public class TrinketMenu : MonoBehaviour
     public void PageDown()
     {
         if (pageIndex <= 0) return;
-        AudioManager.Instance.PlayOneShot(pageDown);
+        AudioManager.Instance.PlayOneShot(pageDownSFX);
         pageIndex--;
         UpdateMenu();
-    }
-
-    public void PlayOpenAnimation()
-    {
-        Vector3 test = new Vector3(10,0,0);
-        displayImageContainer.transform.DOMove(test, 3f);
-        //animator.Play("TrinketMenu_Open");
-    }
-
-    public void PlaySelectAnimation()
-    {
-        //animator.Play("TrinketMenu_Close");
     }
 }

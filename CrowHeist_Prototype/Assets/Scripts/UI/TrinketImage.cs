@@ -22,7 +22,7 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if(image.sprite == trinketMenu.DefaultSprite) return;
 
-        AudioManager.Instance.PlayOneShot(trinketMenu.hoverTrinket);
+        AudioManager.Instance.PlayOneShot(trinketMenu.hoverTrinketSFX);
         gameObject.transform.localScale = new Vector3(1.1f, 1.1f, 1.1f);
     }
 
@@ -38,11 +38,11 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
 
         if(!isUnlocked)
         {
-            AudioManager.Instance.PlayOneShot(trinketMenu.lockTrinket);
+            AudioManager.Instance.PlayOneShot(trinketMenu.lockTrinketSFX);
         }
         else
         {
-            AudioManager.Instance.PlayOneShot(trinketMenu.selectTrinket);
+            AudioManager.Instance.PlayOneShot(trinketMenu.selectTrinketSFX);
         }
         trinketMenu.SelectItem(index);
     }
