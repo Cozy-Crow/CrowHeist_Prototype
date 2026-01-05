@@ -17,6 +17,7 @@ public class TrinketMenu : MonoBehaviour
     [SerializeField] private Image displayImage;
     [SerializeField] private TextMeshProUGUI displayName;
     [SerializeField] private TextMeshProUGUI displayDescription;
+    [SerializeField] private TextMeshProUGUI locationHint;
     [SerializeField] private TextMeshProUGUI pageNumber;
     [SerializeField] private TrinketImage[] trinketImageArray;
 
@@ -152,6 +153,7 @@ public class TrinketMenu : MonoBehaviour
         displayImage.sprite = trinketsDataLst[arrayIndex].DisplayIcon;
         displayName.text = trinketsDataLst[arrayIndex].DispayName;
         displayDescription.text = trinketsDataLst[arrayIndex].DisplayDescritpion;
+        locationHint.text = trinketsDataLst[arrayIndex].LocationHint;
     }
 
     public void PageUp()

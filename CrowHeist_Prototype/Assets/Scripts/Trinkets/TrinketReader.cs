@@ -40,15 +40,17 @@ public class TrinketReader : MonoBehaviour
 
             string trinketName = data[0].Trim();
             string description = data[1].Trim('"');
+            string locationHint = data[2].Trim('"');
 
             if (trinketDict.TryGetValue(trinketName, out TrinketsSO existing))
             {
                 existing.TrinketName = trinketName;
                 existing.Description = description;
+                existing.LocationHint = locationHint;
                 continue;
             }
 
-            TrinketsSO newTrinket = CreateTrinketSO(trinketName, description);
+            TrinketsSO newTrinket = CreateTrinketSO(trinketName, description, locationHint);
             trinketDict.Add(trinketName, newTrinket);
         }
 
@@ -58,12 +60,13 @@ public class TrinketReader : MonoBehaviour
 #endif
     }
 
-    private TrinketsSO CreateTrinketSO(string trinketName, string description)
+    private TrinketsSO CreateTrinketSO(string trinketName, string description, string locationHint)
     {
         TrinketsSO newTrinket = ScriptableObject.CreateInstance<TrinketsSO>();
         newTrinket.name = trinketName;
         newTrinket.TrinketName = trinketName;
         newTrinket.Description = description;
+        newTrinket.LocationHint = locationHint;
         newTrinket.isUnlocked = false;
 
 #if UNITY_EDITOR
