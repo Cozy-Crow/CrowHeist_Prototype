@@ -161,7 +161,6 @@ namespace KinematicCharacterController.Examples
         {
             if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Debug.Log("Toggling Trinket Menu");
                 TrinketMenu.instance.ToggleMenu();
             }
             UpdateCoyoteTime();
@@ -644,14 +643,14 @@ namespace KinematicCharacterController.Examples
                         }
                     }
 
-                    if (heldObject.TryGetComponent(out Trinket trinket))
-                    {
-                        TrinketMenu.instance.UpdateItem(trinket.TrinketData);
-                    }
-                    else
-                    {
-                        Debug.Log("Missing trinket component");    
-                    }   
+                    // if (heldObject.TryGetComponent(out Trinket trinket))
+                    // {
+                    //     TrinketMenu.instance.UpdateItem(trinket.TrinketData);
+                    // }
+                    // else
+                    // {
+                    //     Debug.Log("Missing trinket component");    
+                    // }   
                 }
             }
 

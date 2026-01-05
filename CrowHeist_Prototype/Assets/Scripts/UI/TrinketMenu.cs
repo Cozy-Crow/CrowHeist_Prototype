@@ -18,7 +18,7 @@ public class TrinketMenu : MonoBehaviour
     [SerializeField] private TextMeshProUGUI displayName;
     [SerializeField] private TextMeshProUGUI displayDescription;
     [SerializeField] private TextMeshProUGUI pageNumber;
-    [SerializeField] private Image[] trinketImageArray;
+    [SerializeField] private TrinketImage[] trinketImageArray;
 
     [Header("UI Events")]
     public UnityEvent open;
@@ -36,7 +36,6 @@ public class TrinketMenu : MonoBehaviour
     public EventReference lockTrinketSFX;
     public EventReference pageUpSFX;
     public EventReference pageDownSFX;
-    private bool isOpen = false;
     private int selectedID = 0;
     private int pageIndex = 0;
     private int maxPageIndex = 0;
@@ -60,9 +59,7 @@ public class TrinketMenu : MonoBehaviour
 
     private void SetUp()
     {
-        // container.alpha = 0;
-        // container.interactable = false;
-        // container.blocksRaycasts = false;
+        container.gameObject.SetActive(false);
 
         if(trinketsDataLst.Count == 0)
         {
@@ -72,7 +69,7 @@ public class TrinketMenu : MonoBehaviour
 
         for(int i = 0; i < trinketImageArray.Length; i++)
         {
-            trinketImageArray[i].sprite = null;
+            trinketImageArray[i].IconSprite = null;
         }
 
         displayImage.sprite = defaultSprite;
@@ -89,11 +86,11 @@ public class TrinketMenu : MonoBehaviour
         {
             if (i + pageIndex * 8 >= trinketsDataLst.Count)
             {
-                trinketImageArray[i].sprite = defaultSprite;
+                trinketImageArray[i].IconSprite = defaultSprite;
                 continue;
             }
-            trinketImageArray[i].sprite = trinketsDataLst[i + pageIndex * 8].DisplayIcon;
-            trinketImageArray[i].GetComponent<TrinketImage>().IsUnlocked = trinketsDataLst[i + pageIndex * 8].isUnlocked;
+            trinketImageArray[i].IconSprite = trinketsDataLst[i + pageIndex * 8].DisplayIcon;
+            trinketImageArray[i].IsUnlocked = trinketsDataLst[i + pageIndex * 8].isUnlocked;
         }
 
         Debug.Log($"Selected Display: {trinketsDataLst[selectedID].DisplayIcon}");
@@ -106,32 +103,30 @@ public class TrinketMenu : MonoBehaviour
 
     public void ToggleMenu()
     {
-        if (isOpen == false)
+        if (container.gameObject.activeSelf == false)
         {
             //Open Menu
-            container.alpha = 1;
-            container.interactable = true;
-            container.blocksRaycasts = true;
+            container.gameObject.SetActive(true);
+            container.DOFade(1, 0.2f).SetUpdate(true);
 
             Debug.Log("Opening Trinket Menu");
             AudioManager.Instance.PlayOneShot(openMenuSFX);
             UpdateMenu();
 
             open.Invoke();
-            isOpen = true;
         }
         else
         {  
             //Close Menu
-            // container.alpha = 0;
-            // container.interactable = false;
-            // container.blocksRaycasts = false;
+            container.DOFade(0, 0.2f).SetUpdate(true).onComplete = () =>
+            {
+                container.gameObject.SetActive(false);
+            };
 
             Debug.Log("Closing Trinket Menu");
             AudioManager.Instance.PlayOneShot(closeMenuSFX);
 
             close.Invoke();
-            isOpen = false;
         }
     }
 

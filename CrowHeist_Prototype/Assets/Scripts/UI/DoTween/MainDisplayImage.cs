@@ -20,8 +20,8 @@ public class DisplayImage : MonoBehaviour
     public void Animate()
     {
         Debug.Log("Animating Display Image");
-        transform.DOLocalMove(targetTransform.localPosition, duration).SetTarget(this);
-        transform.DOLocalRotateQuaternion(targetTransform.localRotation, duration).SetTarget(this);
+        transform.DOLocalMove(targetTransform.localPosition, duration).SetTarget(this).SetUpdate(true);
+        transform.DOLocalRotateQuaternion(targetTransform.localRotation, duration).SetTarget(this).SetUpdate(true);
     }
 
     public void Reset()

@@ -16,6 +16,11 @@ public class TrinkerReaderEditor : Editor
             trinketReader.UpdateTrinketData();
         }
 
+        if(GUILayout.Button("Load All Trinkets From Path"))
+        {
+            trinketReader.LoadAllTrinketsFromPath();
+        }
+
         if (GUILayout.Button("Unlock All Trinkets"))
         {
             trinketReader.UnlockAll();

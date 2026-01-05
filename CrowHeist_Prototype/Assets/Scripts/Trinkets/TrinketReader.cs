@@ -39,7 +39,7 @@ public class TrinketReader : MonoBehaviour
             string[] data = trinketArray[i].Split(',');
 
             string trinketName = data[0].Trim();
-            string description = data[1].Trim();
+            string description = data[1].Trim('"');
 
             if (trinketDict.TryGetValue(trinketName, out TrinketsSO existing))
             {
@@ -114,5 +114,10 @@ public class TrinketReader : MonoBehaviour
         {
             trinket.isUnlocked = false;
         }
+    }
+
+    public void LoadAllTrinketsFromPath()
+    {
+        trinketSOArray = Resources.LoadAll<TrinketsSO>(trinketAssetFolder);
     }
 }
