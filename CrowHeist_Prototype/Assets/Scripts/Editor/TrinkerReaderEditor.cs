@@ -11,7 +11,7 @@ public class TrinkerReaderEditor : Editor
 
         TrinketReader trinketReader = (TrinketReader)target;
 
-        if (GUILayout.Button("Create Trinket ScriptableObjects"))
+        if (GUILayout.Button("Update ScriptableObjects"))
         {
             trinketReader.UpdateTrinketData();
         }

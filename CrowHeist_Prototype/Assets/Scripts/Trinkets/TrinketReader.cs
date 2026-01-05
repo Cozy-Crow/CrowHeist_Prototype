@@ -118,6 +118,9 @@ public class TrinketReader : MonoBehaviour
 
     public void LoadAllTrinketsFromPath()
     {
-        trinketSOArray = Resources.LoadAll<TrinketsSO>(trinketAssetFolder);
+        string resourcesPath = trinketAssetFolder
+            .Replace("Assets/Resources/", "")
+            .Replace(".asset", "");
+        trinketSOArray = Resources.LoadAll<TrinketsSO>(resourcesPath);
     }
 }
