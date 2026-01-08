@@ -14,11 +14,18 @@ public class TrinkerReaderEditor : Editor
         if (GUILayout.Button("Update ScriptableObjects"))
         {
             trinketReader.UpdateTrinketData();
+            EditorUtility.SetDirty(trinketReader);
+            Repaint();
         }
 
         if(GUILayout.Button("Load All Trinkets From Path"))
         {
             trinketReader.LoadAllTrinketsFromPath();
+        }
+
+        if(GUILayout.Button("Delete All Trinkets From Path"))
+        {
+            trinketReader.DeleteAllTrinketsFromPath();
         }
 
         if (GUILayout.Button("Unlock All Trinkets"))

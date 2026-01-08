@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -29,6 +31,7 @@ public class TrinketReader : MonoBehaviour
 
         //Read from CSV
         string[] trinketArray = trinketCSV.text.Split('\n');
+        trinketSOArray = new TrinketsSO[trinketArray.Length - 1];
 
         //Skip first line (header)
         for (int i = 1; i < trinketArray.Length; i++)
@@ -36,8 +39,7 @@ public class TrinketReader : MonoBehaviour
             if (string.IsNullOrWhiteSpace(trinketArray[i]))
                 continue;
 
-            string[] data = trinketArray[i].Split(',');
-
+            string[] data = trinketArray[i].Split('\t');
             string trinketName = data[0].Trim();
             string description = data[1].Trim('"');
             string locationHint = data[2].Trim('"');
@@ -47,39 +49,47 @@ public class TrinketReader : MonoBehaviour
                 existing.TrinketName = trinketName;
                 existing.Description = description;
                 existing.LocationHint = locationHint;
+                trinketSOArray[i - 1] = existing;
                 continue;
             }
 
             TrinketsSO newTrinket = CreateTrinketSO(trinketName, description, locationHint);
             trinketDict.Add(trinketName, newTrinket);
+            trinketSOArray[i - 1] = newTrinket;
         }
 
-#if UNITY_EDITOR
+        Debug.Log($"Trinket data updated. Total trinkets: {trinketDict.Count}");
+
+        #if UNITY_EDITOR
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-#endif
+        #endif
     }
 
     private TrinketsSO CreateTrinketSO(string trinketName, string description, string locationHint)
     {
         TrinketsSO newTrinket = ScriptableObject.CreateInstance<TrinketsSO>();
-        newTrinket.name = trinketName;
+        Debug.Log($"Creating new trinket without spaces: {trinketName.Replace(" ", "")}");
+
+        string cleanName = trinketName.Replace(" ", "");
+
+        newTrinket.name = cleanName;
         newTrinket.TrinketName = trinketName;
         newTrinket.Description = description;
         newTrinket.LocationHint = locationHint;
         newTrinket.isUnlocked = false;
 
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         EnsureFolderExists(trinketAssetFolder);
 
-        string assetPath = $"{trinketAssetFolder}/{trinketName}.asset";
+        string assetPath = $"{trinketAssetFolder}/{cleanName}.asset";
         AssetDatabase.CreateAsset(newTrinket, assetPath);
-#endif
+        #endif
 
         return newTrinket;
     }
 
-#if UNITY_EDITOR
+    #if UNITY_EDITOR
     private void EnsureFolderExists(string path)
     {
         if (AssetDatabase.IsValidFolder(path))
@@ -97,7 +107,7 @@ public class TrinketReader : MonoBehaviour
             parent += "/" + folder;
         }
     }
-#endif
+    #endif
 
     public void UnlockAll()
     {
@@ -125,5 +135,23 @@ public class TrinketReader : MonoBehaviour
             .Replace("Assets/Resources/", "")
             .Replace(".asset", "");
         trinketSOArray = Resources.LoadAll<TrinketsSO>(resourcesPath);
+    }
+
+    public void DeleteAllTrinketsFromPath()
+    {
+        string resourcesPath = trinketAssetFolder
+            .Replace("Assets/Resources/", "")
+            .Replace(".asset", "");
+        trinketSOArray = Resources.LoadAll<TrinketsSO>(resourcesPath);
+
+        foreach (var trinket in trinketSOArray)
+        {
+            #if UNITY_EDITOR
+            string assetPath = AssetDatabase.GetAssetPath(trinket);
+            AssetDatabase.DeleteAsset(assetPath);
+            #endif  
+        }
+
+        trinketSOArray = new TrinketsSO[0];
     }
 }
