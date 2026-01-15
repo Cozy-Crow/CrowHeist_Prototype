@@ -7,33 +7,32 @@ using KinematicCharacterController.Examples;
 [RequireComponent(typeof(Rigidbody))]
 public class Pickable : MonoBehaviour, IPickupable
 {
-    private Rigidbody _rigidbody;
-    private GameObject _item;
+    [SerializeField] private Enum_Sockets socketType;
+    protected Rigidbody rb;
     public bool pickedUp = false;
     public bool _isDirty = false;
     public Controller2Point5D player;
-    public GameObject Item => _item;
     private AIEventManager aiEventManager;
     private ItemEventManager itemEventManager;
     public SpawnItem mySpawner;
 
+    public Enum_Sockets SocketType {get => socketType;}
+
     private void Awake()
     {
-        _item = gameObject;
-        _rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
     }
     void Start()
     {
         itemEventManager = FindObjectOfType<ItemEventManager>();
-        
         aiEventManager = FindObjectOfType<AIEventManager>();
         if (aiEventManager != null)
         {
             aiEventManager.e_makedirty.AddListener(OnObjectDirty);
         }
     }
-    public void PickUP(Transform parent)
+    public virtual void PickUp(Transform parent)
     {
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
@@ -61,8 +60,7 @@ public class Pickable : MonoBehaviour, IPickupable
             Debug.Log("Non-Knife Picked up");
         }
 
-
-        _rigidbody.isKinematic = true;
+        rb.isKinematic = true;
         pickedUp = true;
 
         if (player != null)
@@ -70,18 +68,16 @@ public class Pickable : MonoBehaviour, IPickupable
             //Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
             if (_isDirty)
             {
-                player._isDirty = true;
+                player.isDirty = true;
                 aiEventManager.PlayerDirty(player.transform.position);
                 Debug.Log("Player is dirty");
             }
         }
 
-        TooltipManager.Instance.ShowTooltip(tag);
-
-
+        //TooltipManager.Instance.ShowTooltip(tag);
     }
     
-    public void Drop(Vector3 position)
+    public virtual void Drop(Vector3 position)
     {
         transform.SetParent(null);
         transform.position = position;
@@ -91,13 +87,12 @@ public class Pickable : MonoBehaviour, IPickupable
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
 
-        _rigidbody.isKinematic = false;
+        rb.isKinematic = false;
         pickedUp = false;
         MusicManager.SetParameterByName("ItemYes", 0);
 
-        TooltipManager.Instance.HideTooltip(tag);
+        //TooltipManager.Instance.HideTooltip(tag);
     }
-
 
     public void Use()
     {
@@ -137,4 +132,10 @@ public class Pickable : MonoBehaviour, IPickupable
             }
         }
     }
+}
+
+public enum Enum_Sockets
+{
+    HEAD,
+    HAND
 }

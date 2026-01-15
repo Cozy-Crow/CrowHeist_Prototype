@@ -209,7 +209,7 @@ public class Sink : MonoBehaviour
             // Update player dirty status if the item is picked up
             if (item.pickedUp && item.player != null)
             {
-                item.player._isDirty = false;
+                item.player.isDirty = false;
             }
 
             Debug.Log(item.gameObject.name + " has been cleaned!");

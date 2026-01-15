@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "SFXData", menuName = "SFX", order = 1)]
 public class SFXData : ScriptableObject
 {
     [SerializeField] private AudioClip sfx;

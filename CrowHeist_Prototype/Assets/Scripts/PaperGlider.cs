@@ -18,17 +18,17 @@ namespace KinematicCharacterController.Examples
 
         private void ApplyGliding()
         {
-            if (controller._rb.velocity.y < 0)
+            if (controller.rb.velocity.y < 0)
             {
                 // Reduced gravity for gliding
-                float gravityForce = Physics.gravity.y * controller._gravityMultiplier * 0.1f;
-                controller._rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
+                float gravityForce = Physics.gravity.y * controller.gravityMultiplier * 0.1f;
+                controller.rb.AddForce(Vector3.up * gravityForce, ForceMode.Acceleration);
                 
                 // Set glide fall speed
                 float glideFallSpeed = -1f;
-                if (controller._rb.velocity.y < glideFallSpeed)
+                if (controller.rb.velocity.y < glideFallSpeed)
                 {
-                    controller._rb.velocity = new Vector3(controller._rb.velocity.x, glideFallSpeed, controller._rb.velocity.z);
+                    controller.rb.velocity = new Vector3(controller.rb.velocity.x, glideFallSpeed, controller.rb.velocity.z);
                 }
             }
         }
