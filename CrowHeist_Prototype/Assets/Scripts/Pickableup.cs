@@ -15,6 +15,7 @@ public class Pickable : MonoBehaviour, IPickupable
     private AIEventManager aiEventManager;
     private ItemEventManager itemEventManager;
     public SpawnItem mySpawner;
+    private bool hasBeenPickedUp;
 
     public Enum_Sockets SocketType {get => socketType;}
 
@@ -37,6 +38,15 @@ public class Pickable : MonoBehaviour, IPickupable
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         //MusicManager.SetParameterByName("ItemYes", 1);
+
+        // Show visual for picked up item if it has not been picked up before
+        // Could be used in tandem with narrative menu later
+        // Need to rework later to make it specific to object types, this will trigger for every pickupable
+        if(hasBeenPickedUp == false)
+        {
+            PickupVisualManager.Instance.PlayFirstPickupAnim(Item);
+            hasBeenPickedUp = true;
+        }
 
         if (this.tag == "Knife")
         {
