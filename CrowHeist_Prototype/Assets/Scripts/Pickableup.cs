@@ -44,7 +44,7 @@ public class Pickable : MonoBehaviour, IPickupable
         // Need to rework later to make it specific to object types, this will trigger for every pickupable
         if(hasBeenPickedUp == false)
         {
-            PickupVisualManager.Instance.PlayFirstPickupAnim(Item);
+            PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
             hasBeenPickedUp = true;
         }
 
