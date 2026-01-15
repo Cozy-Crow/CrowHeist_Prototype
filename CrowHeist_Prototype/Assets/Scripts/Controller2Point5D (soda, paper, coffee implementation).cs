@@ -619,7 +619,7 @@ namespace KinematicCharacterController.Examples
                     {
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
-                            pickUp.PickUP(_pickUpPoint);
+                            pickUp.PickUp(_pickUpPoint);
                             _pickUpsList.Add(pickUp);
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                         }

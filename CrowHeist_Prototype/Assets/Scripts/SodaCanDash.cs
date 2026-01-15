@@ -19,7 +19,7 @@ namespace KinematicCharacterController.Examples
 
         public void HandleDash()
         {
-            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller._isDashing && controller._canDash)
+            if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller.isDashing && controller.canDash)
             {
                 StartCoroutine(Dash());
             }
@@ -30,14 +30,14 @@ namespace KinematicCharacterController.Examples
             // return statement meant for limited dashes
             //return dashCount > 0 && Time.time >= lastDashTime + controller._dashCooldown;
 
-            return Time.time >= lastDashTime + controller._dashCooldown;
+            return Time.time >= lastDashTime + controller.dashCooldown;
         }
 
         private IEnumerator Dash()
         {
             lastDashTime = Time.time;
-            controller._canDash = false;
-            controller._isDashing = true;
+            controller.canDash = false;
+            controller.isDashing = true;
 
             float dashDirection;
             Vector3 force;
@@ -49,24 +49,24 @@ namespace KinematicCharacterController.Examples
             }
             else
             {
-                dashDirection = controller._isFacingRight ? 1f : -1f;
+                dashDirection = controller.isFacingRight ? 1f : -1f;
                 force = new Vector3(dashDirection * dashForce, 0, 0);
             }
 
-            controller._rb.AddForce(force, ForceMode.Impulse);
+            controller.rb.AddForce(force, ForceMode.Impulse);
 
             float dashTime = 0f;
-            while (dashTime < controller._dashDuration)
+            while (dashTime < controller.dashDuration)
             {
-                controller._rb.velocity = Vector3.Lerp(controller._rb.velocity, new Vector3(0, controller._rb.velocity.y, 0), Time.deltaTime * 2f);
+                controller.rb.velocity = Vector3.Lerp(controller.rb.velocity, new Vector3(0, controller.rb.velocity.y, 0), Time.deltaTime * 2f);
                 dashTime += Time.deltaTime;
                 yield return null;
             }
 
-            controller._isDashing = false;
+            controller.isDashing = false;
 
-            yield return new WaitForSeconds(controller._dashCooldown);
-            controller._canDash = true;
+            yield return new WaitForSeconds(controller.dashCooldown);
+            controller.canDash = true;
         }
     }
 }
