@@ -4,7 +4,7 @@ using UnityEngine;
 using KinematicCharacterController.Examples;
 
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 public class Pickable : MonoBehaviour, IPickupable
 {
     [SerializeField] private Enum_Sockets socketType;
