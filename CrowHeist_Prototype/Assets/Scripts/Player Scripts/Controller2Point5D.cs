@@ -106,14 +106,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private AnimationCurve arcCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
         [SerializeField] private float throwPowerScaler = 1f;
 
-        //Jack in the Box
+        //Hit Detection
         private GameObject touchingObject;
         private GameObject currentGroundObject;
         private GameObject currentHeadbuttObject;
-        private bool isWindingUp = false;
-        private float windUpTime = 1f;
-        private float windUpTimer = 0f;
-        private bool isTimerActive = false;
         
         //Bouncing
         public float bounceDelay = 2f;
@@ -132,7 +128,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 knockbackVelocity;
         private float knockbackTimer = 0f;
 
-        // Fan Force
+        // External Force
         private Vector3 externalForce;
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
@@ -197,7 +193,6 @@ namespace KinematicCharacterController.Examples
             HandleMove();
             HandleRotation();
             HandlePickUp();
-            HandleWindUp();
             HandleBounce();
             RemoveNullItems();
         }
@@ -425,54 +420,6 @@ namespace KinematicCharacterController.Examples
             Flip(faceDirection);
         }
 
-        void HandleWindUp() //jack in the box
-        {
-            if (isGrounded && touchingObject != null && touchingObject.CompareTag("JackInTheBox"))
-            {
-                GameObject jack = touchingObject;
-                GameObject jackInTheBox = null;
-                
-                foreach (Transform child in jack.GetComponentsInChildren<Transform>(true))
-                {
-                    if (child.name == "SpringFunction")
-                    {
-                        jackInTheBox = child.gameObject;
-                        break;
-                    }
-                }
-
-                if (Input.GetKey(KeyCode.E))
-                {
-                    windUpTimer += Time.deltaTime;
-
-                    if (windUpTimer >= windUpTime)
-                    {
-                        if (jackInTheBox != null)
-                        {
-                            jackInTheBox.SetActive(false);
-                        }
-                        isTimerActive = true;
-                        windUpTimer = 0f;
-                        Debug.Log("Jack-in-the-Box wound up! Waiting for launch...");
-                    }
-                }
-                else
-                {
-                    windUpTimer = 0f;
-                }
-            }
-            
-            if (isTimerActive)
-            {
-                bounceTimer += Time.deltaTime;
-                if (bounceTimer >= bounceDelay)
-                {
-                    canBounce = true;
-                    isTimerActive = false;
-                    bounceTimer = 0f;
-                }
-            }
-        }
 
         void HandleBounce() //jack in the box
         {
@@ -521,28 +468,6 @@ namespace KinematicCharacterController.Examples
                 }
             }
             
-            if (other.CompareTag("JackInTheBox"))
-            {
-                isInTrigger = true;
-                touchingObject = other.gameObject;
-                Debug.Log("Entered Jack In The Box trigger.");
-            }
-            
-            if (other.CompareTag("OffSwitch") && !isGrounded)
-            {
-                Debug.Log("Off Switch");
-                var offSwitchToOn = other.GetComponentInParent<FanSwitch>();
-                offSwitchToOn.ToggleSwitchOn();
-            }
-            
-            if (other.CompareTag("OnSwitch") && isGrounded && currentGroundObject != null && currentGroundObject.CompareTag("OnSwitch"))
-            {
-                Debug.Log("On Switch");
-                var onSwitchToOff = other.GetComponentInParent<FanSwitch>();
-                onSwitchToOff.ToggleSwitchOff();
-            }
-            
-            
         }
 
         void OnTriggerExit(Collider other)
@@ -551,22 +476,10 @@ namespace KinematicCharacterController.Examples
             {
                 if (nearbyInteractables.Contains(interactable))
                 {
-                    // Debug.Log("Removed " + interactable.gameObject.name);
+                    
                     nearbyInteractables.Remove(interactable);
-                    // Debug.Log("Interactables: ");
-                    // foreach (Interactable item in nearbyInteractables)
-                    // {
-                    //     Debug.Log(item.gameObject.name + "\n");
-                    // }
-
                     UpdateHighlightedInteractable();
                 }
-            }
-            
-            if (other.CompareTag("JackInTheBox"))
-            {
-                isInTrigger = false;
-                // Debug.Log("Exited Jack In The Box trigger.");
             }
         }
 
@@ -628,36 +541,6 @@ namespace KinematicCharacterController.Examples
                         {
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
-                    }
-
-                    // if (heldObject.TryGetComponent(out Trinket trinket))
-                    // {
-                    //     TrinketMenu.instance.UpdateItem(trinket.TrinketData);
-                    // }
-                    // else
-                    // {
-                    //     Debug.Log("Missing trinket component");    
-                    // }   
-                }
-            }
-
-            // Paint bucket logic
-            if (heldObject != null && heldObject.CompareTag("PaintBucket"))
-            {
-                if (Input.GetKey(KeyCode.E))
-                {
-                    Paint paintBucket = heldObject.GetComponent<Paint>();
-                    if (paintBucket != null && paintBucket._paintInBucket > 0)
-                    {
-                        Debug.Log("Painting! " + paintBucket._paintInBucket);
-                        paintBucket.Spill();
-                        paintBucket._paintInBucket -= Time.deltaTime;
-                    }
-
-                    if (paintBucket._paintInBucket <= 0)
-                    {
-                        Debug.Log("Out of paint, Dropping bucket");
-                        Drop();
                     }
                 }
             }
