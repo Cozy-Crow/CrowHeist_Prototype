@@ -222,7 +222,11 @@ namespace KinematicCharacterController.Examples
         }
         private void HandleInput()
         {
-            input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            // Zack H. 1/20:
+            // Changed from Input.GetAxis to Input.GetAxisRaw
+            // Apparently GetAxis has smoothing to it to slowly progress to 0
+            // instead of instantly setting to 0, making you not stop.
+            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
