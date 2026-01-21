@@ -162,6 +162,7 @@ namespace KinematicCharacterController.Examples
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
+            HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
             {
@@ -190,7 +191,6 @@ namespace KinematicCharacterController.Examples
                     }
                 }
             }
-            HandleMove();
             HandleRotation();
             HandlePickUp();
             HandleBounce();
