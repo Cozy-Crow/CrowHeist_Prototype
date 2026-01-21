@@ -6,7 +6,7 @@ using FMOD.Studio;
 using System.Net.Sockets;
 
 
-public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
+public class PixieDust : MonoBehaviour, IPickupable
 {
     [SerializeField] private Enum_Sockets socketType;
 
@@ -592,60 +592,9 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
         return;
     }
 
-    // ADDED: ICustomSaveable implementation to save/load the used state
-    public void SaveCustomData(SaveableObjectData data)
-    {
-        // Save the isUsed flag
-        data.customBool1 = isUsed;
-        Debug.Log($"Saving PixieDust state: isUsed = {isUsed}");
-    }
+    
 
-    public void LoadCustomData(SaveableObjectData data)
-    {
-        // CRITICAL: Stop any active effects before restoring state
-        ClearActiveEffects();
-
-        // CRITICAL: Reset pickup state to prevent using item without holding it
-        wasPickedUp = false;
-        pickupTime = -1f;
-
-        // CRITICAL: If being held, properly drop it
-        if (transform.parent != null)
-        {
-            Debug.Log($"[PixieDust] Object was being held during load, dropping it properly");
-
-            // Clear the player's held object reference if this was being held
-            if (player != null && playerController != null)
-            {
-                if (playerController.heldObject != null &&
-                    playerController.heldObject.gameObject == gameObject)
-                {
-                    playerController.heldObject = null;
-                    Debug.Log($"[PixieDust] Cleared player's held object reference");
-                }
-            }
-
-            // Properly drop using Drop() method (will restore collider, rigidbody, etc.)
-            Vector3 dropPos = transform.position;
-            Drop(dropPos);
-            Debug.Log($"[PixieDust] Properly dropped at {dropPos}");
-        }
-
-        // Restore the isUsed flag
-        isUsed = data.customBool1;
-
-        // Restore the appropriate appearance based on the loaded state
-        if (isUsed)
-        {
-            ChangeToUsedAppearance();
-        }
-        else
-        {
-            RestoreOriginalAppearance();
-        }
-
-        Debug.Log($"Loading PixieDust state: isUsed = {isUsed}, pickup state cleared, parent cleared");
-    }
+    
 
     
     private void ClearActiveEffects()
