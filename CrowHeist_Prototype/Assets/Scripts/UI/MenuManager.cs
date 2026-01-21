@@ -197,7 +197,7 @@ public class PauseManager : MonoBehaviour
                 return;
             }
 
-            // Resume time before loading (in case we're paused)
+            // Resume time before loading 
             Time.timeScale = 1f;
             isGamePaused = false;
 
@@ -273,7 +273,6 @@ public class PauseManager : MonoBehaviour
 
         if (player != null)
         {
-            // heldObject is a Rigidbody, null means not holding anything
             return player.heldObject != null;
         }
 
