@@ -546,20 +546,7 @@ namespace KinematicCharacterController.Examples
                 onSwitchToOff.ToggleSwitchOff();
             }
             
-            if (other.CompareTag("FanBase"))
-            {
-                Transform parent = other.transform.parent;
-                if (parent != null)
-                {
-                    GameObject parentObj = parent.gameObject;
-                    Debug.Log("Hit Base");
-                    var disassembler = parentObj.GetComponent<SpawnFanOnDestroy>();
-                    if (disassembler != null)
-                    {
-                        disassembler.Disassemble();
-                    }
-                }
-            }
+            
         }
 
         void OnTriggerExit(Collider other)

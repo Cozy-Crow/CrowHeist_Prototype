@@ -12,9 +12,7 @@ public class UIManager : MonoBehaviour
     public CoinsUI CoinsUI { get => _coinsUI;}
     public AltWinCoinsUI AltWinCoinsUI { get => _altWinCoinsUI;}
 
-    [SerializeField] private NoiseMeterUI _noiseUI;
 
-    public NoiseMeterUI NoiseMeterUI { get => _noiseUI;}
 
     private void Awake()
     {
