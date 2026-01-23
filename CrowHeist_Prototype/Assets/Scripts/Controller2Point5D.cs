@@ -142,6 +142,14 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference playerFootsteps;
         private EventInstance footstepInstance;
 
+        [Header("Trinket Guide")]
+        [SerializeField] private Material trinketGuideMaterial;
+        [SerializeField] private float trinketGuideWidth = 0.1f;
+        [SerializeField] private Color trinketGuideColor = Color.yellow;
+        private LineRenderer trinketGuideLine;
+        private bool hasPickedUpTrinket = false;
+        private Transform nearestWindow;
+
         private void Awake()
         {
             _normalMoveSpeed = _moveSpeed;
@@ -176,6 +184,7 @@ namespace KinematicCharacterController.Examples
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
+            SetupTrinketGuideLine();
             footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
@@ -217,6 +226,12 @@ namespace KinematicCharacterController.Examples
             HandleWindUp();
             HandleBounce();
             PlayFootsteps();
+            
+            // Update trinket guide line position
+            if (hasPickedUpTrinket && trinketGuideLine.enabled)
+            {
+                UpdateTrinketGuideLine();
+            }
 
             //added as a fix for now, could probably called more efficiently
             RemoveNullItems();
@@ -771,6 +786,14 @@ namespace KinematicCharacterController.Examples
                                 Debug.Log("Item: " + interactable.transform.name);
                             }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
+                            
+                            // Check for first trinket pickup
+                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+                            {
+                                hasPickedUpTrinket = true;
+                                ShowTrinketGuide();
+                            }
+                            
                             UpdateHighlightedInteractable();
 
                             // Physics.IgnoreCollision(heldObject.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>(), true);
@@ -923,6 +946,11 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
+            // Check if dropping a trinket to hide guide
+            if (heldObject != null && heldObject.CompareTag("Trinket"))
+            {
+                trinketGuideLine.enabled = false;
+            }
 
             foreach (IPickupable pickUp in _pickUpsList)
             {
@@ -1152,6 +1180,63 @@ namespace KinematicCharacterController.Examples
                 footstepInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             }
 
+        }
+
+        void SetupTrinketGuideLine()
+        {
+            GameObject lineObj = new GameObject("TrinketGuideLine");
+            lineObj.transform.SetParent(transform);
+            trinketGuideLine = lineObj.AddComponent<LineRenderer>();
+            
+            trinketGuideLine.material = trinketGuideMaterial;
+            trinketGuideLine.startWidth = trinketGuideWidth;
+            trinketGuideLine.endWidth = trinketGuideWidth;
+            if (trinketGuideLine.material != null)
+            {
+                trinketGuideLine.material.color = trinketGuideColor;
+            }
+            trinketGuideLine.positionCount = 2;
+            trinketGuideLine.useWorldSpace = true;
+            trinketGuideLine.enabled = false;
+        }
+
+        void ShowTrinketGuide()
+        {
+            FindNearestWindow();
+            if (nearestWindow != null)
+            {
+                trinketGuideLine.enabled = true;
+                UpdateTrinketGuideLine();
+            }
+        }
+
+        void FindNearestWindow()
+        {
+            GameObject[] windows = GameObject.FindGameObjectsWithTag("Window");
+            if (windows.Length == 0) return;
+            
+            float closestDistance = Mathf.Infinity;
+            foreach (GameObject window in windows)
+            {
+                float distance = Vector3.Distance(transform.position, window.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    nearestWindow = window.transform;
+                }
+            }
+        }
+
+        void UpdateTrinketGuideLine()
+        {
+            if (nearestWindow != null && trinketGuideLine.enabled)
+            {
+                Vector3 startPos = transform.position + Vector3.up * 0.5f;
+                Vector3 endPos = nearestWindow.position + Vector3.up * 0.5f;
+                
+                trinketGuideLine.SetPosition(0, startPos);
+                trinketGuideLine.SetPosition(1, endPos);
+            }
         }
 
     }
