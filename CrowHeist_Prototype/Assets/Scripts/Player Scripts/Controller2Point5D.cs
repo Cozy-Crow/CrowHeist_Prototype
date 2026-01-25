@@ -513,7 +513,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUp()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            // Notes: Zack H 1/25
+            //E for left hand on keyboard
+            //U for Right hand on keyboard
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
