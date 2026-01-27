@@ -7,6 +7,7 @@ public class BreakableObjectFramework : MonoBehaviour
     public ParticleSystem breakEffect;
     public AudioClip breakSound;
     public float BreakForce = 5f;
+    public GameObject coinPrefab;
     
     private bool isBroken = false;
     
@@ -36,6 +37,13 @@ public class BreakableObjectFramework : MonoBehaviour
                 rb.AddTorque(Random.insideUnitSphere * BreakForce);
             }
             Destroy(spawnedPiece, 5f);
+        }
+        
+        if (coinPrefab)
+        {
+            var coin = Instantiate(coinPrefab, transform.position + Vector3.up, Quaternion.identity);
+            var coinRb = coin.GetComponent<Rigidbody>();
+            if (coinRb) coinRb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }
         
         GetComponent<Collider>().enabled = false;

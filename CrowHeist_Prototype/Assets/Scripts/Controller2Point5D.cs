@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
@@ -1229,6 +1229,7 @@ namespace KinematicCharacterController.Examples
 
         void UpdateTrinketGuideLine()
         {
+            FindNearestWindow();
             if (nearestWindow != null && trinketGuideLine.enabled)
             {
                 Vector3 startPos = transform.position + Vector3.up * 0.5f;
