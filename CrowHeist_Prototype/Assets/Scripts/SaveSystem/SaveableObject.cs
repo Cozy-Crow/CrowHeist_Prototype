@@ -49,7 +49,7 @@ public class SaveableObject : MonoBehaviour
         if (string.IsNullOrEmpty(_uniqueId))
         {
             _uniqueId = System.Guid.NewGuid().ToString();
-            Debug.Log($"Generated unique ID for {gameObject.name}: {_uniqueId}");
+            //Debug.Log($"Generated unique ID for {gameObject.name}: {_uniqueId}");
         }
 
         // Auto-detect object type if not set

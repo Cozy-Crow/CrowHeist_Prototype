@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
-using System.Numerics;
 
 public class AudioManager : MonoBehaviour
 {
@@ -59,7 +58,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //This is to play oneshot SFX that need spatialization
-    public void PlayOneShot3D(EventReference eventSFX, UnityEngine.Vector3 worldPos)
+    public void PlayOneShot3D(EventReference eventSFX, Vector3 worldPos)
     {
         RuntimeManager.PlayOneShot(eventSFX, worldPos);
     }
