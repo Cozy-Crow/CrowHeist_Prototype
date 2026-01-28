@@ -41,6 +41,7 @@ public class XrayCamera : MonoBehaviour
             seePlayer = true;
             currentCoroutine = StartCoroutine(RemoveMask());
         }
+        
         raycastTransform = hit.transform;
     }
 
