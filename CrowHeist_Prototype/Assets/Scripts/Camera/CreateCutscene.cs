@@ -3,6 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
+// Script by Mark D. - created 1/25/2026
+// This script allows for easy creation of cutscenes
+// Create and empty game object called "Blank Cutscene" and add this script to it
+// Create Cinemachine virtual cameras for the cutscene and place them where you want in the scene
+// Drag the virtual cameras into the inspector for the cutscene object and enter activation times
+// Call the PlayCutscene method using the CutsceneManager script
+
 [System.Serializable]
 public class CutsceneCameraSwitch
 {

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class CutsceneManager : MonoBehaviour
 {
+    // Script by Mark D. - created 1/25/2026
+    // This script is temporary to play my new easy-to-create cutscenes
+    // It will be changed to work with unity events so cutscenes
+    // can be triggered by a variety of conditions
+    
     public CreateCutscene doorOpenCutscene;
     bool doorOpenCutscenePlayed = false;
     public DoorOpen doorOpen;
