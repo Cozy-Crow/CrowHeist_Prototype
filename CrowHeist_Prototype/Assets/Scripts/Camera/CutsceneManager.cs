@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class CutsceneManager : MonoBehaviour
 {
-    public CreateCutscene exampleCutscene;
-    bool exampleCutscenePlayed = false;
+    public CreateCutscene doorOpenCutscene;
+    bool doorOpenCutscenePlayed = false;
 
     void Update()
     {
-        if(GameManager.Score >= 1 && !exampleCutscenePlayed)
+        if(GameManager.Score >= 1 && !doorOpenCutscenePlayed)
         {
-            exampleCutscene.PlayCutscene();
-            exampleCutscenePlayed = true;
+            doorOpenCutscene.PlayCutscene();
+            doorOpenCutscenePlayed = true;
         }
     }
 }
