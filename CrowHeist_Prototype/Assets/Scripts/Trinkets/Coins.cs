@@ -13,8 +13,8 @@ public class Coins : MonoBehaviour
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
 
-    [Header("Audio")]
-    [SerializeField] private EventReference _collectSound;
+     [Header("Audio")]
+     [SerializeField] private EventReference _collectSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
