@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using KinematicCharacterController.Examples;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PaperSpawner : Interactable
@@ -7,11 +9,13 @@ public class PaperSpawner : Interactable
 
     [SerializeField] private Transform paperSpawnPoint;
     [SerializeField] private GameObject paperPrefab;
+    [SerializeField] private Controller2Point5D characterController;
+    private GameObject paper;
     
     // Start is called before the first frame update
     void Start()
     {
-        
+        //paper = null;
     }
 
     // Update is called once per frame
@@ -23,7 +27,18 @@ public class PaperSpawner : Interactable
     
     public override void TriggerInteraction(Pickable item)
     {
-        Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
+        if (paper == null)
+        {
+            Debug.Log("Spawn paper please");
+            paper = Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
+            characterController.Pickup(paper.GetComponentInChildren<Interactable>(), paper.GetComponent<IPickupable>());
+        }
+        else
+        {
+            Destroy(paper);
+            paper = Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
+            characterController.Pickup(paper.GetComponentInChildren<Interactable>(), paper.GetComponent<IPickupable>());
+        }
         //base.TriggerInteraction(item);
     }
 }

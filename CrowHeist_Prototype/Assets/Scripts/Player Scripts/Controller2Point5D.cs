@@ -525,16 +525,7 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            selected.SetOutline(false);
-                            Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            pickUp.PickUp(transform);
-                            _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            // foreach (var interactable in nearbyInteractables)
-                            // {
-                            //     Debug.Log("Item: " + interactable.transform.name);
-                            // }
-                            heldObject = selected.realObject.GetComponent<Rigidbody>();
+                            Pickup(selected, pickUp);
                             UpdateHighlightedInteractable();
                         }
                         else
@@ -641,6 +632,20 @@ namespace KinematicCharacterController.Examples
                     storedThrowDirection = Vector3.zero;
                 }
             }
+        }
+
+        public void Pickup(Interactable selected, IPickupable pickUp)
+        {
+            selected.SetOutline(false);
+            Transform transform = sockets.GetSockets(pickUp.SocketType);
+            pickUp.PickUp(transform);
+            _pickUpsList.Add(pickUp);
+            nearbyInteractables.Remove(selected);
+            // foreach (var interactable in nearbyInteractables)
+            // {
+            //     Debug.Log("Item: " + interactable.transform.name);
+            // }
+            heldObject = selected.realObject.GetComponent<Rigidbody>();
         }
 
         public void Drop()
