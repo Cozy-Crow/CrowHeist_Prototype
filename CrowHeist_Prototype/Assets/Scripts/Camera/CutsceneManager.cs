@@ -6,13 +6,15 @@ public class CutsceneManager : MonoBehaviour
 {
     public CreateCutscene doorOpenCutscene;
     bool doorOpenCutscenePlayed = false;
+    public DoorOpen doorOpen;
 
     void Update()
     {
-        if(GameManager.Score >= 1 && !doorOpenCutscenePlayed)
+        if(GameManager.Score >= 3 && !doorOpenCutscenePlayed)
         {
             doorOpenCutscene.PlayCutscene();
             doorOpenCutscenePlayed = true;
+            doorOpen.OpenDoor();
         }
     }
 }

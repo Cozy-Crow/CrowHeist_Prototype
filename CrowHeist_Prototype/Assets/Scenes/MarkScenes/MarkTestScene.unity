@@ -2809,7 +2809,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &263798001
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18019,7 +18019,7 @@ MonoBehaviour:
   startDelay: 0.5
   cameraSwitches:
   - virtualCamera: {fileID: 612166668}
-    activeTime: 2
+    activeTime: 3
   playerRb: {fileID: 484221369}
 --- !u!4 &1754289678
 Transform:
@@ -18814,37 +18814,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1823458597}
   m_Mesh: {fileID: 7564564302986564761, guid: e90ac05fcf2f46f4cbae245d40574997, type: 3}
---- !u!1 &1841906833
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1841906834}
-  m_Layer: 0
-  m_Name: Roomba
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1841906834
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841906833}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 25.89925, y: 18.789967, z: -35.022438}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1853912120
 GameObject:
   m_ObjectHideFlags: 0
@@ -22172,6 +22141,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6504554785361560979, guid: cbaa248dbf46c46109fbc1d742c7ba1f, type: 3}
+      propertyPath: doorOpen
+      value: 
+      objectReference: {fileID: 612166667}
+    - target: {fileID: 6504554785361560979, guid: cbaa248dbf46c46109fbc1d742c7ba1f, type: 3}
       propertyPath: exampleCutscene
       value: 
       objectReference: {fileID: 1754289677}
@@ -22367,5 +22340,4 @@ SceneRoots:
   - {fileID: 484221368}
   - {fileID: 74682409}
   - {fileID: 8067805120530598566}
-  - {fileID: 1841906834}
   - {fileID: 1754289678}
