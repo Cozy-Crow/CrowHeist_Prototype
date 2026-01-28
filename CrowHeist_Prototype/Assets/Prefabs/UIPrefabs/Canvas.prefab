@@ -1654,6 +1654,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 0}
   _altWinCoinsUI: {fileID: 0}
+  CollectionZoneCameraUI: {fileID: 8619467960984133480}
 --- !u!1 &2977918521744158439
 GameObject:
   m_ObjectHideFlags: 0
@@ -3007,7 +3008,7 @@ GameObject:
   - component: {fileID: 7150565627458255767}
   - component: {fileID: 5614479646161887228}
   m_Layer: 5
-  m_Name: RawImage
+  m_Name: OutsideFeed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3027,10 +3028,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3759179723477609534}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7150565627458255767
 CanvasRenderer:
@@ -3773,6 +3774,8 @@ GameObject:
   - component: {fileID: 3759179723477609534}
   - component: {fileID: 1332370216779918325}
   - component: {fileID: 5111391971638415637}
+  - component: {fileID: 865821371909245676}
+  - component: {fileID: 8619467960984133480}
   m_Layer: 5
   m_Name: CrowCamUI
   m_TagString: Untagged
@@ -3795,9 +3798,9 @@ RectTransform:
   - {fileID: 7207408939684607233}
   m_Father: {fileID: 2147257194732189406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1565, y: -299}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 355, y: -299}
   m_SizeDelta: {x: -2612, y: 512}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1332370216779918325
@@ -3838,6 +3841,41 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &865821371909245676
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335618020175901470}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &8619467960984133480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6335618020175901470}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06cda3d1b48300b4caf449d31e8d3410, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraDisplay: {fileID: 5614479646161887228}
+  canvasGroup: {fileID: 865821371909245676}
+  displayContainer: {fileID: 3759179723477609534}
+  collectionCamera: {fileID: 0}
+  collectionVirtualCamera: {fileID: 0}
+  renderTexture: {fileID: 8400000, guid: 40136d0dfaad1b74ea0d2221e0887621, type: 2}
+  appearDuration: 0.5
+  displayDuration: 3
+  fadeDuration: 0.5
+  hiddenScale: {x: 0.5, y: 0.5}
+  visibleScale: {x: 1, y: 1}
 --- !u!1 &6373847945734546787
 GameObject:
   m_ObjectHideFlags: 0
