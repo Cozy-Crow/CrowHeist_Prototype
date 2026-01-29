@@ -17,8 +17,12 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
 
-    // Added for Patrol Mode
-    [SerializeField] private List<Transform> patrolPoints;
+    //Patrol Mode for both rooms - added 1/29/25 by Mark D.
+    [SerializeField] private List<Transform> patrolPoints_Room1;
+    [SerializeField] private List<Transform> patrolPoints_Room2;
+    //active patrol points (one of the lists above will be assigned)
+    private List<Transform> patrolPoints;
+
     private int currentPatrolIndex = 0;
     public bool isActivated = false;
     public bool isBroken = false;
@@ -66,6 +70,8 @@ public class RoombAi : MonoBehaviour
 
         // if (!targets.Contains(dock))
         //     targets.Add(dock);
+
+        patrolPoints = patrolPoints_Room1;
     }
 
     private void Update()
@@ -225,6 +231,12 @@ public class RoombAi : MonoBehaviour
         {
             currentPatrolIndex = (currentPatrolIndex + 1) % patrolPoints.Count;
         }
+    }
+
+    // Called when door opens, roomba goes into other room - added 1/29/25 by Mark D.
+    public void SwitchPatrol()
+    {
+        patrolPoints = patrolPoints_Room2;
     }
 
     // Activate method added by Mark D. 9/10/25
