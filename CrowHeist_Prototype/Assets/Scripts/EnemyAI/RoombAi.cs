@@ -226,6 +226,7 @@ public class RoombAi : MonoBehaviour
 
         Transform target = patrolPoints[currentPatrolIndex];
         agent.SetDestination(target.position);
+        Debug.Log(target);
 
         if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
         {
@@ -237,6 +238,7 @@ public class RoombAi : MonoBehaviour
     public void SwitchPatrol()
     {
         patrolPoints = patrolPoints_Room2;
+        currentPatrolIndex = 0;
     }
 
     // Activate method added by Mark D. 9/10/25
@@ -256,6 +258,4 @@ public class RoombAi : MonoBehaviour
         isBroken = true;
         agent.isStopped = true;
     }
-
-
 }
