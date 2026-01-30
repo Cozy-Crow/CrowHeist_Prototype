@@ -52,9 +52,9 @@ public class Coins : MonoBehaviour
             UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone();
         }
 
-        MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-        float newValue = currentValue + 1;
-        MusicManager.SetParameterByName("TrinketsCollected", newValue);
+        // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+        // float newValue = currentValue + 1;
+        // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
         if(pickableUpScript.pickedUp)
         {
