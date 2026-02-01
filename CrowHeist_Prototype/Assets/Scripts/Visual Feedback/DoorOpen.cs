@@ -16,10 +16,15 @@ public class DoorOpen : MonoBehaviour
     private bool isOpening = false;
     private float currentAngle = 0f;
 
+    public RoombAi roomba;
+
     public void OpenDoor()
     {
         if (!isOpening)
+        {
             isOpening = true;
+            roomba.SwitchPatrol();
+        }
     }
 
     void Update()

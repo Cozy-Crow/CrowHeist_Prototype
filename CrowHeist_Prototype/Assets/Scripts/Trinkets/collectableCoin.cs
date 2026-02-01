@@ -16,6 +16,10 @@ public class CollectableCoin: MonoBehaviour
     [SerializeField] private GameObject _popupPrefab;
     [SerializeField] private bool _spawnUIPopup = true;
 
+    void Start()
+    {
+    }
+    
     void Update()
     {
         if (_rotateObject)
@@ -54,7 +58,7 @@ public class CollectableCoin: MonoBehaviour
             {
                 CollectiblePopupManager.ShowPopup(transform.position, _pointValue, _popupPrefab);
             }
-
+            
             // Destroy collectible
             Destroy(gameObject);
         }
