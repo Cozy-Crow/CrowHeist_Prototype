@@ -111,7 +111,12 @@ public class TrinketMenu : MonoBehaviour
             container.DOFade(1, 0.2f).SetUpdate(true);
 
             Debug.Log("Opening Trinket Menu");
-            AudioManager.Instance.PlayOneShot(openMenuSFX);
+
+                if (AudioManager.Instance != null)
+                {
+                    AudioManager.Instance.PlayOneShot(openMenuSFX);
+                }
+            
             UpdateMenu();
 
             open.Invoke();
@@ -125,7 +130,11 @@ public class TrinketMenu : MonoBehaviour
             };
 
             Debug.Log("Closing Trinket Menu");
-            AudioManager.Instance.PlayOneShot(closeMenuSFX);
+
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayOneShot(closeMenuSFX);
+            }
 
             close.Invoke();
         }
@@ -159,7 +168,11 @@ public class TrinketMenu : MonoBehaviour
     public void PageUp()
     {
         if (pageIndex >= maxPageIndex) return;
-        AudioManager.Instance.PlayOneShot(pageUpSFX);
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayOneShot(pageUpSFX);
+            }
+
         pageIndex++;
         UpdateMenu();
     }
@@ -167,7 +180,10 @@ public class TrinketMenu : MonoBehaviour
     public void PageDown()
     {
         if (pageIndex <= 0) return;
-        AudioManager.Instance.PlayOneShot(pageDownSFX);
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayOneShot(pageDownSFX);
+            }
         pageIndex--;
         UpdateMenu();
     }

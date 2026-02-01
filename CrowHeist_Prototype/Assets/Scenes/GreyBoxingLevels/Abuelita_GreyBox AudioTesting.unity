@@ -1326,7 +1326,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 0}
-  _noiseUI: {fileID: 0}
+  _altWinCoinsUI: {fileID: 0}
+  CollectionZoneCameraUI: {fileID: 0}
 --- !u!114 &644018406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2844,6 +2845,9 @@ MonoBehaviour:
     _camera: {fileID: 0}
   - _name: Exit
     _camera: {fileID: 0}
+  endCutsceneScene: EndCutsceneScene
+  gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1 &1093793666
 GameObject:
   m_ObjectHideFlags: 0
@@ -3725,21 +3729,35 @@ MonoBehaviour:
       Data2: 1125558608
       Data3: 83752125
       Data4: -1985734428
-    Path: event:/Music/menuTheme
+    Path: event:/Music/MIDI MIXES/menuTheme
   crowleyTheme:
     Guid:
       Data1: 1756621485
       Data2: 1248048468
       Data3: -1831000424
       Data4: 1573877002
-    Path: event:/Music/crowleyTheme
+    Path: event:/Music/MIDI MIXES/CrowleyTheme
   abuelitaLevel:
     Guid:
       Data1: -1003063325
       Data2: 1243931125
       Data3: 1616946107
       Data4: -1139620065
-    Path: event:/Music/abuelitaLevel
+    Path: event:/Music/MIDI MIXES/abuelitaLevel
+  abuelitaIntro:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  abuelitaOutro:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
   canSetParameter: 0
   trinketsCollected: 0
   itemYes: 0
@@ -4399,7 +4417,7 @@ MonoBehaviour:
       Data2: 1243931125
       Data3: 1616946107
       Data4: -1139620065
-    Path: event:/Music/abuelitaLevel
+    Path: event:/Music/MIDI MIXES/abuelitaLevel
   _musicName: 
 --- !u!1 &1524899669
 GameObject:
@@ -5020,8 +5038,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1774141657}
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+--- !u!1 &1774141656 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 1774141655}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1774141657
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1774141656}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &1793002885
 GameObject:
   m_ObjectHideFlags: 0
