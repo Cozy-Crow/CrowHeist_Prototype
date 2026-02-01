@@ -31,7 +31,11 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if(image.sprite == trinketMenu.DefaultSprite) return;
 
-        AudioManager.Instance.PlayOneShot(trinketMenu.hoverTrinketSFX);
+            if(AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayOneShot(trinketMenu.hoverTrinketSFX);
+            }
+
         image.transform.DOScale(scaleUp, scaleDuration).SetEase(scaleUpEase).SetUpdate(true);
 
         selection.DOColor(
@@ -58,11 +62,11 @@ public class TrinketImage : MonoBehaviour, IPointerEnterHandler, IPointerExitHan
     {
         if(image.sprite == trinketMenu.DefaultSprite) return;
 
-        if(!isUnlocked)
+        if(!isUnlocked && AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayOneShot(trinketMenu.lockTrinketSFX);
         }
-        else
+        else if (AudioManager.Instance != null)
         {
             AudioManager.Instance.PlayOneShot(trinketMenu.selectTrinketSFX);
         }

@@ -99,8 +99,10 @@ public class Pickable : MonoBehaviour, IPickupable
 
         rb.isKinematic = false;
         pickedUp = false;
-        MusicManager.SetParameterByName("ItemYes", 0);
-
+        if (MusicManager.Instance != null)
+        {
+            MusicManager.SetParameterByName("ItemYes", 0);
+        }
         //TooltipManager.Instance.HideTooltip(tag);
     }
 
