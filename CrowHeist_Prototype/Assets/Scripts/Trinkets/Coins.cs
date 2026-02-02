@@ -40,6 +40,10 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
+        if(this.isNarrativeItem == true)
+        {
+            _coinValue = 3;
+        }
     }
     private void OnTriggerEnter(Collider other)
 {
