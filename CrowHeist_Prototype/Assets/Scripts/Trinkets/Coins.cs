@@ -19,6 +19,7 @@ public class Coins : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
     [SerializeField] private GameObject _popupPrefab;
+    public bool isNarrativeItem = false;
 
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
     
