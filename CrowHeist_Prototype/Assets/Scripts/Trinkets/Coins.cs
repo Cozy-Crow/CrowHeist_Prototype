@@ -13,8 +13,8 @@ public class Coins : MonoBehaviour
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
 
-    [Header("Audio")]
-    [SerializeField] private EventReference _collectSound;
+     [Header("Audio")]
+     [SerializeField] private EventReference _collectSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
@@ -40,47 +40,35 @@ public class Coins : MonoBehaviour
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
     }
-
     private void OnTriggerEnter(Collider other)
+{
+    if (other.CompareTag("HeistZone"))
     {
-        if (other.CompareTag("HeistZone"))
+        GameManager.Score += _coinValue;
+        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+
+        if (UIManager.Instance.CollectionZoneCameraUI != null)
         {
-            GameManager.Score += _coinValue;
-            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-            //SoundManager.instance.PlaySFXByClip(_coinSound);
-            //SoundManager.instance.PlaySFX();
-
-            #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
-             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
-             float currentValue;
-
-            
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
-            float newValue = currentValue += 1;
-            MusicManager.SetParameterByName("TrinketsCollected", + newValue);
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float value1);
-
-            //works if player runs into heist zone
-            //if player throws coin and picks up another item, it will drop what they pick up
-            
-            //if the item is picked up, ONLY THEN drop the item
-            if(pickableUpScript.pickedUp)
-            {
-                playerController.Drop();
-            }
-            
-
-            // playerController.ItemWasDestroyed();
-            // Spawn particle effect
-            if (_collectParticlePrefab != null)
-            {
-                Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
-            }
-
-            //run in a function to allow the item to drop first
-            KillObject();
+            UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone();
         }
+
+        // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+        // float newValue = currentValue + 1;
+        // MusicManager.SetParameterByName("TrinketsCollected", newValue);
+
+        if(pickableUpScript.pickedUp)
+        {
+            playerController.Drop();
+        }
+
+        if (_collectParticlePrefab != null)
+        {
+            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+        }
+
+        KillObject();
     }
+}
     
     void KillObject()
     {

@@ -133,6 +133,18 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
 
+        //Audio
+        [SerializeField] private EventReference playerFootsteps;
+        private EventInstance footstepInstance;
+
+        [Header("Trinket Guide")]
+        [SerializeField] private Material trinketGuideMaterial;
+        [SerializeField] private float trinketGuideWidth = 0.1f;
+        [SerializeField] private Color trinketGuideColor = Color.yellow;
+        private LineRenderer trinketGuideLine;
+        private bool hasPickedUpTrinket = false;
+        private Transform nearestWindow;
+
         private void Awake()
         {
             normalMoveSpeed = moveSpeed;
@@ -150,6 +162,7 @@ namespace KinematicCharacterController.Examples
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
+            SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
         }
 
@@ -194,6 +207,10 @@ namespace KinematicCharacterController.Examples
             HandleRotation();
             HandlePickUp();
             HandleBounce();
+            if (hasPickedUpTrinket && trinketGuideLine.enabled)
+            {
+                UpdateTrinketGuideLine();
+            }
             RemoveNullItems();
         }
 
@@ -222,7 +239,11 @@ namespace KinematicCharacterController.Examples
         }
         private void HandleInput()
         {
-            input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical")).normalized;
+            // Zack H. 1/20:
+            // Changed from Input.GetAxis to Input.GetAxisRaw
+            // Apparently GetAxis has smoothing to it to slowly progress to 0
+            // instead of instantly setting to 0, making you not stop.
+            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -509,7 +530,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandlePickUp()
         {
-            if (Input.GetKeyDown(KeyCode.E))
+            // Notes: Zack H 1/25
+            //E for left hand on keyboard
+            //U for Right hand on keyboard
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -536,6 +560,12 @@ namespace KinematicCharacterController.Examples
                             // }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
+
+                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+                            {
+                                hasPickedUpTrinket = true;
+                                ShowTrinketGuide();
+                            }
                         }
                         else
                         {
@@ -645,6 +675,12 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
+            // Check if dropping a trinket to hide guide
+            if (heldObject != null && heldObject.CompareTag("Trinket"))
+            {
+                trinketGuideLine.enabled = false;
+            }
+
             foreach (IPickupable pickUp in _pickUpsList)
             {
                 pickUp.Drop(dropPoint.position);
@@ -777,6 +813,64 @@ namespace KinematicCharacterController.Examples
                 Gizmos.color = isGrounded ? Color.green : Color.yellow;
                 Vector3 origin = transform.position + Vector3.up * (normalCollider.height * 0.5f);
                 Gizmos.DrawWireSphere(origin - Vector3.up * ((normalCollider.height * 0.5f) + groundCheckDistance), normalCollider.radius * 0.9f);
+            }
+        }
+
+        void SetupTrinketGuideLine()
+        {
+            GameObject lineObj = new GameObject("TrinketGuideLine");
+            lineObj.transform.SetParent(transform);
+            trinketGuideLine = lineObj.AddComponent<LineRenderer>();
+            
+            trinketGuideLine.material = trinketGuideMaterial;
+            trinketGuideLine.startWidth = trinketGuideWidth;
+            trinketGuideLine.endWidth = trinketGuideWidth;
+            if (trinketGuideLine.material != null)
+            {
+                trinketGuideLine.material.color = trinketGuideColor;
+            }
+            trinketGuideLine.positionCount = 2;
+            trinketGuideLine.useWorldSpace = true;
+            trinketGuideLine.enabled = false;
+        }
+
+        void ShowTrinketGuide()
+        {
+            FindNearestWindow();
+            if (nearestWindow != null)
+            {
+                trinketGuideLine.enabled = true;
+                UpdateTrinketGuideLine();
+            }
+        }
+
+        void FindNearestWindow()
+        {
+            GameObject[] windows = GameObject.FindGameObjectsWithTag("Window");
+            if (windows.Length == 0) return;
+            
+            float closestDistance = Mathf.Infinity;
+            foreach (GameObject window in windows)
+            {
+                float distance = Vector3.Distance(transform.position, window.transform.position);
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    nearestWindow = window.transform;
+                }
+            }
+        }
+
+        void UpdateTrinketGuideLine()
+        {
+            FindNearestWindow();
+            if (nearestWindow != null && trinketGuideLine.enabled)
+            {
+                Vector3 startPos = transform.position + Vector3.up * 0.5f;
+                Vector3 endPos = nearestWindow.position + Vector3.up * 0.5f;
+                
+                trinketGuideLine.SetPosition(0, startPos);
+                trinketGuideLine.SetPosition(1, endPos);
             }
         }
     }

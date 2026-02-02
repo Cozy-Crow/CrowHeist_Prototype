@@ -8114,7 +8114,7 @@ MonoBehaviour:
       Data2: 1243931125
       Data3: 1616946107
       Data4: -1139620065
-    Path: event:/Music/abuelitaLevel
+    Path: event:/Music/MIDI MIXES/abuelitaLevel
   _musicName: 
 --- !u!1001 &746684963
 PrefabInstance:
@@ -14934,6 +14934,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 865821371909245676, guid: 3bc4074c56594174386f0f2360fb3e3d, type: 3}
+      propertyPath: m_Alpha
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1136247006689199996, guid: 3bc4074c56594174386f0f2360fb3e3d, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -15034,6 +15038,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3759179723477609534, guid: 3bc4074c56594174386f0f2360fb3e3d, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 512
+      objectReference: {fileID: 0}
     - target: {fileID: 4211393902068448150, guid: 3bc4074c56594174386f0f2360fb3e3d, type: 3}
       propertyPath: modelAnchor
       value: 
@@ -15042,6 +15050,10 @@ PrefabInstance:
       propertyPath: modelStorage
       value: 
       objectReference: {fileID: 1280868093}
+    - target: {fileID: 8619467960984133480, guid: 3bc4074c56594174386f0f2360fb3e3d, type: 3}
+      propertyPath: collectionCamera
+      value: 
+      objectReference: {fileID: 1547910496}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -17071,6 +17083,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1545271981}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!20 &1547910496 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 6755525286322747404, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+  m_PrefabInstance: {fileID: 3540251900492496609}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1548044304
 GameObject:
   m_ObjectHideFlags: 0
@@ -22692,6 +22709,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
   m_PrefabInstance: {fileID: 2165848748917720779}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &3540251900492496609
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 7.6701
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 29.74491
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 3639043919494999341, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6152197670726142401, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_Name
+      value: CrowCam
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755525286322747404, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6755525286322747404, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
+      propertyPath: m_TargetTexture
+      value: 
+      objectReference: {fileID: 8400000, guid: 40136d0dfaad1b74ea0d2221e0887621, type: 2}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0ade8316ef368434dabc57bec753eca1, type: 3}
 --- !u!4 &4366362782813464528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
@@ -23144,3 +23226,4 @@ SceneRoots:
   - {fileID: 1981363918}
   - {fileID: 2135538615}
   - {fileID: 264208831}
+  - {fileID: 3540251900492496609}

@@ -40,8 +40,10 @@ public class PlayCrowleySFX : MonoBehaviour
             Debug.LogWarning("Sound " + sfx + " not found in dictionary!");
             return;
         }
-
-        AudioManager.Instance.PlayOneShot(sound);
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayOneShot(sound);  
+        }         
     }
 }
 

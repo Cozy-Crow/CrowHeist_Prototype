@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     
     [SerializeField] private CoinsUI _coinsUI;
     [SerializeField] private AltWinCoinsUI _altWinCoinsUI;
+    public CollectionZoneCameraUI CollectionZoneCameraUI; // ADD THIS LINE
 
     public CoinsUI CoinsUI { get => _coinsUI;}
     public AltWinCoinsUI AltWinCoinsUI { get => _altWinCoinsUI;}
