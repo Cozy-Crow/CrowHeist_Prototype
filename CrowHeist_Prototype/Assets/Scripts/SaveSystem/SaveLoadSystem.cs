@@ -132,24 +132,34 @@ public class SaveLoadSystem : MonoBehaviour
                 Pickable pickable = item.GetComponent<Pickable>();
                 bool isDirty = false;
                 bool isHeld = false;
+                bool hasBeenPickedUp = false;
 
                 if (pickable != null)
                 {
                     isDirty = pickable._isDirty;
                     isHeld = pickable.pickedUp;
+                    hasBeenPickedUp = pickable.HasBeenPickedUp;
                 }
 
                 ItemData itemData = new ItemData(
                     item.ID,
                     item.gameObject.name.Replace("(Clone)", "").Trim(),
+                    (int)item.ObjectType,
                     item.transform.position,
                     item.transform.eulerAngles,
                     isDirty,
                     isHeld,
-                    item.gameObject.activeSelf
+                    item.gameObject.activeSelf,
+                    hasBeenPickedUp
                 );
 
                 data.items.Add(itemData);
+            }
+
+            // Save PickupRegistry state
+            if (PickupRegistry.Instance != null)
+            {
+                data.registryData = PickupRegistry.Instance.GenerateSaveData();
             }
 
             // Add timestamp
@@ -265,6 +275,7 @@ public class SaveLoadSystem : MonoBehaviour
                     if (pickable != null)
                     {
                         pickable._isDirty = savedData.isDirty;
+                        pickable.HasBeenPickedUp = savedData.hasBeenPickedUp;
 
                         // If this item should be held by player
                         if (savedData.isHeld && !string.IsNullOrEmpty(data.heldObjectID) &&
@@ -279,6 +290,12 @@ public class SaveLoadSystem : MonoBehaviour
                         }
                     }
                 }
+            }
+
+            // Load PickupRegistry state
+            if (PickupRegistry.Instance != null && data.registryData != null)
+            {
+                PickupRegistry.Instance.LoadFromSaveData(data.registryData);
             }
 
             Debug.Log($"Game loaded successfully from: {SavePath}");

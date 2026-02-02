@@ -21,6 +21,9 @@ public class SaveData
     // Items Data
     public List<ItemData> items = new List<ItemData>();
 
+    // Pickup Registry Data (tracks first-pickup states for pickupables and narrative items)
+    public RegistrySaveData registryData;
+
     // Timestamp
     public string saveTimestamp;
 }
@@ -88,20 +91,24 @@ public class ItemData
 {
     public string uniqueID;
     public string itemType; // Type of the item (e.g., "Coin", "Soda", etc.)
+    public int objectType; // ObjectType enum value
     public Vector3Data position;
     public Vector3Data rotation;
     public bool isDirty;
     public bool isHeld; // Is this item currently held by player
     public bool isActive; // Is this item active in the scene
+    public bool hasBeenPickedUp; // Has this item ever been picked up (for first-pickup tracking)
 
-    public ItemData(string id, string type, Vector3 pos, Vector3 rot, bool dirty, bool held, bool active)
+    public ItemData(string id, string type, int objType, Vector3 pos, Vector3 rot, bool dirty, bool held, bool active, bool pickedUp)
     {
         uniqueID = id;
         itemType = type;
+        objectType = objType;
         position = new Vector3Data(pos);
         rotation = new Vector3Data(rot);
         isDirty = dirty;
         isHeld = held;
         isActive = active;
+        hasBeenPickedUp = pickedUp;
     }
 }
