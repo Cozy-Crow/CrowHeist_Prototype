@@ -11,6 +11,10 @@ public class CollectionZoneCameraUI : MonoBehaviour
     [SerializeField] private RectTransform displayContainer;
     [SerializeField] private Image recordingDot;
     
+    [Header("Narrative Item Popup")]
+    [SerializeField] private Image narrativePopup;
+    [SerializeField] private float narrativePopupDelay = 0.5f;
+    
     [Header("Camera Setup")]
     [SerializeField] private Camera collectionCamera;
     [SerializeField] private CinemachineVirtualCamera collectionVirtualCamera;
@@ -23,14 +27,12 @@ public class CollectionZoneCameraUI : MonoBehaviour
     [SerializeField] private Vector2 hiddenScale = new Vector2(0.5f, 0.5f);
     [SerializeField] private Vector2 visibleScale = Vector2.one;
 
-    private Coroutine currentAnimation;
-    private int originalCameraPriority;
-
     [Header("Recording Dot Settings")]
     [SerializeField] private float blinkSpeed = 0.3f;
+
+    private Coroutine currentAnimation;
     private Coroutine blinkCoroutine;
-
-
+    private int originalCameraPriority;
 
     private void Awake()
     {
@@ -40,9 +42,15 @@ public class CollectionZoneCameraUI : MonoBehaviour
         
         displayContainer.localScale = hiddenScale;
 
-         if (recordingDot != null)
+        if (recordingDot != null)
         {
             recordingDot.enabled = false;
+        }
+
+        // Hide narrative popup initially
+        if (narrativePopup != null)
+        {
+            narrativePopup.enabled = false;
         }
         
         // Set up render texture
@@ -61,17 +69,17 @@ public class CollectionZoneCameraUI : MonoBehaviour
         }
     }
 
-    /// Show the collection zone camera view
-    public void ShowCollectionZone()
+    // Show the collection zone camera view
+    public void ShowCollectionZone(bool isNarrativeItem = false, Sprite itemSprite = null)
     {
         // Stop any existing animation
         if (currentAnimation != null)
             StopCoroutine(currentAnimation);
 
-        currentAnimation = StartCoroutine(AnimateCameraView());
+        currentAnimation = StartCoroutine(AnimateCameraView(isNarrativeItem, itemSprite));
     }
 
-    private IEnumerator AnimateCameraView()
+    private IEnumerator AnimateCameraView(bool isNarrativeItem, Sprite itemSprite)
     {
         // Enable camera
         if (collectionCamera != null)
@@ -112,8 +120,28 @@ public class CollectionZoneCameraUI : MonoBehaviour
         displayContainer.localScale = visibleScale;
         canvasGroup.alpha = 1f;
 
+        // Show narrative popup if this is a narrative item
+        if (isNarrativeItem && narrativePopup != null)
+        {
+            yield return new WaitForSeconds(narrativePopupDelay);
+            
+            // Set the sprite if provided
+            if (itemSprite != null)
+            {
+                narrativePopup.sprite = itemSprite;
+            }
+            
+            narrativePopup.enabled = true;
+        }
+
         // Hold for display duration
         yield return new WaitForSeconds(displayDuration);
+
+        // Hide narrative popup before fading out
+        if (narrativePopup != null)
+        {
+            narrativePopup.enabled = false;
+        }
 
         // Fade out
         elapsed = 0f;
