@@ -9,6 +9,7 @@ public class CollectionZoneCameraUI : MonoBehaviour
     [SerializeField] private RawImage cameraDisplay;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform displayContainer;
+    [SerializeField] private Image recordingDot;
     
     [Header("Camera Setup")]
     [SerializeField] private Camera collectionCamera;
@@ -25,6 +26,12 @@ public class CollectionZoneCameraUI : MonoBehaviour
     private Coroutine currentAnimation;
     private int originalCameraPriority;
 
+    [Header("Recording Dot Settings")]
+    [SerializeField] private float blinkSpeed = 0.3f;
+    private Coroutine blinkCoroutine;
+
+
+
     private void Awake()
     {
         // Start hidden
@@ -32,6 +39,11 @@ public class CollectionZoneCameraUI : MonoBehaviour
             canvasGroup.alpha = 0f;
         
         displayContainer.localScale = hiddenScale;
+
+         if (recordingDot != null)
+        {
+            recordingDot.enabled = false;
+        }
         
         // Set up render texture
         if (collectionCamera != null && renderTexture != null)
@@ -64,6 +76,15 @@ public class CollectionZoneCameraUI : MonoBehaviour
         // Enable camera
         if (collectionCamera != null)
             collectionCamera.enabled = true;
+
+        // Start blinking recording dot
+        if (recordingDot != null)
+        {
+            recordingDot.enabled = true;
+            if (blinkCoroutine != null)
+                StopCoroutine(blinkCoroutine);
+            blinkCoroutine = StartCoroutine(BlinkRecordingDot());
+        }
 
         // Optionally activate virtual camera for better framing
         if (collectionVirtualCamera != null)
@@ -109,6 +130,15 @@ public class CollectionZoneCameraUI : MonoBehaviour
 
         canvasGroup.alpha = 0f;
         
+        // Stop blinking and hide recording dot
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
+        if (recordingDot != null)
+            recordingDot.enabled = false;
+        
         // Disable camera
         if (collectionCamera != null)
             collectionCamera.enabled = false;
@@ -126,5 +156,45 @@ public class CollectionZoneCameraUI : MonoBehaviour
         float c1 = 1.70158f;
         float c3 = c1 + 1f;
         return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
+    }
+
+    private IEnumerator BlinkRecordingDot()
+    {
+        while (true)
+        {
+            // Fade in
+            float elapsed = 0f;
+            while (elapsed < blinkSpeed / 2f)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = Mathf.Lerp(0.2f, 1f, elapsed / (blinkSpeed / 2f));
+                
+                if (recordingDot != null)
+                {
+                    Color color = recordingDot.color;
+                    color.a = alpha;
+                    recordingDot.color = color;
+                }
+                
+                yield return null;
+            }
+
+            // Fade out
+            elapsed = 0f;
+            while (elapsed < blinkSpeed / 2f)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0.2f, elapsed / (blinkSpeed / 2f));
+                
+                if (recordingDot != null)
+                {
+                    Color color = recordingDot.color;
+                    color.a = alpha;
+                    recordingDot.color = color;
+                }
+                
+                yield return null;
+            }
+        }
     }
 }

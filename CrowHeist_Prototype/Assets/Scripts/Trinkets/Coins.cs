@@ -71,7 +71,8 @@ public class Coins : MonoBehaviour
             Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
         }
 
-        KillObject();
+        // Remove the KillObject() call - coin will remain in the scene
+        // KillObject();
     }
 }
     
