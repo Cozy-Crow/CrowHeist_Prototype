@@ -687,6 +687,12 @@ namespace KinematicCharacterController.Examples
             Drop();
         }
 
+        public void ToggleInput()
+        {
+            //Zack H. 2/1/26
+            //Function used to disable crowley's movement while in a menu (pause, puzzle menu, etc)
+        }
+
         public void ApplyKnockback(Vector3 direction, float force)
         {
             knockbackVelocity = direction.normalized * force;
