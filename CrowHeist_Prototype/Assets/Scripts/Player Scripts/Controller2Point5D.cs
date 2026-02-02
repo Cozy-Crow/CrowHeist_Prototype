@@ -546,18 +546,16 @@ namespace KinematicCharacterController.Examples
                     if (selected != null && selected.realObject != null)
                     {
 
+                        //if the object can be picked up, pick it up
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
+
                             selected.SetOutline(false);
                             Transform transform = sockets.GetSockets(pickUp.SocketType);
                             pickUp.PickUp(transform);
                             _pickUpsList.Add(pickUp);
                             nearbyInteractables.Remove(selected);
-                            // foreach (var interactable in nearbyInteractables)
-                            // {
-                            //     Debug.Log("Item: " + interactable.transform.name);
-                            // }
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
 
@@ -567,8 +565,10 @@ namespace KinematicCharacterController.Examples
                                 ShowTrinketGuide();
                             }
                         }
+                        //otherwise interact with it
                         else
                         {
+                            Debug.Log("calling on " + selected);
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
                     }
@@ -714,12 +714,6 @@ namespace KinematicCharacterController.Examples
         {
             Destroy(heldObject.gameObject);
             Drop();
-        }
-
-        public void ToggleInput()
-        {
-            //Zack H. 2/1/26
-            //Function used to disable crowley's movement while in a menu (pause, puzzle menu, etc)
         }
 
         public void ApplyKnockback(Vector3 direction, float force)
