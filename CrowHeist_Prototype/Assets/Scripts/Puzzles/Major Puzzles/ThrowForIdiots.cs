@@ -20,23 +20,50 @@ public class ThrowForIdiots : MonoBehaviour
 
     void Update()
     {
-        if (pickableUp.pickedUp) 
+        // if (pickableUp.pickedUp) 
+        // {
+        //     _pickedUp = true;
+        // }
+
+        // if (_pickedUp && !hasLanded)
+        // {
+        //     if (rb.velocity.magnitude > 1f) wasThrown = true;
+        //     if (wasThrown && rb.velocity.magnitude < 0.1f)
+        //     {
+        //         hasLanded = true;
+        //         rb.isKinematic = true;
+        //         if (bookCover) StartCoroutine(SmoothOpen());
+
+        //         // Alternative: Animation-based opening
+        //         // if (bookAnimator) bookAnimator.SetTrigger("Open");
+        //     }
+        // }
+
+        // Update method edited by Mark D - 2/3/26
+        // rigidbody is destroyed on pickup and this was causing errors here
+        if (rb == null) return;
+
+        if (pickableUp.pickedUp)
         {
             _pickedUp = true;
+            return; // don't evaluate throw/landing while held
         }
 
-        if (_pickedUp && !hasLanded)
-        {
-            if (rb.velocity.magnitude > 1f) wasThrown = true;
-            if (wasThrown && rb.velocity.magnitude < 0.1f)
-            {
-                hasLanded = true;
-                rb.isKinematic = true;
-                if (bookCover) StartCoroutine(SmoothOpen());
+        // Only care about landing after it has been picked up and released
+        if (!_pickedUp || hasLanded) return;
 
-                // Alternative: Animation-based opening
-                // if (bookAnimator) bookAnimator.SetTrigger("Open");
-            }
+        float speed = rb.velocity.magnitude;
+
+        if (speed > 1f)
+            wasThrown = true;
+
+        if (wasThrown && speed < 0.1f)
+        {
+            hasLanded = true;
+            rb.isKinematic = true;
+
+            if (bookCover)
+                StartCoroutine(SmoothOpen());
         }
     }
 
