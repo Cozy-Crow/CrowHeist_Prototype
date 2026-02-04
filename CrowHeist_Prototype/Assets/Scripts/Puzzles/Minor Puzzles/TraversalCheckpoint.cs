@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TraversalCheckpoint : MonoBehaviour
 {
+    [SerializeField] private string keyTag = "";
     [SerializeField] private int numberOfObjects = 1;
     [SerializeField] private GameObject[] targetObjects;
     [SerializeField] private Vector3[] endPositions;
@@ -30,7 +31,7 @@ public class TraversalCheckpoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag(keyTag))
         {
             MoveObjectsToEndPositions();
             isOpen = true;
@@ -45,6 +46,9 @@ public class TraversalCheckpoint : MonoBehaviour
 
     private IEnumerator MoveObjects()
     {
+        gameObject.AddComponent<Rigidbody>();
+        gameObject.GetComponent<BoxCollider>().isTrigger = false;
+
         Vector3[] startPositions = new Vector3[targetObjects.Length];
         Quaternion[] startRotations = new Quaternion[targetObjects.Length];
         for (int i = 0; i < targetObjects.Length; i++)
@@ -70,5 +74,7 @@ public class TraversalCheckpoint : MonoBehaviour
             }
             yield return null;
         }
+
+        
     }
 }

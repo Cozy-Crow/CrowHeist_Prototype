@@ -77,9 +77,14 @@ public class MusicManager : MonoBehaviour
 
             if (!canSetParameter)
                 return;
-            SetParameterByName("trinketsCollected", trinketsCollected);
-            SetParameterByName("itemYes", itemYes);
-            SetParameterByName("returnLocation", reutrnLocation);
+
+            if (MusicManager.Instance != null)
+            {
+                SetParameterByName("trinketsCollected", trinketsCollected);
+                SetParameterByName("itemYes", itemYes);
+                SetParameterByName("returnLocation", reutrnLocation); 
+            }
+            
 
         }
     }
