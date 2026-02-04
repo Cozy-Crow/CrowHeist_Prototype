@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 6441231726720338701}
   - component: {fileID: 5864103318338057392}
   - component: {fileID: 5210627100692351898}
-  - component: {fileID: 7756994128220735487}
   m_Layer: 0
   m_Name: BackPages
   m_TagString: Untagged
@@ -115,27 +114,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &7756994128220735487
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 855743210927458731}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1215923466569349227
 GameObject:
   m_ObjectHideFlags: 0
@@ -148,7 +126,6 @@ GameObject:
   - component: {fileID: 1429859396561206714}
   - component: {fileID: 580105198390420354}
   - component: {fileID: 1629272811763420345}
-  - component: {fileID: 2029989193354030942}
   m_Layer: 0
   m_Name: CoverBack
   m_TagString: Untagged
@@ -243,19 +220,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2029989193354030942
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1215923466569349227}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  realObject: {fileID: 0}
 --- !u!1 &1675948137945430237
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,7 +674,6 @@ GameObject:
   - component: {fileID: 5228630110757789752}
   - component: {fileID: 6522119979980354700}
   - component: {fileID: 6563502277143979313}
-  - component: {fileID: 913820523949236065}
   m_Layer: 0
   m_Name: FrontPages
   m_TagString: Untagged
@@ -783,27 +746,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &913820523949236065
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3773567213013079690}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4709932914124083955
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,7 +929,6 @@ GameObject:
   - component: {fileID: 3986279591094337061}
   - component: {fileID: 3913435329530197887}
   - component: {fileID: 795058620996512456}
-  - component: {fileID: 3755421246372041162}
   m_Layer: 0
   m_Name: CoverFront
   m_TagString: Untagged
@@ -1083,19 +1024,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3755421246372041162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6486437641370227407}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 61026a8ac83887044b49f6ba4a9731bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  realObject: {fileID: 0}
 --- !u!1 &8570947881485753938
 GameObject:
   m_ObjectHideFlags: 0
@@ -1209,3 +1137,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5af2e6ad952a046148d33e5976c992a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  frontCollider: {fileID: 795058620996512456}
+  backCollider: {fileID: 1629272811763420345}
+  spawnObject: {fileID: 0}
+  spawnPoint: {fileID: 4211604671875597356}
+  breakDropHeight: 15

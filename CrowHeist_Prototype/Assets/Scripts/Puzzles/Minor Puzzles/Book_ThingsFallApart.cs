@@ -10,7 +10,10 @@ public class Book_ThingsFallApart : MonoBehaviour
     // if it hits the "Ground" from a breakDropHeight it will drop a coin for now
     // it will eventually break once we have a broken book asset
 
-    [SerializeField] private GameObject spawnObject, bookCover;
+    [SerializeField] private Collider frontCollider;
+    [SerializeField] private Collider backCollider;
+
+    [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float breakDropHeight = 15f; // 15 is a solid number, it looks like crowley can throw it to a hieght of 11.2 from the ground
 
@@ -35,9 +38,19 @@ public class Book_ThingsFallApart : MonoBehaviour
         // While being held, keep resetting max height
         if (pickableUp != null && pickableUp.pickedUp)
         {
+            //disable cover colliders if holding
+            if (frontCollider) frontCollider.enabled = false;
+            if (backCollider) backCollider.enabled = false;
+
             _pickedUp = true;
             maxHeight = transform.position.y;
             return;
+        }
+        else
+        {
+            //reenable cover colliders if not holding
+            if (frontCollider) frontCollider.enabled = true;
+            if (backCollider) backCollider.enabled = true;
         }
 
         // Only track after it has been picked up at least once

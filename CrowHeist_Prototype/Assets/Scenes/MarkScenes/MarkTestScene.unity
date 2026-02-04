@@ -22065,19 +22065,14 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
   m_PrefabInstance: {fileID: 2165848748917720779}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3925129033640437564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6486437641370227407, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
-  m_PrefabInstance: {fileID: 8546305846930994445}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &4366362782813464528 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
   m_PrefabInstance: {fileID: 1790557556048681108}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &4699827044428537670 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4211604671875597356, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
+--- !u!65 &4381822339561085266 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 1629272811763420345, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
   m_PrefabInstance: {fileID: 8546305846930994445}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4801188822359671136
@@ -22141,6 +22136,11 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 8227812877910624028, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
   m_PrefabInstance: {fileID: 4801188822359671136}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6269079469631360545 stripped
+BoxCollider:
+  m_CorrespondingSourceObject: {fileID: 795058620996512456, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
+  m_PrefabInstance: {fileID: 8546305846930994445}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6645886825532221156
 PrefabInstance:
@@ -22453,21 +22453,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7003569701316780266, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
-      propertyPath: bookCover
-      value: 
-      objectReference: {fileID: 3925129033640437564}
-    - target: {fileID: 7003569701316780266, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
-      propertyPath: spawnPoint
-      value: 
-      objectReference: {fileID: 4699827044428537670}
-    - target: {fileID: 7003569701316780266, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
       propertyPath: spawnObject
       value: 
       objectReference: {fileID: 1774908766}
     - target: {fileID: 7003569701316780266, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
-      propertyPath: breakDropHeight
-      value: 5
-      objectReference: {fileID: 0}
+      propertyPath: backCollider
+      value: 
+      objectReference: {fileID: 4381822339561085266}
+    - target: {fileID: 7003569701316780266, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
+      propertyPath: frontCollider
+      value: 
+      objectReference: {fileID: 6269079469631360545}
     - target: {fileID: 8570947881485753938, guid: e54d962af80a640898b6f2f3793f2dff, type: 3}
       propertyPath: m_Name
       value: BookThingsFallApart
