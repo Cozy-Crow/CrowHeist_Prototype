@@ -31,6 +31,7 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu)
         public Vector3 Velocity => velocity;
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
@@ -175,6 +176,7 @@ namespace KinematicCharacterController.Examples
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
+
             HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -239,6 +241,16 @@ namespace KinematicCharacterController.Examples
         }
         private void HandleInput()
         {
+            //Note: Zack H. 2/4
+            // if not allowed input, dont allow input
+            // sets input to 0 so that crowley will stop
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector2();
+                return;
+            }
+
             // Zack H. 1/20:
             // Changed from Input.GetAxis to Input.GetAxisRaw
             // Apparently GetAxis has smoothing to it to slowly progress to 0
@@ -268,12 +280,14 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+
             if (isDashing) return;
  
             velocity = new Vector3(input.x, 0, input.y) * moveSpeed;
 
             //Get the last face direction
             // Update face direction only on the axes that have non-zero movement
+            
             if(input.x == 0 && input.y != 0)
             {
                 faceDirection.z = input.y;
@@ -286,6 +300,7 @@ namespace KinematicCharacterController.Examples
 
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            
             rb.velocity = targetVelocity;
         }
 
@@ -725,6 +740,11 @@ namespace KinematicCharacterController.Examples
         public void ApplyExternalForce(Vector3 force)
         {
             externalForce += force;
+        }
+
+        public void SetCanInput(bool val)
+        {
+            canInput = val;
         }
 
         void DrawThrowTrajectory(Vector3 direction)

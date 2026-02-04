@@ -1,14 +1,16 @@
 using System.Collections;
-using System.Collections.Generic;
 using KinematicCharacterController.Examples;
 using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine.UI;
 
 public class ColoringBook : Interactable
 {
+    //Created by ZackH 2/4
+    //Script handling everything related to the coloring book puzzle!
+
     [SerializeField] GameObject menu;
     [SerializeField] Controller2Point5D crowley;
-    [SerializeField] PauseManager pauseManager;
+    [SerializeField] public Button closeButton;
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +19,13 @@ public class ColoringBook : Interactable
         {
             Debug.LogWarning("Coloring Book UI not connected!");
         }
+
+        // add listener for button
+        closeButton.onClick.AddListener(CloseMenu);
+
+        // hide UI on start
+        menu.gameObject.SetActive(false);
+        Debug.Log("Starting");
     }
 
     // Update is called once per frame
@@ -28,11 +37,6 @@ public class ColoringBook : Interactable
             HandlePuzzle();
         }
 
-        if(Input.GetKeyDown(KeyCode.Escape))
-        {
-            Debug.Log("closing book puzzle");
-            CloseMenu();
-        }
     }
 
     //function that handles the puzzle logic
@@ -45,9 +49,8 @@ public class ColoringBook : Interactable
     {
         //close UI
         menu.gameObject.SetActive(false);
-        //unpause game
-        pauseManager.SetIsGamePaused(false);
-        Time.timeScale = 1;
+        //enable movement
+        crowley.SetCanInput(true);
     }
 
     //function handling on interaction
@@ -57,9 +60,6 @@ public class ColoringBook : Interactable
         //show UI
         menu.gameObject.SetActive(true);
         // //disable player movement
-        // crowley.ToggleInput();
-        //pause game
-        pauseManager.SetIsGamePaused(true);
-        Time.timeScale = 0;
+        crowley.SetCanInput(false);
     }
 }

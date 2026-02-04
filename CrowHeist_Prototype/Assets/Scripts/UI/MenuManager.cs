@@ -174,14 +174,6 @@ public class PauseManager : MonoBehaviour
         }
     }
 
-    // Added by Zack H. 2/2/26
-    // Added to be able let the pause manager know the game is paused
-    // when in the menu for a puzzle   
-    public void SetIsGamePaused(bool val)
-    {
-        isGamePaused = val;
-    }
-
     public void GoBack()
     {
         if (loadSaveSlots != null)
