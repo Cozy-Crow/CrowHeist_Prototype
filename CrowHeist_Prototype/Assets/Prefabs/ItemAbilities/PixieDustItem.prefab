@@ -48,7 +48,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2455081315271248448}
-  m_Mesh: {fileID: -3238029933325745159, guid: 21407b519341c0d4183e3dc546deadae, type: 3}
+  m_Mesh: {fileID: -3238029933325745159, guid: d0303d0b6fe1e624ba772dca60b9c505, type: 3}
 --- !u!23 &1507928350198852050
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 823bdda7636606c449989189638ee9f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   levitationDuration: 2
   levitationForce: 100
   levitationRampUpTime: 0
@@ -136,8 +137,8 @@ MonoBehaviour:
   pixieDustMaterial: {fileID: 2100000, guid: 8e7a8b2556da26a4aaeb271598a72203, type: 2}
   shaderEffectDuration: 1
   levitationAnimation: {fileID: 0}
-  usedItemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
-  usedItemMaterial: {fileID: 2100000, guid: fa7583f4941f3ec4695e3315f9ab341c, type: 2}
+  cooldownItemColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  cooldownItemMaterial: {fileID: 0}
   maxFloorDustParticles: 50
   floorDustLifetime: 60
   pickupCooldown: 0.5
@@ -201,6 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -217,6 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
