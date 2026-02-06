@@ -4,7 +4,7 @@ using UnityEngine;
 using KinematicCharacterController.Examples;
 
 
-[RequireComponent(typeof(Rigidbody))]
+//[RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(UniqueID))]
 public class Pickable : MonoBehaviour, IPickupable
 {
