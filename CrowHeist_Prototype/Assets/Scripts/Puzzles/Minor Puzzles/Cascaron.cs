@@ -4,48 +4,34 @@ using UnityEngine;
 
 public class Cascaron : MonoBehaviour
 {
+    // Cascaron Puzzle implemented by Mark D. 2/6/26
+    // This is the only script needed for the puzzle and is on the cascaron prefab
+    // just drag in however many cascarones you want in the level
+    // the last one to be destroyed will drop a coin
+
     public float breakSpeed = 5f;
     public GameObject confettiEffect;
     public GameObject coinPrefab;
 
-    private static int remainingCascarones;
-    private static bool initialized;
-
-    void Start()
-    {
-        if (!initialized)
-        {
-            remainingCascarones = FindObjectsOfType<Cascaron>().Length;
-            initialized = true;
-        }
-    }
-
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Player"))
-        {
+        if(collision.gameObject.CompareTag("Player")) 
             return;
-        }
-        else
-        {
-            // Debug.Log("Force: "+collision.relativeVelocity.magnitude);
-            if (collision.relativeVelocity.magnitude >= breakSpeed)
-            {
-                Break();
-            }
-        }
+        
+        // Debug.Log("Force: "+collision.relativeVelocity.magnitude);
+        if (collision.relativeVelocity.magnitude >= breakSpeed) 
+            Break();
     }
 
     void Break()
     {
-        Debug.Log("Remaining: "+remainingCascarones);
         if (confettiEffect)
             Instantiate(confettiEffect, transform.position, Quaternion.identity);
 
-        remainingCascarones--;
-
-        if (remainingCascarones <= 0 && coinPrefab)
+        if (FindObjectsOfType<Cascaron>().Length == 1 && coinPrefab)
+        {
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
+        }
 
         Destroy(gameObject);
     }
