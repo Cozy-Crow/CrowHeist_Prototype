@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
+using FMOD.Studio;
 using KinematicCharacterController.Examples;
 
 public class Coins : MonoBehaviour
 {
     [SerializeField] private int _coinValue = 1;
     [SerializeField] private float _rotateSpeed = 1.0f;
-    [SerializeField] private EventReference CubeCollectedSound;
     private GameObject player;
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
 
      [Header("Audio")]
-     [SerializeField] private EventReference _collectSound;
+     [SerializeField] private EventReference coinCollect;
+     [SerializeField] private EventReference coinEmitter;
+    private EventInstance coinInstance;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
@@ -39,6 +41,8 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
+        //coinInstance = AudioManager.Instance.CreateInstance(coinEmitter);
+        //coinInstance.start();
     }
     private void OnTriggerEnter(Collider other)
 {
@@ -46,6 +50,11 @@ public class Coins : MonoBehaviour
     {
         GameManager.Score += _coinValue;
         UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+        
+        if (AudioManager.Instance != null)
+        {
+          AudioManager.Instance.PlayOneShot(coinCollect);        
+        }
 
         if (UIManager.Instance.CollectionZoneCameraUI != null)
         {

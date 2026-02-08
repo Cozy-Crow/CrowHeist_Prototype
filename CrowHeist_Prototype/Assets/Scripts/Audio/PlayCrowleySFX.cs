@@ -2,11 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class PlayCrowleySFX : MonoBehaviour
 {
     [SerializeField] private List<SoundData> crowleySFX;
+    private EventInstance footstepInstance;
     private Dictionary<string, EventReference> soundDictionary = new();
     public void Awake()
     {
@@ -24,7 +28,11 @@ public class PlayCrowleySFX : MonoBehaviour
 
         // Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
         // Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
+
+        
     }
+
+
     public void PlaySFX(String sfx)
     {
         string key = sfx
@@ -41,11 +49,41 @@ public class PlayCrowleySFX : MonoBehaviour
             return;
         }
         if (AudioManager.Instance != null)
-        {
-            AudioManager.Instance.PlayOneShot(sound);  
+        { 
+            footstepInstance = AudioManager.Instance.CreateInstance(sound);
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+              footstepInstance.setParameterByName("WalkRun", 1);  
+            }
+            else
+            {
+             footstepInstance.setParameterByName("WalkRun", 0);   
+            } 
+
+            footstepInstance.start();
+            footstepInstance.release();
         }         
     }
+        private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag.Equals("MetalFootstep"))
+        {
+            print("METAL");
+            footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
+        }
+        else if (collider.tag.Equals("WoodFootstep"))
+        {
+            print("WOOD");
+            footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
+        }
+        else
+        {
+            footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
+            print("GENERIC");
+        }
+    }
 }
+
 
 [Serializable]
 public struct SoundData

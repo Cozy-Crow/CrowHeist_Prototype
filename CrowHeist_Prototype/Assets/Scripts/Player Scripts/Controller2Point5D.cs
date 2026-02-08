@@ -133,9 +133,9 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
 
-        //Audio
-        [SerializeField] private EventReference playerFootsteps;
-        private EventInstance footstepInstance;
+        [Header("Audio")]
+        [SerializeField] private EventReference dashActivate;
+
 
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -184,6 +184,7 @@ namespace KinematicCharacterController.Examples
                     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
                     if (sodaDash != null)
                     {
+                        AudioManager.Instance?.PlayOneShot(dashActivate);
                         sodaDash.HandleDash();
                     }
                 }
