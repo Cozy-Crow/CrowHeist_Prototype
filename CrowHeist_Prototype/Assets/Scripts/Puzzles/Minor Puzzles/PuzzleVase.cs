@@ -11,6 +11,7 @@ public class PuzzleVase : MonoBehaviour
     public float breakSpeed = 10f;
     public GameObject brokenVasePrefab;
     public GameObject coinPrefab;
+    public Transform coinSpawnPoint;
 
     public float explodeForce = 2f;
 
@@ -30,7 +31,7 @@ public class PuzzleVase : MonoBehaviour
     {
         broken = true;
 
-        GameObject brokenInstance = Instantiate(brokenVasePrefab, transform.position, transform.rotation);
+        GameObject brokenInstance = Instantiate(brokenVasePrefab, coinSpawnPoint.position, transform.rotation);
 
         // gets the broken peices from the broken vase prefab right after instantiated
         foreach (Rigidbody rb in brokenInstance.GetComponentsInChildren<Rigidbody>())
@@ -41,7 +42,8 @@ public class PuzzleVase : MonoBehaviour
         // If this is the last PuzzleVase in the scene
         if (FindObjectsOfType<PuzzleVase>().Length == 1 && coinPrefab)
         {
-            Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            GameObject spawnedCoin = Instantiate(coinPrefab, transform.position, Quaternion.identity);
+            spawnedCoin.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
         }
 
         Destroy(gameObject);
