@@ -13,6 +13,7 @@ public class ColoringBookObject : Interactable
     [SerializeField] public Button closeButton;
     [SerializeField] public GameObject puzzleController;
 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -55,7 +56,7 @@ public class ColoringBookObject : Interactable
         //enable movement
         crowley.SetCanInput(true);
         //stop the puzzle
-        puzzleController.GetComponent<ColoringBookPuzzle>().EndPuzzle();
+        puzzleController.GetComponent<ColoringBookPuzzle>().ClosePuzzle();
     }
 
     //function handling on interaction
