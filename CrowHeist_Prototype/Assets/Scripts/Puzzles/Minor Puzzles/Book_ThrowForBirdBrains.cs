@@ -4,10 +4,8 @@ using UnityEngine;
 
 public class Book_ThrowForBirdBrains : MonoBehaviour
 {
-    // Script created by Mark D. 2/3/26
-    // When things fall apart - this tracks the max height of the book when thrown
-    // if it hits the "Ground" from a breakDropHeight it will drop a coin for now
-    // it will eventually break once we have a broken book asset
+    // Script created by Mark D. 2/7/26
+    // Throwing for Bird brains - refactored version of Logan's ThrowForIdiots Script
 
     [SerializeField] private Collider frontCollider;
     [SerializeField] private Collider backCollider;
