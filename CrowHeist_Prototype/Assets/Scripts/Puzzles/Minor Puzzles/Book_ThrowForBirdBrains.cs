@@ -1,52 +1,53 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class ThrowForIdiots : MonoBehaviour
+public class Book_ThrowForBirdBrains : MonoBehaviour
 {
-    [SerializeField] private GameObject spawnObject, bookCover;
+    // Script created by Mark D. 2/7/26
+    // Throwing for Bird brains - refactored version of Logan's ThrowForIdiots Script
+
+    [SerializeField] private Collider frontCollider;
+    [SerializeField] private Collider backCollider;
+
+    [SerializeField] private GameObject bookCover;
+    [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
-    // [SerializeField] private Animator bookAnimator; // For animation-based opening
 
     private Rigidbody rb;
-    private bool hasLanded, wasThrown;
-    private bool _pickedUp = false;
-
     private Pickable pickableUp;
 
-    void Start() {
+    private bool hasLanded;
+    private bool wasThrown;
+    private bool _pickedUp;
+    private bool hasBroken;
+
+    private float maxHeight;
+
+    void Start()
+    {
         rb = GetComponent<Rigidbody>();
         pickableUp = GetComponent<Pickable>();
     }
 
     void Update()
     {
-        // if (pickableUp.pickedUp) 
-        // {
-        //     _pickedUp = true;
-        // }
-
-        // if (_pickedUp && !hasLanded)
-        // {
-        //     if (rb.velocity.magnitude > 1f) wasThrown = true;
-        //     if (wasThrown && rb.velocity.magnitude < 0.1f)
-        //     {
-        //         hasLanded = true;
-        //         rb.isKinematic = true;
-        //         if (bookCover) StartCoroutine(SmoothOpen());
-
-        //         // Alternative: Animation-based opening
-        //         // if (bookAnimator) bookAnimator.SetTrigger("Open");
-        //     }
-        // }
-
-        // Update method edited by Mark D - 2/3/26
-        // rigidbody is destroyed on pickup and this was causing errors here
         if (rb == null) return;
 
         if (pickableUp.pickedUp)
         {
+            //disable cover colliders if holding
+            if (frontCollider) frontCollider.enabled = false;
+            if (backCollider) backCollider.enabled = false;
+
             _pickedUp = true;
             return; // don't evaluate throw/landing while held
+        }
+        else
+        {
+            //reenable cover colliders if not holding
+            if (frontCollider) frontCollider.enabled = true;
+            if (backCollider) backCollider.enabled = true;
         }
 
         // Only care about landing after it has been picked up and released
@@ -88,6 +89,7 @@ public class ThrowForIdiots : MonoBehaviour
         SpawnItem();
     }
 
+
     void SpawnItem()
     {
         if (spawnObject && spawnPoint)
@@ -96,10 +98,4 @@ public class ThrowForIdiots : MonoBehaviour
             spawned.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
         }
     }
-
-    // Animation-based opening (call this from animation event)
-    // public void OnBookOpenComplete()
-    // {
-    //     SpawnItem();
-    // }
 }
