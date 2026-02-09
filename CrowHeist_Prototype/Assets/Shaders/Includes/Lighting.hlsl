@@ -3,13 +3,13 @@
 
 
 void CalculateMainLight_float(float3 WorldPos, out float3 Direction, out float3 Color, out half DistanceAtten, out half ShadowAtten){
-#if SHADERGRAPH_PREVIEW
+#if defined(SHADERGRAPH_PREVIEW)
     Direction = float3(0.5, 0.5, 0);
     Color = 1;
     DistanceAtten = 1;
     ShadowAtten = 1;
 #else 
-    #if SHADOWS_SCREEN
+    #if defined(SHADOWS_SCREEN)
         half4 clipPos = TransformWorldToHClip(WorldPos);
         half4 shadowCoord = ComputeScreenPos(clipPos);
     #else
@@ -24,17 +24,18 @@ void CalculateMainLight_float(float3 WorldPos, out float3 Direction, out float3 
    
 }
 
-/*void AddAdditionalLights_float(float Smoothness, float3 WorldPosition, float3 WorldNormal, float3 WorldView, float MainDiffuse, float MainSpecular, float3 MainColor, out float Diffuse, out float Specular, out float3 Color)
+void AddAdditionalLights_float(float Smoothness, float3 WorldPosition, float3 WorldNormal, float3 WorldView, float MainDiffuse, float MainSpecular, float3 MainColor, out float Diffuse, out float Specular, out float3 Color)
 {
     Diffuse = MainDiffuse;
     Specular = MainSpecular;
     Color = MainColor * (MainDiffuse + MainSpecular);
     
-#ifndef SHADERGRAPH_PREVIEW
+#if !defined(SHADERGRAPH_PREVIEW)
     int pixelLightCount = GetAdditionalLightsCount();
+    
     for (int i = 0; i < pixelLightCount; ++i)
     {
-        Light light = GetAdditionalLights(i, WorldPosition);
+        Light light = GetAdditionalLight(i, WorldPosition);
         half NdotL = saturate(dot(WorldNormal, light.direction));
         half atten = light.distanceAttenuation * light.shadowAttenuation;
         half thisDiffuse = atten * NdotL;
@@ -47,5 +48,5 @@ void CalculateMainLight_float(float3 WorldPos, out float3 Direction, out float3 
 #endif
     half total = Diffuse + Specular;
     Color = total <= 0 ? MainColor : Color / total;
-}*/
+}
 #endif
