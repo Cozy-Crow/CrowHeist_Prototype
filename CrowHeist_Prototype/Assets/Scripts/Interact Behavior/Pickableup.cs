@@ -5,6 +5,7 @@ using KinematicCharacterController.Examples;
 
 
 //[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(UniqueID))]
 public class Pickable : MonoBehaviour, IPickupable
 {
     [SerializeField] private Enum_Sockets socketType;
@@ -17,11 +18,25 @@ public class Pickable : MonoBehaviour, IPickupable
     public SpawnItem mySpawner;
     private bool hasBeenPickedUp;
 
-    public Enum_Sockets SocketType {get => socketType;}
+    // UniqueID reference for registry integration
+    private UniqueID uniqueID;
+
+    public Enum_Sockets SocketType { get => socketType; }
+
+    
+    public UniqueID UniqueID => uniqueID;
+
+    // Gets or sets whether this item has been picked up before (for first-pickup detection).  
+    public bool HasBeenPickedUp
+    {
+        get => hasBeenPickedUp;
+        set => hasBeenPickedUp = value;
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        uniqueID = GetComponent<UniqueID>();
         player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
     }
     void Start()
@@ -40,11 +55,29 @@ public class Pickable : MonoBehaviour, IPickupable
         //MusicManager.SetParameterByName("ItemYes", 1);
 
         // Show visual for picked up item if it has not been picked up before
-        // Could be used in tandem with narrative menu later
-        // Need to rework later to make it specific to object types, this will trigger for every pickupable
-        if(hasBeenPickedUp == false)
+        // Uses registry to track first pickup state across save/load
+        bool isFirstPickup = !hasBeenPickedUp;
+
+        // Check registry for persistent first-pickup state
+        if (PickupRegistry.Instance != null && uniqueID != null)
         {
-            PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
+            isFirstPickup = !PickupRegistry.Instance.HasBeenPickedUp(uniqueID.ID);
+            PickupRegistry.Instance.MarkAsPickedUp(uniqueID.ID);
+        }
+
+        if (isFirstPickup)
+        {
+            // Check if this item type should show pickup animation
+            bool shouldShowVisual = true;
+            if (uniqueID != null && uniqueID.ItemData != null)
+            {
+                shouldShowVisual = uniqueID.ItemData.ShowOnFirstPickup;
+            }
+
+            if (shouldShowVisual && PickupVisualManager.Instance != null)
+            {
+                PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
+            }
             hasBeenPickedUp = true;
         }
 
@@ -86,7 +119,7 @@ public class Pickable : MonoBehaviour, IPickupable
 
         //TooltipManager.Instance.ShowTooltip(tag);
     }
-    
+
     public virtual void Drop(Vector3 position)
     {
         transform.SetParent(null);
@@ -133,11 +166,11 @@ public class Pickable : MonoBehaviour, IPickupable
     }
     void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag ("Waypoint"))
+        if (other.CompareTag("Waypoint"))
         {
             SpawnItem spawner = other.GetComponentInParent<SpawnItem>();
             Debug.Log(spawner);
-            if(spawner != null)
+            if (spawner != null)
             {
                 mySpawner = spawner;
                 mySpawner.NotifyIfRemoved(this.gameObject);

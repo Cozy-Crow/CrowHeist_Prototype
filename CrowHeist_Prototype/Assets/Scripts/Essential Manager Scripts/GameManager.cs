@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
         _cameraDictionary.Clear();
     }
 
-  
+
     /// Quick save via GameManager (alternative to pressing S)
 
     public void QuickSave()
@@ -118,9 +118,9 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+
     /// Quick load via GameManager (alternative to pressing L)
-   
+
     public void QuickLoad()
     {
         if (SaveLoadSystem.Instance != null)
@@ -133,12 +133,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    
+
     /// Check if a save file exists
-   
+
     public bool HasSaveFile()
     {
-        return SaveLoadSystem.Instance != null && SaveLoadSystem.Instance.SaveFileExists();
+        return true;
+        //return SaveLoadSystem.Instance != null && SaveLoadSystem.Instance.SaveFileExists();
     }
 }
 

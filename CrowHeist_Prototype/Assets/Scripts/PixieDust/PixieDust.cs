@@ -6,7 +6,7 @@ using FMOD.Studio;
 using System.Net.Sockets;
 
 
-public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
+public class PixieDust : MonoBehaviour, IPickupable
 {
     [SerializeField] private Enum_Sockets socketType;
 
@@ -33,9 +33,9 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
     [SerializeField] private float shaderEffectDuration = 1f;
     [SerializeField] private AnimationClip levitationAnimation;
 
-    [Header("Used Item Appearance")]
-    [SerializeField] private Color usedItemColor = Color.gray;
-    [SerializeField] private Material usedItemMaterial; // Optional: specific material for used items
+    [Header("Cooldown Appearance")]
+    [SerializeField] private Color cooldownItemColor = Color.gray;
+    [SerializeField] private Material cooldownItemMaterial; 
 
     [Header("Floor Dust Management")]
     [SerializeField] private int maxFloorDustParticles = 50;
@@ -45,7 +45,8 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
     [SerializeField] private float pickupCooldown = 0.5f; // Delay before item can be used after pickup
 
     private GameObject item;
-    private bool isUsed = false;
+    private bool isOnCooldown = false; // Changed from isUsed to isOnCooldown
+    private bool wasAirborne = false; // Track if player was airborne after use
     private GameObject player;
     private Controller2Point5D playerController;
     private Renderer playerRenderer;
@@ -55,7 +56,7 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
     // Item's own renderer and materials for color changes
     private Renderer itemRenderer;
     private Material[] itemOriginalMaterials;
-    private Material[] itemUsedMaterials; // Store the used materials so we can restore them
+    private Material[] itemCooldownMaterials; // Store the cooldown materials
 
     // Track when the item was picked up to prevent immediate use
     private float pickupTime = -1f;
@@ -70,7 +71,7 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
     private EventInstance levitationInstance;
     private EventInstance dustEndInstance;
 
-    public Enum_Sockets SocketType {get => SocketType;}
+    public Enum_Sockets SocketType { get => socketType; }
 
     void Awake()
     {
@@ -105,15 +106,27 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 
     void Update()
     {
-        // Only allow E key usage if item hasn't been used yet
-        if (isUsed) return;
+        // Track if player becomes airborne while on cooldown
+        if (isOnCooldown && playerController != null)
+        {
+            if (!playerController.IsGrounded)
+            {
+                wasAirborne = true;
+            }
+
+            // Only reset cooldown if player was airborne and is now grounded
+            if (wasAirborne && playerController.IsGrounded)
+            {
+                ResetCooldown();
+            }
+        }
 
         // DEBUG: Log E key press to see if it's being detected
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (transform.parent == null)
             {
-                return; 
+                return;
             }
         }
 
@@ -136,9 +149,9 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             }
 
             // Check if enough time has passed since pickup before allowing use
-            bool canUse = !wasPickedUp || (Time.time - pickupTime >= pickupCooldown);
+            bool canUse = (!wasPickedUp || (Time.time - pickupTime >= pickupCooldown)) && !isOnCooldown;
 
-            
+
             bool isProperlyHeld = transform.parent != null &&
                                   transform.parent.name == "Head" &&
                                   playerController != null;
@@ -149,7 +162,11 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             }
             else if (Input.GetKeyDown(KeyCode.E) && !isProperlyHeld)
             {
-                Debug.LogWarning($"[PixieDust {gameObject.name}]  Cannot use - not properly held. Parent: {transform.parent?.name ?? "null"}, playerController: {playerController != null}");
+                Debug.LogWarning($"[PixieDust {gameObject.name}] Cannot use - not properly held. Parent: {transform.parent?.name ?? "null"}, playerController: {playerController != null}");
+            }
+            else if (Input.GetKeyDown(KeyCode.E) && isProperlyHeld && isOnCooldown)
+            {
+                Debug.LogWarning($"[PixieDust {gameObject.name}] On cooldown! Touch the ground to use again.");
             }
         }
     }
@@ -166,7 +183,7 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
 
     public void PickUp(Transform parent)
     {
-        Debug.Log(isUsed ? "Picking up Used Pixie Dust" : "Picking up Pixie Dust");
+        Debug.Log(isOnCooldown ? "Picking up Pixie Dust (on cooldown)" : "Picking up Pixie Dust (ready)");
         transform.SetParent(parent);
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
@@ -183,17 +200,14 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             col.enabled = false;
         }
 
-        // Track pickup time to prevent immediate use (only matters if not used)
-        if (!isUsed)
-        {
-            pickupTime = Time.time;
-            wasPickedUp = true;
-        }
+        // Track pickup time to prevent immediate use
+        pickupTime = Time.time;
+        wasPickedUp = true;
     }
 
     public void Drop(Vector3 position)
     {
-        Debug.Log(isUsed ? "Dropping Used Pixie Dust" : "Dropping Enhanced Pixie Dust");
+        Debug.Log(isOnCooldown ? "Dropping Pixie Dust (on cooldown)" : "Dropping Pixie Dust (ready)");
         transform.SetParent(null);
         transform.position = position;
 
@@ -209,28 +223,33 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
             col.enabled = true;
         }
 
-        // Reset pickup tracking when dropped (only matters if not used)
-        if (!isUsed)
-        {
-            wasPickedUp = false;
-            pickupTime = -1f;
-        }
+        // Reset pickup tracking when dropped
+        wasPickedUp = false;
+        pickupTime = -1f;
     }
 
     public void Use()
     {
-        bool canUse = !wasPickedUp || (Time.time - pickupTime >= pickupCooldown);
+        bool canUse = (!wasPickedUp || (Time.time - pickupTime >= pickupCooldown)) && !isOnCooldown;
         if (!canUse)
         {
-            float timeRemaining = pickupCooldown - (Time.time - pickupTime);
-            Debug.LogWarning($"[PixieDust {gameObject.name}]  BLOCKED: Pickup cooldown active! Wait {timeRemaining:F1}s");
+            if (isOnCooldown)
+            {
+                Debug.LogWarning($"[PixieDust {gameObject.name}] BLOCKED: On cooldown! Touch the ground to use again.");
+            }
+            else
+            {
+                float timeRemaining = pickupCooldown - (Time.time - pickupTime);
+                Debug.LogWarning($"[PixieDust {gameObject.name}] BLOCKED: Pickup cooldown active! Wait {timeRemaining:F1}s");
+            }
             return;
         }
 
-        
 
-        isUsed = true;
-        Debug.Log("Using Enhanced Pixie Dust - item will remain as cosmetic after use");
+
+        isOnCooldown = true;
+        wasAirborne = false; // Reset airborne tracker
+        Debug.Log("Using Pixie Dust - infinite use! Touch ground to reset cooldown.");
 
         // Play use explosion particles
         PlayUseExplosionEffect();
@@ -244,23 +263,31 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
         // Create floor dust
         CreateFloorDust();
 
-        // Change item appearance to show it's used
-        ChangeToUsedAppearance();
+        // Change item appearance to show it's on cooldown
+        ChangeToCooldownAppearance();
     }
 
-    private void ChangeToUsedAppearance()
+    private void ResetCooldown()
+    {
+        isOnCooldown = false;
+        wasAirborne = false;
+        RestoreOriginalAppearance();
+        Debug.Log("Pixie Dust cooldown reset - ready to use again!");
+    }
+
+    private void ChangeToCooldownAppearance()
     {
         if (itemRenderer != null)
         {
-            if (usedItemMaterial != null)
+            if (cooldownItemMaterial != null)
             {
-                // Use specific material for used items
+                // Use specific material for cooldown
                 Material[] newMaterials = new Material[itemRenderer.materials.Length];
                 for (int i = 0; i < newMaterials.Length; i++)
                 {
-                    newMaterials[i] = usedItemMaterial;
+                    newMaterials[i] = cooldownItemMaterial;
                 }
-                itemUsedMaterials = newMaterials;
+                itemCooldownMaterials = newMaterials;
                 itemRenderer.materials = newMaterials;
             }
             else
@@ -270,9 +297,9 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
                 for (int i = 0; i < itemOriginalMaterials.Length; i++)
                 {
                     newMaterials[i] = new Material(itemOriginalMaterials[i]);
-                    newMaterials[i].color = usedItemColor;
+                    newMaterials[i].color = cooldownItemColor;
                 }
-                itemUsedMaterials = newMaterials;
+                itemCooldownMaterials = newMaterials;
                 itemRenderer.materials = newMaterials;
             }
         }
@@ -592,62 +619,8 @@ public class PixieDust : MonoBehaviour, IPickupable, ICustomSaveable
         return;
     }
 
-    // ADDED: ICustomSaveable implementation to save/load the used state
-    public void SaveCustomData(SaveableObjectData data)
-    {
-        // Save the isUsed flag
-        data.customBool1 = isUsed;
-        Debug.Log($"Saving PixieDust state: isUsed = {isUsed}");
-    }
-
-    public void LoadCustomData(SaveableObjectData data)
-    {
-        // CRITICAL: Stop any active effects before restoring state
-        ClearActiveEffects();
-
-        // CRITICAL: Reset pickup state to prevent using item without holding it
-        wasPickedUp = false;
-        pickupTime = -1f;
-
-        // CRITICAL: If being held, properly drop it
-        if (transform.parent != null)
-        {
-            Debug.Log($"[PixieDust] Object was being held during load, dropping it properly");
-
-            // Clear the player's held object reference if this was being held
-            if (player != null && playerController != null)
-            {
-                if (playerController.heldObject != null &&
-                    playerController.heldObject.gameObject == gameObject)
-                {
-                    playerController.heldObject = null;
-                    Debug.Log($"[PixieDust] Cleared player's held object reference");
-                }
-            }
-
-            // Properly drop using Drop() method (will restore collider, rigidbody, etc.)
-            Vector3 dropPos = transform.position;
-            Drop(dropPos);
-            Debug.Log($"[PixieDust] Properly dropped at {dropPos}");
-        }
-
-        // Restore the isUsed flag
-        isUsed = data.customBool1;
-
-        // Restore the appropriate appearance based on the loaded state
-        if (isUsed)
-        {
-            ChangeToUsedAppearance();
-        }
-        else
-        {
-            RestoreOriginalAppearance();
-        }
-
-        Debug.Log($"Loading PixieDust state: isUsed = {isUsed}, pickup state cleared, parent cleared");
-    }
-
     
+
     private void ClearActiveEffects()
     {
         // Stop all running coroutines on this PixieDust
