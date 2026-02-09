@@ -8,12 +8,22 @@ public class BreakableObjectFramework : MonoBehaviour
     public AudioClip breakSound;
     public float BreakForce = 5f;
     public GameObject coinPrefab;
+    public float minThrowVelocity = 3f;
     
     private bool isBroken = false;
     
     void OnCollisionEnter(Collision collision)
     {
-        if (!isBroken && (collision.gameObject.CompareTag("Player") || collision.relativeVelocity.magnitude > 3f))
+        if (isBroken) return;
+        
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            if (collision.relativeVelocity.y < -2f)
+            {
+                Break();
+            }
+        }
+        else if (collision.relativeVelocity.magnitude > minThrowVelocity)
         {
             Break();
         }
@@ -36,7 +46,6 @@ public class BreakableObjectFramework : MonoBehaviour
                 rb.AddForce(Random.insideUnitSphere * BreakForce);
                 rb.AddTorque(Random.insideUnitSphere * BreakForce);
             }
-            Destroy(spawnedPiece, 5f);
         }
         
         if (coinPrefab)
