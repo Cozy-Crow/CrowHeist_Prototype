@@ -12,6 +12,12 @@ public class LockTrigger : MonoBehaviour
     [SerializeField] private float keyTipOffset = 0.5f;
     [SerializeField] private float keyBackOffset = 0.1f;
 
+    private void Start()
+    {
+        if (TryGetComponent<Pickable>(out var pickable)) pickable.enabled = false;
+        if (lockInteractionTrigger) lockInteractionTrigger.SetActive(false);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if (!other.CompareTag(keyTag) || checkpoint == null) return;
@@ -19,8 +25,6 @@ public class LockTrigger : MonoBehaviour
         Rigidbody rb = other.GetComponent<Rigidbody>();
         if (rb == null || rb.velocity.magnitude < minVelocity) return;
 
-        if (lockInteractionTrigger) lockInteractionTrigger.SetActive(false);
-        
         if (other.TryGetComponent<Pickable>(out var keyPickable)) Destroy(keyPickable);
         if (other.TryGetComponent<Outline>(out var keyOutline)) Destroy(keyOutline);
         
