@@ -25,10 +25,10 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - MAIN_LIGHT_CALCULATE_SHADOWS
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - MAIN_LIGHT_CALCULATE_SHADOWS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -116,6 +116,7 @@ Material:
     - MAIN_LIGHT_CALCULATE_SHADOWS: 1
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _AmbientOcclusion: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -150,7 +151,7 @@ Material:
     - _ZWrite: 1
     - _lightingCutoff: 0.2
     - _shadowBrightness: 0.5
-    - _smoothness: 1
+    - _smoothness: 0
     m_Colors:
     - _BaseColor: {r: 0.3254902, g: 0.3254902, b: 0.3254902, a: 1}
     - _Color: {r: 0.32549015, g: 0.32549015, b: 0.32549015, a: 1}

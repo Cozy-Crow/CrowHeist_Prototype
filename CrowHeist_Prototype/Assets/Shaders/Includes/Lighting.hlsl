@@ -1,13 +1,36 @@
 #ifndef CUSTOM_LIGHTING_INCLUDED
 #define CUSTOM_LIGHTING_INCLUDED
 
+struct CustomLightData
+{
+    float ambientOcclusion;
+    float3 albedo;
+    float3 bakedGI;
+    float3 normal;
+};
 
-void CalculateMainLight_float(float3 WorldPos, out float3 Direction, out float3 Color, out half DistanceAtten, out half ShadowAtten){
+#if !defined(SHADERGRAPH_PREVIEW)
+float3 CustomGlobalIllumination(CustomLightData d)
+{
+    float3 indirectDiffuse = d.albedo * d.bakedGI * d.ambientOcclusion;
+    
+    return indirectDiffuse;
+}
+
+
+void CalculateMainLight_float(float3 WorldPos, float AmbientOcclusion,float2 LightmapUV, float3 Normal,  out float3 Direction, out float3 Color, out half DistanceAtten, out half ShadowAtten){
+
+
+    CustomLightData d;
+    d.ambientOcclusion = AmbientOcclusion;
 #if defined(SHADERGRAPH_PREVIEW)
     Direction = float3(0.5, 0.5, 0);
+    Normal = float3(0,0,0);
     Color = 1;
     DistanceAtten = 1;
     ShadowAtten = 1;
+    d.bakedGI = 0;
+    
 #else 
     #if defined(SHADOWS_SCREEN)
         half4 clipPos = TransformWorldToHClip(WorldPos);
@@ -20,7 +43,14 @@ void CalculateMainLight_float(float3 WorldPos, out float3 Direction, out float3 
     Color = mainLight.color;
     DistanceAtten = mainLight.distanceAttenuation;
     ShadowAtten = mainLight.shadowAttenuation;
+    
+    float3 lightmapUV;
+    OUTPUT_LIGHTMAP_UV(LightmapUV, unity_LightmapST, lightmapUV);
+    float3 vertexSH;
+    OUTPUT_SH(Normal, vertexSH);
+    d.bakedGI = SAMPLE_GI(lightmapUV, vertexSH, Normal);
 #endif
+    
    
 }
 

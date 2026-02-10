@@ -101,6 +101,7 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             Debug.Log("Non-Knife Picked up");
+            
         }
 
         rb.isKinematic = true;
