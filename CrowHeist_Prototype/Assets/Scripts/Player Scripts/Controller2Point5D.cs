@@ -135,6 +135,7 @@ namespace KinematicCharacterController.Examples
 
         [Header("Audio")]
         [SerializeField] private EventReference dashActivate;
+        private EventReference ObjThrowAudio;
 
 
         [Header("Trinket Guide")]
@@ -559,6 +560,7 @@ namespace KinematicCharacterController.Examples
                             // {
                             //     Debug.Log("Item: " + interactable.transform.name);
                             // }
+                            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
 
@@ -626,6 +628,11 @@ namespace KinematicCharacterController.Examples
                     isThrowing = true;
                     chargingThrow = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+
+                    print("THROW");
+                    
+                    AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
+                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
                     if (rigidbody != null)
                     {

@@ -49,13 +49,8 @@ public class Coins : MonoBehaviour
     if (other.CompareTag("HeistZone"))
     {
         GameManager.Score += _coinValue;
-        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-        
-        if (AudioManager.Instance != null)
-        {
-          AudioManager.Instance.PlayOneShot(coinCollect);        
-        }
-
+        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);     
+    
         if (UIManager.Instance.CollectionZoneCameraUI != null)
         {
             UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone();
@@ -74,6 +69,8 @@ public class Coins : MonoBehaviour
         {
             Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
         }
+
+        AudioManager.Instance?.PlayOneShot(coinCollect);   
 
         KillObject();
     }
