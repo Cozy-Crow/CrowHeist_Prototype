@@ -60,7 +60,7 @@
 	<object class="MarkerTrack" id="{f88bbeef-3300-40b2-9324-770d6a801db0}" />
 	<object class="GroupTrack" id="{371718b3-60b2-4a8a-a0f5-0f9db06f5cf2}">
 		<relationship name="modules">
-			<destination>{4035f3ba-910d-4b74-960c-f0c60aead155}</destination>
+			<destination>{088018b8-cc40-4e7e-a907-a5765f7e6566}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{38f66084-4758-4d50-a3ab-e9f84c763b10}</destination>
@@ -68,10 +68,10 @@
 	</object>
 	<object class="Timeline" id="{db762c20-4e42-4ec2-9d81-4ea00daddc3d}">
 		<relationship name="modules">
-			<destination>{4035f3ba-910d-4b74-960c-f0c60aead155}</destination>
+			<destination>{088018b8-cc40-4e7e-a907-a5765f7e6566}</destination>
 		</relationship>
 		<relationship name="markers">
-			<destination>{4f88bee1-ab07-443f-a7c7-88e8104b6cd1}</destination>
+			<destination>{024a4c91-69dd-4cf2-b670-8268fda1f8f7}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{8d01e97e-46d7-4da7-8811-6a2a5bae38e5}">
@@ -91,15 +91,21 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{3d092ec0-4886-46d9-af43-d7bb0c32f8e7}" />
-	<object class="SingleSound" id="{4035f3ba-910d-4b74-960c-f0c60aead155}">
+	<object class="SingleSound" id="{088018b8-cc40-4e7e-a907-a5765f7e6566}">
+		<property name="isAsync">
+			<value>true</value>
+		</property>
 		<property name="start">
 			<value>2.7755575615628914e-17</value>
 		</property>
 		<property name="length">
 			<value>22.699999999999999</value>
 		</property>
+		<property name="looping">
+			<value>true</value>
+		</property>
 		<relationship name="audioFile">
-			<destination>{74de8818-71a0-4f94-af18-4f4e2822c06f}</destination>
+			<destination>{5fe8c87c-1176-4851-aa87-4170fccb9c3b}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{38f66084-4758-4d50-a3ab-e9f84c763b10}">
@@ -116,7 +122,7 @@
 			<destination>{8d01e97e-46d7-4da7-8811-6a2a5bae38e5}</destination>
 		</relationship>
 	</object>
-	<object class="LoopRegion" id="{4f88bee1-ab07-443f-a7c7-88e8104b6cd1}">
+	<object class="LoopRegion" id="{024a4c91-69dd-4cf2-b670-8268fda1f8f7}">
 		<property name="position">
 			<value>2.7755575615628914e-17</value>
 		</property>
@@ -145,6 +151,19 @@
 	</object>
 	<object class="MixerBusPanner" id="{1b6d41ef-327a-46da-89fb-0caf9204c018}" />
 	<object class="MixerBusFader" id="{af7f1871-2722-4eda-a023-8eb5e96cf1ed}" />
-	<object class="ObjectSpatialiserEffect" id="{90d5b5dc-aaa8-40c7-9899-14207f132f3d}" />
+	<object class="ObjectSpatialiserEffect" id="{90d5b5dc-aaa8-40c7-9899-14207f132f3d}">
+		<property name="maximumDistance">
+			<value>25</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="minimumExtent">
+			<value>140</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{2163ce87-02dd-4a64-8e22-0a419f3938de}" />
 </objects>

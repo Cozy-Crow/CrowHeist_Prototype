@@ -133,9 +133,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
 
-        //Audio
-        [SerializeField] private EventReference playerFootsteps;
-        private EventInstance footstepInstance;
+        [Header("Audio")]
+        [SerializeField] private EventReference dashActivate;
+        private EventReference ObjThrowAudio;
+
 
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -184,6 +185,7 @@ namespace KinematicCharacterController.Examples
                     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
                     if (sodaDash != null)
                     {
+                        AudioManager.Instance?.PlayOneShot(dashActivate);
                         sodaDash.HandleDash();
                     }
                 }
@@ -558,6 +560,7 @@ namespace KinematicCharacterController.Examples
                             // {
                             //     Debug.Log("Item: " + interactable.transform.name);
                             // }
+                            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
                             heldObject = selected.realObject.GetComponent<Rigidbody>();
                             UpdateHighlightedInteractable();
 
@@ -625,6 +628,11 @@ namespace KinematicCharacterController.Examples
                     isThrowing = true;
                     chargingThrow = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+
+                    print("THROW");
+                    
+                    AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
+                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
                     if (rigidbody != null)
                     {

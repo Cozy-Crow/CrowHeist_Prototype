@@ -1343,7 +1343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 0}
   _altWinCoinsUI: {fileID: 0}
-  _noiseUI: {fileID: 0}
+  CollectionZoneCameraUI: {fileID: 0}
 --- !u!1 &216941844 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773044524037658, guid: c222f9f5d39acc34da546b3f301c3d03, type: 3}
@@ -4088,6 +4088,7 @@ MonoBehaviour:
     _camera: {fileID: 0}
   endCutsceneScene: EndCutsceneScene
   gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1001 &577088486
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5730,6 +5731,7 @@ MonoBehaviour:
     _camera: {fileID: 1060763413}
   endCutsceneScene: EndCutsceneScene
   gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1 &858428356
 GameObject:
   m_ObjectHideFlags: 0
@@ -5903,7 +5905,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -5269614778711817667, guid: 331f5f4eb835a5249ad63f9c71b85fc9, type: 3}
       propertyPath: CubeCollectedSound.Path
-      value: event:/SFX/Test
+      value: event:/SFX/TempUI/Test
       objectReference: {fileID: 0}
     - target: {fileID: -5269614778711817667, guid: 331f5f4eb835a5249ad63f9c71b85fc9, type: 3}
       propertyPath: CubeCollectedSound.Guid.Data1
@@ -8706,6 +8708,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4d200b3975b26e4f824c5b156eaf001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   levitationDuration: 5
   levitationForce: 50
 --- !u!1 &1425309620
@@ -9177,6 +9180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -10515,6 +10519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -11057,6 +11062,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -11641,7 +11647,7 @@ MonoBehaviour:
       Data2: 1142408379
       Data3: 29881249
       Data4: 859620508
-    Path: event:/SFX/LoopingTest
+    Path: event:/SFX/TempUI/LoopingTest
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -12740,13 +12746,44 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1928086105}
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
 --- !u!4 &1928086103 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9192850426392321633, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
   m_PrefabInstance: {fileID: 1928086102}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1928086104 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 1928086102}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1928086105
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1928086104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &1932946882
 GameObject:
   m_ObjectHideFlags: 0
@@ -14882,7 +14919,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Path
-      value: event:/SFX/Test 2
+      value: event:/SFX/TempUI/Test 2
       objectReference: {fileID: 0}
     - target: {fileID: 1629801011090452496, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
       propertyPath: playerFootsteps.Guid.Data1
@@ -15105,7 +15142,38 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1600297423}
+    - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5852904083076923022}
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+--- !u!1 &5852904083076923021 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 5852904083076923020}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5852904083076923022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5852904083076923021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!4 &6505057340831361182 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 631451988467006383, guid: 1cafeb9b3f0cb4544aae25e177ceef1a, type: 3}
@@ -15270,7 +15338,7 @@ MonoBehaviour:
       Data2: 1338355012
       Data3: 1227322515
       Data4: 1079479445
-    Path: event:/SFX/Crow
+    Path: event:/SFX/TempUI/Crow
 --- !u!114 &6505057340831361190
 MonoBehaviour:
   m_ObjectHideFlags: 0

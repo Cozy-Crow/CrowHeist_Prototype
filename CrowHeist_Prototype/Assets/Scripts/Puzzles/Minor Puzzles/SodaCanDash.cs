@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
 
 namespace KinematicCharacterController.Examples
 {
@@ -8,6 +10,8 @@ namespace KinematicCharacterController.Examples
     {
         [SerializeField] private float dashForce = 10f;
         private float lastDashTime = -1f;
+
+        public EventReference dashUse = FMODUnity.EventReference.Find("event:/SFX/PlayerMovement/Dash/Dash Use");
 
         private Controller2Point5D controller;
 
@@ -38,6 +42,8 @@ namespace KinematicCharacterController.Examples
             lastDashTime = Time.time;
             controller.canDash = false;
             controller.isDashing = true;
+
+            AudioManager.Instance?.PlayOneShot(dashUse);
 
             float dashDirection;
             Vector3 force;
