@@ -29,25 +29,23 @@ public class PlayCrowleySFX : MonoBehaviour
 
         // Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
         // Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
-        if (AudioManager.Instance != null)
-        { 
-            footstepInstance = AudioManager.Instance.CreateInstance(Footstep);
-        }
-        
+        //footstepInstance = AudioManager.Instance.CreateInstance(Footstep);
     }
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) == true)
-            {
-              footstepInstance.setParameterByName("WalkRun", 1);  
-              print("RUN");
-            }
-            else
-            { 
-             footstepInstance.setParameterByName("WalkRun", 0);   
-             print("Walk");
-            } 
+        //Debug.Log("Hi");
+        if (Input.GetKey(KeyCode.Q))
+        {
+            AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
+            Debug.Log("Run");
+        }
+        // else
+        // {  
+        //     // AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 0f); 
+        //     // //AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", -1f, "Walk"); 
+        //     // Debug.Log("Walk");
+        // }
     }
 
 
@@ -66,12 +64,13 @@ public class PlayCrowleySFX : MonoBehaviour
             Debug.LogWarning("Sound " + sfx + " not found in dictionary!");
             return;
         }
-        if (AudioManager.Instance != null)
-        { 
-            footstepInstance.start();
-            footstepInstance.release();
-        }         
+        // if (AudioManager.Instance != null)
+        // { 
+        //     footstepInstance.start();
+        //     footstepInstance.release();
+        // }         
     }
+
         private void OnTriggerEnter(Collider collider)
     {
         if (collider.tag.Equals("MetalFootstep"))
