@@ -84,7 +84,8 @@ namespace KinematicCharacterController.Examples
         private bool wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
-        [Header("Charged Throw Settings")]
+        [Header("Charged Throw Settings")] 
+        [SerializeField] private GameObject targetAssetObject;
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -604,6 +605,7 @@ namespace KinematicCharacterController.Examples
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
+                    
                 }
 
                 if (Input.GetMouseButtonUp(0) && !cancelThrow)
@@ -651,6 +653,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
+                    targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -660,6 +663,7 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
+                    targetAssetObject.SetActive(false);
                 }
             }
         }
@@ -749,6 +753,7 @@ namespace KinematicCharacterController.Examples
 
         void DrawThrowTrajectory(Vector3 direction)
         {
+            
             float chargePercent = throwForce / maxThrowForce;
             float scaledArc = Mathf.Lerp(minArc, maxArc, arcCurve.Evaluate(chargePercent));
             Vector3 curvedDirection = direction;
@@ -774,6 +779,34 @@ namespace KinematicCharacterController.Examples
             }
 
             throwDirection = curvedDirection;
+            
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
+
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
+
+        }
+
+        private Vector3 FindThrowCollisionPoint()
+        {
+            LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
+            Vector3 collisionPoint = new Vector3(0, 0, 0);
+            Vector3 startPoint = lineRenderer.GetPosition(0);
+
+            for (int i = 0; i < lineRenderer.positionCount - 1; i++) 
+            {
+                Vector3 currentPoint = lineRenderer.GetPosition(i);
+                if (Physics.Linecast(startPoint, currentPoint, out RaycastHit hit, layerMask))
+                {
+                    collisionPoint = hit.point;
+                }
+                
+                startPoint = collisionPoint;
+            }
+
+            return collisionPoint;
         }
 
         private void Flip(Vector3 faceDirection)
