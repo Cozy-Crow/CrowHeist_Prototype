@@ -84,7 +84,6 @@ public class Pickable : MonoBehaviour, IPickupable
                 PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
             }
             hasBeenPickedUp = true;
-            AudioManager.Instance?.PlayOneShot(ObjPuAudio);
         }
 
         if (this.tag == "Knife")
@@ -111,6 +110,8 @@ public class Pickable : MonoBehaviour, IPickupable
 
         rb.isKinematic = true;
         pickedUp = true;
+
+        AudioManager.Instance?.PlayOneShot(ObjPuAudio);
 
         if (player != null)
         {
