@@ -84,7 +84,8 @@ namespace KinematicCharacterController.Examples
         private bool wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
-        [Header("Charged Throw Settings")]
+        [Header("Charged Throw Settings")] 
+        [SerializeField] private GameObject targetAssetObject;
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -551,24 +552,7 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            selected.SetOutline(false);
-                            Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            pickUp.PickUp(transform);
-                            _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            // foreach (var interactable in nearbyInteractables)
-                            // {
-                            //     Debug.Log("Item: " + interactable.transform.name);
-                            // }
-                            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
-                            heldObject = selected.realObject.GetComponent<Rigidbody>();
-                            UpdateHighlightedInteractable();
-
-                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
-                            {
-                                hasPickedUpTrinket = true;
-                                ShowTrinketGuide();
-                            }
+                            Pickup(selected, pickUp);
                         }
                         else
                         {
@@ -621,6 +605,7 @@ namespace KinematicCharacterController.Examples
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
+                    
                 }
 
                 if (Input.GetMouseButtonUp(0) && !cancelThrow)
@@ -668,6 +653,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
+                    targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -677,9 +663,39 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
+                    targetAssetObject.SetActive(false);
                 }
             }
         }
+
+        public List<IPickupable> GetHeldItems()
+        {
+            return _pickUpsList;
+        }
+
+
+        public void Pickup(Interactable selected, IPickupable pickUp)
+        {
+            selected.SetOutline(false);
+            Transform transform = sockets.GetSockets(pickUp.SocketType);
+            pickUp.PickUp(transform);
+            _pickUpsList.Add(pickUp);
+            nearbyInteractables.Remove(selected);
+            // foreach (var interactable in nearbyInteractables)
+            // {
+            //     Debug.Log("Item: " + interactable.transform.name);
+            // }
+            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
+            heldObject = selected.realObject.GetComponent<Rigidbody>();
+            UpdateHighlightedInteractable();
+
+            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+            {
+                hasPickedUpTrinket = true;
+                ShowTrinketGuide();
+            }
+        }
+        
 
         public void Drop()
         {
@@ -737,6 +753,7 @@ namespace KinematicCharacterController.Examples
 
         void DrawThrowTrajectory(Vector3 direction)
         {
+            
             float chargePercent = throwForce / maxThrowForce;
             float scaledArc = Mathf.Lerp(minArc, maxArc, arcCurve.Evaluate(chargePercent));
             Vector3 curvedDirection = direction;
@@ -762,6 +779,38 @@ namespace KinematicCharacterController.Examples
             }
 
             throwDirection = curvedDirection;
+            
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
+
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
+
+        }
+
+        private Vector3 FindThrowCollisionPoint()
+        {
+            LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
+            Vector3 collisionPoint = new Vector3(0, 0, 0);
+            Vector3 firstPoint = lineRenderer.GetPosition(0);
+
+            for (int i = 0; i < lineRenderer.positionCount - 1; i++) 
+            {
+                Vector3 currentPoint = lineRenderer.GetPosition(i);
+                if (Physics.Linecast(firstPoint, currentPoint, out RaycastHit hit))
+                {
+                    Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
+                    if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    {
+                        collisionPoint = hit.point;
+                    }
+                }
+                
+                firstPoint = currentPoint;
+            }
+
+            return collisionPoint;
         }
 
         private void Flip(Vector3 faceDirection)
