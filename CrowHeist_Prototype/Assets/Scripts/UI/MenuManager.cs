@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using KinematicCharacterController.Examples;
 
 public class PauseManager : MonoBehaviour
 {
@@ -19,43 +20,32 @@ public class PauseManager : MonoBehaviour
     public Button LoadButton; // Reference to the "Load Button"
     public Button BackButton; // Reference to the "Back Button"
 
+    private Controller2Point5D player; // Reference to player for checking held items
+
     void Start()
     {
+        // Find the player in the scene
+        player = FindObjectOfType<Controller2Point5D>();
+
         if (ResumeButton != null)
         {
             ResumeButton.onClick.AddListener(ResumeGame);
         }
-        // else
-        // {
-        //     Debug.Log("Resume Button is not assigned!");
-        // }
 
         if (QuitButton != null)
         {
             QuitButton.onClick.AddListener(QuitGame);
         }
-        // else
-        // {
-        //     Debug.Log("Quit Button is not assigned!");
-        // }
 
         if (RestartButton != null)
         {
             RestartButton.onClick.AddListener(RestartGame);
         }
-        // else
-        // {
-        //     Debug.Log("Restart Button is not assigned!");
-        // }
 
         if (SaveButton != null)
         {
-            SaveButton.onClick.AddListener(SaveGame);
+            SaveButton.onClick.AddListener(OnSaveButtonClicked);
         }
-        // else
-        // {
-        //     Debug.Log("Save Button is not assigned!");
-        // }
 
         if (PlayButton != null)
         {
@@ -64,13 +54,16 @@ public class PauseManager : MonoBehaviour
 
         if (LoadButton != null)
         {
-            LoadButton.onClick.AddListener(LoadGame);
+            LoadButton.onClick.AddListener(OnLoadButtonClicked);
         }
 
         if (BackButton != null)
         {
             BackButton.onClick.AddListener(GoBack);
         }
+
+        // Update button states on start
+        UpdateButtonStates();
     }
 
     public void Update()
@@ -102,6 +95,9 @@ public class PauseManager : MonoBehaviour
         {
             PauseMenu.SetActive(true); // Show pause menu
         }
+
+        // Update button states when menu opens
+        UpdateButtonStates();
     }
 
     public void ResumeGame()
@@ -119,16 +115,50 @@ public class PauseManager : MonoBehaviour
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
-            Application.Quit();
+        Application.Quit();
 #endif
     }
 
     public void RestartGame()
     {
+        // Delete the save file before restarting
+        if (SaveLoadSystem.Instance != null)
+        {
+            SaveLoadSystem.Instance.DeleteSave();
+            Debug.Log("Save file deleted on restart");
+        }
+
         isGamePaused = false;
         Time.timeScale = 1f; // Resume time
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
+    }
+
+    // Called when save button is clicked
+    private void OnSaveButtonClicked()
+    {
+        // Check if player is holding something
+        if (IsPlayerHoldingItem())
+        {
+            Debug.LogWarning("Cannot save while holding an item!");
+            return;
+        }
+
+        SaveGame();
+        UpdateButtonStates(); // Update button states after saving
+    }
+
+    // Called when load button is clicked
+    private void OnLoadButtonClicked()
+    {
+        // Check if save exists before attempting to load
+        if (SaveLoadSystem.Instance != null && !SaveLoadSystem.Instance.SaveExists())
+        {
+            Debug.LogWarning("No save file found!");
+            return;
+        }
+
+        LoadGame();
     }
 
     public void SaveGame()
@@ -161,7 +191,13 @@ public class PauseManager : MonoBehaviour
     {
         if (SaveLoadSystem.Instance != null)
         {
-            // Resume time before loading (in case we're paused)
+            if (!SaveLoadSystem.Instance.SaveExists())
+            {
+                Debug.LogWarning("No save file to load!");
+                return;
+            }
+
+            // Resume time before loading 
             Time.timeScale = 1f;
             isGamePaused = false;
 
@@ -180,5 +216,66 @@ public class PauseManager : MonoBehaviour
         {
             loadSaveSlots.SetActive(false); // Hide Save Slot selection
         }
+    }
+
+    // Updates both Save and Load button states
+    private void UpdateButtonStates()
+    {
+        UpdateSaveButtonState();
+        UpdateLoadButtonState();
+    }
+
+    // Updates the Save button's interactable state based on whether player is holding an item
+    private void UpdateSaveButtonState()
+    {
+        if (SaveButton != null)
+        {
+            bool canSave = !IsPlayerHoldingItem();
+            SaveButton.interactable = canSave;
+
+            if (!canSave)
+            {
+                Debug.Log("Save button disabled - player is holding an item");
+            }
+            else
+            {
+                Debug.Log("Save button enabled - player is not holding anything");
+            }
+        }
+    }
+
+    // Updates the Load button's interactable state based on save file existence
+    private void UpdateLoadButtonState()
+    {
+        if (LoadButton != null && SaveLoadSystem.Instance != null)
+        {
+            bool saveExists = SaveLoadSystem.Instance.SaveExists();
+            LoadButton.interactable = saveExists;
+
+            if (saveExists)
+            {
+                Debug.Log("Load button enabled - save file exists");
+            }
+            else
+            {
+                Debug.Log("Load button disabled - no save file");
+            }
+        }
+    }
+
+    // Checks if the player is currently holding an item
+    private bool IsPlayerHoldingItem()
+    {
+        if (player == null)
+        {
+            player = FindObjectOfType<Controller2Point5D>();
+        }
+
+        if (player != null)
+        {
+            return player.heldObject != null;
+        }
+
+        return false;
     }
 }

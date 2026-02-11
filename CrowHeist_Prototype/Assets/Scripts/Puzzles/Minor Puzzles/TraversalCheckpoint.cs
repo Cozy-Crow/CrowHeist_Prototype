@@ -28,18 +28,10 @@ public class TraversalCheckpoint : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            MoveObjectsToEndPositions();
-            isOpen = true;
-        }
-    }
-
     public void MoveObjectsToEndPositions()
     {
         if (isOpen) return;
+        isOpen = true;
         StartCoroutine(MoveObjects());
     }
 
@@ -70,5 +62,7 @@ public class TraversalCheckpoint : MonoBehaviour
             }
             yield return null;
         }
+
+        
     }
 }

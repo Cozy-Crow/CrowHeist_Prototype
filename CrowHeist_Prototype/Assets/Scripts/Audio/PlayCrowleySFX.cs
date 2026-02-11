@@ -2,11 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
+using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 
 public class PlayCrowleySFX : MonoBehaviour
 {
     [SerializeField] private List<SoundData> crowleySFX;
+    [SerializeField] private EventReference Footstep;
+    private EventInstance footstepInstance;
     private Dictionary<string, EventReference> soundDictionary = new();
     public void Awake()
     {
@@ -24,7 +29,26 @@ public class PlayCrowleySFX : MonoBehaviour
 
         // Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
         // Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
+        //footstepInstance = AudioManager.Instance.CreateInstance(Footstep);
     }
+
+    public void Update()
+    {
+        //Debug.Log("Hi");
+        if (Input.GetKey(KeyCode.Q))
+        {
+            AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
+            Debug.Log("Run");
+        }
+        // else
+        // {  
+        //     // AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 0f); 
+        //     // //AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", -1f, "Walk"); 
+        //     // Debug.Log("Walk");
+        // }
+    }
+
+
     public void PlaySFX(String sfx)
     {
         string key = sfx
@@ -40,10 +64,38 @@ public class PlayCrowleySFX : MonoBehaviour
             Debug.LogWarning("Sound " + sfx + " not found in dictionary!");
             return;
         }
+        // if (AudioManager.Instance != null)
+        // { 
+        //     footstepInstance.start();
+        //     footstepInstance.release();
+        // }         
+    }
 
-        AudioManager.Instance.PlayOneShot(sound);
+        private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag.Equals("MetalFootstep"))
+        {
+            print("METAL");
+            footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
+        }
+        else if (collider.tag.Equals("WoodFootstep"))
+        {
+            print("WOOD");
+            footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
+        }
+        else if (collider.tag.Equals("CarpetFootstep"))
+        {
+            print("Carpet");
+            footstepInstance.setParameterByNameWithLabel("Surface", "Carpet");
+        }
+        else
+        {
+            footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
+            print("GENERIC");
+        }
     }
 }
+
 
 [Serializable]
 public struct SoundData

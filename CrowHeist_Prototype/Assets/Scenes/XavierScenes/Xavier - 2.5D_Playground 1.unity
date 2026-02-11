@@ -1045,7 +1045,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 1979024721}
-  _noiseUI: {fileID: 0}
+  _altWinCoinsUI: {fileID: 0}
+  CollectionZoneCameraUI: {fileID: 0}
 --- !u!1 &216941844 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1773044524037658, guid: c222f9f5d39acc34da546b3f301c3d03, type: 3}
@@ -4257,9 +4258,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   dock: {fileID: 1300790624}
-  patrolPoints: []
+  patrolPoints_Room1: []
+  patrolPoints_Room2: []
   isActivated: 0
+  isBroken: 0
   player: {fileID: 0}
+  virtualCamManager: {fileID: 0}
 --- !u!1 &536928176
 GameObject:
   m_ObjectHideFlags: 0
@@ -6178,6 +6182,8 @@ MonoBehaviour:
   - _name: Exit
     _camera: {fileID: 1060763413}
   endCutsceneScene: EndCutsceneScene
+  gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1 &858428356
 GameObject:
   m_ObjectHideFlags: 0
@@ -9181,6 +9187,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -10988,6 +10995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
@@ -12953,6 +12961,15 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
+  _collectSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  _collectParticlePrefab: {fileID: 0}
+  _popupPrefab: {fileID: 0}
 --- !u!4 &1997090842 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8000491189340789022, guid: 7befce1172bb6c942ac21f1ed9b014aa, type: 3}
@@ -14254,8 +14271,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5852904083076923022}
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+--- !u!1 &5852904083076923021 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 5852904083076923020}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5852904083076923022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5852904083076923021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!136 &6505057340831361183
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -14415,7 +14463,7 @@ MonoBehaviour:
       Data2: 1338355012
       Data3: 1227322515
       Data4: 1079479445
-    Path: event:/SFX/Crow
+    Path: event:/SFX/TempUI/Crow
 --- !u!114 &6505057340831361190
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14441,10 +14489,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isGamePaused: 0
-  pauseMenu: {fileID: 1202085288}
-  quitButton: {fileID: 942403428}
-  resumeButton: {fileID: 516965835}
-  restartButton: {fileID: 311164471}
+  PauseMenu: {fileID: 0}
+  loadSaveSlots: {fileID: 0}
+  QuitButton: {fileID: 0}
+  ResumeButton: {fileID: 0}
+  RestartButton: {fileID: 0}
+  SaveButton: {fileID: 0}
+  PlayButton: {fileID: 0}
+  LoadButton: {fileID: 0}
+  BackButton: {fileID: 0}
 --- !u!1001 &8901235735088571908
 PrefabInstance:
   m_ObjectHideFlags: 0

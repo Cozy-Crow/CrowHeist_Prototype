@@ -19,6 +19,9 @@ public class Coins : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
     [SerializeField] private GameObject _popupPrefab;
+    
+    [Header("Narrative Item")]
+    public bool isNarrativeItem = false;
 
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
     
@@ -39,6 +42,11 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
+        
+        if(this.isNarrativeItem == true)
+        {
+            _coinValue = 3;
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -47,38 +55,40 @@ public class Coins : MonoBehaviour
         {
             GameManager.Score += _coinValue;
             UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-            //SoundManager.instance.PlaySFXByClip(_coinSound);
-            //SoundManager.instance.PlaySFX();
 
-            #warning starting from TinkerfestScene causes the music manager to not be loaded causing the below code to bug out
-             // AudioManager.Instance.PlayOneShot(CubeCollectedSound);
-             float currentValue;
+            // Show collection zone with narrative popup if applicable
+            if (UIManager.Instance.CollectionZoneCameraUI != null)
+            {
+                // Get sprite from SpriteRenderer if this is a narrative item
+                Sprite itemSprite = null;
+                if (isNarrativeItem)
+                {
+                    SpriteRenderer sr = GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        itemSprite = sr.sprite;
+                    }
+                }
+                
+                UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone(isNarrativeItem, itemSprite);
+            }
 
-            
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out currentValue);
-            float newValue = currentValue += 1;
-            MusicManager.SetParameterByName("TrinketsCollected", + newValue);
-            MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float value1);
+            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+            // float newValue = currentValue + 1;
+            // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
-            //works if player runs into heist zone
-            //if player throws coin and picks up another item, it will drop what they pick up
-            
-            //if the item is picked up, ONLY THEN drop the item
             if(pickableUpScript.pickedUp)
             {
                 playerController.Drop();
             }
-            
 
-            // playerController.ItemWasDestroyed();
-            // Spawn particle effect
             if (_collectParticlePrefab != null)
             {
                 Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
             }
 
-            //run in a function to allow the item to drop first
-            KillObject();
+            // Remove the KillObject() call - coin will remain in the scene
+            // KillObject();
         }
     }
     

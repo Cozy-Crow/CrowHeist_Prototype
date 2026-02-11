@@ -7,7 +7,6 @@ using FMOD.Studio;
 public class AudioManager : MonoBehaviour
 {
     //Reference the singleton
-
     private List<EventInstance> eventInstances;
     public static AudioManager Instance { get; private set; }
 
@@ -55,6 +54,27 @@ public class AudioManager : MonoBehaviour
     public void PlayOneShot(EventReference sound)
     {
         RuntimeManager.PlayOneShot(sound);
+    }
+
+    public void PlayOneShotWithParameter(EventReference sound, string parameterName, float floatParam = -1f, string labelParam = null)
+    {
+        if(floatParam >= 0f)
+        {
+            EventInstance instance = RuntimeManager.CreateInstance(sound);
+            instance.setParameterByName(parameterName, floatParam);
+            instance.start();
+            instance.release();
+            return;
+        }
+
+        if(labelParam != null)
+        {
+            EventInstance instance = RuntimeManager.CreateInstance(sound);
+            instance.setParameterByNameWithLabel(parameterName, labelParam);
+            instance.start();
+            instance.release();
+            return;
+        }
     }
 
     //This is to play oneshot SFX that need spatialization
