@@ -67,12 +67,13 @@ public class CrowleySFX : MonoBehaviour
         AudioManager.Instance?.PlayInstance(instance);
     }
 
-
+    // Set instance parameter by float value
     public void SetInstanceFloatParam(string instance, string parameter, float value)
     {
         AudioManager.Instance?.SetInstanceFloatParam(instance, parameter, value);
     }
 
+    // Set instance parameter by label value
     public void SetInstanceLabelParam(string instance, string parameter, string label)
     {
         AudioManager.Instance?.SetInstanceLabelParam(instance, parameter, label);

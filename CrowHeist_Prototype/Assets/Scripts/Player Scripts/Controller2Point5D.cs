@@ -262,6 +262,7 @@ namespace KinematicCharacterController.Examples
                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
             }
         }
+        
         private void HandleInput()
         {
             // Zack H. 1/20:
