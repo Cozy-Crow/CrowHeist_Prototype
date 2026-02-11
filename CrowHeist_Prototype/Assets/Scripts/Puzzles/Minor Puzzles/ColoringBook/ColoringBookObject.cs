@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using KinematicCharacterController.Examples;
 using UnityEngine;
@@ -6,15 +7,14 @@ using UnityEngine.UI;
 public class ColoringBookObject : Interactable
 {
     //Created by ZackH 2/4
-    //Script handling everything related to the coloring book puzzle!
+    //Script handling everything related to the coloring book object!
 
-    [SerializeField] GameObject menu;
-    [SerializeField] Controller2Point5D crowley;
-    [SerializeField] public Button closeButton;
-    [SerializeField] public GameObject puzzleController;
-
-    bool isInteractable = true;
-
+    [SerializeField] GameObject menu; //menu linked to the puzzle
+    [SerializeField] Controller2Point5D crowley; //reference to crowley
+    [SerializeField] public Button closeButton; //close button on the menu
+    [SerializeField] public GameObject puzzleController; //reference to the script on the ui (controls the actual puzzle)
+    bool isInteractable = true; //tells whether or not the book can be interacted with
+    float animTime = 5; //holds animation time for the ending animation for the puzzle
 
     // Start is called before the first frame update
     void Start()
@@ -63,16 +63,35 @@ public class ColoringBookObject : Interactable
 
     public void EndPuzzle()
     {
+        //start end puzzle sequence
+        StartCoroutine(EndPuzzleRoutine());
+    }
+
+    //handles 
+    IEnumerator EndPuzzleRoutine()
+    {
+        //stall closing the menu
+        yield return new WaitForSeconds(2);
+        
         //close UI
         menu.gameObject.SetActive(false);
+        
+        //run animation
+        PlayAnimation();
+
+        //time this with animation time
+        //pauses the coroutine until the animation is done
+        yield return new WaitForSeconds(animTime);
+
+        ////closing sequence - Enable input, disable ability to interact
         //enable movement
         crowley.SetCanInput(true);
-
         //play animation, pop reward
-        
         //remove interactioncapability
         isInteractable = false;
     }
+
+
 
     //function handling on interaction
     public override void TriggerInteraction(Pickable item)
@@ -85,5 +104,10 @@ public class ColoringBookObject : Interactable
             crowley.SetCanInput(false);
             
         }
+    }
+
+    public void PlayAnimation()
+    {
+        Debug.Log("playing anim playing anim");
     }
 }
