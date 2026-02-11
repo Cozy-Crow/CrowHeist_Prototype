@@ -1,53 +1,41 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
-using FMOD.Studio;
 using UnityEngine;
-using System.Runtime.CompilerServices;
-using Unity.VisualScripting;
 
+/// <summary>
+/// This class is responsible for managing Crowley's sound effects. 
+/// It holds references to one-shot and instance SFX,
+/// providing methods to play them in the animation and set parameters in other scripts. 
+/// </summary> 
 public class CrowleySFX : MonoBehaviour
 {
+    // Use to serialize one-shot SFX in the inspector, which will be added to the dictionary for easy access by name
     [SerializeField] private List<SoundData> crowleyOneShotSFX;
     [SerializeField] private List<SoundData> crowleyInstanceSFX;
+
+    // For faster lookup when playing one shot sfx
     private Dictionary<string, EventReference> soundDictionary = new();
+
     public void Start()
     {
+        //Populates the dictionary with the key:name, value:one-shot SFX,
         foreach (SoundData sfx in crowleyOneShotSFX)
         {
-            string key = sfx.name
-            .Trim()                          // Remove leading/trailing spaces
-            .Replace(" ", "")                // Remove spaces
-            .Replace("_", "")                // Remove underscores
-            .Replace("-", "")                // Remove dashes
-            .ToUpper();             // Uppercase consistently
-
-            soundDictionary.Add(key, sfx.sound);
+            soundDictionary.Add(sfx.name, sfx.sound);
         }
 
+        // Creates instances for all instance SFX, using the name as the key for later access
         foreach (SoundData sfx in crowleyInstanceSFX)
         {
             AudioManager.Instance?.CreateInstance(sfx.name, sfx.sound);
         }
     }
 
-    public void Update()
-    {
-        //Debug.Log("Hi");
-        // if (Input.GetKey(KeyCode.Q))
-        // {
-        //     AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
-        //     Debug.Log("Run");
-        //}
-        // else
-        // {  
-        //     // AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 0f); 
-        //     // //AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", -1f, "Walk"); 
-        //     // Debug.Log("Walk");
-        // }
-    }
 
+    // Use for animator to call one-shot SFX, which are not affected by parameters
+    // sfx with parameter are not settable here, and must be created as event instance
+    // Add the event instance in the serializefield -- crowleyInstanceSFX list --
     public void PlayOneShot(string sfx)
     {
         string key = sfx
@@ -67,11 +55,18 @@ public class CrowleySFX : MonoBehaviour
 
         AudioManager.Instance?.PlayOneShot(sound);      
     }
-
+    
+    // Use for animator to call instance SFX, which have settable parameters
     public void PlayInstanceOneShot(string instance)
     {
         AudioManager.Instance?.PlayInstanceOneShot(instance);
     }
+
+    public void PlayInstance(string instance)
+    {
+        AudioManager.Instance?.PlayInstance(instance);
+    }
+
 
     public void SetInstanceFloatParam(string instance, string parameter, float value)
     {
@@ -82,36 +77,18 @@ public class CrowleySFX : MonoBehaviour
     {
         AudioManager.Instance?.SetInstanceLabelParam(instance, parameter, label);
     }
-
-    // private void OnTriggerEnter(Collider collider)
-    // {
-    //     if (collider.tag.Equals("MetalFootstep"))
-    //     {
-    //         print("METAL");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
-    //     }
-    //     else if (collider.tag.Equals("WoodFootstep"))
-    //     {
-    //         print("WOOD");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
-    //     }
-    //     else if (collider.tag.Equals("CarpetFootstep"))
-    //     {
-    //         print("Carpet");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Carpet");
-    //     }
-    //     else
-    //     {
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
-    //         print("GENERIC");
-    //     }
-    // }
 }
 
 
 [Serializable]
 public struct SoundData
 {
-    public string name;
+    public string _name;
+
+    // Name property ensure consistent name formatting
+    public string name
+    {
+        get => _name.Trim().Replace(" ", "").Replace("_", "").Replace("-", "").ToUpper();
+    }
     public EventReference sound;
 }
