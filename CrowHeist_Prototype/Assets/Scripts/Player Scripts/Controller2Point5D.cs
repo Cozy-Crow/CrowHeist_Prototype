@@ -793,17 +793,21 @@ namespace KinematicCharacterController.Examples
         {
             LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
             Vector3 collisionPoint = new Vector3(0, 0, 0);
-            Vector3 startPoint = lineRenderer.GetPosition(0);
+            Vector3 firstPoint = lineRenderer.GetPosition(0);
 
             for (int i = 0; i < lineRenderer.positionCount - 1; i++) 
             {
                 Vector3 currentPoint = lineRenderer.GetPosition(i);
-                if (Physics.Linecast(startPoint, currentPoint, out RaycastHit hit, layerMask))
+                if (Physics.Linecast(firstPoint, currentPoint, out RaycastHit hit))
                 {
-                    collisionPoint = hit.point;
+                    Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
+                    if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    {
+                        collisionPoint = hit.point;
+                    }
                 }
                 
-                startPoint = collisionPoint;
+                firstPoint = currentPoint;
             }
 
             return collisionPoint;
