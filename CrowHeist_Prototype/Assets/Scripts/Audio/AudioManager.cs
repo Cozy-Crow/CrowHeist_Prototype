@@ -57,6 +57,44 @@ public class AudioManager : MonoBehaviour
         return instance;
     }
 
+    public void SetInstanceFloatParam(string instance, string parameter, float value)
+    {
+        string key = instance
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance eventInstance);
+
+        if (!eventInstance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        eventInstance.setParameterByName(parameter, value);
+    }
+
+    public void SetInstanceLabelParam(string instance, string parameter, string label)
+    {
+        string key = instance
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance eventInstance);
+
+        if (!eventInstance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        eventInstance.setParameterByNameWithLabel(parameter, label);
+    }
+
     //Plays oneshot SFX that do not need spatialization
     public void PlayOneShot(EventReference sound)
     {

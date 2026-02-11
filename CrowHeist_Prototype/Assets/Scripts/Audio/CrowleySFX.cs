@@ -7,7 +7,7 @@ using UnityEngine;
 using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 
-public class PlayCrowleySFX : MonoBehaviour
+public class CrowleySFX : MonoBehaviour
 {
     [SerializeField] private List<SoundData> crowleyOneShotSFX;
     [SerializeField] private List<SoundData> crowleyInstanceSFX;
@@ -48,7 +48,7 @@ public class PlayCrowleySFX : MonoBehaviour
         // }
     }
 
-    public void PlayOneShot(String sfx)
+    public void PlayOneShot(string sfx)
     {
         string key = sfx
         .Trim()                          // Remove leading/trailing spaces
@@ -68,9 +68,19 @@ public class PlayCrowleySFX : MonoBehaviour
         AudioManager.Instance?.PlayOneShot(sound);      
     }
 
-    public void PlayInstanceOneShot(String instance)
+    public void PlayInstanceOneShot(string instance)
     {
         AudioManager.Instance?.PlayInstanceOneShot(instance);
+    }
+
+    public void SetInstanceFloatParam(string instance, string parameter, float value)
+    {
+        AudioManager.Instance?.SetInstanceFloatParam(instance, parameter, value);
+    }
+
+    public void SetInstanceLabelParam(string instance, string parameter, string label)
+    {
+        AudioManager.Instance?.SetInstanceLabelParam(instance, parameter, label);
     }
 
     // private void OnTriggerEnter(Collider collider)

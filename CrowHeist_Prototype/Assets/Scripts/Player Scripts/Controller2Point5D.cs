@@ -13,7 +13,9 @@ namespace KinematicCharacterController.Examples
     [RequireComponent(typeof(CapsuleCollider))]
     public class Controller2Point5D : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private Sockets sockets;
+        [SerializeField] private CrowleySFX crowleySFX;
 
         #region Movement Variables
         [Header("Movement")]
@@ -165,6 +167,7 @@ namespace KinematicCharacterController.Examples
             // - trigger is listed first in inspector 
             triggerCollider = capsuleCollider[0];
             normalCollider = capsuleCollider[1];
+            crowleySFX = GetComponent<CrowleySFX>();
         }
 
         public void Start()
@@ -252,6 +255,7 @@ namespace KinematicCharacterController.Examples
             if(hitMain.collider != null)
             {
                 surfaceTag = hitMain.collider.gameObject.tag;
+                crowleySFX.SetInstanceLabelParam("Footstep", "SurfaceType", surfaceTag);
             }
         }
         private void HandleInput()
@@ -505,7 +509,6 @@ namespace KinematicCharacterController.Examples
 
                 }
             }
-            
         }
 
         void OnTriggerExit(Collider other)
