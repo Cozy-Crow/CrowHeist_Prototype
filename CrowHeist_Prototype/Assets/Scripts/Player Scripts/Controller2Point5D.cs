@@ -15,6 +15,7 @@ namespace KinematicCharacterController.Examples
     {
         [SerializeField] private Sockets sockets;
 
+        #region Movement Variables
         [Header("Movement")]
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
@@ -31,15 +32,21 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
+        private string surfaceTag = "";
+
         public Vector3 Velocity => velocity;
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
+        public string SurfaceTag => surfaceTag;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
         public bool ChargeThrowing { get => chargingThrow;}
+        #endregion
 
+        #region Animation
         //Sprite
         [SerializeField] GameObject playerSprite;
         [SerializeField] AnimatorCoder animatorCoder;
+        #endregion
         
         // Soda Variables
         public bool isSpeedBoosted = false;
@@ -51,12 +58,13 @@ namespace KinematicCharacterController.Examples
         public float fallingTime = 0f;
         private float maxFallSpeed = 20f;
 
-        [Header("PickUP")]
+        [Header("PickUp")]
         [SerializeField] private Transform pickUpPoint;
         [SerializeField] private Transform handPoint;
         [SerializeField] private Transform dropPoint;
         public bool isDirty = false;
 
+        #region Dash Variables
         [Header("Dash")]
         [SerializeField] public float dashSpeed = 40f;
         [SerializeField] public float dashDuration = 0.3f;
@@ -64,6 +72,7 @@ namespace KinematicCharacterController.Examples
         public float dashCooldown = 1f;
         public bool canDash = true;
         public bool isDashing = false;
+        #endregion
 
         [Header("Added Jump Features")]
         [SerializeField] private float coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
@@ -137,7 +146,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference dashActivate;
         private EventReference ObjThrowAudio;
 
-
+        #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
         [SerializeField] private float trinketGuideWidth = 0.1f;
@@ -145,6 +154,7 @@ namespace KinematicCharacterController.Examples
         private LineRenderer trinketGuideLine;
         private bool hasPickedUpTrinket = false;
         private Transform nearestWindow;
+        #endregion
 
         private void Awake()
         {
@@ -238,6 +248,11 @@ namespace KinematicCharacterController.Examples
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
+
+            if(hitMain.collider != null)
+            {
+                surfaceTag = hitMain.collider.gameObject.tag;
+            }
         }
         private void HandleInput()
         {
