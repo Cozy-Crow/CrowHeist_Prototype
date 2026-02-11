@@ -20,10 +20,11 @@ public class PickupVisualManager : MonoBehaviour
     [SerializeField] private Vector2 offscreenRightPos;
     [SerializeField] private Vector2 centerPos;
 
-    [Header("Pickup Data")]
+    [Header("Pickup Data (Legacy - Tag Based)")]
     [SerializeField] private PickupVisualData[] pickupData;
 
     private GameObject currentModel;
+    private ItemDataSO currentItemData;
 
 
     private void Awake()
@@ -61,17 +62,31 @@ public class PickupVisualManager : MonoBehaviour
         panel.gameObject.SetActive(true);
         panel.anchoredPosition = offscreenRightPos;
 
-        // 2. Set name & description
-        PickupVisualData data = GetDataForItem(item);
-        if (data != null)
+        // 2. Set name & description - try ItemDataSO first, then fall back to tag-based
+        float holdTime = centerHoldTime;
+        currentItemData = GetItemDataSO(item);
+
+        if (currentItemData != null)
         {
-            itemName.text = data.displayName;
-            itemDescription.text = data.description;
+            // Use new ItemDataSO system
+            itemName.text = currentItemData.ItemName;
+            itemDescription.text = currentItemData.Description;
+            holdTime = currentItemData.DisplayDuration;
         }
         else
         {
-            itemName.text = item.name;
-            itemDescription.text = "";
+            // Fall back to legacy tag-based system
+            PickupVisualData data = GetDataForItem(item);
+            if (data != null)
+            {
+                itemName.text = data.displayName;
+                itemDescription.text = data.description;
+            }
+            else
+            {
+                itemName.text = item.name;
+                itemDescription.text = "";
+            }
         }
 
         // 3. Animate to center
@@ -81,13 +96,14 @@ public class PickupVisualManager : MonoBehaviour
         SpawnModel(item);
 
         // 5. Hold at center
-        yield return new WaitForSeconds(centerHoldTime);
+        yield return new WaitForSeconds(holdTime);
 
         // 6. Animate off screen
         yield return MovePanel(centerPos, offscreenRightPos);
 
         // 7. Cleanup & hide
         ClearModel();
+        currentItemData = null;
         panel.gameObject.SetActive(false);
     }
 
@@ -110,15 +126,19 @@ public class PickupVisualManager : MonoBehaviour
         ClearModel();
 
         GameObject container = new GameObject("PreviewContainer");
-
-        
         container.transform.SetParent(modelAnchor, false);
-
         container.transform.localPosition = Vector3.zero;
         container.transform.localRotation = Quaternion.identity;
         container.transform.localScale = Vector3.one;
 
-        GameObject model = Instantiate(item);
+        // Use preview model from ItemDataSO if available, otherwise clone the item
+        GameObject modelSource = item;
+        if (currentItemData != null && currentItemData.PreviewModelPrefab != null)
+        {
+            modelSource = currentItemData.PreviewModelPrefab;
+        }
+
+        GameObject model = Instantiate(modelSource);
         model.transform.SetParent(container.transform, false);
         model.transform.localPosition = Vector3.zero;
         model.transform.localRotation = Quaternion.identity;
@@ -129,6 +149,13 @@ public class PickupVisualManager : MonoBehaviour
 
         foreach (Rigidbody rb in model.GetComponentsInChildren<Rigidbody>())
             Destroy(rb);
+
+        // Disable any scripts that could interfere with preview
+        foreach (MonoBehaviour script in model.GetComponentsInChildren<MonoBehaviour>())
+        {
+            if (!(script is Transform))
+                script.enabled = false;
+        }
 
         container.transform.localScale = Vector3.one * 0.5f;
 
@@ -153,6 +180,26 @@ public class PickupVisualManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    
+    private ItemDataSO GetItemDataSO(GameObject item)
+    {
+        UniqueID uniqueID = item.GetComponent<UniqueID>();
+        if (uniqueID != null && uniqueID.ItemData != null)
+        {
+            return uniqueID.ItemData;
+        }
+        return null;
+    }
+
+    /// <summary>
+    /// Returns the current item data if available.
+    /// Useful for other systems that need to know what item is being displayed.
+    /// </summary>
+    public ItemDataSO GetCurrentItemData()
+    {
+        return currentItemData;
     }
 }
 

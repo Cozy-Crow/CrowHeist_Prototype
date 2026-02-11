@@ -16,8 +16,7 @@ GameObject:
   - component: {fileID: 5354364256869844381}
   - component: {fileID: 8271206297480907123}
   - component: {fileID: 3966910754532871489}
-  - component: {fileID: -658400695853698022}
-  - component: {fileID: 6252109140960560988}
+  - component: {fileID: 2962149724889517888}
   m_Layer: 3
   m_Name: ShinyObject
   m_TagString: Trinket
@@ -127,20 +126,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coinValue: 1
   _rotateSpeed: 25
-  coinCollect:
+  CubeCollectedSound:
     Guid:
-      Data1: 484010483
-      Data2: 1159383769
-      Data3: 2019980200
-      Data4: -2126844190
-    Path: event:/SFX/Objects/Coin/CoinCollect
-  coinEmitter:
+      Data1: -2108607817
+      Data2: 1280256464
+      Data3: -779780991
+      Data4: -1785143012
+    Path: event:/Empty
+  _collectSound:
     Guid:
-      Data1: -931559241
-      Data2: 1176371072
-      Data3: -479455084
-      Data4: 700806336
-    Path: event:/SFX/Objects/Coin/CoinEmitter
+      Data1: -2108607817
+      Data2: 1280256464
+      Data3: -779780991
+      Data4: -1785143012
+    Path: event:/Empty
   _collectParticlePrefab: {fileID: 8344967203117557352, guid: a6b9b97b44670d04c9b61087f798f9f9, type: 3}
   _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
 --- !u!54 &5354364256869844381
@@ -205,7 +204,7 @@ MonoBehaviour:
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
---- !u!114 &-658400695853698022
+--- !u!114 &2962149724889517888
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -214,47 +213,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 3078150366677145011}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a9496910b6e50843af9549e7ca3eef2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uniqueId: 
-  _objectType: 
-  _savePosition: 1
-  _saveRotation: 1
-  _saveScale: 0
-  _coinsComponent: {fileID: 0}
-  _altCoinsComponent: {fileID: 0}
---- !u!114 &6252109140960560988
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3078150366677145011}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
-  EventReference:
-    Guid:
-      Data1: -931559241
-      Data2: 1176371072
-      Data3: -479455084
-      Data4: 700806336
-    Path: event:/SFX/Objects/Coin/CoinEmitter
-  Event: 
-  EventPlayTrigger: 1
-  EventStopTrigger: 2
-  AllowFadeout: 1
-  TriggerOnce: 0
-  Preload: 0
-  NonRigidbodyVelocity: 0
-  Params: []
-  OverrideAttenuation: 0
-  OverrideMinDistance: 1
-  OverrideMaxDistance: 20
+  id: c082b047-0e03-40f2-bf6c-e876699149ab
 --- !u!1 &3785057032258832425
 GameObject:
   m_ObjectHideFlags: 0
