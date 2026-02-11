@@ -9,13 +9,12 @@ using Unity.VisualScripting;
 
 public class PlayCrowleySFX : MonoBehaviour
 {
-    [SerializeField] private List<SoundData> crowleySFX;
-    [SerializeField] private EventReference Footstep;
-    private EventInstance footstepInstance;
+    [SerializeField] private List<SoundData> crowleyOneShotSFX;
+    [SerializeField] private List<SoundData> crowleyInstanceSFX;
     private Dictionary<string, EventReference> soundDictionary = new();
-    public void Awake()
+    public void Start()
     {
-        foreach (SoundData sfx in crowleySFX)
+        foreach (SoundData sfx in crowleyOneShotSFX)
         {
             string key = sfx.name
             .Trim()                          // Remove leading/trailing spaces
@@ -27,19 +26,20 @@ public class PlayCrowleySFX : MonoBehaviour
             soundDictionary.Add(key, sfx.sound);
         }
 
-        // Debug.Log("Loaded " + soundDictionary.Count + " Crowley SFX into dictionary.");
-        // Debug.Log("Sounds: " + string.Join(", ", soundDictionary.Keys));
-        //footstepInstance = AudioManager.Instance.CreateInstance(Footstep);
+        foreach (SoundData sfx in crowleyInstanceSFX)
+        {
+            AudioManager.Instance?.CreateInstance(sfx.name, sfx.sound);
+        }
     }
 
     public void Update()
     {
         //Debug.Log("Hi");
-        if (Input.GetKey(KeyCode.Q))
-        {
-            AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
-            Debug.Log("Run");
-        }
+        // if (Input.GetKey(KeyCode.Q))
+        // {
+        //     AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
+        //     Debug.Log("Run");
+        //}
         // else
         // {  
         //     // AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 0f); 
@@ -48,52 +48,54 @@ public class PlayCrowleySFX : MonoBehaviour
         // }
     }
 
-
-    public void PlaySFX(String sfx)
+    public void PlayOneShot(String sfx)
     {
         string key = sfx
         .Trim()                          // Remove leading/trailing spaces
         .Replace(" ", "")                // Remove spaces
         .Replace("_", "")                // Remove underscores
         .Replace("-", "")                // Remove dashes
-        .ToUpper();             // Uppercase consistently
+        .ToUpper();                      // Uppercase consistently
         
         soundDictionary.TryGetValue(key, out EventReference sound);
+
         if (sound.Equals(null))
         {
             Debug.LogWarning("Sound " + sfx + " not found in dictionary!");
             return;
         }
-        // if (AudioManager.Instance != null)
-        // { 
-        //     footstepInstance.start();
-        //     footstepInstance.release();
-        // }         
+
+        AudioManager.Instance?.PlayOneShot(sound);      
     }
 
-        private void OnTriggerEnter(Collider collider)
+    public void PlayInstanceOneShot(String instance)
     {
-        if (collider.tag.Equals("MetalFootstep"))
-        {
-            print("METAL");
-            footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
-        }
-        else if (collider.tag.Equals("WoodFootstep"))
-        {
-            print("WOOD");
-            footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
-        }
-        else if (collider.tag.Equals("CarpetFootstep"))
-        {
-            print("Carpet");
-            footstepInstance.setParameterByNameWithLabel("Surface", "Carpet");
-        }
-        else
-        {
-            footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
-            print("GENERIC");
-        }
+        AudioManager.Instance?.PlayInstanceOneShot(instance);
     }
+
+    // private void OnTriggerEnter(Collider collider)
+    // {
+    //     if (collider.tag.Equals("MetalFootstep"))
+    //     {
+    //         print("METAL");
+    //         footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
+    //     }
+    //     else if (collider.tag.Equals("WoodFootstep"))
+    //     {
+    //         print("WOOD");
+    //         footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
+    //     }
+    //     else if (collider.tag.Equals("CarpetFootstep"))
+    //     {
+    //         print("Carpet");
+    //         footstepInstance.setParameterByNameWithLabel("Surface", "Carpet");
+    //     }
+    //     else
+    //     {
+    //         footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
+    //         print("GENERIC");
+    //     }
+    // }
 }
 
 
