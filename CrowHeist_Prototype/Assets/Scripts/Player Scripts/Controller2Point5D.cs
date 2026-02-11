@@ -255,7 +255,11 @@ namespace KinematicCharacterController.Examples
             if(hitMain.collider != null)
             {
                 surfaceTag = hitMain.collider.gameObject.tag;
-                crowleySFX.SetInstanceLabelParam("Footstep", "SurfaceType", surfaceTag);
+                if(surfaceTag.Equals("Untagged") || surfaceTag.Equals("Ground"))
+                {
+                    surfaceTag = "Generic";
+                }
+                crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
             }
         }
         private void HandleInput()
