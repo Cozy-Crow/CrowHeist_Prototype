@@ -551,24 +551,7 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            selected.SetOutline(false);
-                            Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            pickUp.PickUp(transform);
-                            _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            // foreach (var interactable in nearbyInteractables)
-                            // {
-                            //     Debug.Log("Item: " + interactable.transform.name);
-                            // }
-                            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
-                            heldObject = selected.realObject.GetComponent<Rigidbody>();
-                            UpdateHighlightedInteractable();
-
-                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
-                            {
-                                hasPickedUpTrinket = true;
-                                ShowTrinketGuide();
-                            }
+                            Pickup(selected, pickUp);
                         }
                         else
                         {
@@ -680,6 +663,35 @@ namespace KinematicCharacterController.Examples
                 }
             }
         }
+
+        public List<IPickupable> GetHeldItems()
+        {
+            return _pickUpsList;
+        }
+
+
+        public void Pickup(Interactable selected, IPickupable pickUp)
+        {
+            selected.SetOutline(false);
+            Transform transform = sockets.GetSockets(pickUp.SocketType);
+            pickUp.PickUp(transform);
+            _pickUpsList.Add(pickUp);
+            nearbyInteractables.Remove(selected);
+            // foreach (var interactable in nearbyInteractables)
+            // {
+            //     Debug.Log("Item: " + interactable.transform.name);
+            // }
+            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
+            heldObject = selected.realObject.GetComponent<Rigidbody>();
+            UpdateHighlightedInteractable();
+
+            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+            {
+                hasPickedUpTrinket = true;
+                ShowTrinketGuide();
+            }
+        }
+        
 
         public void Drop()
         {

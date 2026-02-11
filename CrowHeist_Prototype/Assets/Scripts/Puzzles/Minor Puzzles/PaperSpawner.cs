@@ -27,9 +27,13 @@ public class PaperSpawner : Interactable
     
     public override void TriggerInteraction(Pickable item)
     {
+        if (characterController.GetHeldItems().Count > 0)
+        {
+            characterController.Drop();
+        }
+
         if (paper == null)
         {
-            Debug.Log("Spawn paper please");
             paper = Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
             characterController.Pickup(paper.GetComponentInChildren<Interactable>(), paper.GetComponent<IPickupable>());
         }
