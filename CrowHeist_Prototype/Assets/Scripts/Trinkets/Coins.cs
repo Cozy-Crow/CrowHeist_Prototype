@@ -12,6 +12,7 @@ public class Coins : MonoBehaviour
     private GameObject player;
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
+    private UniqueID uniqueID;
 
     [Header("Audio")]
     [SerializeField] private EventReference _collectSound;
@@ -19,7 +20,7 @@ public class Coins : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
     [SerializeField] private GameObject _popupPrefab;
-    
+
     [Header("Narrative Item")]
     public bool isNarrativeItem = false;
 
@@ -42,7 +43,8 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
-        
+        uniqueID = GetComponent<UniqueID>();
+
         if(this.isNarrativeItem == true)
         {
             _coinValue = 3;
@@ -69,8 +71,14 @@ public class Coins : MonoBehaviour
                         itemSprite = sr.sprite;
                     }
                 }
-                
+
                 UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone(isNarrativeItem, itemSprite);
+            }
+
+            // Narrative item: fire collection event to unlock in narrative menu
+            if (isNarrativeItem && PickupRegistry.Instance != null && uniqueID != null)
+            {
+                PickupRegistry.Instance.MarkNarrativeAsCollected(uniqueID);
             }
 
             // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
