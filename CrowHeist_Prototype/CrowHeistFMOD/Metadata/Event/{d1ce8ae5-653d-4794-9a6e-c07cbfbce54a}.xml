@@ -56,7 +56,11 @@
 			<destination>{0b18dc2b-9c92-4148-9173-32e9d909ff26}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{9e7226b5-45e3-4fc4-8452-45d4c6a2d7d2}" />
+	<object class="EventAutomatableProperties" id="{9e7226b5-45e3-4fc4-8452-45d4c6a2d7d2}">
+		<property name="triggerCooldown">
+			<value>520</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{02d491b9-4fc4-4bf8-8690-b424476576f2}" />
 	<object class="GroupTrack" id="{58e5a831-de7b-4e23-9104-9a3b56b447a0}">
 		<relationship name="modules">
@@ -72,6 +76,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{930a03ae-ec47-4dfd-b4de-01a2b449f124}">
+		<property name="volume">
+			<value>-6</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{c60276c8-b42f-4012-945a-5ee313b3824c}</destination>
 		</relationship>
@@ -110,6 +117,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{3433e2a1-aef4-4049-bf86-fb613298aba1}">
+		<property name="volume">
+			<value>-0.5</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -126,7 +136,7 @@
 	<object class="MixerBusEffectChain" id="{c60276c8-b42f-4012-945a-5ee313b3824c}">
 		<relationship name="effects">
 			<destination>{bfdc6c7c-bfcf-4c3d-a337-bf01f8da0546}</destination>
-			<destination>{a98bc1e0-5eb2-4d19-8a7e-f682206a17de}</destination>
+			<destination>{785ae487-a0a3-4219-8a2e-fee45e59dd7c}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{724a059c-4185-4153-a7c9-c17979432b79}" />
@@ -182,7 +192,23 @@
 	</object>
 	<object class="MixerBusPanner" id="{4e2ed615-5ced-49b7-9ee1-ddbe5a1f8e27}" />
 	<object class="MixerBusFader" id="{bfdc6c7c-bfcf-4c3d-a337-bf01f8da0546}" />
-	<object class="SpatialiserEffect" id="{a98bc1e0-5eb2-4d19-8a7e-f682206a17de}" />
+	<object class="SpatialiserEffect" id="{785ae487-a0a3-4219-8a2e-fee45e59dd7c}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>3.60000014</value>
+		</property>
+		<property name="minimumExtent">
+			<value>154</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{90716bdc-ebbe-41b2-b972-71e46edf430d}">
 		<property name="position">
 			<value>0.31</value>

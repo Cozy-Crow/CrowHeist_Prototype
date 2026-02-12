@@ -34,18 +34,7 @@ public class CrowleySFX : MonoBehaviour
 
     public void Update()
     {
-        //Debug.Log("Hi");
-        // if (Input.GetKey(KeyCode.Q))
-        // {
-        //     AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 1f);
-        //     Debug.Log("Run");
-        //}
-        // else
-        // {  
-        //     // AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", 0f); 
-        //     // //AudioManager.Instance?.PlayOneShotWithParameter(Footstep, "WalkRun", -1f, "Walk"); 
-        //     // Debug.Log("Walk");
-        // }
+    
     }
 
     public void PlayOneShot(string sfx)
@@ -83,29 +72,6 @@ public class CrowleySFX : MonoBehaviour
         AudioManager.Instance?.SetInstanceLabelParam(instance, parameter, label);
     }
 
-    // private void OnTriggerEnter(Collider collider)
-    // {
-    //     if (collider.tag.Equals("MetalFootstep"))
-    //     {
-    //         print("METAL");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Metal");
-    //     }
-    //     else if (collider.tag.Equals("WoodFootstep"))
-    //     {
-    //         print("WOOD");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Wood");
-    //     }
-    //     else if (collider.tag.Equals("CarpetFootstep"))
-    //     {
-    //         print("Carpet");
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Carpet");
-    //     }
-    //     else
-    //     {
-    //         footstepInstance.setParameterByNameWithLabel("Surface", "Generic");
-    //         print("GENERIC");
-    //     }
-    // }
 }
 
 

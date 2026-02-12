@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 
@@ -10,6 +11,7 @@ public class InteractableRoombaVase : MonoBehaviour
 {
     [SerializeField] private GameObject player;
     [SerializeField] private float interactDistance;
+    [SerializeField] EventReference BreakVaseSFX;
 
     public GameObject brokenPrefab;
 
@@ -44,6 +46,7 @@ public class InteractableRoombaVase : MonoBehaviour
         rb.isKinematic = false;
         rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
         virtualCamManager.StartRoombaBreakSequence();
+        AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
     }
 
     public void OnTriggerEnter(Collider other)

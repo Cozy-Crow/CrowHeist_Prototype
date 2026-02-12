@@ -146,6 +146,8 @@ namespace KinematicCharacterController.Examples
 
         [Header("Audio")]
         [SerializeField] private EventReference dashActivate;
+        [SerializeField] private EventReference jump;
+        [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
         #region  Trinket Guide
@@ -178,6 +180,9 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            //creates audio land instance
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -198,7 +203,6 @@ namespace KinematicCharacterController.Examples
                     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
                     if (sodaDash != null)
                     {
-                        AudioManager.Instance?.PlayOneShot(dashActivate);
                         sodaDash.HandleDash();
                     }
                 }
@@ -260,6 +264,7 @@ namespace KinematicCharacterController.Examples
                     surfaceTag = "Generic";
                 }
                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
             }
         }
         private void HandleInput()
@@ -289,6 +294,16 @@ namespace KinematicCharacterController.Examples
             {
                 jumpBufferCounter -= Time.deltaTime;
             }
+
+            //sets parameter for footstep audio to change from running or walking
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+            }
+            else
+            {
+                crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+            }
         }
 
         private void HandleMove()
@@ -312,6 +327,8 @@ namespace KinematicCharacterController.Examples
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
             rb.velocity = targetVelocity;
+
+
         }
 
         private void HandleGravity()
@@ -338,6 +355,10 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+                    //plays audio when landing
+                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    
                 }
 
                 isJumping = false;
@@ -355,6 +376,7 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
+            AudioManager.Instance?.PlayOneShot(jump); 
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -590,6 +612,10 @@ namespace KinematicCharacterController.Examples
                             {
                                 hasPickedUpTrinket = true;
                                 ShowTrinketGuide();
+                            }
+                            if(heldObject.CompareTag("Soda"))
+                            {
+                                AudioManager.Instance?.PlayOneShot(dashActivate);
                             }
                         }
                         else

@@ -35,6 +35,10 @@ public class Coins : MonoBehaviour
         {
             pickableUpScript._isDirty = false;
         }
+        if(pickableUpScript.pickedUp == true)
+        {
+                  GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up  
+        } 
     }
 
     private void Awake()
