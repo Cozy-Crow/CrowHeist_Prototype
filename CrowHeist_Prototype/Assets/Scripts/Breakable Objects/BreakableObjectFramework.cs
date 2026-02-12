@@ -14,8 +14,23 @@ public class BreakableObjectFramework : MonoBehaviour
     public float BreakForce = 5f;
     public GameObject coinPrefab;
     public float minThrowVelocity = 3f;
-    
+    public float minFallTime = 0.5f;
     private bool isBroken = false;
+    private Rigidbody rb;
+    private float fallTime = 0f;
+    
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
+    
+    void Update()
+    {
+        if (rb != null && rb.velocity.y < -0.1f)
+        {
+            fallTime += Time.deltaTime;
+        }
+    }
     
     void OnTriggerEnter(Collider other)
     {
@@ -33,9 +48,9 @@ public class BreakableObjectFramework : MonoBehaviour
         {
             Break();
         }
-        else if (other.attachedRigidbody != null && other.attachedRigidbody.velocity.magnitude < 0.1f)
+        else if (fallTime >= minFallTime)
         {
-            StartCoroutine(CheckForFall(other.attachedRigidbody));
+            Break();
         }
     }
     
@@ -70,18 +85,4 @@ public class BreakableObjectFramework : MonoBehaviour
         Destroy(gameObject, 1f);
     }
 
-    private IEnumerator CheckForFall(Rigidbody rb)
-    {
-        float fallTime = 0f;
-        while (rb.velocity.magnitude < 0.1f)
-        {
-            fallTime += Time.deltaTime;
-            if (fallTime >= 0.5f)
-            {
-                Break();
-                yield break;
-            }
-            yield return null;
-        }
-    }
 }
