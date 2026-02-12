@@ -6,7 +6,7 @@ using UnityEngine;
 public class TrinketsSO : ScriptableObject
 {
     [SerializeField] private string trinketName;
-    [SerializeField, TextArea(3,5)] private string description;
+    [SerializeField, TextArea(3,5)] private string[] descriptions;
     [SerializeField] string locationHint;
     [SerializeField] private Sprite lockedIcon;
     [SerializeField] private Sprite unlockedIcon;
@@ -16,7 +16,28 @@ public class TrinketsSO : ScriptableObject
     //For creating trinket
     public Sprite LockedIcon {get => lockedIcon; set => lockedIcon = value; }
     public Sprite UnlockedIcon {get => unlockedIcon; set => unlockedIcon = value; }
-    public string Description {get => description; set => description = value; }
+
+    /// <summary>
+    /// Gets or sets the full array of descriptions.
+    /// </summary>
+    public string[] Descriptions {get => descriptions; set => descriptions = value; }
+
+    /// <summary>
+    /// Gets or sets a single description. Getter returns a random pick; setter wraps into array.
+    /// </summary>
+    public string Description
+    {
+        get
+        {
+            if (descriptions == null || descriptions.Length == 0)
+                return string.Empty;
+            if (descriptions.Length == 1)
+                return descriptions[0];
+            return descriptions[Random.Range(0, descriptions.Length)];
+        }
+        set => descriptions = new string[] { value };
+    }
+
     public string LocationHint {get => locationHint; set => locationHint = value; }
     //For displaying trinket
     public string DispayName {
@@ -51,7 +72,7 @@ public class TrinketsSO : ScriptableObject
         {
             if (isUnlocked)
             {
-                return description;
+                return Description;
             }
             else
             {

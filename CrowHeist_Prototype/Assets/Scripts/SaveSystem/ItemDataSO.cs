@@ -9,7 +9,7 @@ public class ItemDataSO : ScriptableObject
 {
     [Header("Basic Info")]
     [SerializeField] private string itemName;
-    [SerializeField, TextArea(3, 5)] private string description;
+    [SerializeField, TextArea(3, 5)] private string[] descriptions;
     [SerializeField] private ObjectType itemType = ObjectType.Pickupable;
 
     [Header("Visual Display")]
@@ -26,7 +26,27 @@ public class ItemDataSO : ScriptableObject
 
     // Properties
     public string ItemName => itemName;
-    public string Description => description;
+
+    /// <summary>
+    /// Returns a random description from the descriptions array.
+    /// </summary>
+    public string Description
+    {
+        get
+        {
+            if (descriptions == null || descriptions.Length == 0)
+                return string.Empty;
+            if (descriptions.Length == 1)
+                return descriptions[0];
+            return descriptions[Random.Range(0, descriptions.Length)];
+        }
+    }
+
+    /// <summary>
+    /// Returns the full array of descriptions.
+    /// </summary>
+    public string[] Descriptions => descriptions;
+
     public ObjectType ItemType => itemType;
     public Sprite Icon => icon;
     public GameObject PreviewModelPrefab => previewModelPrefab;
@@ -37,7 +57,8 @@ public class ItemDataSO : ScriptableObject
 
     // Setters for editor/runtime creation
     public void SetItemName(string name) => itemName = name;
-    public void SetDescription(string desc) => description = desc;
+    public void SetDescription(string desc) => descriptions = new string[] { desc };
+    public void SetDescriptions(string[] descs) => descriptions = descs;
     public void SetItemType(ObjectType type) => itemType = type;
     public void SetIcon(Sprite newIcon) => icon = newIcon;
     public void SetPreviewModel(GameObject model) => previewModelPrefab = model;
