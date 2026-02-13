@@ -9,6 +9,7 @@ public class WTFA_Book : MonoBehaviour
     // Spawns broken prefab when dropped from sufficient height
 
     [SerializeField] private GameObject brokenBookPrefab;
+    [SerializeField] private Transform brokenBookSpawnPoint;
 
     [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
@@ -64,8 +65,13 @@ public class WTFA_Book : MonoBehaviour
     {
         hasBroken = true;
 
-        if (brokenBookPrefab)
-            Instantiate(brokenBookPrefab, transform.position, transform.rotation);
+        GameObject broken = Instantiate(brokenBookPrefab, transform.position, transform.rotation);
+
+        foreach (Rigidbody r in broken.GetComponentsInChildren<Rigidbody>())
+        {
+            r.velocity = Vector3.zero;
+            r.angularVelocity = Vector3.zero;
+        }
 
         SpawnItem();
 
