@@ -13,8 +13,11 @@ namespace KinematicCharacterController.Examples
     [RequireComponent(typeof(CapsuleCollider))]
     public class Controller2Point5D : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private Sockets sockets;
+        [SerializeField] private CrowleySFX crowleySFX;
 
+        #region Movement Variables
         [Header("Movement")]
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
@@ -31,15 +34,21 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
+        private string surfaceTag = "";
+
         public Vector3 Velocity => velocity;
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
+        public string SurfaceTag => surfaceTag;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
         public bool ChargeThrowing { get => chargingThrow;}
+        #endregion
 
+        #region Animation
         //Sprite
         [SerializeField] GameObject playerSprite;
         [SerializeField] AnimatorCoder animatorCoder;
+        #endregion
         
         // Soda Variables
         public bool isSpeedBoosted = false;
@@ -51,12 +60,13 @@ namespace KinematicCharacterController.Examples
         public float fallingTime = 0f;
         private float maxFallSpeed = 20f;
 
-        [Header("PickUP")]
+        [Header("PickUp")]
         [SerializeField] private Transform pickUpPoint;
         [SerializeField] private Transform handPoint;
         [SerializeField] private Transform dropPoint;
         public bool isDirty = false;
 
+        #region Dash Variables
         [Header("Dash")]
         [SerializeField] public float dashSpeed = 40f;
         [SerializeField] public float dashDuration = 0.3f;
@@ -64,6 +74,7 @@ namespace KinematicCharacterController.Examples
         public float dashCooldown = 1f;
         public bool canDash = true;
         public bool isDashing = false;
+        #endregion
 
         [Header("Added Jump Features")]
         [SerializeField] private float coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
@@ -136,9 +147,11 @@ namespace KinematicCharacterController.Examples
 
         [Header("Audio")]
         [SerializeField] private EventReference dashActivate;
+        [SerializeField] private EventReference jump;
+        [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
-
+        #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
         [SerializeField] private float trinketGuideWidth = 0.1f;
@@ -146,6 +159,7 @@ namespace KinematicCharacterController.Examples
         private LineRenderer trinketGuideLine;
         private bool hasPickedUpTrinket = false;
         private Transform nearestWindow;
+        #endregion
 
         private void Awake()
         {
@@ -156,6 +170,7 @@ namespace KinematicCharacterController.Examples
             // - trigger is listed first in inspector 
             triggerCollider = capsuleCollider[0];
             normalCollider = capsuleCollider[1];
+            crowleySFX = GetComponent<CrowleySFX>();
         }
 
         public void Start()
@@ -166,6 +181,9 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            //creates audio land instance
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -186,7 +204,6 @@ namespace KinematicCharacterController.Examples
                     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
                     if (sodaDash != null)
                     {
-                        AudioManager.Instance?.PlayOneShot(dashActivate);
                         sodaDash.HandleDash();
                     }
                 }
@@ -239,6 +256,17 @@ namespace KinematicCharacterController.Examples
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
+
+            if(hitMain.collider != null)
+            {
+                surfaceTag = hitMain.collider.gameObject.tag;
+                if(surfaceTag.Equals("Untagged") || surfaceTag.Equals("Ground"))
+                {
+                    surfaceTag = "Generic";
+                }
+                crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+            }
         }
         private void HandleInput()
         {
@@ -267,6 +295,16 @@ namespace KinematicCharacterController.Examples
             {
                 jumpBufferCounter -= Time.deltaTime;
             }
+
+            //sets parameter for footstep audio to change from running or walking
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+            }
+            else
+            {
+                crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+            }
         }
 
         private void HandleMove()
@@ -290,6 +328,8 @@ namespace KinematicCharacterController.Examples
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
             rb.velocity = targetVelocity;
+
+
         }
 
         private void HandleGravity()
@@ -316,6 +356,10 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+                    //plays audio when landing
+                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    
                 }
 
                 isJumping = false;
@@ -333,6 +377,7 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
+            AudioManager.Instance?.PlayOneShot(jump); 
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -491,7 +536,6 @@ namespace KinematicCharacterController.Examples
 
                 }
             }
-            
         }
 
         void OnTriggerExit(Collider other)
@@ -694,6 +738,10 @@ namespace KinematicCharacterController.Examples
             {
                 hasPickedUpTrinket = true;
                 ShowTrinketGuide();
+            }
+            if(heldObject.CompareTag("Soda"))
+            {
+              AudioManager.Instance?.PlayOneShot(dashActivate);
             }
         }
         
