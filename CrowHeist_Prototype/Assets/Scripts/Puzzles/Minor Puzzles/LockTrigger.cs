@@ -44,7 +44,7 @@ public class LockTrigger : MonoBehaviour
             keyRb.isKinematic = true;
         }
 
-        Quaternion targetRot = transform.rotation * Quaternion.Euler(0, 0, 90);
+        Quaternion targetRot = transform.rotation * Quaternion.Euler(0, 90, 90);
         Vector3 targetPos = transform.position + transform.forward * keyTipOffset - transform.up * keyBackOffset;
         
         while (Vector3.Distance(key.position, targetPos) > 0.01f)

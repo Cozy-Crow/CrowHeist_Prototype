@@ -1,4 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using KinematicCharacterController.Examples;
+using Unity.VisualScripting;
 
 public class BreakableObjectFramework : MonoBehaviour
 {
@@ -12,20 +17,25 @@ public class BreakableObjectFramework : MonoBehaviour
     
     private bool isBroken = false;
     
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
         if (isBroken) return;
         
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
-            if (collision.relativeVelocity.y < -2f)
+            Controller2Point5D player = other.GetComponent<Controller2Point5D>();
+            if(player != null && player.fallingTime >= 0.4f)
             {
                 Break();
             }
         }
-        else if (collision.relativeVelocity.magnitude > minThrowVelocity)
+        else if (other.attachedRigidbody != null && other.attachedRigidbody.velocity.magnitude > minThrowVelocity)
         {
             Break();
+        }
+        else if (other.attachedRigidbody != null && other.attachedRigidbody.velocity.magnitude < 0.1f)
+        {
+            StartCoroutine(CheckForFall(other.attachedRigidbody));
         }
     }
     
@@ -39,7 +49,7 @@ public class BreakableObjectFramework : MonoBehaviour
         
         foreach (var piece in brokenPieces)
         {
-            var spawnedPiece = Instantiate(piece, transform.position, Random.rotation);
+            var spawnedPiece = Instantiate(piece, transform.position, transform.rotation);
             var rb = spawnedPiece.GetComponent<Rigidbody>();
             if (rb)
             {
@@ -58,5 +68,20 @@ public class BreakableObjectFramework : MonoBehaviour
         GetComponent<Collider>().enabled = false;
         GetComponent<Renderer>().enabled = false;
         Destroy(gameObject, 1f);
+    }
+
+    private IEnumerator CheckForFall(Rigidbody rb)
+    {
+        float fallTime = 0f;
+        while (rb.velocity.magnitude < 0.1f)
+        {
+            fallTime += Time.deltaTime;
+            if (fallTime >= 0.5f)
+            {
+                Break();
+                yield break;
+            }
+            yield return null;
+        }
     }
 }
