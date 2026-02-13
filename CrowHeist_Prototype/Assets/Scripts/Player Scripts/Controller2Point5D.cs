@@ -739,6 +739,10 @@ namespace KinematicCharacterController.Examples
                 hasPickedUpTrinket = true;
                 ShowTrinketGuide();
             }
+            if(heldObject.CompareTag("Soda"))
+            {
+              AudioManager.Instance?.PlayOneShot(dashActivate);
+            }
         }
         
 
