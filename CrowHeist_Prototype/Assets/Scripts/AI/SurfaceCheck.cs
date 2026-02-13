@@ -2,8 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Created by Mark D on 9/10/25
-// This script goes on objects in the Abuela level so the roomba knows when to activate
+// Created by Mark D on 9/10/25 - Updated 2/13/26
+// This script goes one object in the Abuela level to activate the roomba and trigger the cutscene
 // This will go on every object that has a surface that crowley can climb on to activate roomba
 
 public class SurfaceCheck : MonoBehaviour
