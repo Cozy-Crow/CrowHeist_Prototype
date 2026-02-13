@@ -8,6 +8,8 @@ using UnityEngine;
 
 public class SurfaceCheck : MonoBehaviour
 {
+    public CutsceneManager cutsceneManager;
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -17,6 +19,7 @@ public class SurfaceCheck : MonoBehaviour
             {
                 roomba.Activate();
             }
+            cutsceneManager.RoombaActivationCutscene();
         }
     }
 }

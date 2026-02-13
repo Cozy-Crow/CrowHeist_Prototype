@@ -9,6 +9,9 @@ public class CutsceneManager : MonoBehaviour
     // It will be changed to work with unity events so cutscenes
     // can be triggered by a variety of conditions
     
+    public CreateCutscene roombaActivationCutscene;
+    bool roombaActivationCutscenePlayed = false;
+
     public CreateCutscene doorOpenCutscene;
     bool doorOpenCutscenePlayed = false;
     public DoorOpen doorOpen;
@@ -21,5 +24,12 @@ public class CutsceneManager : MonoBehaviour
             doorOpenCutscenePlayed = true;
             doorOpen.OpenDoor();
         }
+    }
+
+    public void RoombaActivationCutscene()
+    {
+        Debug.Log("cutscene manager roomba activation cutscene");
+        roombaActivationCutscene.PlayCutscene();
+        roombaActivationCutscenePlayed = true;
     }
 }
