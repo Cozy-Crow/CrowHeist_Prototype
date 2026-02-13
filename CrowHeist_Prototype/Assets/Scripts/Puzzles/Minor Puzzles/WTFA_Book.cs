@@ -65,13 +65,7 @@ public class WTFA_Book : MonoBehaviour
     {
         hasBroken = true;
 
-        GameObject broken = Instantiate(brokenBookPrefab, transform.position, transform.rotation);
-
-        foreach (Rigidbody r in broken.GetComponentsInChildren<Rigidbody>())
-        {
-            r.velocity = Vector3.zero;
-            r.angularVelocity = Vector3.zero;
-        }
+        Instantiate(brokenBookPrefab, brokenBookSpawnPoint.position, brokenBookSpawnPoint.rotation);
 
         SpawnItem();
 
