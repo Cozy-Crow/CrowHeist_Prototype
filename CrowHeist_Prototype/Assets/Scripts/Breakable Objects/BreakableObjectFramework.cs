@@ -1,4 +1,9 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using KinematicCharacterController.Examples;
+using Unity.VisualScripting;
 
 public class BreakableObjectFramework : MonoBehaviour
 {
@@ -8,12 +13,42 @@ public class BreakableObjectFramework : MonoBehaviour
     public AudioClip breakSound;
     public float BreakForce = 5f;
     public GameObject coinPrefab;
-    
+    public float minThrowVelocity = 3f;
+    public float minFallTime = 0.5f;
     private bool isBroken = false;
+    private Rigidbody rb;
+    private float fallTime = 0f;
     
-    void OnCollisionEnter(Collision collision)
+    void Start()
     {
-        if (!isBroken && (collision.gameObject.CompareTag("Player") || collision.relativeVelocity.magnitude > 3f))
+        rb = GetComponent<Rigidbody>();
+    }
+    
+    void Update()
+    {
+        if (rb != null && rb.velocity.y < -0.1f)
+        {
+            fallTime += Time.deltaTime;
+        }
+    }
+    
+    void OnTriggerEnter(Collider other)
+    {
+        if (isBroken) return;
+        
+        if (other.CompareTag("Player"))
+        {
+            Controller2Point5D player = other.GetComponent<Controller2Point5D>();
+            if(player != null && player.fallingTime >= 0.4f)
+            {
+                Break();
+            }
+        }
+        else if (other.attachedRigidbody != null && other.attachedRigidbody.velocity.magnitude > minThrowVelocity)
+        {
+            Break();
+        }
+        else if (fallTime >= minFallTime)
         {
             Break();
         }
@@ -29,14 +64,13 @@ public class BreakableObjectFramework : MonoBehaviour
         
         foreach (var piece in brokenPieces)
         {
-            var spawnedPiece = Instantiate(piece, transform.position, Random.rotation);
+            var spawnedPiece = Instantiate(piece, transform.position, transform.rotation);
             var rb = spawnedPiece.GetComponent<Rigidbody>();
             if (rb)
             {
                 rb.AddForce(Random.insideUnitSphere * BreakForce);
                 rb.AddTorque(Random.insideUnitSphere * BreakForce);
             }
-            Destroy(spawnedPiece, 5f);
         }
         
         if (coinPrefab)
@@ -50,4 +84,5 @@ public class BreakableObjectFramework : MonoBehaviour
         GetComponent<Renderer>().enabled = false;
         Destroy(gameObject, 1f);
     }
+
 }

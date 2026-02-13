@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 public class Book_ThrowForBirdBrains : MonoBehaviour
@@ -13,6 +14,7 @@ public class Book_ThrowForBirdBrains : MonoBehaviour
     [SerializeField] private GameObject bookCover;
     [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
+    [SerializeField] private EventReference bookOpen;
 
     private Rigidbody rb;
     private Pickable pickableUp;
@@ -70,6 +72,7 @@ public class Book_ThrowForBirdBrains : MonoBehaviour
 
     IEnumerator SmoothOpen()
     {
+        AudioManager.Instance?.PlayOneShot3D(bookOpen, transform.position);
         var startPos = bookCover.transform.localPosition;
         var startRot = bookCover.transform.localEulerAngles;
         var targetPos = startPos + new Vector3(-1f, 0, 0.238f);

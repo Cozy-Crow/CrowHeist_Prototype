@@ -693,6 +693,7 @@ GameObject:
   - component: {fileID: 157269829}
   - component: {fileID: 157269828}
   - component: {fileID: 157269827}
+  - component: {fileID: 157269834}
   m_Layer: 3
   m_Name: Cube (19)
   m_TagString: Glider
@@ -730,10 +731,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!54 &157269829
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -848,6 +871,21 @@ Transform:
   - {fileID: 1164666614}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &157269834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 157269826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 4238488d-3420-4a5f-9703-e85bc2561444
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1001 &180340409
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1666,6 +1704,9 @@ MonoBehaviour:
     _camera: {fileID: 1772206044}
   - _name: Exit
     _camera: {fileID: 1367140864}
+  endCutsceneScene: EndCutsceneScene
+  gameSceneName: IntroScene
+  enableSaveSystem: 1
 --- !u!1001 &417375575
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4006,7 +4047,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _coinsUI: {fileID: 0}
-  _noiseUI: {fileID: 0}
+  _altWinCoinsUI: {fileID: 0}
+  CollectionZoneCameraUI: {fileID: 0}
 --- !u!114 &925734380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4184,6 +4226,7 @@ GameObject:
   - component: {fileID: 945011978}
   - component: {fileID: 945011977}
   - component: {fileID: 945011976}
+  - component: {fileID: 945011982}
   m_Layer: 3
   m_Name: Toy (3)
   m_TagString: Untagged
@@ -4203,10 +4246,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!54 &945011977
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -4320,6 +4385,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &945011982
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 945011975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: c92a729b-5f4c-4631-8b17-ee4fd429bd69
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1001 &954901502
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4391,6 +4471,7 @@ GameObject:
   - component: {fileID: 963922531}
   - component: {fileID: 963922530}
   - component: {fileID: 963922535}
+  - component: {fileID: 963922536}
   m_Layer: 3
   m_Name: Toy (2)
   m_TagString: Untagged
@@ -4523,10 +4604,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+--- !u!114 &963922536
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963922529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: bed8ef31-a6b9-450e-b7a9-4013491e993b
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1001 &1003186224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6564,6 +6682,7 @@ GameObject:
   - component: {fileID: 1286128883}
   - component: {fileID: 1286128882}
   - component: {fileID: 1286128887}
+  - component: {fileID: 1286128888}
   m_Layer: 3
   m_Name: Toy (1)
   m_TagString: Untagged
@@ -6696,10 +6815,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+--- !u!114 &1286128888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1286128881}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0e7911bc-b820-4c9c-81cb-7e382e46abe7
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1 &1300932081
 GameObject:
   m_ObjectHideFlags: 0
@@ -7675,6 +7831,7 @@ GameObject:
   - component: {fileID: 1537182973}
   - component: {fileID: 1537182972}
   - component: {fileID: 1537182971}
+  - component: {fileID: 1537182977}
   m_Layer: 3
   m_Name: Toy2 (1)
   m_TagString: Untagged
@@ -7694,10 +7851,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!54 &1537182972
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -7811,6 +7990,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1537182977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537182970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 719172ba-814e-411f-a647-d731f2fc66d8
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1 &1545364837
 GameObject:
   m_ObjectHideFlags: 0
@@ -7881,6 +8075,7 @@ GameObject:
   - component: {fileID: 1561016669}
   - component: {fileID: 1561016668}
   - component: {fileID: 1561016673}
+  - component: {fileID: 1561016674}
   m_Layer: 3
   m_Name: Toy
   m_TagString: Untagged
@@ -8013,10 +8208,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+--- !u!114 &1561016674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1561016666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2b88da8e-4106-43a5-8a7f-dc9fb9624551
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1001 &1595509519
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8893,8 +9125,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1811557520}
   m_SourcePrefab: {fileID: 100100000, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+--- !u!1 &1811557519 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 1811557518}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1811557520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811557519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 474bcb49853aa07438625e644c072ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Version: 3
+  m_UsePipelineSettings: 1
+  m_AdditionalLightsShadowResolutionTier: 2
+  m_LightLayerMask: 1
+  m_RenderingLayers: 1
+  m_CustomShadowLayers: 0
+  m_ShadowLayerMask: 1
+  m_ShadowRenderingLayers: 1
+  m_LightCookieSize: {x: 1, y: 1}
+  m_LightCookieOffset: {x: 0, y: 0}
+  m_SoftShadowQuality: 0
 --- !u!1 &1821724228
 GameObject:
   m_ObjectHideFlags: 0
@@ -10121,6 +10384,7 @@ GameObject:
   - component: {fileID: 2037519509}
   - component: {fileID: 2037519508}
   - component: {fileID: 2037519513}
+  - component: {fileID: 2037519514}
   m_Layer: 3
   m_Name: Toy2
   m_TagString: Untagged
@@ -10253,10 +10517,47 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjThrowAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  ObjLandAudio:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+--- !u!114 &2037519514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2037519506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 60565593-eebd-431d-987c-dc3bae1af386
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1 &2050907799
 GameObject:
   m_ObjectHideFlags: 0
