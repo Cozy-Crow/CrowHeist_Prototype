@@ -12,6 +12,9 @@ public class CutsceneManager : MonoBehaviour
     public CreateCutscene roombaActivationCutscene;
     bool roombaActivationCutscenePlayed = false;
 
+    public CreateCutscene roombaBreakCutscene;
+    bool roombaBreakCutscenePlayed = false;
+
     public CreateCutscene doorOpenCutscene;
     bool doorOpenCutscenePlayed = false;
     public DoorOpen doorOpen;
@@ -31,5 +34,12 @@ public class CutsceneManager : MonoBehaviour
         Debug.Log("cutscene manager roomba activation cutscene");
         roombaActivationCutscene.PlayCutscene();
         roombaActivationCutscenePlayed = true;
+    }
+
+    public void RoombaBreakCutscene()
+    {
+        Debug.Log("cutscene manager roomba break cutscene");
+        roombaBreakCutscene.PlayCutscene();
+        roombaBreakCutscenePlayed = true;
     }
 }
