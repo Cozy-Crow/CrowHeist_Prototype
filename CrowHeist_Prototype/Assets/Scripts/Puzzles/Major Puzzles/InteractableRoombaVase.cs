@@ -17,7 +17,7 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private Rigidbody rb;
 
-    public VirtualCamManager virtualCamManager;
+    public CutsceneManager cutsceneManager;
     
 
     void Start()
@@ -45,7 +45,7 @@ public class InteractableRoombaVase : MonoBehaviour
     {
         rb.isKinematic = false;
         rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
-        virtualCamManager.StartRoombaBreakSequence();
+        cutsceneManager.RoombaBreakCutscene();
         AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
     }
 
