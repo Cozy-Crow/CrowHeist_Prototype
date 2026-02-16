@@ -183,7 +183,7 @@ namespace KinematicCharacterController.Examples
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
             //creates audio land instance
-            //AudioManager.Instance?.CreateInstance("land", land);
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -264,8 +264,8 @@ namespace KinematicCharacterController.Examples
                 {
                     surfaceTag = "Generic";
                 }
-                // crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
-                // AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
             }
         }
         private void HandleInput()
@@ -297,14 +297,14 @@ namespace KinematicCharacterController.Examples
             }
 
             //sets parameter for footstep audio to change from running or walking
-            // if (Input.GetKey(KeyCode.LeftShift))
-            // {
-            //     crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
-            // }
-            // else
-            // {
-            //     crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
-            // }
+             if (Input.GetKey(KeyCode.LeftShift))
+             {
+                 crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+             }
+             else
+             {
+                 crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+             }
         }
 
         private void HandleMove()
