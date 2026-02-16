@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController.Examples;
+using FMODUnity;
 
 
 //[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(UniqueID))]
 public class Pickable : MonoBehaviour, IPickupable
 {
     [SerializeField] private Enum_Sockets socketType;
@@ -16,12 +18,30 @@ public class Pickable : MonoBehaviour, IPickupable
     private ItemEventManager itemEventManager;
     public SpawnItem mySpawner;
     private bool hasBeenPickedUp;
+    [Header("Audio")]
+    [SerializeField] private EventReference ObjPuAudio;
+    [SerializeField] public EventReference ObjThrowAudio;
+    [SerializeField] private EventReference ObjLandAudio;
 
-    public Enum_Sockets SocketType {get => socketType;}
+    // UniqueID reference for registry integration
+    private UniqueID uniqueID;
+
+    public Enum_Sockets SocketType { get => socketType; }
+
+    
+    public UniqueID UniqueID => uniqueID;
+
+    // Gets or sets whether this item has been picked up before (for first-pickup detection).  
+    public bool HasBeenPickedUp
+    {
+        get => hasBeenPickedUp;
+        set => hasBeenPickedUp = value;
+    }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        uniqueID = GetComponent<UniqueID>();
         player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
     }
     void Start()
@@ -40,11 +60,29 @@ public class Pickable : MonoBehaviour, IPickupable
         //MusicManager.SetParameterByName("ItemYes", 1);
 
         // Show visual for picked up item if it has not been picked up before
-        // Could be used in tandem with narrative menu later
-        // Need to rework later to make it specific to object types, this will trigger for every pickupable
-        if(hasBeenPickedUp == false)
+        // Uses registry to track first pickup state across save/load
+        bool isFirstPickup = !hasBeenPickedUp;
+
+        // Check registry for persistent first-pickup state
+        if (PickupRegistry.Instance != null && uniqueID != null)
         {
-            PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
+            isFirstPickup = !PickupRegistry.Instance.HasBeenPickedUp(uniqueID.ID);
+            PickupRegistry.Instance.MarkAsPickedUp(uniqueID.ID);
+        }
+
+        if (isFirstPickup)
+        {
+            // Check if this item type should show pickup animation
+            bool shouldShowVisual = true;
+            if (uniqueID != null && uniqueID.ItemData != null)
+            {
+                shouldShowVisual = uniqueID.ItemData.ShowOnFirstPickup;
+            }
+
+            if (shouldShowVisual && PickupVisualManager.Instance != null)
+            {
+                PickupVisualManager.Instance.PlayFirstPickupAnim(this.gameObject);
+            }
             hasBeenPickedUp = true;
         }
 
@@ -68,10 +106,13 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             Debug.Log("Non-Knife Picked up");
+            
         }
 
         rb.isKinematic = true;
         pickedUp = true;
+
+        AudioManager.Instance?.PlayOneShot(ObjPuAudio);
 
         if (player != null)
         {
@@ -86,7 +127,7 @@ public class Pickable : MonoBehaviour, IPickupable
 
         //TooltipManager.Instance.ShowTooltip(tag);
     }
-    
+
     public virtual void Drop(Vector3 position)
     {
         transform.SetParent(null);
@@ -126,6 +167,12 @@ public class Pickable : MonoBehaviour, IPickupable
 
     void OnTriggerEnter(Collider other)
     {
+        //makes it so the land sfx doesnt trigger on player throwing it initially
+        if (other.CompareTag("Player") == false)
+        {
+         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);   
+        }
+
         if (other.CompareTag("Ground") && _isDirty == false)
         {
             OnObjectDirty();
@@ -133,11 +180,11 @@ public class Pickable : MonoBehaviour, IPickupable
     }
     void OnTriggerExit(Collider other)
     {
-        if(other.CompareTag ("Waypoint"))
+        if (other.CompareTag("Waypoint"))
         {
             SpawnItem spawner = other.GetComponentInParent<SpawnItem>();
             Debug.Log(spawner);
-            if(spawner != null)
+            if (spawner != null)
             {
                 mySpawner = spawner;
                 mySpawner.NotifyIfRemoved(this.gameObject);

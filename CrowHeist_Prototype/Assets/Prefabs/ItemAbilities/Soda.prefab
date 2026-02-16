@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 738506968109312443}
   - component: {fileID: 3408510411124744870}
   - component: {fileID: 8399069459982045381}
-  - component: {fileID: -5775266499156134897}
+  - component: {fileID: 432515924856268787}
   m_Layer: 3
   m_Name: Soda
   m_TagString: Soda
@@ -150,10 +150,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 696abdb1838c07f41bd6d225251c72c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketType: 0
   pickedUp: 0
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: 212889189
+      Data2: 1118222299
+      Data3: -1648703328
+      Data4: 907331486
+    Path: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuGlass
+  ObjThrowAudio:
+    Guid:
+      Data1: -147064373
+      Data2: 1293584215
+      Data3: 1677258155
+      Data4: 327904074
+    Path: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowGlass
+  ObjLandAudio:
+    Guid:
+      Data1: 2043097456
+      Data2: 1250804870
+      Data3: 544206518
+      Data4: -1911469993
+    Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandGlass
 --- !u!114 &3408510411124744870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -185,7 +207,28 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dashForce: 20
---- !u!114 &-5775266499156134897
+  dashActivatve:
+    Guid:
+      Data1: -512311345
+      Data2: 1196429614
+      Data3: 698543011
+      Data4: 1989495072
+    Path: event:/SFX/PlayerMovement/Dash/Dash Activate
+  dashUse:
+    Guid:
+      Data1: -1039040138
+      Data2: 1080964333
+      Data3: 570924983
+      Data4: 832051154
+    Path: event:/SFX/PlayerMovement/Dash/Dash DeActivate
+  dashDeactivatve:
+    Guid:
+      Data1: 1363557720
+      Data2: 1284371144
+      Data3: 751245227
+      Data4: -1884316214
+    Path: event:/SFX/PlayerMovement/Dash/Dash Use
+--- !u!114 &432515924856268787
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -194,16 +237,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 323577287663079076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a9496910b6e50843af9549e7ca3eef2, type: 3}
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uniqueId: 
-  _objectType: 
-  _savePosition: 1
-  _saveRotation: 1
-  _saveScale: 0
-  _coinsComponent: {fileID: 0}
-  _altCoinsComponent: {fileID: 0}
+  id: 46fd7461-730e-4cc2-a36f-56d63951338b
+  objectType: 0
+  itemData: {fileID: 0}
 --- !u!1 &1956521395444532409
 GameObject:
   m_ObjectHideFlags: 0

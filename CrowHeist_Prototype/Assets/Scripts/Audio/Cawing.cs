@@ -12,19 +12,19 @@ public class Cawing : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.C) && (AudioManager.Instance != null && !_cawingSfx.IsNull))
         {
-            AudioManager.Instance.PlayOneShot(_cawingSfx);
+                AudioManager.Instance?.PlayOneShot(_cawingSfx);
             //RuntimeManager.PlayOneShot("event:/Crow");
         }
     }
 
-    public void PlaySFX(string audioname)
-    {
-        switch (audioname)
-        {
-            case "caw":
-                AudioManager.Instance.PlayOneShot(_cawingSfx);
-                break;
-        }
+    //public void PlaySFX(string audioname)
+    //{
+        //switch (audioname)
+        //{
+          //  case "caw":
+            //    AudioManager.Instance.PlayOneShot(_cawingSfx);
+              //  break;
+        //}
 
-    }
+    //}
 }

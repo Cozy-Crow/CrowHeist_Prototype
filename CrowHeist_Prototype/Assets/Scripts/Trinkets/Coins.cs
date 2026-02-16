@@ -13,12 +13,21 @@ public class Coins : MonoBehaviour
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
 
-     [Header("Audio")]
-     [SerializeField] private EventReference _collectSound;
+    [Header("Audio")]
+    [SerializeField] private EventReference _collectSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
     [SerializeField] private GameObject _popupPrefab;
+    
+    [Header("Narrative Item")]
+    public bool isNarrativeItem = false;
+
+    [Header("Collection Animation")]
+    [SerializeField] private Transform teleportPoint; // Where item teleports to before arc
+    [SerializeField] private Transform sackTarget; // The sack object
+    [SerializeField] private float arcHeight = 3f; // Height of the arc
+    [SerializeField] private float arcDuration = 1f; // Time to reach sack
 
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
     
@@ -32,6 +41,10 @@ public class Coins : MonoBehaviour
         {
             pickableUpScript._isDirty = false;
         }
+        if(pickableUpScript.pickedUp == true)
+        {
+                  GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up  
+        } 
     }
 
     private void Awake()
@@ -39,36 +52,136 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
+        
+        if(this.isNarrativeItem == true)
+        {
+            _coinValue = 3;
+        }
+
+        // Auto-find teleport point and sack if not set
+        if (teleportPoint == null)
+        {
+            GameObject tp = GameObject.Find("CollectionTeleportPoint");
+            if (tp != null) teleportPoint = tp.transform;
+        }
+
+        if (sackTarget == null)
+        {
+            GameObject sack = GameObject.Find("CollectionSack");
+            if (sack != null) sackTarget = sack.transform;
+        }
     }
+
     private void OnTriggerEnter(Collider other)
-{
-    if (other.CompareTag("HeistZone"))
     {
+        if (other.CompareTag("HeistZone"))
+        {
+            // Drop item if picked up
+            if(pickableUpScript.pickedUp)
+            {
+                playerController.Drop();
+            }
+
+            // Start collection sequence
+            StartCoroutine(CollectionSequence());
+        }
+    }
+
+    private IEnumerator CollectionSequence()
+    {
+        // Disable physics
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+        }
+
+        // Disable collider so player can't interact during animation
+        Collider col = GetComponent<Collider>();
+        if (col != null)
+        {
+            col.enabled = false;
+        }
+
+        // Show camera UI
+        if (UIManager.Instance.CollectionZoneCameraUI != null)
+        {
+            Sprite itemSprite = null;
+            if (isNarrativeItem)
+            {
+                SpriteRenderer sr = GetComponent<SpriteRenderer>();
+                if (sr != null)
+                {
+                    itemSprite = sr.sprite;
+                }
+            }
+            
+            UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone(isNarrativeItem, itemSprite);
+        }
+
+        // Teleport to start position
+        if (teleportPoint != null)
+        {
+            transform.position = teleportPoint.position;
+        }
+
+        // Small delay before arc starts
+        yield return new WaitForSeconds(0.2f);
+
+        // Arc to sack
+        if (sackTarget != null)
+        {
+            yield return StartCoroutine(ArcToTarget(sackTarget.position));
+        }
+
+        // Spawn particle effect at sack
+        if (_collectParticlePrefab != null)
+        {
+            Instantiate(_collectParticlePrefab, sackTarget.position, Quaternion.identity);
+        }
+
+        // Update score
         GameManager.Score += _coinValue;
         UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
 
-        if (UIManager.Instance.CollectionZoneCameraUI != null)
-        {
-            UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone();
-        }
-
+        // MusicManager code (if you want to re-enable it)
         // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
         // float newValue = currentValue + 1;
         // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
-        if(pickableUpScript.pickedUp)
-        {
-            playerController.Drop();
-        }
-
-        if (_collectParticlePrefab != null)
-        {
-            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
-        }
-
+        // Destroy or hide the item
         KillObject();
     }
-}
+
+    private IEnumerator ArcToTarget(Vector3 targetPosition)
+    {
+        Vector3 startPosition = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < arcDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / arcDuration;
+
+            // Linear interpolation for horizontal movement
+            Vector3 currentPos = Vector3.Lerp(startPosition, targetPosition, t);
+
+            // Add arc (parabola) for vertical movement
+            float height = arcHeight * (1 - Mathf.Pow(2 * t - 1, 2)); // Parabolic arc
+            currentPos.y += height;
+
+            transform.position = currentPos;
+
+            // Optional: rotate item during flight
+            transform.Rotate(Vector3.up, 360f * Time.deltaTime * 2f);
+
+            yield return null;
+        }
+
+        // Ensure we end exactly at target
+        transform.position = targetPosition;
+    }
     
     void KillObject()
     {

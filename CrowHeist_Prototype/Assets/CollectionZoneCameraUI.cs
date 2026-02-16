@@ -9,6 +9,11 @@ public class CollectionZoneCameraUI : MonoBehaviour
     [SerializeField] private RawImage cameraDisplay;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform displayContainer;
+    [SerializeField] private Image recordingDot;
+    
+    [Header("Narrative Item Popup")]
+    [SerializeField] private Image narrativePopup;
+    [SerializeField] private float narrativePopupDelay = 0.5f;
     
     [Header("Camera Setup")]
     [SerializeField] private Camera collectionCamera;
@@ -22,7 +27,11 @@ public class CollectionZoneCameraUI : MonoBehaviour
     [SerializeField] private Vector2 hiddenScale = new Vector2(0.5f, 0.5f);
     [SerializeField] private Vector2 visibleScale = Vector2.one;
 
+    [Header("Recording Dot Settings")]
+    [SerializeField] private float blinkSpeed = 0.3f;
+
     private Coroutine currentAnimation;
+    private Coroutine blinkCoroutine;
     private int originalCameraPriority;
 
     private void Awake()
@@ -32,6 +41,17 @@ public class CollectionZoneCameraUI : MonoBehaviour
             canvasGroup.alpha = 0f;
         
         displayContainer.localScale = hiddenScale;
+
+        if (recordingDot != null)
+        {
+            recordingDot.enabled = false;
+        }
+
+        // Hide narrative popup initially
+        if (narrativePopup != null)
+        {
+            narrativePopup.enabled = false;
+        }
         
         // Set up render texture
         if (collectionCamera != null && renderTexture != null)
@@ -49,21 +69,30 @@ public class CollectionZoneCameraUI : MonoBehaviour
         }
     }
 
-    /// Show the collection zone camera view
-    public void ShowCollectionZone()
+    // Show the collection zone camera view
+    public void ShowCollectionZone(bool isNarrativeItem = false, Sprite itemSprite = null)
     {
         // Stop any existing animation
         if (currentAnimation != null)
             StopCoroutine(currentAnimation);
 
-        currentAnimation = StartCoroutine(AnimateCameraView());
+        currentAnimation = StartCoroutine(AnimateCameraView(isNarrativeItem, itemSprite));
     }
 
-    private IEnumerator AnimateCameraView()
+    private IEnumerator AnimateCameraView(bool isNarrativeItem, Sprite itemSprite)
     {
         // Enable camera
         if (collectionCamera != null)
             collectionCamera.enabled = true;
+
+        // Start blinking recording dot
+        if (recordingDot != null)
+        {
+            recordingDot.enabled = true;
+            if (blinkCoroutine != null)
+                StopCoroutine(blinkCoroutine);
+            blinkCoroutine = StartCoroutine(BlinkRecordingDot());
+        }
 
         // Optionally activate virtual camera for better framing
         if (collectionVirtualCamera != null)
@@ -91,8 +120,28 @@ public class CollectionZoneCameraUI : MonoBehaviour
         displayContainer.localScale = visibleScale;
         canvasGroup.alpha = 1f;
 
+        // Show narrative popup if this is a narrative item
+        if (isNarrativeItem && narrativePopup != null)
+        {
+            yield return new WaitForSeconds(narrativePopupDelay);
+            
+            // Set the sprite if provided
+            if (itemSprite != null)
+            {
+                narrativePopup.sprite = itemSprite;
+            }
+            
+            narrativePopup.enabled = true;
+        }
+
         // Hold for display duration
         yield return new WaitForSeconds(displayDuration);
+
+        // Hide narrative popup before fading out
+        if (narrativePopup != null)
+        {
+            narrativePopup.enabled = false;
+        }
 
         // Fade out
         elapsed = 0f;
@@ -108,6 +157,15 @@ public class CollectionZoneCameraUI : MonoBehaviour
         }
 
         canvasGroup.alpha = 0f;
+        
+        // Stop blinking and hide recording dot
+        if (blinkCoroutine != null)
+        {
+            StopCoroutine(blinkCoroutine);
+            blinkCoroutine = null;
+        }
+        if (recordingDot != null)
+            recordingDot.enabled = false;
         
         // Disable camera
         if (collectionCamera != null)
@@ -126,5 +184,45 @@ public class CollectionZoneCameraUI : MonoBehaviour
         float c1 = 1.70158f;
         float c3 = c1 + 1f;
         return 1f + c3 * Mathf.Pow(t - 1f, 3f) + c1 * Mathf.Pow(t - 1f, 2f);
+    }
+
+    private IEnumerator BlinkRecordingDot()
+    {
+        while (true)
+        {
+            // Fade in
+            float elapsed = 0f;
+            while (elapsed < blinkSpeed / 2f)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = Mathf.Lerp(0.2f, 1f, elapsed / (blinkSpeed / 2f));
+                
+                if (recordingDot != null)
+                {
+                    Color color = recordingDot.color;
+                    color.a = alpha;
+                    recordingDot.color = color;
+                }
+                
+                yield return null;
+            }
+
+            // Fade out
+            elapsed = 0f;
+            while (elapsed < blinkSpeed / 2f)
+            {
+                elapsed += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0.2f, elapsed / (blinkSpeed / 2f));
+                
+                if (recordingDot != null)
+                {
+                    Color color = recordingDot.color;
+                    color.a = alpha;
+                    recordingDot.color = color;
+                }
+                
+                yield return null;
+            }
+        }
     }
 }

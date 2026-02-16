@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using KinematicCharacterController.Examples;
 using Unity.VisualScripting;
+using FMODUnity;
 
 public class BreakableCube : MonoBehaviour
 {
@@ -11,6 +12,12 @@ public class BreakableCube : MonoBehaviour
     public float breakForce = 5f; // Velocity needed to break
     public Vector3[] velocities = new Vector3[3] { Vector3.zero, Vector3.zero, Vector3.zero };
     [SerializeField] private GameObject coin;
+
+    [Header("Audio")]
+    [SerializeField] private EventReference mainBreakable;
+    [SerializeField] private EventReference breakablePieces;
+
+
 
     private void FixedUpdate()
     {
@@ -57,6 +64,8 @@ public class BreakableCube : MonoBehaviour
         // Spawn the broken version
         GameObject broken = Instantiate(brokenPrefab, transform.position, transform.rotation);
         Instantiate(coin, transform.position, transform.rotation);
+
+        AudioManager.Instance?.PlayOneShot3D(mainBreakable, transform.position);
 
         Vector3 max = Vector3.zero;
 

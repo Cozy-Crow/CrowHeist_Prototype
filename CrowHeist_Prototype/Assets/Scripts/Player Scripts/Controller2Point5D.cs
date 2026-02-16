@@ -13,8 +13,11 @@ namespace KinematicCharacterController.Examples
     [RequireComponent(typeof(CapsuleCollider))]
     public class Controller2Point5D : MonoBehaviour
     {
+        [Header("References")]
         [SerializeField] private Sockets sockets;
+        [SerializeField] private CrowleySFX crowleySFX;
 
+        #region Movement Variables
         [Header("Movement")]
         [SerializeField] public float moveSpeed = 5;
         [SerializeField] private float smoothTime = 0.05f;
@@ -31,16 +34,23 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
-        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu)
+
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
+        private string surfaceTag = "";
+
         public Vector3 Velocity => velocity;
         public Vector3 FaceDirection => faceDirection;
         public bool IsGrounded => isGrounded;
+        public string SurfaceTag => surfaceTag;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
         public bool ChargeThrowing { get => chargingThrow;}
+        #endregion
 
+        #region Animation
         //Sprite
         [SerializeField] GameObject playerSprite;
         [SerializeField] AnimatorCoder animatorCoder;
+        #endregion
         
         // Soda Variables
         public bool isSpeedBoosted = false;
@@ -52,12 +62,13 @@ namespace KinematicCharacterController.Examples
         public float fallingTime = 0f;
         private float maxFallSpeed = 20f;
 
-        [Header("PickUP")]
+        [Header("PickUp")]
         [SerializeField] private Transform pickUpPoint;
         [SerializeField] private Transform handPoint;
         [SerializeField] private Transform dropPoint;
         public bool isDirty = false;
 
+        #region Dash Variables
         [Header("Dash")]
         [SerializeField] public float dashSpeed = 40f;
         [SerializeField] public float dashDuration = 0.3f;
@@ -65,6 +76,7 @@ namespace KinematicCharacterController.Examples
         public float dashCooldown = 1f;
         public bool canDash = true;
         public bool isDashing = false;
+        #endregion
 
         [Header("Added Jump Features")]
         [SerializeField] private float coyoteTime = 0.15f; // Time after leaving ground where jump is still allowed
@@ -85,7 +97,8 @@ namespace KinematicCharacterController.Examples
         private bool wasGroundedLastFrame = false;
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
-        [Header("Charged Throw Settings")]
+        [Header("Charged Throw Settings")] 
+        [SerializeField] private GameObject targetAssetObject;
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -134,10 +147,13 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float externalForceDecay = 5f;
         [SerializeField] private float externalForceDamping = 0.9f;
 
-        //Audio
-        [SerializeField] private EventReference playerFootsteps;
-        private EventInstance footstepInstance;
+        [Header("Audio")]
+        [SerializeField] private EventReference dashActivate;
+        [SerializeField] private EventReference jump;
+        [SerializeField] private EventReference land;
+        private EventReference ObjThrowAudio;
 
+        #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
         [SerializeField] private float trinketGuideWidth = 0.1f;
@@ -145,6 +161,7 @@ namespace KinematicCharacterController.Examples
         private LineRenderer trinketGuideLine;
         private bool hasPickedUpTrinket = false;
         private Transform nearestWindow;
+        #endregion
 
         private void Awake()
         {
@@ -155,6 +172,7 @@ namespace KinematicCharacterController.Examples
             // - trigger is listed first in inspector 
             triggerCollider = capsuleCollider[0];
             normalCollider = capsuleCollider[1];
+            crowleySFX = GetComponent<CrowleySFX>();
         }
 
         public void Start()
@@ -165,6 +183,9 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            //creates audio land instance
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -238,6 +259,17 @@ namespace KinematicCharacterController.Examples
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
+
+            if(hitMain.collider != null)
+            {
+                surfaceTag = hitMain.collider.gameObject.tag;
+                if(surfaceTag.Equals("Untagged") || surfaceTag.Equals("Ground"))
+                {
+                    surfaceTag = "Generic";
+                }
+                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+            }
         }
         private void HandleInput()
         {
@@ -276,6 +308,16 @@ namespace KinematicCharacterController.Examples
             {
                 jumpBufferCounter -= Time.deltaTime;
             }
+
+            //sets parameter for footstep audio to change from running or walking
+            //  if (Input.GetKey(KeyCode.LeftShift))
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+            //  }
+            //  else
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+            //  }
         }
 
         private void HandleMove()
@@ -302,6 +344,8 @@ namespace KinematicCharacterController.Examples
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
             
             rb.velocity = targetVelocity;
+
+
         }
 
         private void HandleGravity()
@@ -328,6 +372,10 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+                    //plays audio when landing
+                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    
                 }
 
                 isJumping = false;
@@ -345,6 +393,7 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
+            AudioManager.Instance?.PlayOneShot(jump); 
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -503,7 +552,6 @@ namespace KinematicCharacterController.Examples
 
                 }
             }
-            
         }
 
         void OnTriggerExit(Collider other)
@@ -565,20 +613,8 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-
-                            selected.SetOutline(false);
-                            Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            pickUp.PickUp(transform);
-                            _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            heldObject = selected.realObject.GetComponent<Rigidbody>();
-                            UpdateHighlightedInteractable();
-
-                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
-                            {
-                                hasPickedUpTrinket = true;
-                                ShowTrinketGuide();
-                            }
+                            
+                            Pickup(selected, pickUp);
                         }
                         //otherwise interact with it
                         else
@@ -606,6 +642,7 @@ namespace KinematicCharacterController.Examples
             if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
+                
                 if (heldCollider != null)
                 {
                     heldCollider.enabled = true;
@@ -633,6 +670,7 @@ namespace KinematicCharacterController.Examples
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
+                    
                 }
 
                 if (Input.GetMouseButtonUp(0) && !cancelThrow)
@@ -640,6 +678,11 @@ namespace KinematicCharacterController.Examples
                     isThrowing = true;
                     chargingThrow = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
+
+                    print("THROW");
+                    
+                    AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
+                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
                     if (rigidbody != null)
                     {
@@ -675,6 +718,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
+                    targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -684,9 +728,43 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
+                    targetAssetObject.SetActive(false);
                 }
             }
         }
+
+        public List<IPickupable> GetHeldItems()
+        {
+            return _pickUpsList;
+        }
+
+
+        public void Pickup(Interactable selected, IPickupable pickUp)
+        {
+            selected.SetOutline(false);
+            Transform transform = sockets.GetSockets(pickUp.SocketType);
+            pickUp.PickUp(transform);
+            _pickUpsList.Add(pickUp);
+            nearbyInteractables.Remove(selected);
+            // foreach (var interactable in nearbyInteractables)
+            // {
+            //     Debug.Log("Item: " + interactable.transform.name);
+            // }
+            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
+            heldObject = selected.realObject.GetComponent<Rigidbody>();
+            UpdateHighlightedInteractable();
+
+            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+            {
+                hasPickedUpTrinket = true;
+                ShowTrinketGuide();
+            }
+            if(heldObject.CompareTag("Soda"))
+            {
+              AudioManager.Instance?.PlayOneShot(dashActivate);
+            }
+        }
+        
 
         public void Drop()
         {
@@ -749,6 +827,7 @@ namespace KinematicCharacterController.Examples
 
         void DrawThrowTrajectory(Vector3 direction)
         {
+            
             float chargePercent = throwForce / maxThrowForce;
             float scaledArc = Mathf.Lerp(minArc, maxArc, arcCurve.Evaluate(chargePercent));
             Vector3 curvedDirection = direction;
@@ -774,6 +853,38 @@ namespace KinematicCharacterController.Examples
             }
 
             throwDirection = curvedDirection;
+            
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
+
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
+
+        }
+
+        private Vector3 FindThrowCollisionPoint()
+        {
+            LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
+            Vector3 collisionPoint = new Vector3(0, 0, 0);
+            Vector3 firstPoint = lineRenderer.GetPosition(0);
+
+            for (int i = 0; i < lineRenderer.positionCount - 1; i++) 
+            {
+                Vector3 currentPoint = lineRenderer.GetPosition(i);
+                if (Physics.Linecast(firstPoint, currentPoint, out RaycastHit hit))
+                {
+                    Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
+                    if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    {
+                        collisionPoint = hit.point;
+                    }
+                }
+                
+                firstPoint = currentPoint;
+            }
+
+            return collisionPoint;
         }
 
         private void Flip(Vector3 faceDirection)
