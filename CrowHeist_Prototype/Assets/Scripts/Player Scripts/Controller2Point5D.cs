@@ -297,14 +297,14 @@ namespace KinematicCharacterController.Examples
             }
 
             //sets parameter for footstep audio to change from running or walking
-             if (Input.GetKey(KeyCode.LeftShift))
-             {
-                 crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
-             }
-             else
-             {
-                 crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
-             }
+            //  if (Input.GetKey(KeyCode.LeftShift))
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+            //  }
+            //  else
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+            //  }
         }
 
         private void HandleMove()
