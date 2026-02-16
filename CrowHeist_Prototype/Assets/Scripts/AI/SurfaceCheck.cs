@@ -9,10 +9,11 @@ using UnityEngine;
 public class SurfaceCheck : MonoBehaviour
 {
     public CutsceneManager cutsceneManager;
+    bool played = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (other.CompareTag("Player") && !played)
         {
             RoombAi roomba = FindObjectOfType<RoombAi>();
             if (roomba != null)
@@ -20,6 +21,7 @@ public class SurfaceCheck : MonoBehaviour
                 roomba.Activate();
             }
             cutsceneManager.RoombaActivationCutscene();
+            played = true;
         }
     }
 }
