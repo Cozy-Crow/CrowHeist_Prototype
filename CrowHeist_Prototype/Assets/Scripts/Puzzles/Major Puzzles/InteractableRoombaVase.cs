@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 
@@ -50,7 +51,6 @@ public class InteractableRoombaVase : MonoBehaviour
         rb.isKinematic = false;
         rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
         cutsceneManager.RoombaBreakCutscene();
-        AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -58,6 +58,7 @@ public class InteractableRoombaVase : MonoBehaviour
         if(other.gameObject.CompareTag("BreakVase"))
         {
             GameObject broken = Instantiate(brokenPrefab, transform.position, transform.rotation);
+            AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
             roombAi.Deactivate();
             roombaLightsOff.LightsOff();
             roombaDispense.Dispense();
