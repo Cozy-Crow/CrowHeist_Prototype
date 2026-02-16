@@ -14,11 +14,23 @@ public class ColoringBookObject : Interactable
     [SerializeField] public Button closeButton; //close button on the menu
     [SerializeField] public GameObject puzzleController; //reference to the script on the ui (controls the actual puzzle)
     bool isInteractable = true; //tells whether or not the book can be interacted with
+    
+    //animation vars
     float animTime = 5; //holds animation time for the ending animation for the puzzle
+    [SerializeField] Texture2D sprite1; //3 sprites showing after each slam
+    [SerializeField] Texture2D sprite2;
+    [SerializeField] Texture2D sprite3;
+    [SerializeField] GameObject openBook; //open and closed book models
+    [SerializeField] GameObject closedBook;
+    [SerializeField] SpriteRenderer sprite; // holds the sprite during the animation
+
+
 
     // Start is called before the first frame update
     void Start()
     {
+        sprite.enabled = false; //turn of sprite initally
+
         if(menu == null)
         {
             Debug.LogWarning("Coloring Book UI not connected!");
