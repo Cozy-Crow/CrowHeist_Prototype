@@ -43,6 +43,7 @@ float3 CalculateCustomLighting(CustomLightingData d)
 #ifdef SHADERGRAPH_PREVIEW
     float3 lightDir = float3(0.5, 0.5, 0);
     float intensity = saturate(dot(d.normalWS, lightDir)) + pow(saturate(dot(d.normalWS, normalize(d.viewDirectionWS + lightDir))), GetSmoothnessPower(d.smoothness));
+
     return d.albedo * intensity;
 
 #else 
@@ -57,6 +58,7 @@ float3 CalculateCustomLighting(CustomLightingData d)
         uint numAdditionalLights = GetAdditionalLightsCount();
         for (uint lightI = 0; lightI < numAdditionalLights; lightI++){
             Light light = GetAdditionalLight(lightI, d.positionWS, 1);
+            
             color += CustomLightHandling(d, light);
             }
     #endif
@@ -65,7 +67,7 @@ float3 CalculateCustomLighting(CustomLightingData d)
 #endif
 }
 
-void CalculateCustomLighting_float(float3 Position, float3 Normal,float3 ViewDirection, float3 Albedo,float Smoothness, float AmbientOcclusion, float2 LightmapUV, out float3 Color)
+void CalculateCustomLighting_float(float3 Position, float3 Normal, float3 ViewDirection, float3 Albedo,float Smoothness, float AmbientOcclusion, float2 LightmapUV, out float3 Color)
 {
     CustomLightingData d;
     d.positionWS = Position;

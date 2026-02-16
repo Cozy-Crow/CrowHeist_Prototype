@@ -21,14 +21,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Gold
-  m_Shader: {fileID: -6465566751694194690, guid: 6b2993e5ed271b648a0cc9613d78c8ca, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: c789ddfe73b451c4399b0ade20ab39c3, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _MAIN_LIGHT_SHADOWS_CASCADE
-  - _SHADOWS_SOFT
-  m_InvalidKeywords:
-  - MAIN_LIGHT_CALCULATE_SHADOWS
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -79,6 +76,14 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _RampGradient:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadingRamp:
+        m_Texture: {fileID: 2800000, guid: 901904d176d36664f8d6e2d02e396e83, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -115,11 +120,14 @@ Material:
     - _EdgePower: 1
     - _EnvironmentReflections: 1
     - _Fresnel: 0
+    - _FresnelPower: 0.256
+    - _FresnelThreshold: 0.65
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
     - _MAIN_LIGHT_SHADOWS_CASCADE: 1
     - _Metallic: 0
+    - _Mettalic: 0.644
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
@@ -129,7 +137,7 @@ Material:
     - _RimThreshold: 0.5
     - _SHADOWS_SOFT: 1
     - _ShadowPower: 1
-    - _Smoothness: 0.5
+    - _Smoothness: 0.335
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -143,8 +151,10 @@ Material:
     m_Colors:
     - _BaseColor: {r: 1, g: 0.8235294, b: 0, a: 1}
     - _Color: {r: 1, g: 0.8235294, b: 0, a: 1}
+    - _DarkColor: {r: 1, g: 0.8235294, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _LightColor: {r: 1, g: 0.9568626, b: 0.8392157, a: 1}
+    - _LitColor: {r: 1, g: 0.8942842, b: 0.4009434, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
