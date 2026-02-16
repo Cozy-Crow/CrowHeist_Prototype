@@ -183,7 +183,7 @@ namespace KinematicCharacterController.Examples
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
             //creates audio land instance
-            //AudioManager.Instance?.CreateInstance("land", land);
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -264,8 +264,8 @@ namespace KinematicCharacterController.Examples
                 {
                     surfaceTag = "Generic";
                 }
-                 //crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
-                 //AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
             }
         }
         private void HandleInput()
