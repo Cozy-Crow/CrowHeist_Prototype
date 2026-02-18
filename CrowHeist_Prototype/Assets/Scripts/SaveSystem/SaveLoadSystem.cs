@@ -58,6 +58,12 @@ public class SaveLoadSystem : MonoBehaviour
         {
             LoadGame();
         }
+
+        // Debug: delete all save data
+        if (Input.GetKeyDown(KeyCode.F10))
+        {
+            DeleteAllSaveData();
+        }
     }
 
     public void SaveGame()
@@ -320,6 +326,42 @@ public class SaveLoadSystem : MonoBehaviour
             File.Delete(SavePath);
             Debug.Log("Save file deleted.");
         }
+    }
+
+    /// <summary>
+    /// DEBUG: Deletes the save file and resets ALL runtime save-related state.
+    /// Wipes scores, registry pickup/read states, and ItemDataSO read flags.
+    /// Bound to F10 in Update.
+    /// </summary>
+    public void DeleteAllSaveData()
+    {
+        // Delete save file from disk
+        DeleteSave();
+
+        // Reset scores
+        GameManager.Score = 0;
+        GameManager.AltCoinsScore = 0;
+
+        // Update coins UI
+        if (UIManager.Instance != null && UIManager.Instance.CoinsUI != null)
+        {
+            UIManager.Instance.CoinsUI.UpdateCoins(0);
+        }
+
+        // Reset PickupRegistry (pickup/read states and ItemDataSO read flags)
+        if (PickupRegistry.Instance != null)
+        {
+            PickupRegistry.Instance.ResetAllStates();
+        }
+
+        // Reset pickup state on all Pickable objects in scene
+        Pickable[] allPickables = FindObjectsOfType<Pickable>();
+        foreach (Pickable p in allPickables)
+        {
+            p.HasBeenPickedUp = false;
+        }
+
+        Debug.Log("<color=red>[DEBUG] All save data deleted and runtime state reset.</color>");
     }
 
     public string GetSaveFilePath()
