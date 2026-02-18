@@ -9,10 +9,10 @@ public class JackOLanternPuzzle : MonoBehaviour
 {
     
     [SerializeField] private GameObject jackOLanternPrefab;
-    [SerializeField] private GameObject[] pumpkinPieces; // 0: leftEye, 1: rightEye, 2: nose, 3: mouth, 4: lid
-    [SerializeField] private GameObject goldenCoin;
-    [SerializeField] private Light candleLight;
+    [SerializeField] private GameObject[] pumpkinPiecePrefabs; // 0: leftEye, 1: rightEye, 2: nose, 3: mouth, 4: lid
+    [SerializeField] private GameObject goldenCoinPrefab;
     [SerializeField] private float popForce = 5f;
+    [SerializeField] private Vector3 spawnOffset = new Vector3(0, -0.5f, 0);
 
 
 
@@ -28,34 +28,41 @@ public class JackOLanternPuzzle : MonoBehaviour
 
     private void ChangeToJackOLantern()
     {
+        PopOutPieces();
+        
         if (jackOLanternPrefab != null)
         {
             Quaternion rotation = transform.rotation * Quaternion.Euler(0, 180, 0);
-            Instantiate(jackOLanternPrefab, transform.position, rotation);
-            gameObject.SetActive(false);
+            Instantiate(jackOLanternPrefab, transform.position + spawnOffset, rotation);
         }
         
-        PopOutPieces();
-        if (candleLight != null) candleLight.enabled = true;
+        gameObject.SetActive(false);
     }
 
     private void PopOutPieces()
     {
-        foreach (var piece in pumpkinPieces)
+        List<GameObject> spawnedObjects = new List<GameObject>();
+        
+        foreach (var piecePrefab in pumpkinPiecePrefabs)
         {
-            if (piece != null)
+            if (piecePrefab != null)
             {
-                Rigidbody rb = piece.GetComponent<Rigidbody>();
-                if (rb == null) rb = piece.AddComponent<Rigidbody>();
-                rb.AddForce(piece.transform.forward * popForce, ForceMode.Impulse);
+                GameObject piece = Instantiate(piecePrefab, transform.position, transform.rotation);
+                spawnedObjects.Add(piece);
             }
         }
         
-        if (goldenCoin != null)
+        if (goldenCoinPrefab != null)
         {
-            Rigidbody coinRb = goldenCoin.GetComponent<Rigidbody>();
-            if (coinRb == null) coinRb = goldenCoin.AddComponent<Rigidbody>();
-            coinRb.AddForce(goldenCoin.transform.forward * popForce, ForceMode.Impulse);
+            GameObject coin = Instantiate(goldenCoinPrefab, transform.position, transform.rotation);
+            spawnedObjects.Add(coin);
+        }
+        
+        foreach (var obj in spawnedObjects)
+        {
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
+            if (rb == null) rb = obj.AddComponent<Rigidbody>();
+            rb.AddForce(obj.transform.forward * popForce, ForceMode.Impulse);
         }
     }
 }
