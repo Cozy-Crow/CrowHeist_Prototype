@@ -6,6 +6,7 @@ using FMOD.Studio;
 using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
+using UnityEngine.Rendering.Universal;
 
 namespace KinematicCharacterController.Examples
 {
@@ -96,7 +97,8 @@ namespace KinematicCharacterController.Examples
         private List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         [Header("Charged Throw Settings")] 
-        [SerializeField] private GameObject targetAssetObject;
+        [SerializeField] private DecalProjector targetDecalProjector;
+        private GameObject targetDecalInstance;
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -655,6 +657,11 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonUp(0) && !cancelThrow)
                 {
+                    if (targetDecalInstance != null)
+                    {
+                        Destroy(targetDecalInstance);
+                    }
+
                     isThrowing = true;
                     chargingThrow = false;
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
@@ -698,7 +705,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
-                    targetAssetObject.SetActive(false);
+                    targetDecalProjector.gameObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -708,7 +715,7 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
-                    targetAssetObject.SetActive(false);
+                    targetDecalProjector.gameObject.SetActive(false);
                 }
             }
         }
@@ -829,12 +836,13 @@ namespace KinematicCharacterController.Examples
 
             throwDirection = curvedDirection;
             
-            if (!targetAssetObject.activeSelf)
+
+            if (!targetDecalProjector.gameObject.activeSelf)
             {
-                targetAssetObject.SetActive(true);
+                targetDecalProjector.gameObject.SetActive(true);
             }
 
-            targetAssetObject.transform.position = FindThrowCollisionPoint();
+            FindThrowCollisionPoint();
 
         }
 
@@ -852,6 +860,9 @@ namespace KinematicCharacterController.Examples
                     Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
                     if (inSightCheck.collider.gameObject.CompareTag("Player"))
                     {
+                        targetDecalProjector.transform.position = lineRenderer.GetPosition(i - 2);
+                        targetDecalProjector.transform.LookAt(hit.point);
+                        targetDecalProjector.pivot = targetDecalProjector.transform.forward;
                         collisionPoint = hit.point;
                     }
                 }
