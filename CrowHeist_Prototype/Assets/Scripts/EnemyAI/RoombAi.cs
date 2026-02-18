@@ -52,7 +52,7 @@ public class RoombAi : MonoBehaviour
     [SerializeField] public EventReference roombaEat;
     [SerializeField] public EventReference roombaMovement;
     [SerializeField] public EventReference damageCaw;
-    //private EventInstance roombaMovementInstance;
+    public StudioEventEmitter roombaEmitter;
 
 
     //For roomba activation cutscene - added 12/2/25 by Mark D.
@@ -87,10 +87,11 @@ public class RoombAi : MonoBehaviour
         patrolPoints = patrolPoints_Room1;
         
         //checks if audiomanager exists, creates roombamovementinstance
-        //if(AudioManager.Instance != null)
-        //{
-         //roombaMovementInstance = AudioManager.Instance.CreateInstance("roombaMovement", roombaMovement);   
-        //}
+        if(AudioManager.Instance != null)
+        {  
+         roombaEmitter = GetComponent<FMODUnity.StudioEventEmitter>();
+         roombaEmitter.SetParameter("RoombaOnOff", 0);
+        }
     }
 
     private void Update()
@@ -270,8 +271,7 @@ public class RoombAi : MonoBehaviour
             isActivated = true;
             virtualCamManager.StartRoombaActivateSequence();
             AudioManager.Instance?.PlayOneShot(roombaOn);
-            //roombaMovementInstance.start();
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            roombaEmitter.Play();
         }
     }
 
@@ -282,7 +282,6 @@ public class RoombAi : MonoBehaviour
         isBroken = true;
         agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
-        //roombaMovementInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        GetComponent<FMODUnity.StudioEventEmitter>().Stop();
+        roombaEmitter.Stop();
     }
 }

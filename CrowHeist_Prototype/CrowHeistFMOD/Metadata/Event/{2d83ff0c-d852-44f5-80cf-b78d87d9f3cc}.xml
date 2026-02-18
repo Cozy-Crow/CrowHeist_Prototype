@@ -67,6 +67,12 @@
 		<property name="dopplerEnabled">
 			<value>true</value>
 		</property>
+		<property name="dopplerScale">
+			<value>94</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10</value>
+		</property>
 	</object>
 	<object class="MarkerTrack" id="{f4bfdc36-f687-4d3f-8af9-ad381e38e66e}" />
 	<object class="MarkerTrack" id="{3291f40b-3055-4e5e-aabf-005ef3c1edd5}" />
@@ -276,7 +282,7 @@
 	<object class="MixerBusEffectChain" id="{3b00222a-e2d2-44b2-b059-463974252b6c}">
 		<relationship name="effects">
 			<destination>{4bc8b5fe-2053-4315-ab14-8d676cda0c51}</destination>
-			<destination>{5853557f-efbb-495e-a34b-2fe531ec8b65}</destination>
+			<destination>{0ee077a5-451b-4743-a20a-53e92a9c7971}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{0a86f4f1-6e18-4584-be39-f6d7b1b0f126}" />
@@ -343,9 +349,12 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{4bc8b5fe-2053-4315-ab14-8d676cda0c51}" />
-	<object class="ObjectSpatialiserEffect" id="{5853557f-efbb-495e-a34b-2fe531ec8b65}">
+	<object class="ObjectSpatialiserEffect" id="{0ee077a5-451b-4743-a20a-53e92a9c7971}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
 		<property name="maximumDistance">
-			<value>40</value>
+			<value>80</value>
 		</property>
 		<property name="overrideRange">
 			<value>true</value>
@@ -353,11 +362,8 @@
 		<property name="extentMode">
 			<value>1</value>
 		</property>
-		<property name="soundSize">
-			<value>14</value>
-		</property>
 		<property name="minimumExtent">
-			<value>206</value>
+			<value>360</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{5d7e8f18-bd1a-44fa-b795-5267b104fa95}">
