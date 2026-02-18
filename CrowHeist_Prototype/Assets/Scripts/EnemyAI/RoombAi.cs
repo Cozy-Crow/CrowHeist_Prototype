@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using FMODUnity;
+using FMOD.Studio;
 using System.Linq;
 using KinematicCharacterController.Examples;
+using FMOD;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class RoombAi : MonoBehaviour
@@ -42,6 +45,16 @@ public class RoombAi : MonoBehaviour
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
 
+    [Header("Audio")]
+    [SerializeField] public EventReference roombaDetect;
+    [SerializeField] public EventReference roombaOn;
+    [SerializeField] public EventReference roombaOff;
+    [SerializeField] public EventReference roombaEat;
+    [SerializeField] public EventReference roombaMovement;
+    [SerializeField] public EventReference damageCaw;
+    //private EventInstance roombaMovementInstance;
+
+
     //For roomba activation cutscene - added 12/2/25 by Mark D.
     // public RoombaCamManager roombaCamManager;
     public VirtualCamManager virtualCamManager;
@@ -72,6 +85,12 @@ public class RoombAi : MonoBehaviour
         //     targets.Add(dock);
 
         patrolPoints = patrolPoints_Room1;
+        
+        //checks if audiomanager exists, creates roombamovementinstance
+        //if(AudioManager.Instance != null)
+        //{
+         //roombaMovementInstance = AudioManager.Instance.CreateInstance("roombaMovement", roombaMovement);   
+        //}
     }
 
     private void Update()
@@ -177,7 +196,7 @@ public class RoombAi : MonoBehaviour
     {
         if (other.CompareTag("Puddle") && other != null)
         {
-            Debug.Log(other);
+            UnityEngine.Debug.Log(other);
             Destroy(other.gameObject);
             HandleDirtyItemCollection();
         }
@@ -191,6 +210,7 @@ public class RoombAi : MonoBehaviour
             if (other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty)
             {
                 Destroy(parentTransform.gameObject);
+                AudioManager.Instance?.PlayOneShot(roombaEat);
                 HandleDirtyItemCollection(); // Update list after removal
             }
         }
@@ -203,6 +223,7 @@ public class RoombAi : MonoBehaviour
             knockbackDir.y = 0f; 
             float knockbackForce = 10f;
             playerController.ApplyKnockback(knockbackDir,knockbackForce);
+            AudioManager.Instance?.PlayOneShot(damageCaw);
         }
     }
 
@@ -226,7 +247,7 @@ public class RoombAi : MonoBehaviour
 
         Transform target = patrolPoints[currentPatrolIndex];
         agent.SetDestination(target.position);
-        Debug.Log(target);
+        UnityEngine.Debug.Log(target);
 
         if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
         {
@@ -248,6 +269,9 @@ public class RoombAi : MonoBehaviour
         {
             isActivated = true;
             virtualCamManager.StartRoombaActivateSequence();
+            AudioManager.Instance?.PlayOneShot(roombaOn);
+            //roombaMovementInstance.start();
+            GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
     }
 
@@ -257,5 +281,8 @@ public class RoombAi : MonoBehaviour
         isActivated = false;
         isBroken = true;
         agent.isStopped = true;
+        AudioManager.Instance?.PlayOneShot(roombaOff);
+        //roombaMovementInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        GetComponent<FMODUnity.StudioEventEmitter>().Stop();
     }
 }
