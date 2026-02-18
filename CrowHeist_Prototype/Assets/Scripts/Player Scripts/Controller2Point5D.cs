@@ -93,7 +93,7 @@ namespace KinematicCharacterController.Examples
         private bool isJumping = false;
         private bool onSlope = false;
         private bool wasGroundedLastFrame = false;
-        private List<IPickupable> _pickUpsList = new List<IPickupable>();
+        public List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         [Header("Charged Throw Settings")] 
         [SerializeField] private GameObject targetAssetObject;
