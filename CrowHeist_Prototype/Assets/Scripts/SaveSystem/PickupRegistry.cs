@@ -135,6 +135,10 @@ public class PickupRegistry : MonoBehaviour
         {
             entry.HasBeenPickedUp = true;
             entry.PickupCount++;
+            if (entry.ObjectType == ObjectType.Narrative && entry.ItemData != null)
+            {
+                entry.ItemData.isPickedUp = true;
+            }
             OnItemPickedUp?.Invoke(entry);
         }
     }
