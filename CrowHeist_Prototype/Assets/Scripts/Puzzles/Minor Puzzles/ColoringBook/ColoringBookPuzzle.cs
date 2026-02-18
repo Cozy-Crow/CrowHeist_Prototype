@@ -87,6 +87,9 @@ public class ColoringBookPuzzle : MonoBehaviour
         //stop allowing drawing
         puzzleOn = false;
 
+        //hide close button (to prevent menuing errors)
+        coloringBook.closeButton.enabled = false;
+        
         
         Debug.Log("Ending puzzle");
 

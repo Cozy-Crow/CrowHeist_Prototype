@@ -17,9 +17,10 @@ public class ColoringBookObject : Interactable
     
     //animation vars
     float animTime = 5; //holds animation time for the ending animation for the puzzle
-    [SerializeField] Texture2D sprite1; //3 sprites showing after each slam
-    [SerializeField] Texture2D sprite2;
-    [SerializeField] Texture2D sprite3;
+    [SerializeField] SpriteRenderer spriteRenderer; //sprites
+    [SerializeField] Sprite sprite1; //3 sprites showing after each slam
+    [SerializeField] Sprite sprite2;
+    [SerializeField] Sprite sprite3;
     [SerializeField] GameObject openBook; //open and closed book models
     [SerializeField] GameObject closedBook;
     [SerializeField] SpriteRenderer sprite; // holds the sprite during the animation
@@ -82,14 +83,31 @@ public class ColoringBookObject : Interactable
     //handles 
     IEnumerator EndPuzzleRoutine()
     {
-        //stall closing the menu
+        //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(2);
-        
+
         //close UI
         menu.gameObject.SetActive(false);
-        
-        //run animation
-        PlayAnimation();
+
+        //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
+        yield return new WaitForSeconds(0.25f); //.25 sec before it starts
+        //close book
+        closedBook.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.25f); //.25 before next
+
+        //open book
+        closedBook.gameObject.SetActive(false);
+        openBook.gameObject.SetActive(true);
+        yield return new WaitForSeconds(0.1f); //.1 before showing
+        spriteRenderer.enabled = true;
+        spriteRenderer.sprite = sprite1;
+
+        //close book
+        closedBook.gameObject.SetActive(true);
+        openBook.gameObject.SetActive(false);
+        yield return new WaitForSeconds(0.25f); //.25 before next
+        spriteRenderer.enabled = false;
+
 
         //time this with animation time
         //pauses the coroutine until the animation is done
@@ -116,10 +134,5 @@ public class ColoringBookObject : Interactable
             crowley.SetCanInput(false);
             
         }
-    }
-
-    public void PlayAnimation()
-    {
-        Debug.Log("playing anim playing anim");
     }
 }
