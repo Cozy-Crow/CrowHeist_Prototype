@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
+using FMOD.Studio;
 
 namespace KinematicCharacterController.Examples
 {
@@ -8,6 +10,11 @@ namespace KinematicCharacterController.Examples
     {
         [SerializeField] private float dashForce = 10f;
         private float lastDashTime = -1f;
+
+        [Header("audio")]
+        [SerializeField] private EventReference dashActivatve;
+        [SerializeField] private EventReference dashUse;
+        [SerializeField] private EventReference dashDeactivatve;
 
         private Controller2Point5D controller;
 
@@ -22,6 +29,7 @@ namespace KinematicCharacterController.Examples
             if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller.isDashing && controller.canDash)
             {
                 StartCoroutine(Dash());
+                AudioManager.Instance?.PlayOneShot(dashUse);
             }
         }
 

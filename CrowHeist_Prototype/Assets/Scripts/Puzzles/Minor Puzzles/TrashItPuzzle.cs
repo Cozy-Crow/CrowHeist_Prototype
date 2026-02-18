@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
 
 public class TrashITPuzzle : MonoBehaviour
@@ -9,6 +10,8 @@ public class TrashITPuzzle : MonoBehaviour
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float shootForce = 10f;
     [SerializeField] private GameObject trashBallPrefab;
+    [SerializeField] EventReference trashballCollect;
+    [SerializeField] EventReference trashPuzzleWin;
 
     private List<Vector3> originalPositions = new List<Vector3>();
     private List<Quaternion> originalRotations = new List<Quaternion>();
@@ -23,13 +26,14 @@ public class TrashITPuzzle : MonoBehaviour
             originalRotations.Add(other.transform.rotation);
             
             Destroy(other.gameObject);
+            AudioManager.Instance?.PlayOneShot3D(trashballCollect, transform.position);
             collectedCount++;
 
             if (collectedCount == 4)
             {
                 puzzleCompleted = true;
+                AudioManager.Instance?.PlayOneShot3D(trashPuzzleWin, transform.position);
                 StartCoroutine(RespawnAndShootBalls());
-
                 GameObject spawnedObject = Instantiate(spawnObject, spawnPoint.position, spawnPoint.rotation);
                 Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
                 spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);

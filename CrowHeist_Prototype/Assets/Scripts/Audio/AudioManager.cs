@@ -7,8 +7,7 @@ using FMOD.Studio;
 public class AudioManager : MonoBehaviour
 {
     //Reference the singleton
-
-    private List<EventInstance> eventInstances;
+    private Dictionary<string, EventInstance> eventInstances = new();
     public static AudioManager Instance { get; private set; }
 
     [SerializeField] private EventReference Ambience;
@@ -25,15 +24,13 @@ public class AudioManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        eventInstances = new List<EventInstance>();
     }
 
 
     //starts ambience intance using createinstance function
     private void InitializeAmbience(EventReference AmbienceReference)
     {
-        AmbienceInstance = CreateInstance(AmbienceReference);
+        AmbienceInstance = CreateInstance("Ambience", AmbienceReference);
         AmbienceInstance.start();
     }
 
@@ -44,17 +41,83 @@ public class AudioManager : MonoBehaviour
     }
 
     /// This is used for continous instances, such as looping sfx
-    public EventInstance CreateInstance(EventReference eventSFX)
+    public EventInstance CreateInstance(string name,EventReference eventSFX)
     {
+        string key = name
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        Debug.Log("Creating instance for: " + key);
+
         EventInstance instance = RuntimeManager.CreateInstance(eventSFX);
-        eventInstances.Add(instance);
+        eventInstances.Add(key, instance);
         return instance;
+    }
+
+    public void SetInstanceFloatParam(string instance, string parameter, float value)
+    {
+        string key = instance
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance eventInstance);
+
+        if (!eventInstance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        eventInstance.setParameterByName(parameter, value);
+    }
+
+    public void SetInstanceLabelParam(string instance, string parameter, string label)
+    {
+        string key = instance
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance eventInstance);
+
+        if (!eventInstance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        eventInstance.setParameterByNameWithLabel(parameter, label);
     }
 
     //Plays oneshot SFX that do not need spatialization
     public void PlayOneShot(EventReference sound)
     {
         RuntimeManager.PlayOneShot(sound);
+    }
+
+    public void PlayInstanceOneShot(string name)
+    {
+        string key = name
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance instance);
+
+        if (!instance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        instance.start();
     }
 
     //This is to play oneshot SFX that need spatialization
@@ -66,10 +129,10 @@ public class AudioManager : MonoBehaviour
     //Stops and releases all created instances
     public void CleanUp()
     {
-        foreach (EventInstance instance in eventInstances)
+        foreach (KeyValuePair<string, EventInstance> kvp in eventInstances)
         {
-            instance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            instance.release();
+            kvp.Value.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            kvp.Value.release();
         }
     }
 
