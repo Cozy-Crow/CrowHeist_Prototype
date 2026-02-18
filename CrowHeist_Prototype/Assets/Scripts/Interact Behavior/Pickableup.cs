@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using KinematicCharacterController.Examples;
+using FMODUnity;
 
 
 //[RequireComponent(typeof(Rigidbody))]
@@ -17,6 +18,10 @@ public class Pickable : MonoBehaviour, IPickupable
     private ItemEventManager itemEventManager;
     public SpawnItem mySpawner;
     private bool hasBeenPickedUp;
+    [Header("Audio")]
+    [SerializeField] private EventReference ObjPuAudio;
+    [SerializeField] public EventReference ObjThrowAudio;
+    [SerializeField] private EventReference ObjLandAudio;
 
     // UniqueID reference for registry integration
     private UniqueID uniqueID;
@@ -101,10 +106,13 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             Debug.Log("Non-Knife Picked up");
+            
         }
 
         rb.isKinematic = true;
         pickedUp = true;
+
+        AudioManager.Instance?.PlayOneShot(ObjPuAudio);
 
         if (player != null)
         {
@@ -159,6 +167,12 @@ public class Pickable : MonoBehaviour, IPickupable
 
     void OnTriggerEnter(Collider other)
     {
+        //makes it so the land sfx doesnt trigger on player throwing it initially
+        if (other.CompareTag("Player") == false)
+        {
+         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);   
+        }
+
         if (other.CompareTag("Ground") && _isDirty == false)
         {
             OnObjectDirty();

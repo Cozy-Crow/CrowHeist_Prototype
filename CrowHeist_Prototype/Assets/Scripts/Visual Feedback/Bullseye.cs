@@ -5,15 +5,21 @@ using UnityEngine;
 public class Bullseye : MonoBehaviour
 {
     public ParticleSystem confetti;
+    public GameObject coin;
+    public Transform spawnPoint;
+
+    private bool hasSpawned = false;
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Dart"))
+        if (!hasSpawned && other.CompareTag("Dart"))
         {
+            hasSpawned = true;
+
             if (confetti != null)
-            {
                 confetti.Play();
-            }
+
+            Instantiate(coin, spawnPoint.position, spawnPoint.rotation);
         }
     }
 }

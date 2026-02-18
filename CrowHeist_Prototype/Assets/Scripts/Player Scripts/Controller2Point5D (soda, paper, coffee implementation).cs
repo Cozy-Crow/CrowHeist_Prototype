@@ -147,7 +147,7 @@ namespace KinematicCharacterController.Examples
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
-            footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
+            //footstepInstance = AudioManager.Instance.CreateInstance(playerFootsteps);
         }
 
         void Update()
