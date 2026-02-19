@@ -723,8 +723,8 @@ namespace KinematicCharacterController.Examples
         {
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
-            pickUp.PickUp(transform);
             _pickUpsList.Add(pickUp);
+            pickUp.PickUp(transform);
             nearbyInteractables.Remove(selected);
             // foreach (var interactable in nearbyInteractables)
             // {
