@@ -9,10 +9,10 @@ public class TrinketCollection : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         other.TryGetComponent(out Trinket trinket);
-        
+
         if(trinket != null)
         {
-            TrinketMenu.instance.UpdateItem(trinket.TrinketData);
+            TrinketMenu.instance.UpdateItem(trinket.ItemData);
             collectEffect?.Play();
             Destroy(other.gameObject);
         }

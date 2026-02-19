@@ -32,6 +32,26 @@ PrefabInstance:
       propertyPath: m_Height
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4456491358769736683, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      propertyPath: _cawingSfx.Path
+      value: event:/SFX/Caws/GenericCaw
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456491358769736683, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      propertyPath: _cawingSfx.Guid.Data1
+      value: 345002108
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456491358769736683, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      propertyPath: _cawingSfx.Guid.Data2
+      value: 1226833273
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456491358769736683, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      propertyPath: _cawingSfx.Guid.Data3
+      value: -167619142
+      objectReference: {fileID: 0}
+    - target: {fileID: 4456491358769736683, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      propertyPath: _cawingSfx.Guid.Data4
+      value: -2128445852
+      objectReference: {fileID: 0}
     - target: {fileID: 5510557021245334183, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.15
@@ -195,6 +215,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1541109921227792601, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
       insertIndex: -1
       addedObject: {fileID: 4700546497416972282}
+    - targetCorrespondingSourceObject: {fileID: 1541109921227792601, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6453235951501725631}
     - targetCorrespondingSourceObject: {fileID: 6448246462007828739, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1708215457832552558}
@@ -224,6 +247,36 @@ MonoBehaviour:
     m_Bits: 0
   expandTime: 0.3
   retractTime: 0.1
+--- !u!114 &6453235951501725631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 948529252563037752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31095ce37d4bd054d93130b76df5a7da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crowleyOneShotSFX: []
+  crowleyInstanceSFX:
+  - name: Footstep
+    sound:
+      Guid:
+        Data1: -877396617
+        Data2: 1078832072
+        Data3: 1610675621
+        Data4: -1498924790
+      Path: event:/SFX/PlayerMovement/Footsteps
+  - name: Land
+    sound:
+      Guid:
+        Data1: -900275709
+        Data2: 1236955404
+        Data3: 775939740
+        Data4: 65958460
+      Path: event:/SFX/PlayerMovement/Land
 --- !u!4 &1980743771834434612 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 231872630528445141, guid: 0d6887fa203028547adbacbd0ffa0726, type: 3}
