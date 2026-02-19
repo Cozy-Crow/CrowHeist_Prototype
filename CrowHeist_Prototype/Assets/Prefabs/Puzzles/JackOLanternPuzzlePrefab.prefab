@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 6041336515927316481}
   - component: {fileID: 547249296396576031}
   - component: {fileID: 8202219112436126684}
+  - component: {fileID: 1283758331849911840}
+  - component: {fileID: 2706224490257498816}
   m_Layer: 0
   m_Name: JackOLanternPuzzlePrefab
   m_TagString: Untagged
@@ -30,7 +32,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,8 +100,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 050181b896d8942f595fffcc9ad1bc90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jackOLanternPuzzleMesh: {fileID: -2432090755550338912, guid: 9f2204d705247497c9d55c77408a0433, type: 3}
-  jackOLanternPuzzleMaterial: {fileID: 9003353085549565770, guid: 9f2204d705247497c9d55c77408a0433, type: 3}
+  jackOLanternPrefab: {fileID: 968472146341642687, guid: bb3ba5c0f268a8d418fd2d9455750a49, type: 3}
+  pumpkinPiecePrefabs:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  goldenCoinPrefab: {fileID: 3078150366677145011, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+  popForce: 1
+  spawnOffset: {x: 0, y: -1, z: 0}
 --- !u!135 &8202219112436126684
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -121,3 +131,51 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.25
   m_Center: {x: -0.0016785115, y: -0.04, z: 0.001390487}
+--- !u!54 &1283758331849911840
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266794830580523175}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!65 &2706224490257498816
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3266794830580523175}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.23651958, y: 0.22332233, z: 0.08722472}
+  m_Center: {x: -0.0052245855, y: -0.0063999593, z: -0.24835241}
