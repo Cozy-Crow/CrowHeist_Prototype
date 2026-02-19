@@ -22,6 +22,7 @@ public class PickupRegistry : MonoBehaviour
     public event Action<RegistryEntry> OnItemRegistered;
     public event Action<RegistryEntry> OnItemPickedUp;
     public event Action<RegistryEntry> OnNarrativeRead;
+    public event Action<RegistryEntry> OnNarrativeItemCollected;
 
     private void Awake()
     {
@@ -134,11 +135,15 @@ public class PickupRegistry : MonoBehaviour
         {
             entry.HasBeenPickedUp = true;
             entry.PickupCount++;
+            if (entry.ObjectType == ObjectType.Narrative && entry.ItemData != null)
+            {
+                entry.ItemData.isPickedUp = true;
+            }
             OnItemPickedUp?.Invoke(entry);
         }
     }
 
-   
+
     public void MarkNarrativeAsRead(string id)
     {
         if (allItems.TryGetValue(id, out RegistryEntry entry))
@@ -152,6 +157,40 @@ public class PickupRegistry : MonoBehaviour
                 }
                 OnNarrativeRead?.Invoke(entry);
             }
+        }
+    }
+
+    /// <summary>
+    /// Marks a narrative item as collected (deposited at HeistZone).
+    /// This unlocks the item's information in the narrative menu.
+    /// </summary>
+    public void MarkNarrativeAsCollected(string id)
+    {
+        if (allItems.TryGetValue(id, out RegistryEntry entry))
+        {
+            if (entry.ObjectType == ObjectType.Narrative)
+            {
+                entry.HasBeenPickedUp = true;
+                entry.HasBeenRead = true;
+                entry.PickupCount++;
+                if (entry.ItemData != null)
+                {
+                    entry.ItemData.MarkAsRead();
+                }
+                OnNarrativeItemCollected?.Invoke(entry);
+                Debug.Log($"PickupRegistry: Narrative item collected - {entry.ItemData?.ItemName ?? id}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Marks a narrative item as collected by UniqueID component reference.
+    /// </summary>
+    public void MarkNarrativeAsCollected(UniqueID uniqueID)
+    {
+        if (uniqueID != null)
+        {
+            MarkNarrativeAsCollected(uniqueID.ID);
         }
     }
 

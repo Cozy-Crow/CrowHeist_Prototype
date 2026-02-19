@@ -8,49 +8,18 @@ using Debug = UnityEngine.Debug;
 public class JackOLanternPuzzle : MonoBehaviour
 {
     
-    [SerializeField] private Mesh jackOLanternPuzzleMesh;
-    [SerializeField] private Material jackOLanternPuzzleMaterial;
-    [SerializeField] private Vector3 jackOLanternScale;
-    
-    private MeshRenderer pumpkinMeshRenderer;
-    private MeshFilter pumpkinMeshFilter;
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        pumpkinMeshRenderer = GetComponent<MeshRenderer>();
-        pumpkinMeshFilter = GetComponent<MeshFilter>();
-    }
+    [SerializeField] private GameObject jackOLanternPrefab;
+    [SerializeField] private GameObject[] pumpkinPiecePrefabs; // 0: leftEye, 1: rightEye, 2: nose, 3: mouth, 4: lid
+    [SerializeField] private GameObject goldenCoinPrefab;
+    [SerializeField] private float popForce = 5f;
+    [SerializeField] private Vector3 spawnOffset = new Vector3(0, -0.5f, 0);
 
-    // Update is called once per frame
-    void Update()
+
+
+    public void OnTriggerEnter(Collider other)
     {
-        if (Input.GetKey("'"))
+        if (other.CompareTag("Dart"))
         {
-            ChangeToJackOLantern();
-        }
-    }
-
-    // public void OnTriggerEnter(Collider other)
-    // {
-    //     Debug.Log(other.gameObject.name);
-    //     if (other.CompareTag("Dart"))
-    //     {
-    //         if (other.gameObject.CompareTag("Dart"))
-    //         {
-    //             Debug.Log("dart detected");
-    //             ChangeToJackOLantern();
-    //         }
-    //         
-    //     }
-    // }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(collision.gameObject.name);
-        if (collision.gameObject.CompareTag("Dart"))
-        {
-            Debug.Log("dart detected");
             ChangeToJackOLantern();
         }
     }
@@ -59,8 +28,41 @@ public class JackOLanternPuzzle : MonoBehaviour
 
     private void ChangeToJackOLantern()
     {
-        pumpkinMeshRenderer.material = jackOLanternPuzzleMaterial;
-        pumpkinMeshFilter.mesh = jackOLanternPuzzleMesh;
-        gameObject.transform.localScale = jackOLanternScale;
+        PopOutPieces();
+        
+        if (jackOLanternPrefab != null)
+        {
+            Quaternion rotation = transform.rotation * Quaternion.Euler(0, 180, 0);
+            Instantiate(jackOLanternPrefab, transform.position + spawnOffset, rotation);
+        }
+        
+        gameObject.SetActive(false);
+    }
+
+    private void PopOutPieces()
+    {
+        List<GameObject> spawnedObjects = new List<GameObject>();
+        
+        foreach (var piecePrefab in pumpkinPiecePrefabs)
+        {
+            if (piecePrefab != null)
+            {
+                GameObject piece = Instantiate(piecePrefab, transform.position, transform.rotation);
+                spawnedObjects.Add(piece);
+            }
+        }
+        
+        if (goldenCoinPrefab != null)
+        {
+            GameObject coin = Instantiate(goldenCoinPrefab, transform.position, transform.rotation);
+            spawnedObjects.Add(coin);
+        }
+        
+        foreach (var obj in spawnedObjects)
+        {
+            Rigidbody rb = obj.GetComponent<Rigidbody>();
+            if (rb == null) rb = obj.AddComponent<Rigidbody>();
+            rb.AddForce(obj.transform.forward * popForce, ForceMode.Impulse);
+        }
     }
 }

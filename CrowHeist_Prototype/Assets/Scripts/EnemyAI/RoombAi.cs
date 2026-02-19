@@ -219,6 +219,7 @@ public class RoombAi : MonoBehaviour
         if (other.CompareTag("Player") && playerController.heldObject != null)
         {
             playerController.Drop();
+            playerController._pickUpsList.Clear();
             playerIsDirty = false;
             Vector3 knockbackDir = (other.transform.position - transform.position).normalized;
             knockbackDir.y = 0f; 
