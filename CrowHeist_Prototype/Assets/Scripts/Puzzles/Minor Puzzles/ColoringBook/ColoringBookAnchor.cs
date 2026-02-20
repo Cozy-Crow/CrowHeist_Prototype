@@ -8,17 +8,13 @@ using UnityEngine.UI;
 public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler
 {
     [SerializeField] public int index;
-    [SerializeField] public bool triggered;
 
     [SerializeField] private ColoringBookPuzzle puzzleManager;
 
 
     void Update()
     {
-        if(triggered)
-        {
-            GetComponent<Image>().color = Color.green;
-        }
+        
     }
 
     //function handling if the mouse enters the image
@@ -30,5 +26,11 @@ public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler
             // Debug.Log("HIT! - " + name);
         }
 
+    }
+
+    public void triggerAnchor()
+    {
+        GetComponent<Image>().color = Color.green;
+        //play anchor hit sound here
     }
 }

@@ -65,7 +65,12 @@ public class ColoringBookPuzzle : MonoBehaviour
     {
         //function called by the coloring book to start the puzzle
         puzzleOn = true;
-        // Debug.Log("Starting Puzzle");
+        puzzleComplete = false;
+        currentIndex = 0;
+
+        lineRenderer.points.Clear();
+        lineRenderer.SetAllDirty();
+
     }
 
     public void ClosePuzzle()
@@ -81,7 +86,6 @@ public class ColoringBookPuzzle : MonoBehaviour
         puzzleComplete = true;
         
         //remove the last index (the mouse)
-        lineRenderer.points.RemoveAt(lineRenderer.points.Count-1);
         lineRenderer.SetAllDirty(); //refesh the graphic
 
         //stop allowing drawing
@@ -116,47 +120,89 @@ public class ColoringBookPuzzle : MonoBehaviour
         }
 
         //updates the linerenderer every frame 
-        if(currentAnchorLocal != null && lineRenderer.points.Count >= 2 && !puzzleComplete && isDrawing)
+        // if(currentAnchorLocal != null && lineRenderer.points.Count >= 2 && !puzzleComplete && isDrawing)
+        // {
+        //     //set the last 2 most recent to be able to move (last hit)
+        //     lineRenderer.points[lineRenderer.points.Count-2] = currentAnchorLocal;
+        //     //cursor should always be at the end
+        //     lineRenderer.points[lineRenderer.points.Count-1] = localMousePosition;
+        //     lineRenderer.SetAllDirty(); //refesh the graphic
+        // }
+
+        if (lineRenderer.points.Count >= 1 && !puzzleComplete && isDrawing)
         {
-            //set the last 2 most recent to be able to move (last hit)
-            lineRenderer.points[lineRenderer.points.Count-2] = currentAnchorLocal;
-            //cursor should always be at the end
-            lineRenderer.points[lineRenderer.points.Count-1] = localMousePosition;
-            lineRenderer.SetAllDirty(); //refesh the graphic
+            // Only move the cursor (last point)
+            lineRenderer.points[lineRenderer.points.Count - 1] = localMousePosition;
+            lineRenderer.SetAllDirty();
         }
 
     }
 
     public void HitAnchor(ColoringBookAnchor anchor)
     {
-        currentAnchorLocal = panelRect.InverseTransformPoint(anchor.transform.position);        
+        //if the puzzle is complete, or the puzzle is turned off
+        //return
+        if (puzzleComplete || !puzzleOn)
+            return;
 
-        //check if its the current index
-        if(anchor.index == currentIndex)
+        //get the index of the anchor passes
+        int anchorListIndex = anchors.IndexOf(anchor);
+
+        //if its not there, return
+        if (anchorListIndex == -1)
+            return; // not in list
+
+        //get anchor pos
+        currentAnchorLocal = panelRect.InverseTransformPoint(anchor.transform.position);
+
+        //hitting first anchor in list
+        if (currentIndex == 0)
         {
-            //add the new point to the graphic
-            lineRenderer.points.Insert(currentIndex, currentAnchorLocal);
+            if (anchorListIndex != 0)
+                return;
 
-            Debug.Log("index " + currentIndex);
+            //add to line renderer
+            lineRenderer.points.Add(currentAnchorLocal);
+            lineRenderer.points.Add(localMousePosition); // cursor
 
-            //if its the first one added also add the cursor
-            if(currentIndex == 0)
-                lineRenderer.points.Insert(currentIndex+1, localMousePosition);
-            // cursorIndex++; //index the cursor index so we know 
+            //trigger it
+            anchor.triggerAnchor();
+            //increment index
+            currentIndex = 1;
 
-            //tell the anchor it was hit (change color and whatnot)
-            anchor.triggered = true;
-
-            //index
-            currentIndex++;
-            lineRenderer.SetAllDirty(); //refesh the graphic
+            //refresh the graphic
+            lineRenderer.SetAllDirty();
+            return;
         }
 
-        //checking to make sure the player went all the way around
-        if(currentIndex >= anchors.Count && anchor.CompareTag("ColoringBookFirstAnchor"))
+        //next anchor
+        if (anchorListIndex == currentIndex)
         {
-            lineRenderer.points.Insert(currentIndex, lineRenderer.points[0]);
-            lineRenderer.SetAllDirty(); //refesh the graphic
+            //remove cursor (temp, to add next anchor)
+            lineRenderer.points.RemoveAt(lineRenderer.points.Count - 1);
+
+            //add anchor
+            lineRenderer.points.Add(currentAnchorLocal);
+
+            //re add cursor
+            lineRenderer.points.Add(localMousePosition);
+
+            //trigger anchor
+            anchor.triggerAnchor();
+            currentIndex++; //increment
+
+            //refresh
+            lineRenderer.SetAllDirty();
+            return;
+        }
+
+        //closing the shape, hitting the final anchor again
+        if (currentIndex == anchors.Count && anchorListIndex == 0)
+        {
+            lineRenderer.points.RemoveAt(lineRenderer.points.Count - 1); // remove cursor
+            lineRenderer.points.Add(lineRenderer.points[0]); // close loop
+
+            lineRenderer.SetAllDirty();
             EndPuzzle();
         }
     }
