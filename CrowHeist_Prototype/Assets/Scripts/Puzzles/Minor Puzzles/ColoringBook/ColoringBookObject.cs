@@ -95,9 +95,6 @@ public class ColoringBookObject : Interactable
 
         //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
         yield return new WaitForSeconds(animTime); //.25 sec before it starts
-        // //close book 1
-        // CloseBook();
-        // yield return new WaitForSeconds(animTime); //.25 before next
 
         //open book 1
         OpenBook();
@@ -151,8 +148,6 @@ public class ColoringBookObject : Interactable
         //remove interaction capability
         isInteractable = false;
     }
-
-
 
     //function handling on interaction
     public override void TriggerInteraction(Pickable item)

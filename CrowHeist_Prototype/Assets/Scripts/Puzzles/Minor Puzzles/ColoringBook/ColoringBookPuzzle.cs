@@ -71,6 +71,9 @@ public class ColoringBookPuzzle : MonoBehaviour
         lineRenderer.points.Clear();
         lineRenderer.SetAllDirty();
 
+        //make sure all anchors are off at the start
+        foreach(ColoringBookAnchor a in anchors)
+            a.disableAnchor();
     }
 
     public void ClosePuzzle()
@@ -103,7 +106,6 @@ public class ColoringBookPuzzle : MonoBehaviour
 
     public void HandlePuzzle()
     {
-        Ray cursorRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         
         //get correct mouse position
         ConvertMouseToCanvas();
