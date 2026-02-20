@@ -846,7 +846,7 @@ namespace KinematicCharacterController.Examples
 
         }
 
-        private Vector3 FindThrowCollisionPoint()
+        private void FindThrowCollisionPoint()
         {
             LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
             Vector3 collisionPoint = new Vector3(0, 0, 0);
@@ -857,20 +857,51 @@ namespace KinematicCharacterController.Examples
                 Vector3 currentPoint = lineRenderer.GetPosition(i);
                 if (Physics.Linecast(firstPoint, currentPoint, out RaycastHit hit))
                 {
-                    Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
-                    if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    // Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
+                    // if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    // {
+                    //     targetDecalProjector.transform.position = lineRenderer.GetPosition(i - 2);
+                    //     targetDecalProjector.transform.LookAt(hit.point);
+                    //     targetDecalProjector.pivot = targetDecalProjector.transform.forward;
+                    //     collisionPoint = hit.point;
+                    // }
+                    
+                    RaycastHit[] collidersHit = new RaycastHit[10];
+                    int numHits = Physics.RaycastNonAlloc(hit.point, transform.position - hit.point, collidersHit);
+                    bool playerHit = false;
+                    bool wallBetweenPlayer = false;
+                    if (numHits > 0)
+                    {
+                        for (int j = 0 ; j < numHits ; j++) 
+                        {
+                            
+                            if ((collidersHit[j].collider.CompareTag("Ground") ||
+                                     collidersHit[j].collider.CompareTag("Wall")))
+                            {
+                                
+                                if (Vector3.Distance(hit.point, collidersHit[j].collider.transform.position) < Vector3.Distance(hit.point, transform.position))
+                                {
+                                    wallBetweenPlayer = true;
+                                }
+                            }
+                            
+                            if (collidersHit[j].collider.CompareTag("Player"))
+                            {
+                                playerHit = true;
+                            }
+                        }
+                    }
+
+                    if (playerHit && !wallBetweenPlayer)
                     {
                         targetDecalProjector.transform.position = lineRenderer.GetPosition(i - 2);
                         targetDecalProjector.transform.LookAt(hit.point);
                         targetDecalProjector.pivot = targetDecalProjector.transform.forward;
-                        collisionPoint = hit.point;
                     }
                 }
                 
                 firstPoint = currentPoint;
             }
-
-            return collisionPoint;
         }
 
         private void Flip(Vector3 faceDirection)
