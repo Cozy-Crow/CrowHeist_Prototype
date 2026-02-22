@@ -151,8 +151,8 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
-        [SerializeField] private EventReference charge;
-        public EventInstance chargeInstance;
+        [SerializeField] private EventReference chargeSFX;
+        private EventInstance chargeInstance;
 
 
         #region  Trinket Guide
@@ -187,11 +187,8 @@ namespace KinematicCharacterController.Examples
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
             //creates audio instances
-            AudioManager.Instance?.CreateInstance("land", land);
-            if(AudioManager.Instance != null)
-            {
-             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
-            }
+            AudioManager.Instance?.CreateInstance("land", land); 
+            //chargeInstance = RuntimeManager.CreateInstance(chargeSFX);
         }
 
         void Update()
@@ -640,8 +637,12 @@ namespace KinematicCharacterController.Examples
                 {
                     chargingThrow = true;
                     cancelThrow = false;
+                    if(chargingThrow == true && chargeStartTime == 0)
+                    {
+                        chargeInstance.start();
+                        //AudioManager.Instance?.PlayOneShot(chargeSFX); //THIS WORKS, PROVES SFX PLAYS
+                    }
                     chargeStartTime = Time.time;
-                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -669,9 +670,7 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
-                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
                     if (rigidbody != null)
                     {

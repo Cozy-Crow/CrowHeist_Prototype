@@ -3633,6 +3633,10 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: charge.Path
+      value: event:/SFX/PlayerMovement/Dash/Dash Activate
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: jump.Guid.Data1
       value: 462677423
       objectReference: {fileID: 0}
@@ -3663,6 +3667,22 @@ PrefabInstance:
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: land.Guid.Data4
       value: 65958460
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: charge.Guid.Data1
+      value: -512311345
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: charge.Guid.Data2
+      value: 1196429614
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: charge.Guid.Data3
+      value: 698543011
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: charge.Guid.Data4
+      value: 1989495072
       objectReference: {fileID: 0}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: dashActivate.Path
@@ -8631,6 +8651,26 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: test.Path
+      value: event:/SFX/Roomba/RoombaDetect
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: test.Guid.Data1
+      value: -74208961
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: test.Guid.Data2
+      value: 1159542939
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: test.Guid.Data3
+      value: 306524095
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: test.Guid.Data4
+      value: 4071390
+      objectReference: {fileID: 0}
+    - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: roombaDetect.Path
       value: event:/SFX/Roomba/RoombaDetect
       objectReference: {fileID: 0}
@@ -10715,6 +10755,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!65 &1346546282
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11065,6 +11112,13 @@ MonoBehaviour:
   endRotations:
   - {x: 270, y: 0.0000024148367, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 517602304
+      Data2: 1074348889
+      Data3: 1536408494
+      Data4: -1183827418
+    Path: event:/SFX/Objects/Cabinet/Cabinet 2
 --- !u!1 &1366431094
 GameObject:
   m_ObjectHideFlags: 0
@@ -24963,6 +25017,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 517602304
+      Data2: 1074348889
+      Data3: 1536408494
+      Data4: -1183827418
+    Path: event:/SFX/Objects/Cabinet/Cabinet 2
 --- !u!114 &7557136549489880833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24989,6 +25050,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1001 &7567857987376381187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25746,6 +25814,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!23 &8907530983064873279
 MeshRenderer:
   m_ObjectHideFlags: 0
