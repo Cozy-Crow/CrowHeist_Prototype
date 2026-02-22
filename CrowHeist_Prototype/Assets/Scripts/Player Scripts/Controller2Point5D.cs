@@ -95,7 +95,7 @@ namespace KinematicCharacterController.Examples
         private bool isJumping = false;
         private bool onSlope = false;
         private bool wasGroundedLastFrame = false;
-        private List<IPickupable> _pickUpsList = new List<IPickupable>();
+        public List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         [Header("Charged Throw Settings")] 
         [SerializeField] private GameObject targetAssetObject;
@@ -153,6 +153,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
+        [SerializeField] private EventReference charge;
+        public EventInstance chargeInstance;
+
+
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -184,13 +188,17 @@ namespace KinematicCharacterController.Examples
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
-            //creates audio land instance
+            //creates audio instances
             AudioManager.Instance?.CreateInstance("land", land);
+            if(AudioManager.Instance != null)
+            {
+             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
+            }
         }
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
             }
@@ -653,6 +661,7 @@ namespace KinematicCharacterController.Examples
                     chargingThrow = true;
                     cancelThrow = false;
                     chargeStartTime = Time.time;
+                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -680,7 +689,7 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    
+                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
                     //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
@@ -743,8 +752,8 @@ namespace KinematicCharacterController.Examples
         {
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
-            pickUp.PickUp(transform);
             _pickUpsList.Add(pickUp);
+            pickUp.PickUp(transform);
             nearbyInteractables.Remove(selected);
             // foreach (var interactable in nearbyInteractables)
             // {

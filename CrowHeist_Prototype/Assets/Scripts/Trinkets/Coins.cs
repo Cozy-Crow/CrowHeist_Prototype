@@ -12,6 +12,7 @@ public class Coins : MonoBehaviour
     private GameObject player;
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
+    private UniqueID uniqueID;
 
     [Header("Audio")]
     [SerializeField] private EventReference _collectSound;
@@ -19,7 +20,7 @@ public class Coins : MonoBehaviour
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
     [SerializeField] private GameObject _popupPrefab;
-    
+
     [Header("Narrative Item")]
     public bool isNarrativeItem = false;
 
@@ -52,7 +53,8 @@ public class Coins : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         pickableUpScript = GetComponent<Pickable>();
-        
+        uniqueID = GetComponent<UniqueID>();
+
         if(this.isNarrativeItem == true)
         {
             _coinValue = 3;
@@ -76,6 +78,36 @@ public class Coins : MonoBehaviour
     {
         if (other.CompareTag("HeistZone"))
         {
+            GameManager.Score += _coinValue;
+            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+
+            // Show collection zone with narrative popup if applicable
+            if (UIManager.Instance.CollectionZoneCameraUI != null)
+            {
+                // Get sprite from SpriteRenderer if this is a narrative item
+                Sprite itemSprite = null;
+                if (isNarrativeItem)
+                {
+                    SpriteRenderer sr = GetComponent<SpriteRenderer>();
+                    if (sr != null)
+                    {
+                        itemSprite = sr.sprite;
+                    }
+                }
+
+                UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone(isNarrativeItem, itemSprite);
+            }
+
+            // Narrative item: fire collection event to unlock in narrative menu
+            if (isNarrativeItem && PickupRegistry.Instance != null && uniqueID != null)
+            {
+                PickupRegistry.Instance.MarkNarrativeAsCollected(uniqueID);
+            }
+
+            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+            // float newValue = currentValue + 1;
+            // MusicManager.SetParameterByName("TrinketsCollected", newValue);
+
             // Drop item if picked up
             if(pickableUpScript.pickedUp)
             {

@@ -5,7 +5,7 @@
 			<value>RoombaMovement</value>
 		</property>
 		<property name="outputFormat">
-			<value>2</value>
+			<value>0</value>
 		</property>
 		<relationship name="folder">
 			<destination>{bd439235-9374-4c2e-aa55-933476118796}</destination>
@@ -63,7 +63,17 @@
 			<destination>{0b18dc2b-9c92-4148-9173-32e9d909ff26}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{d579cc40-ed57-47e0-b6ba-b3205043221e}" />
+	<object class="EventAutomatableProperties" id="{d579cc40-ed57-47e0-b6ba-b3205043221e}">
+		<property name="dopplerEnabled">
+			<value>true</value>
+		</property>
+		<property name="dopplerScale">
+			<value>94</value>
+		</property>
+		<property name="maximumDistance">
+			<value>10</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{f4bfdc36-f687-4d3f-8af9-ad381e38e66e}" />
 	<object class="MarkerTrack" id="{3291f40b-3055-4e5e-aabf-005ef3c1edd5}" />
 	<object class="MarkerTrack" id="{38a04d2a-8cef-40cc-80c9-70a49200f1aa}" />
@@ -272,7 +282,7 @@
 	<object class="MixerBusEffectChain" id="{3b00222a-e2d2-44b2-b059-463974252b6c}">
 		<relationship name="effects">
 			<destination>{4bc8b5fe-2053-4315-ab14-8d676cda0c51}</destination>
-			<destination>{8a30f6e7-4e51-4299-8093-d242a70c9bc8}</destination>
+			<destination>{0ee077a5-451b-4743-a20a-53e92a9c7971}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{0a86f4f1-6e18-4584-be39-f6d7b1b0f126}" />
@@ -339,7 +349,23 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{4bc8b5fe-2053-4315-ab14-8d676cda0c51}" />
-	<object class="SpatialiserEffect" id="{8a30f6e7-4e51-4299-8093-d242a70c9bc8}" />
+	<object class="ObjectSpatialiserEffect" id="{0ee077a5-451b-4743-a20a-53e92a9c7971}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
+		<property name="maximumDistance">
+			<value>80</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="minimumExtent">
+			<value>360</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{5d7e8f18-bd1a-44fa-b795-5267b104fa95}">
 		<property name="position">
 			<value>0.30000000000000004</value>
