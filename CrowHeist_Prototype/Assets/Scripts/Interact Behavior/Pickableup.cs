@@ -45,16 +45,16 @@ public class Pickable : MonoBehaviour, IPickupable
         rb = GetComponent<Rigidbody>();
         uniqueID = GetComponent<UniqueID>();
         player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
-        roombaDetect = RoombaAiReference.roombaDetect;
+        // roombaDetect = RoombaAiReference.roombaDetect;
     }
     void Start()
     {
         itemEventManager = FindObjectOfType<ItemEventManager>();
         aiEventManager = FindObjectOfType<AIEventManager>();
-        if (aiEventManager != null)
-        {
-            aiEventManager.e_makedirty.AddListener(OnObjectDirty);
-        }
+        // if (aiEventManager != null)
+        // {
+        //     aiEventManager.e_makedirty.AddListener(OnObjectDirty);
+        // }
     }
     public virtual void PickUp(Transform parent)
     {
@@ -161,18 +161,18 @@ public class Pickable : MonoBehaviour, IPickupable
         player.ConsumeItem();
     }
 
-    void OnObjectDirty()
-    {
-        _isDirty = true;
-        aiEventManager.GroundItemDirty(transform.position);
-        //checks if roomba is activated before playing roomba detect sfx
+    // void OnObjectDirty()
+    // {
+    //     _isDirty = true;
+    //     aiEventManager.GroundItemDirty(transform.position);
+    //     //checks if roomba is activated before playing roomba detect sfx
               
-            if(RoombaAiReference.isActivated == true)
-        {
-            AudioManager.Instance?.PlayOneShot(roombaDetect);
-        }
-        Debug.Log("Dirty");
-    }
+    //         if(RoombaAiReference.isActivated == true)
+    //     {
+    //         AudioManager.Instance?.PlayOneShot(roombaDetect);
+    //     }
+    //     Debug.Log("Dirty");
+    // }
 
     void OnTriggerEnter(Collider other)
     {
@@ -182,10 +182,10 @@ public class Pickable : MonoBehaviour, IPickupable
          AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition); 
         }
 
-        if (other.CompareTag("Ground") && _isDirty == false)
-        {
-            OnObjectDirty();
-        }
+        // if (other.CompareTag("Ground") && _isDirty == false)
+        // {
+        //     OnObjectDirty();
+        // }
     }
     void OnTriggerExit(Collider other)
     {
