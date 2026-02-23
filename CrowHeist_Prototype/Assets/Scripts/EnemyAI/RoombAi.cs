@@ -182,10 +182,10 @@ public class RoombAi : MonoBehaviour
         allDirtyObjects.AddRange(dirtyPickables);
 
         // Add puddles
-        var puddles = GameObject.FindGameObjectsWithTag("Puddle")
-            .Select(obj => obj.transform);
+        //var puddles = GameObject.FindGameObjectsWithTag("Puddle")
+          //  .Select(obj => obj.transform);
 
-        allDirtyObjects.AddRange(puddles);
+        //allDirtyObjects.AddRange(puddles);
 
         // Sort by distance to this Roomba
         allDirtyObjects = allDirtyObjects
