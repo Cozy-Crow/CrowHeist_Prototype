@@ -752,12 +752,14 @@ namespace KinematicCharacterController.Examples
         {
             Debug.Log("disable col " + selected.GetComponent<Collider>());
             //disable collision with whatever object you're holding
-            Collider heldItemPhsyicsCollider = getHeldItemPhysicsCollider(selected.gameObject);
-            Physics.IgnoreCollision(heldItemPhsyicsCollider.GetComponent<Collider>(), normalCollider);
+            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(selected.gameObject);
+            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider);
+
+            Debug.Log("disable col 2");
 
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
-            _pickUpsList.Add(pickUp);
+            _pickUpsList.Add(pickUp);   
             pickUp.PickUp(transform);
             nearbyInteractables.Remove(selected);
             // foreach (var interactable in nearbyInteractables)
@@ -785,7 +787,7 @@ namespace KinematicCharacterController.Examples
         {
             Debug.Log("re enable coll " + heldObject.GetComponent<Collider>());
             //ignore collision
-            Collider heldItemPhsyicsCollider = getHeldItemPhysicsCollider(heldObject.gameObject);
+            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(heldObject.gameObject);
             Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider, false);
 
             // Check if dropping a trinket to hide guide
@@ -809,14 +811,21 @@ namespace KinematicCharacterController.Examples
         }
 
         //function used to get the physics collider on whatever object crowley is holding
-        public Collider getHeldItemPhysicsCollider(GameObject gameObject)
+        public Collider GetHeldItemPhysicsCollider(GameObject gameObject)
         {
-            Collider[] heldItemColliders = heldObject.GetComponents<Collider>();
+            Collider[] heldItemColliders = gameObject.GetComponents<Collider>();
             Collider heldItemPhsyicsCollider = null;
 
             foreach(Collider collider in heldItemColliders)
+            {
+                Debug.Log(collider.name + " " + collider.gameObject.name);
                 if(collider.isTrigger == false)
+                {
                     heldItemPhsyicsCollider = collider;
+                    Debug.Log(heldItemPhsyicsCollider);
+                }
+                
+            }
 
             return heldItemPhsyicsCollider;
         }
