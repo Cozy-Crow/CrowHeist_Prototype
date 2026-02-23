@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using KinematicCharacterController.Examples;
 using Unity.VisualScripting;
 using UnityEngine;
+using FMODUnity;
 
 public class PaperSpawner : Interactable
 {
@@ -11,6 +12,8 @@ public class PaperSpawner : Interactable
     [SerializeField] private GameObject paperPrefab;
     [SerializeField] private Controller2Point5D characterController;
     private GameObject paper;
+
+    [SerializeField] private EventReference PrinterSFX;
     
     // Start is called before the first frame update
     void Start()
@@ -36,12 +39,14 @@ public class PaperSpawner : Interactable
         {
             paper = Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
             characterController.Pickup(paper.GetComponentInChildren<Interactable>(), paper.GetComponent<IPickupable>());
+            AudioManager.Instance?.PlayOneShot3D(PrinterSFX, transform.position);
         }
         else
         {
             Destroy(paper);
             paper = Instantiate(paperPrefab, paperSpawnPoint.position, Quaternion.identity);
             characterController.Pickup(paper.GetComponentInChildren<Interactable>(), paper.GetComponent<IPickupable>());
+            AudioManager.Instance?.PlayOneShot3D(PrinterSFX, transform.position);
         }
         //base.TriggerInteraction(item);
     }

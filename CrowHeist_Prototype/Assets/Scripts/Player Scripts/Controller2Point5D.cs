@@ -34,6 +34,8 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
+
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
         private string surfaceTag = "";
 
         public Vector3 Velocity => velocity;
@@ -93,7 +95,7 @@ namespace KinematicCharacterController.Examples
         private bool isJumping = false;
         private bool onSlope = false;
         private bool wasGroundedLastFrame = false;
-        private List<IPickupable> _pickUpsList = new List<IPickupable>();
+        public List<IPickupable> _pickUpsList = new List<IPickupable>();
 
         [Header("Charged Throw Settings")] 
         [SerializeField] private GameObject targetAssetObject;
@@ -151,6 +153,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
+        [SerializeField] private EventReference charge;
+        public EventInstance chargeInstance;
+
+
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -182,8 +188,12 @@ namespace KinematicCharacterController.Examples
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
-            //creates audio land instance
+            //creates audio instances
             AudioManager.Instance?.CreateInstance("land", land);
+            if(AudioManager.Instance != null)
+            {
+             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
+            }
         }
 
         void Update()
@@ -195,6 +205,7 @@ namespace KinematicCharacterController.Examples
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
+
             HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -270,6 +281,16 @@ namespace KinematicCharacterController.Examples
         }
         private void HandleInput()
         {
+            //Note: Zack H. 2/4
+            // if not allowed input, dont allow input
+            // sets input to 0 so that crowley will stop
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector2();
+                return;
+            }
+
             // Zack H. 1/20:
             // Changed from Input.GetAxis to Input.GetAxisRaw
             // Apparently GetAxis has smoothing to it to slowly progress to 0
@@ -309,12 +330,14 @@ namespace KinematicCharacterController.Examples
 
         private void HandleMove()
         {
+
             if (isDashing) return;
  
             velocity = new Vector3(input.x, 0, input.y) * moveSpeed;
 
             //Get the last face direction
             // Update face direction only on the axes that have non-zero movement
+            
             if(input.x == 0 && input.y != 0)
             {
                 faceDirection.z = input.y;
@@ -327,6 +350,7 @@ namespace KinematicCharacterController.Examples
 
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            
             rb.velocity = targetVelocity;
 
 
@@ -593,13 +617,17 @@ namespace KinematicCharacterController.Examples
                     if (selected != null && selected.realObject != null)
                     {
 
+                        //if the object can be picked up, pick it up
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
+                            
                             Pickup(selected, pickUp);
                         }
+                        //otherwise interact with it
                         else
                         {
+                            Debug.Log("calling on " + selected);
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
                     }
@@ -633,6 +661,7 @@ namespace KinematicCharacterController.Examples
                     chargingThrow = true;
                     cancelThrow = false;
                     chargeStartTime = Time.time;
+                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -660,7 +689,7 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    
+                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
                     //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
@@ -723,8 +752,8 @@ namespace KinematicCharacterController.Examples
         {
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
-            pickUp.PickUp(transform);
             _pickUpsList.Add(pickUp);
+            pickUp.PickUp(transform);
             nearbyInteractables.Remove(selected);
             // foreach (var interactable in nearbyInteractables)
             // {
@@ -798,6 +827,11 @@ namespace KinematicCharacterController.Examples
         public void ApplyExternalForce(Vector3 force)
         {
             externalForce += force;
+        }
+
+        public void SetCanInput(bool val)
+        {
+            canInput = val;
         }
 
         void DrawThrowTrajectory(Vector3 direction)
