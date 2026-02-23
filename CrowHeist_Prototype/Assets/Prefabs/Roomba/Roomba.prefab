@@ -668,6 +668,7 @@ GameObject:
   - component: {fileID: 8928873112428040853}
   - component: {fileID: 6206648810514300098}
   - component: {fileID: 7896481612906206451}
+  - component: {fileID: 2758120696405193815}
   m_Layer: 3
   m_Name: Roomba
   m_TagString: Roomba
@@ -786,18 +787,54 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   dock: {fileID: 0}
-  patrolPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  patrolPoints_Room1: []
+  patrolPoints_Room2: []
   isActivated: 0
   isBroken: 0
   player: {fileID: 0}
+  roombaDetect:
+    Guid:
+      Data1: -74208961
+      Data2: 1159542939
+      Data3: 306524095
+      Data4: 4071390
+    Path: event:/SFX/Roomba/RoombaDetect
+  roombaOn:
+    Guid:
+      Data1: 1655348523
+      Data2: 1158382319
+      Data3: -827522674
+      Data4: 763935159
+    Path: event:/SFX/Roomba/RoombaOn
+  roombaOff:
+    Guid:
+      Data1: 1868098093
+      Data2: 1088911083
+      Data3: 1600379799
+      Data4: 1703839174
+    Path: event:/SFX/Roomba/RoombaOff
+  roombaEat:
+    Guid:
+      Data1: -1076211392
+      Data2: 1117636725
+      Data3: -1750254672
+      Data4: 2136147627
+    Path: event:/SFX/Roomba/RoombaEat
+  roombaMovement:
+    Guid:
+      Data1: 763625228
+      Data2: 1156962386
+      Data3: -1917333632
+      Data4: -856434297
+    Path: event:/SFX/Roomba/RoombaMovement
+  damageCaw:
+    Guid:
+      Data1: 825316630
+      Data2: 1133744866
+      Data3: -916759409
+      Data4: -1673246060
+    Path: event:/SFX/Caws/DamagedCaw
+  roombaEmitter: {fileID: 0}
   virtualCamManager: {fileID: 0}
 --- !u!64 &8928873112428040853
 MeshCollider:
@@ -857,6 +894,37 @@ MonoBehaviour:
   - {fileID: 7935952921170446433}
   - {fileID: 2140921117632262067}
   - {fileID: 2771169388226663580}
+--- !u!114 &2758120696405193815
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8266549675316877170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 763625228
+      Data2: 1156962386
+      Data3: -1917333632
+      Data4: -856434297
+    Path: event:/SFX/Roomba/RoombaMovement
+  Event: 
+  EventPlayTrigger: 0
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 10
 --- !u!1 &8692655095678254709
 GameObject:
   m_ObjectHideFlags: 0
