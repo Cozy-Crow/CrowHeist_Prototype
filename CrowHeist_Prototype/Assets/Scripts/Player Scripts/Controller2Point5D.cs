@@ -153,10 +153,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
-        [SerializeField] private EventReference charge;
-        public EventInstance chargeInstance;
-
-
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -190,10 +186,6 @@ namespace KinematicCharacterController.Examples
 
             //creates audio instances
             AudioManager.Instance?.CreateInstance("land", land);
-            if(AudioManager.Instance != null)
-            {
-             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
-            }
         }
 
         void Update()
@@ -660,13 +652,7 @@ namespace KinematicCharacterController.Examples
                 {
                     chargingThrow = true;
                     cancelThrow = false;
-                    if(chargingThrow == true && chargeStartTime == 0)
-                    {
-                        chargeInstance.start();
-                        //AudioManager.Instance?.PlayOneShot(chargeSFX); //THIS WORKS, PROVES SFX PLAYS
-                    }
                     chargeStartTime = Time.time;
-                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -694,7 +680,6 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
 
                     if (rigidbody != null)
