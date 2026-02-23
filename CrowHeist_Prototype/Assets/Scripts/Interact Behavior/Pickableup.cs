@@ -54,7 +54,8 @@ public class Pickable : MonoBehaviour, IPickupable
          {
              aiEventManager.e_makedirty.AddListener(OnObjectDirty);
          }
-         roombaDetectSFX = RoombaAi.roombaDetect;
+         string eventpath = "event:/SFX/Roomba/RoombaDetect";
+         roombaDetectSFX = RuntimeManager.PathToEventReference(eventpath);
     }
     public virtual void PickUp(Transform parent)
     {
