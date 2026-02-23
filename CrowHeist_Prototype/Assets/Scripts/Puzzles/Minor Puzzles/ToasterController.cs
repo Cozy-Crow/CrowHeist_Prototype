@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using FMODUnity;
 
 public class ToasterController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class ToasterController : MonoBehaviour
     public bool pluggedIn = true;
     [SerializeField] GameObject interactionTrigger;
     [SerializeField] GameObject plugReference;
+    [SerializeField] private EventReference coinSparkle;
 
     void Awake()
     {
@@ -53,7 +55,9 @@ public class ToasterController : MonoBehaviour
         if(collision.gameObject.tag.Equals("Wall"))
         {
             Instantiate(paintTubePrefab, paintTubeSpawnPoint.position, paintTubeSpawnPoint.rotation);
+            AudioManager.Instance?.PlayOneShot3D(coinSparkle, transform.position);
             Destroy(gameObject);
+
         }
 
         // if(GetComponent<Pickable>().pickedUp)
