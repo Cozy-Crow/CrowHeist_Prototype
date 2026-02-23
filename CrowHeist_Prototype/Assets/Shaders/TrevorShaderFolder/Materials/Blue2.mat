@@ -8,14 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Blue2
-  m_Shader: {fileID: -6465566751694194690, guid: 6b2993e5ed271b648a0cc9613d78c8ca, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: c789ddfe73b451c4399b0ade20ab39c3, type: 3}
   m_Parent: {fileID: 2100000, guid: 6c3c72ba44ae38041b4ca35acf9bd981, type: 2}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - MAIN_LIGHT_CALCULATE_SHADOWS
   - _MAIN_LIGHT_SHADOWS_CASCADE
   - _SHADOWS_SOFT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - MAIN_LIGHT_CALCULATE_SHADOWS
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -28,6 +28,10 @@ Material:
     m_TexEnvs:
     - _DiffuseTex:
         m_Texture: {fileID: 2800000, guid: f16f55c473c0473408b5b7e4119a0ff1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadingRamp:
+        m_Texture: {fileID: 2800000, guid: f071e5e507afd424a98d9cfe430ce68b, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []

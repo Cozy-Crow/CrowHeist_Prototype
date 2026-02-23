@@ -9,6 +9,7 @@ public class TraversalCheckpoint : MonoBehaviour
     [SerializeField] private Vector3[] endPositions;
     [SerializeField] private Vector3[] endRotations;
     [SerializeField] private float moveSpeed = 1f;
+    
 
     private bool isOpen = false;
 
