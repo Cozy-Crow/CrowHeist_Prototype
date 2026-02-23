@@ -86,9 +86,9 @@ namespace KinematicCharacterController.Examples
 
         //Physics/Direction
         public Rigidbody rb;
-        private CapsuleCollider[] capsuleCollider; //stores both colliders
-        private CapsuleCollider normalCollider;
-        private CapsuleCollider triggerCollider;
+        private CapsuleCollider[] capsuleColliders; //stores both colliders
+        private CapsuleCollider normalCollider; //handles actual collisions
+        private CapsuleCollider triggerCollider; //handles trigger collider (pickup range)
         public bool isFacingRight = true;
         public bool isThrowing = false;
         public bool canJump = true;
@@ -171,11 +171,11 @@ namespace KinematicCharacterController.Examples
         {
             normalMoveSpeed = moveSpeed;
             rb = GetComponent<Rigidbody>();
-            capsuleCollider = GetComponents<CapsuleCollider>();
+            capsuleColliders = GetComponents<CapsuleCollider>();
             //0 and 1 based on order in inspector
             // - trigger is listed first in inspector 
-            triggerCollider = capsuleCollider[0];
-            normalCollider = capsuleCollider[1];
+            triggerCollider = capsuleColliders[0];
+            normalCollider = capsuleColliders[1];
             crowleySFX = GetComponent<CrowleySFX>();
         }
 
@@ -750,6 +750,11 @@ namespace KinematicCharacterController.Examples
 
         public void Pickup(Interactable selected, IPickupable pickUp)
         {
+            Debug.Log("disable col " + selected.GetComponent<Collider>());
+            //disable collision with whatever object you're holding
+            Collider heldItemPhsyicsCollider = getHeldItemPhysicsCollider(selected.gameObject);
+            Physics.IgnoreCollision(heldItemPhsyicsCollider.GetComponent<Collider>(), normalCollider);
+
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
             _pickUpsList.Add(pickUp);
@@ -772,11 +777,17 @@ namespace KinematicCharacterController.Examples
             {
               AudioManager.Instance?.PlayOneShot(dashActivate);
             }
+            
         }
         
 
         public void Drop()
         {
+            Debug.Log("re enable coll " + heldObject.GetComponent<Collider>());
+            //ignore collision
+            Collider heldItemPhsyicsCollider = getHeldItemPhysicsCollider(heldObject.gameObject);
+            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider, false);
+
             // Check if dropping a trinket to hide guide
             if (heldObject != null && heldObject.CompareTag("Trinket"))
             {
@@ -788,11 +799,26 @@ namespace KinematicCharacterController.Examples
                 pickUp.Drop(dropPoint.position);
             }
 
+
             _pickUpsList.Clear();
             heldObject = null;
 
             //reset line renderer
             lineRenderer.positionCount = 0;
+            
+        }
+
+        //function used to get the physics collider on whatever object crowley is holding
+        public Collider getHeldItemPhysicsCollider(GameObject gameObject)
+        {
+            Collider[] heldItemColliders = heldObject.GetComponents<Collider>();
+            Collider heldItemPhsyicsCollider = null;
+
+            foreach(Collider collider in heldItemColliders)
+                if(collider.isTrigger == false)
+                    heldItemPhsyicsCollider = collider;
+
+            return heldItemPhsyicsCollider;
         }
         
         public void RemoveNullItems()
