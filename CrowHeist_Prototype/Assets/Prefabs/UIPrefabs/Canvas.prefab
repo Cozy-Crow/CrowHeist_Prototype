@@ -620,9 +620,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8540ac24fdf94da40b2e444a6d763c5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NarrativeMenuFirst: {fileID: 1650096348338415870}
-  NarrativeMenuSecond: {fileID: 6460199932965977063}
-  ItemSelectButton: {fileID: 1376660637504960171}
+  narrativeMenuFirst: {fileID: 0}
+  narrativeMenuSecond: {fileID: 0}
+  itemGridParent: {fileID: 0}
+  itemSlots: []
+  detailIcon: {fileID: 0}
+  detailName: {fileID: 0}
+  detailDescription: {fileID: 0}
+  detailNarrativeText: {fileID: 0}
+  backButton: {fileID: 0}
+  lockedIcon: {fileID: 0}
+  lockedDisplayName: ???
+  lockedDescription: ???
 --- !u!222 &4578938881795942180
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1624,7 +1633,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2147257194732189406
 RectTransform:
   m_ObjectHideFlags: 0
