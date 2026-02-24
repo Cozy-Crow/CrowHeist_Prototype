@@ -75,6 +75,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{4da069b6-d896-4f17-9caa-99862f6b8d8a}">
+		<property name="volume">
+			<value>-8.5</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{79bd96d1-a878-4dff-9e7e-ca87ddd6b394}</destination>
 		</relationship>
@@ -109,6 +112,9 @@
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{96b6a257-8949-4d8e-a787-7ede8e4693be}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{1f3f33dd-f813-4b18-8106-9c17e16702a0}</destination>
 		</relationship>
@@ -141,6 +147,23 @@
 	</object>
 	<object class="MixerBusPanner" id="{53bd20ef-a5f5-46eb-8f00-8041158e5778}" />
 	<object class="MixerBusFader" id="{54dcd90b-720e-416d-a337-e86a5a9036a2}" />
+	<object class="ADSRModulator" id="{96b6a257-8949-4d8e-a787-7ede8e4693be}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="releaseTime">
+			<value>2211.5376</value>
+		</property>
+		<property name="releaseShape">
+			<value>0.269372731</value>
+		</property>
+		<property name="finalValue">
+			<value>-56.5185165</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{1f3f33dd-f813-4b18-8106-9c17e16702a0}">
 		<relationship name="effects">
 			<destination>{38e09c03-bd70-4309-9522-21c5fe45f09e}</destination>
@@ -148,6 +171,25 @@
 	</object>
 	<object class="MixerBusPanner" id="{5e1b2e44-48b2-4ab4-98bd-e16de4b83cd1}" />
 	<object class="MixerBusFader" id="{fecd4c27-7e05-40c2-8987-859fba39bdf2}" />
-	<object class="ObjectSpatialiserEffect" id="{5d64ad29-237d-427c-a610-b5a0896ebcdb}" />
+	<object class="ObjectSpatialiserEffect" id="{5d64ad29-237d-427c-a610-b5a0896ebcdb}">
+		<property name="distanceRolloffType">
+			<value>3</value>
+		</property>
+		<property name="minimumDistance">
+			<value>3</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>16.5</value>
+		</property>
+		<property name="minimumExtent">
+			<value>178</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{38e09c03-bd70-4309-9522-21c5fe45f09e}" />
 </objects>

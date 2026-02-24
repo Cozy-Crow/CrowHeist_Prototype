@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 2040993165053756753}
   - component: {fileID: 890341252543259825}
   - component: {fileID: 8234184508664925427}
+  - component: {fileID: 6740529242808970230}
   m_Layer: 3
   m_Name: Cascaron
   m_TagString: Untagged
@@ -189,6 +190,27 @@ MonoBehaviour:
   _isDirty: 0
   player: {fileID: 0}
   mySpawner: {fileID: 0}
+  ObjPuAudio:
+    Guid:
+      Data1: -1634188004
+      Data2: 1269773322
+      Data3: -1884623719
+      Data4: -125230096
+    Path: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuCascarones
+  ObjThrowAudio:
+    Guid:
+      Data1: 494924603
+      Data2: 1252086078
+      Data3: 1980313018
+      Data4: 1232874425
+    Path: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowCascarones
+  ObjLandAudio:
+    Guid:
+      Data1: -396848981
+      Data2: 1282239803
+      Data3: -1670163306
+      Data4: 1762183326
+    Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandCascarones
 --- !u!114 &2040993165053756753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,8 +257,39 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   breakSpeed: 5
-  confettiEffect: {fileID: 5265630987470401662, guid: bd0c5f0796b594b5688e05ab26a9bc69, type: 3}
+  confettiEffect: {fileID: 5814365039413541526, guid: c84ad05e1b7789e4e84239cb60de536a, type: 3}
   coinPrefab: {fileID: 0}
+--- !u!114 &6740529242808970230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2935612585513061451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1767046287
+      Data2: 1318230690
+      Data3: -969806410
+      Data4: 1917927446
+    Path: event:/SFX/Objects/CascaronesEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &7125742234873533647
 GameObject:
   m_ObjectHideFlags: 0

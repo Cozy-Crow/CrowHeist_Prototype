@@ -15,12 +15,23 @@ public class Cascaron : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Player")) 
+        if(collision.gameObject.CompareTag("Player"))
+        {
             return;
-        
+        }
         // Debug.Log("Force: "+collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude >= breakSpeed) 
-            Break();
+        if (collision.relativeVelocity.magnitude >= breakSpeed)
+        {
+            Break();   
+        }
+    }
+
+    void Update()
+    {
+        if (GetComponent<Pickable>().pickedUp == true)
+            {
+              GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up   
+            }
     }
 
     void Break()

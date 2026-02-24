@@ -52,7 +52,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1, y: 10, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &2262862004215459216
 MonoBehaviour:
@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 3631406336014365578}
   - component: {fileID: 1098177574187462569}
   - component: {fileID: -7461839387891097975}
+  - component: {fileID: 6179919418434559524}
   m_Layer: 3
   m_Name: Paper
   m_TagString: Glider
@@ -230,11 +231,11 @@ MonoBehaviour:
     Path: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuPaper
   ObjThrowAudio:
     Guid:
-      Data1: 921217531
-      Data2: 1200699822
-      Data3: -1515486841
-      Data4: -1829890395
-    Path: event:/SFX/Objects/BookSpecifics/BookBreak
+      Data1: 1596982162
+      Data2: 1290196704
+      Data3: 1046076831
+      Data4: -540961598
+    Path: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowPaper
   ObjLandAudio:
     Guid:
       Data1: -678936714
@@ -272,3 +273,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0658e147bb896466c8bfa0a5cadde1b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6179919418434559524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7162343924344954473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2896156139fdda441a281763d9649b28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 4ea6f766-f180-480c-bb26-e4f773689495
+  objectType: 0
+  itemData: {fileID: 0}

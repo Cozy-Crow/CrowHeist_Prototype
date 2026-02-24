@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class TraversalCheckpoint : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class TraversalCheckpoint : MonoBehaviour
     [SerializeField] private Vector3[] endPositions;
     [SerializeField] private Vector3[] endRotations;
     [SerializeField] private float moveSpeed = 1f;
+    
+
+    [SerializeField] private EventReference movementSFX;
+    
 
     private bool isOpen = false;
 
@@ -32,6 +37,7 @@ public class TraversalCheckpoint : MonoBehaviour
     {
         if (isOpen) return;
         isOpen = true;
+        AudioManager.Instance?.PlayOneShot3D(movementSFX, transform.position);
         StartCoroutine(MoveObjects());
     }
 

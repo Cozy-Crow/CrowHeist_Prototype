@@ -34,6 +34,8 @@ namespace KinematicCharacterController.Examples
         private float newFaceAngle = 0f;
         private Vector3 velocity;
         private bool isGrounded = false;
+
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
         private string surfaceTag = "";
 
         public Vector3 Velocity => velocity;
@@ -93,9 +95,10 @@ namespace KinematicCharacterController.Examples
         private bool isJumping = false;
         private bool onSlope = false;
         private bool wasGroundedLastFrame = false;
-        private List<IPickupable> _pickUpsList = new List<IPickupable>();
+        public List<IPickupable> _pickUpsList = new List<IPickupable>();
 
-        [Header("Charged Throw Settings")]
+        [Header("Charged Throw Settings")] 
+        [SerializeField] private GameObject targetAssetObject;
         public Vector3 throwDirection;
         public float maxThrowForce = 50f;
         public float chargeTime = 2f;
@@ -146,6 +149,8 @@ namespace KinematicCharacterController.Examples
 
         [Header("Audio")]
         [SerializeField] private EventReference dashActivate;
+        [SerializeField] private EventReference jump;
+        [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
         #region  Trinket Guide
@@ -178,17 +183,21 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            //creates audio instances
+            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
+            if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
             }
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
+
             HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -198,7 +207,6 @@ namespace KinematicCharacterController.Examples
                     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
                     if (sodaDash != null)
                     {
-                        AudioManager.Instance?.PlayOneShot(dashActivate);
                         sodaDash.HandleDash();
                     }
                 }
@@ -259,12 +267,23 @@ namespace KinematicCharacterController.Examples
                 {
                     surfaceTag = "Generic";
                 }
-                crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                 crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
             }
         }
         
         private void HandleInput()
         {
+            //Note: Zack H. 2/4
+            // if not allowed input, dont allow input
+            // sets input to 0 so that crowley will stop
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector2();
+                return;
+            }
+
             // Zack H. 1/20:
             // Changed from Input.GetAxis to Input.GetAxisRaw
             // Apparently GetAxis has smoothing to it to slowly progress to 0
@@ -290,16 +309,28 @@ namespace KinematicCharacterController.Examples
             {
                 jumpBufferCounter -= Time.deltaTime;
             }
+
+            //sets parameter for footstep audio to change from running or walking
+            //  if (Input.GetKey(KeyCode.LeftShift))
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 1);
+            //  }
+            //  else
+            //  {
+            //      crowleySFX.SetInstanceFloatParam("Footstep", "WalkRun", 0);
+            //  }
         }
 
         private void HandleMove()
         {
+
             if (isDashing) return;
  
             velocity = new Vector3(input.x, 0, input.y) * moveSpeed;
 
             //Get the last face direction
             // Update face direction only on the axes that have non-zero movement
+            
             if(input.x == 0 && input.y != 0)
             {
                 faceDirection.z = input.y;
@@ -312,7 +343,10 @@ namespace KinematicCharacterController.Examples
 
             // Set velocity directly instead of using MovePosition
             Vector3 targetVelocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+            
             rb.velocity = targetVelocity;
+
+
         }
 
         private void HandleGravity()
@@ -339,6 +373,10 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+
+                    //plays audio when landing
+                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    
                 }
 
                 isJumping = false;
@@ -356,6 +394,7 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
+            AudioManager.Instance?.PlayOneShot(jump); 
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -571,30 +610,17 @@ namespace KinematicCharacterController.Examples
                     if (selected != null && selected.realObject != null)
                     {
 
+                        //if the object can be picked up, pick it up
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            selected.SetOutline(false);
-                            Transform transform = sockets.GetSockets(pickUp.SocketType);
-                            pickUp.PickUp(transform);
-                            _pickUpsList.Add(pickUp);
-                            nearbyInteractables.Remove(selected);
-                            // foreach (var interactable in nearbyInteractables)
-                            // {
-                            //     Debug.Log("Item: " + interactable.transform.name);
-                            // }
-                            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
-                            heldObject = selected.realObject.GetComponent<Rigidbody>();
-                            UpdateHighlightedInteractable();
-
-                            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
-                            {
-                                hasPickedUpTrinket = true;
-                                ShowTrinketGuide();
-                            }
+                            
+                            Pickup(selected, pickUp);
                         }
+                        //otherwise interact with it
                         else
                         {
+                            Debug.Log("calling on " + selected);
                             selected.TriggerInteraction(heldObject == null? null : heldObject.GetComponent<Pickable>());
                         }
                     }
@@ -617,6 +643,7 @@ namespace KinematicCharacterController.Examples
             if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
+                
                 if (heldCollider != null)
                 {
                     heldCollider.enabled = true;
@@ -644,6 +671,7 @@ namespace KinematicCharacterController.Examples
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     DrawThrowTrajectory(storedThrowDirection);
+                    
                 }
 
                 if (Input.GetMouseButtonUp(0) && !cancelThrow)
@@ -653,9 +681,7 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
-                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
 
                     if (rigidbody != null)
                     {
@@ -691,6 +717,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
+                    targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -700,9 +727,43 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
+                    targetAssetObject.SetActive(false);
                 }
             }
         }
+
+        public List<IPickupable> GetHeldItems()
+        {
+            return _pickUpsList;
+        }
+
+
+        public void Pickup(Interactable selected, IPickupable pickUp)
+        {
+            selected.SetOutline(false);
+            Transform transform = sockets.GetSockets(pickUp.SocketType);
+            _pickUpsList.Add(pickUp);
+            pickUp.PickUp(transform);
+            nearbyInteractables.Remove(selected);
+            // foreach (var interactable in nearbyInteractables)
+            // {
+            //     Debug.Log("Item: " + interactable.transform.name);
+            // }
+            ObjThrowAudio = selected.realObject.GetComponent<Pickable>().ObjThrowAudio;
+            heldObject = selected.realObject.GetComponent<Rigidbody>();
+            UpdateHighlightedInteractable();
+
+            if (!hasPickedUpTrinket && heldObject.CompareTag("Trinket"))
+            {
+                hasPickedUpTrinket = true;
+                ShowTrinketGuide();
+            }
+            if(heldObject.CompareTag("Soda"))
+            {
+              AudioManager.Instance?.PlayOneShot(dashActivate);
+            }
+        }
+        
 
         public void Drop()
         {
@@ -758,8 +819,14 @@ namespace KinematicCharacterController.Examples
             externalForce += force;
         }
 
+        public void SetCanInput(bool val)
+        {
+            canInput = val;
+        }
+
         void DrawThrowTrajectory(Vector3 direction)
         {
+            
             float chargePercent = throwForce / maxThrowForce;
             float scaledArc = Mathf.Lerp(minArc, maxArc, arcCurve.Evaluate(chargePercent));
             Vector3 curvedDirection = direction;
@@ -785,6 +852,38 @@ namespace KinematicCharacterController.Examples
             }
 
             throwDirection = curvedDirection;
+            
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
+
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
+
+        }
+
+        private Vector3 FindThrowCollisionPoint()
+        {
+            LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
+            Vector3 collisionPoint = new Vector3(0, 0, 0);
+            Vector3 firstPoint = lineRenderer.GetPosition(0);
+
+            for (int i = 0; i < lineRenderer.positionCount - 1; i++) 
+            {
+                Vector3 currentPoint = lineRenderer.GetPosition(i);
+                if (Physics.Linecast(firstPoint, currentPoint, out RaycastHit hit))
+                {
+                    Physics.Raycast(hit.point, transform.position - hit.point, out RaycastHit inSightCheck);
+                    if (inSightCheck.collider.gameObject.CompareTag("Player"))
+                    {
+                        collisionPoint = hit.point;
+                    }
+                }
+                
+                firstPoint = currentPoint;
+            }
+
+            return collisionPoint;
         }
 
         private void Flip(Vector3 faceDirection)

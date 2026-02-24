@@ -56,7 +56,11 @@
 			<destination>{0b18dc2b-9c92-4148-9173-32e9d909ff26}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{9895fe1f-10d9-45f8-b923-4ec28ffc2a56}" />
+	<object class="EventAutomatableProperties" id="{9895fe1f-10d9-45f8-b923-4ec28ffc2a56}">
+		<property name="triggerCooldown">
+			<value>580</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{cc6417b8-d8ad-438a-a5b7-497b9a6dcb86}" />
 	<object class="GroupTrack" id="{3d3d4741-8ea8-40ce-84d8-f748e299bd4c}">
 		<relationship name="modules">
@@ -126,7 +130,7 @@
 	<object class="MixerBusEffectChain" id="{a1598317-2b9c-4112-8e60-676075bd79a5}">
 		<relationship name="effects">
 			<destination>{99e74c50-dc63-429e-9332-dc37f76f45db}</destination>
-			<destination>{e55483d7-d805-409d-958e-632765980a01}</destination>
+			<destination>{b905c510-108c-43c9-8bd6-4f8d74a768ad}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{d1a672dc-328c-423b-a6ed-7be0a7d9ed31}" />
@@ -182,7 +186,23 @@
 	</object>
 	<object class="MixerBusPanner" id="{f526296f-e273-43c2-bd44-aec6a2f24913}" />
 	<object class="MixerBusFader" id="{99e74c50-dc63-429e-9332-dc37f76f45db}" />
-	<object class="SpatialiserEffect" id="{e55483d7-d805-409d-958e-632765980a01}" />
+	<object class="SpatialiserEffect" id="{b905c510-108c-43c9-8bd6-4f8d74a768ad}">
+		<property name="distanceRolloffType">
+			<value>1</value>
+		</property>
+		<property name="overrideRange">
+			<value>true</value>
+		</property>
+		<property name="extentMode">
+			<value>1</value>
+		</property>
+		<property name="soundSize">
+			<value>3.60000014</value>
+		</property>
+		<property name="minimumExtent">
+			<value>154</value>
+		</property>
+	</object>
 	<object class="AutomationPoint" id="{87c5b64a-f824-47cc-836b-7363bd80a4a4}">
 		<property name="position">
 			<value>0.46000000000000002</value>

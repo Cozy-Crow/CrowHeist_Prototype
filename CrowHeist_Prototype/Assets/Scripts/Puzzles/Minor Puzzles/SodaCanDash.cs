@@ -11,7 +11,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float dashForce = 10f;
         private float lastDashTime = -1f;
 
-        public EventReference dashUse = FMODUnity.EventReference.Find("event:/SFX/PlayerMovement/Dash/Dash Use");
+        [Header("audio")]
+        [SerializeField] private EventReference dashActivatve;
+        [SerializeField] private EventReference dashUse;
+        [SerializeField] private EventReference dashDeactivatve;
 
         private Controller2Point5D controller;
 
@@ -26,6 +29,7 @@ namespace KinematicCharacterController.Examples
             if (controller != null && controller.heldObject == this.GetComponent<Rigidbody>() && Input.GetKeyDown(KeyCode.E) && !controller.isDashing && controller.canDash)
             {
                 StartCoroutine(Dash());
+                AudioManager.Instance?.PlayOneShot(dashUse);
             }
         }
 
@@ -42,8 +46,6 @@ namespace KinematicCharacterController.Examples
             lastDashTime = Time.time;
             controller.canDash = false;
             controller.isDashing = true;
-
-            AudioManager.Instance?.PlayOneShot(dashUse);
 
             float dashDirection;
             Vector3 force;

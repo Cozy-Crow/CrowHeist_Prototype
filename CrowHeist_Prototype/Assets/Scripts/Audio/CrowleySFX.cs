@@ -32,10 +32,11 @@ public class CrowleySFX : MonoBehaviour
         }
     }
 
+    public void Update()
+    {
+    
+    }
 
-    // Use for animator to call one-shot SFX, which are not affected by parameters
-    // sfx with parameter are not settable here, and must be created as event instance
-    // Add the event instance in the serializefield -- crowleyInstanceSFX list --
     public void PlayOneShot(string sfx)
     {
         string key = sfx
