@@ -79,7 +79,7 @@ public class Coins : MonoBehaviour
         if (other.CompareTag("HeistZone"))
         {
             GameManager.Score += _coinValue;
-            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+            UIManager.Instance.CollectionZoneCameraUI.UpdateCoinCounter(GameManager.Score);
 
             // Show collection zone with narrative popup if applicable
             if (UIManager.Instance.CollectionZoneCameraUI != null)
