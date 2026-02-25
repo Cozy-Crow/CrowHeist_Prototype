@@ -18,7 +18,7 @@ public class ToasterController : MonoBehaviour
     {
         if(plugReference == null)
         {
-            Debug.LogError("ERROR: PLUG not in level or not conncected");
+            // Debug.LogError("ERROR: PLUG not in level or not conncected");
             pluggedIn = false;
         }
     }
