@@ -14,8 +14,8 @@ namespace KinematicCharacterController.Examples
     public class Controller2Point5D : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Sockets sockets;
-        [SerializeField] private CrowleySFX crowleySFX;
+        [SerializeField] private Sockets sockets;           //  Sockets for holding items
+        [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
 
         #region Movement Variables
         [Header("Movement")]
@@ -271,6 +271,7 @@ namespace KinematicCharacterController.Examples
                  AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
             }
         }
+        
         private void HandleInput()
         {
             //Note: Zack H. 2/4
