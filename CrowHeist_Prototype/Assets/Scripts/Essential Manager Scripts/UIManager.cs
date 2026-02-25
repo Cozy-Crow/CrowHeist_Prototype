@@ -28,5 +28,6 @@ public class UIManager : MonoBehaviour
 
         _coinsUI = GameObject.Find("CoinsUI").GetComponent<CoinsUI>();
         _altWinCoinsUI = GameObject.Find("AltWinCoinsUI").GetComponent<AltWinCoinsUI>();
+        CollectionZoneCameraUI = GameObject.Find("CollectionZoneCameraUI").GetComponent<CollectionZoneCameraUI>();
     }
 }
