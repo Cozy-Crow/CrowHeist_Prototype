@@ -11,7 +11,7 @@ public class JackOLanternPuzzle : MonoBehaviour
     [SerializeField] private GameObject jackOLanternPrefab;
     [SerializeField] private GameObject[] pumpkinPiecePrefabs; // 0: leftEye, 1: rightEye, 2: nose, 3: mouth, 4: lid
     [SerializeField] private GameObject goldenCoinPrefab;
-    [SerializeField] private float popForce = 5f;
+    [SerializeField] private float popForce = 2f;
     [SerializeField] private Vector3 spawnOffset = new Vector3(0, -0.5f, 0);
 
 
