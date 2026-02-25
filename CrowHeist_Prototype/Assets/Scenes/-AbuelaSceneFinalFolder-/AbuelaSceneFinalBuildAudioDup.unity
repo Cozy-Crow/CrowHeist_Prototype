@@ -1951,7 +1951,7 @@ MonoBehaviour:
   roombaDispense: {fileID: 1099528374}
   roombaLightsOff: {fileID: 1099528373}
   doorOpen: {fileID: 612166667}
-  playerRb: {fileID: 0}
+  playerRb: {fileID: 1276572038}
 --- !u!4 &263798002
 Transform:
   m_ObjectHideFlags: 0
@@ -3580,161 +3580,33 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crowley
       objectReference: {fileID: 0}
-    - target: {fileID: 2707338875631281418, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: _cawingSfx.Path
-      value: event:/SFX/Caws/GenericCaw
-      objectReference: {fileID: 0}
-    - target: {fileID: 2707338875631281418, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: _cawingSfx.Guid.Data1
-      value: 345002108
-      objectReference: {fileID: 0}
-    - target: {fileID: 2707338875631281418, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: _cawingSfx.Guid.Data2
-      value: 1226833273
-      objectReference: {fileID: 0}
-    - target: {fileID: 2707338875631281418, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: _cawingSfx.Guid.Data3
-      value: -167619142
-      objectReference: {fileID: 0}
-    - target: {fileID: 2707338875631281418, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: _cawingSfx.Guid.Data4
-      value: -2128445852
-      objectReference: {fileID: 0}
-    - target: {fileID: 4700546497416972282, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: maskObject.transform
-      value: 
-      objectReference: {fileID: 473277726}
-    - target: {fileID: 4700546497416972282, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: maskObject.targetScale.x
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4700546497416972282, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: maskObject.targetScale.y
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 4700546497416972282, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: maskObject.targetScale.z
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: crowleyInstanceSFX.Array.data[2].name
+      propertyPath: crowleyInstanceSFX.Array.data[2]._name
       value: Charge
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.data[2].sound.Path
-      value: event:/SFX/PlayerMovement/Charging2
+      value: event:/SFX/PlayerMovement/Charging
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.data[2].sound.Guid.Data1
-      value: 1073749105
+      value: 401144202
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.data[2].sound.Guid.Data2
-      value: 1251840212
+      value: 1101908673
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.data[2].sound.Guid.Data3
-      value: -591687523
+      value: -18540116
       objectReference: {fileID: 0}
     - target: {fileID: 6453235951501725631, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: crowleyInstanceSFX.Array.data[2].sound.Guid.Data4
-      value: -1959545935
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jump.Path
-      value: event:/SFX/PlayerMovement/Jump
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jumpForce
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: land.Path
-      value: event:/SFX/PlayerMovement/Land
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: moveSpeed
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: charge.Path
-      value: event:/SFX/PlayerMovement/Dash/Dash Activate
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jump.Guid.Data1
-      value: 462677423
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jump.Guid.Data2
-      value: 1154942555
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jump.Guid.Data3
-      value: -673985868
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: jump.Guid.Data4
-      value: 1834852695
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: land.Guid.Data1
-      value: -900275709
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: land.Guid.Data2
-      value: 1236955404
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: land.Guid.Data3
-      value: 775939740
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: land.Guid.Data4
-      value: 65958460
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: charge.Guid.Data1
-      value: -512311345
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: charge.Guid.Data2
-      value: 1196429614
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: charge.Guid.Data3
-      value: 698543011
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: charge.Guid.Data4
-      value: 1989495072
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: dashActivate.Path
-      value: event:/SFX/PlayerMovement/Dash/Dash Activate
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: targetAssetObject
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: dashActivate.Guid.Data1
-      value: -512311345
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: dashActivate.Guid.Data2
-      value: 1196429614
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: dashActivate.Guid.Data3
-      value: 698543011
-      objectReference: {fileID: 0}
-    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-      propertyPath: dashActivate.Guid.Data4
-      value: 1989495072
+      value: -1456046421
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3781,11 +3653,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
---- !u!4 &473277726 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7221038939007103040, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
-  m_PrefabInstance: {fileID: 473277725}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &473277727 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}

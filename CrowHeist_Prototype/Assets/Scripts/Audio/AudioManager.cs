@@ -26,6 +26,12 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    //allows you to get instances from their name in other scripts in order to change their playstates
+    public EventInstance GetInstance(string name)
+    {
+        return eventInstances[name];
+    }
+
 
     // Starts ambience intance using createinstance function
     private void InitializeAmbience(EventReference AmbienceReference)

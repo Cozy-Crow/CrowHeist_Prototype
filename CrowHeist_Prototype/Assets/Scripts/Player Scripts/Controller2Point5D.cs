@@ -682,6 +682,7 @@ namespace KinematicCharacterController.Examples
 
                     print("THROW");
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
+                    AudioManager.Instance.GetInstance("Charge").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
                     if (rigidbody != null)
                     {
@@ -717,7 +718,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
-                    targetAssetObject.SetActive(false);
+                    // targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -727,7 +728,7 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
-                    targetAssetObject.SetActive(false);
+                    // targetAssetObject.SetActive(false);
                 }
             }
         }
@@ -853,12 +854,12 @@ namespace KinematicCharacterController.Examples
 
             throwDirection = curvedDirection;
             
-            if (!targetAssetObject.activeSelf)
-            {
-                targetAssetObject.SetActive(true);
-            }
+            // if (!targetAssetObject.activeSelf)
+            // {
+            //     targetAssetObject.SetActive(true);
+            // }
 
-            targetAssetObject.transform.position = FindThrowCollisionPoint();
+            // targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
 
