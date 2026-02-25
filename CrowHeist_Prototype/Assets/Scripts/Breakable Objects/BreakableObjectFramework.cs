@@ -48,6 +48,10 @@ public class BreakableObjectFramework : MonoBehaviour
         {
             Break();
         }
+        else if (rb != null && rb.velocity.magnitude > minThrowVelocity)
+        {
+            Break();
+        }
         else if (fallTime >= minFallTime)
         {
             Break();
@@ -80,9 +84,7 @@ public class BreakableObjectFramework : MonoBehaviour
             if (coinRb) coinRb.AddForce(Vector3.up * 5f, ForceMode.Impulse);
         }
         
-        GetComponent<Collider>().enabled = false;
-        GetComponent<Renderer>().enabled = false;
-        Destroy(gameObject, 1f);
+        Destroy(gameObject);
     }
 
 }
