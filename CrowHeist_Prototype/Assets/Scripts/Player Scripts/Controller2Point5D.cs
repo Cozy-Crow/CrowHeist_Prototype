@@ -752,7 +752,7 @@ namespace KinematicCharacterController.Examples
         {
             Debug.Log("disable col " + selected.GetComponent<Collider>());
             //disable collision with whatever object you're holding
-            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(selected.gameObject);
+            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(selected.transform.parent.gameObject);
             Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider);
 
             Debug.Log("disable col 2");
@@ -785,7 +785,7 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
-            Debug.Log("re enable coll " + heldObject.GetComponent<Collider>());
+            // Debug.Log("re enable coll " + heldObject.transform.parent.GetComponent<Collider>());
             //ignore collision
             Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(heldObject.gameObject);
             Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider, false);
