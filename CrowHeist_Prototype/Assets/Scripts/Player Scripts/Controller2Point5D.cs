@@ -218,14 +218,14 @@ namespace KinematicCharacterController.Examples
                         sodaDash.HandleDash();
                     }
                 }
-                // else if (heldObject.CompareTag("Dashable"))
-                // {
-                //     CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
-                //     if (coffee != null)
-                // {
-                //         coffee.TryConsumeCoffee();
-                //     }
-                // }
+                else if (heldObject.CompareTag("Dashable"))
+                {
+                    CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
+                    if (coffee != null)
+                {
+                        coffee.TryConsumeCoffee();
+                    }
+                }
                 else if (heldObject.CompareTag("Glider"))
                 {
                     PaperGlider glider = heldObject.GetComponent<PaperGlider>();
