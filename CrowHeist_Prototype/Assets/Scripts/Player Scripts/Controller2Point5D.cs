@@ -6,6 +6,7 @@ using FMOD.Studio;
 using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 
 namespace KinematicCharacterController.Examples
 {
@@ -171,11 +172,18 @@ namespace KinematicCharacterController.Examples
         {
             normalMoveSpeed = moveSpeed;
             rb = GetComponent<Rigidbody>();
+            
+            //prepare the different colliders
             capsuleColliders = GetComponents<CapsuleCollider>();
-            //0 and 1 based on order in inspector
-            // - trigger is listed first in inspector 
-            triggerCollider = capsuleColliders[0];
-            normalCollider = capsuleColliders[1];
+            foreach(CapsuleCollider collider in capsuleColliders)
+            {
+                if(collider.isTrigger)
+                    triggerCollider = collider;
+
+                if(!collider.isTrigger)
+                    normalCollider = collider;
+            } 
+
             crowleySFX = GetComponent<CrowleySFX>();
         }
 
@@ -621,7 +629,8 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            
+
+                            Debug.Log("selcted" + selected.name);
                             Pickup(selected, pickUp);
                         }
                         //otherwise interact with it
@@ -750,13 +759,12 @@ namespace KinematicCharacterController.Examples
 
         public void Pickup(Interactable selected, IPickupable pickUp)
         {
-            Debug.Log("disable col " + selected.GetComponent<Collider>());
+            //selected is the InteractTrigger of the Object
             //disable collision with whatever object you're holding
-            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(selected.transform.parent.gameObject);
-            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider);
-
-            Debug.Log("disable col 2");
-
+            GameObject selectedParent = selected.transform.parent.gameObject;
+            Collider heldItemPhsyicsCollider = selectedParent.GetComponent<Collider>();
+            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider); //ignore first before moving the object
+    
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
             _pickUpsList.Add(pickUp);   
@@ -785,7 +793,6 @@ namespace KinematicCharacterController.Examples
 
         public void Drop()
         {
-            // Debug.Log("re enable coll " + heldObject.transform.parent.GetComponent<Collider>());
             //ignore collision
             Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(heldObject.gameObject);
             Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider, false);
