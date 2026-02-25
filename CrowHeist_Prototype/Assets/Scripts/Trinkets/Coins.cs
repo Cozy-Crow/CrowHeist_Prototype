@@ -31,21 +31,21 @@ public class Coins : MonoBehaviour
     [SerializeField] private float arcDuration = 1f; // Time to reach sack
 
     public int CoinValue { get => _coinValue; set => _coinValue = value; }
-    
+
     // Update is called once per frame
     void Update()
     {
         //transform.Rotate(Vector3.up, _rotateSpeed * Time.deltaTime);
-        
+
         // Prevent coin from becoming dirty
         if (pickableUpScript != null)
         {
             pickableUpScript._isDirty = false;
         }
-        if(pickableUpScript.pickedUp == true)
+        if (pickableUpScript.pickedUp == true)
         {
-                  GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up  
-        } 
+            GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up
+        }
     }
 
     private void Awake()
@@ -55,7 +55,7 @@ public class Coins : MonoBehaviour
         pickableUpScript = GetComponent<Pickable>();
         uniqueID = GetComponent<UniqueID>();
 
-        if(this.isNarrativeItem == true)
+        if (this.isNarrativeItem == true)
         {
             _coinValue = 3;
         }
@@ -79,7 +79,7 @@ public class Coins : MonoBehaviour
         if (other.CompareTag("HeistZone"))
         {
             GameManager.Score += _coinValue;
-            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+            UIManager.Instance.CollectionZoneCameraUI.UpdateCoinCounter(GameManager.Score);
 
             // Show collection zone with narrative popup if applicable
             if (UIManager.Instance.CollectionZoneCameraUI != null)
@@ -103,13 +103,12 @@ public class Coins : MonoBehaviour
             {
                 PickupRegistry.Instance.MarkNarrativeAsCollected(uniqueID);
             }
-
             // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-            // float newValue = currentValue + 1;
-            // MusicManager.SetParameterByName("TrinketsCollected", newValue);
+             // float newValue = currentValue + 1;
+             // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
             // Drop item if picked up
-            if(pickableUpScript.pickedUp)
+            if (pickableUpScript.pickedUp)
             {
                 playerController.Drop();
             }
@@ -143,20 +142,37 @@ public class Coins : MonoBehaviour
             if (isNarrativeItem)
             {
                 SpriteRenderer sr = GetComponent<SpriteRenderer>();
-                if (sr != null)
-                {
-                    itemSprite = sr.sprite;
-                }
+                if (sr != null) itemSprite = sr.sprite;
             }
-            
             UIManager.Instance.CollectionZoneCameraUI.ShowCollectionZone(isNarrativeItem, itemSprite);
         }
 
         // Teleport to start position
+        if (_collectParticlePrefab != null)
+        {
+            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+        }
+
+        // Briefly hide coin during "teleport"
+        Renderer coinRenderer = GetComponent<Renderer>();
+        if (coinRenderer != null) coinRenderer.enabled = false;
+
+        // Teleport to teleport point position
         if (teleportPoint != null)
         {
             transform.position = teleportPoint.position;
         }
+
+        // Small delay before reappearing 
+        yield return new WaitForSeconds(0.1f);
+
+        if (_collectParticlePrefab != null)
+        {
+            Instantiate(_collectParticlePrefab, teleportPoint.position, Quaternion.identity);
+        }
+
+        // Reshow coin
+        if (coinRenderer != null) coinRenderer.enabled = true;
 
         // Small delay before arc starts
         yield return new WaitForSeconds(0.2f);
@@ -173,16 +189,6 @@ public class Coins : MonoBehaviour
             Instantiate(_collectParticlePrefab, sackTarget.position, Quaternion.identity);
         }
 
-        // Update score
-        GameManager.Score += _coinValue;
-        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-
-        // MusicManager code (if you want to re-enable it)
-        // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-        // float newValue = currentValue + 1;
-        // MusicManager.SetParameterByName("TrinketsCollected", newValue);
-
-        // Destroy or hide the item
         KillObject();
     }
 
@@ -214,7 +220,7 @@ public class Coins : MonoBehaviour
         // Ensure we end exactly at target
         transform.position = targetPosition;
     }
-    
+
     void KillObject()
     {
         //Destroy(gameObject);
