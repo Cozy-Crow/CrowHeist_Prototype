@@ -6,6 +6,7 @@ using FMOD.Studio;
 using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 
 namespace KinematicCharacterController.Examples
 {
@@ -86,9 +87,9 @@ namespace KinematicCharacterController.Examples
 
         //Physics/Direction
         public Rigidbody rb;
-        private CapsuleCollider[] capsuleCollider; //stores both colliders
-        private CapsuleCollider normalCollider;
-        private CapsuleCollider triggerCollider;
+        private CapsuleCollider[] capsuleColliders; //stores both colliders
+        private CapsuleCollider normalCollider; //handles actual collisions
+        private CapsuleCollider triggerCollider; //handles trigger collider (pickup range)
         public bool isFacingRight = true;
         public bool isThrowing = false;
         public bool canJump = true;
@@ -171,11 +172,18 @@ namespace KinematicCharacterController.Examples
         {
             normalMoveSpeed = moveSpeed;
             rb = GetComponent<Rigidbody>();
-            capsuleCollider = GetComponents<CapsuleCollider>();
-            //0 and 1 based on order in inspector
-            // - trigger is listed first in inspector 
-            triggerCollider = capsuleCollider[0];
-            normalCollider = capsuleCollider[1];
+            
+            //prepare the different colliders
+            capsuleColliders = GetComponents<CapsuleCollider>();
+            foreach(CapsuleCollider collider in capsuleColliders)
+            {
+                if(collider.isTrigger)
+                    triggerCollider = collider;
+
+                if(!collider.isTrigger)
+                    normalCollider = collider;
+            } 
+
             crowleySFX = GetComponent<CrowleySFX>();
         }
 
@@ -218,14 +226,14 @@ namespace KinematicCharacterController.Examples
                         sodaDash.HandleDash();
                     }
                 }
-                else if (heldObject.CompareTag("Dashable"))
-                {
-                    CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
-                    if (coffee != null)
-                {
-                        coffee.TryConsumeCoffee();
-                    }
-                }
+                // else if (heldObject.CompareTag("Dashable"))
+                // {
+                //     CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
+                //     if (coffee != null)
+                // {
+                //         coffee.TryConsumeCoffee();
+                //     }
+                // }
                 else if (heldObject.CompareTag("Glider"))
                 {
                     PaperGlider glider = heldObject.GetComponent<PaperGlider>();
@@ -621,7 +629,8 @@ namespace KinematicCharacterController.Examples
                         if (selected.realObject.TryGetComponent(out IPickupable pickUp))
                         {
                             if (_pickUpsList.Count > 0) return;
-                            
+
+                            Debug.Log("selcted" + selected.name);
                             Pickup(selected, pickUp);
                         }
                         //otherwise interact with it
@@ -750,9 +759,15 @@ namespace KinematicCharacterController.Examples
 
         public void Pickup(Interactable selected, IPickupable pickUp)
         {
+            //selected is the InteractTrigger of the Object
+            //disable collision with whatever object you're holding
+            GameObject selectedParent = selected.transform.parent.gameObject;
+            Collider heldItemPhsyicsCollider = selectedParent.GetComponent<Collider>();
+            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider); //ignore first before moving the object
+    
             selected.SetOutline(false);
             Transform transform = sockets.GetSockets(pickUp.SocketType);
-            _pickUpsList.Add(pickUp);
+            _pickUpsList.Add(pickUp);   
             pickUp.PickUp(transform);
             nearbyInteractables.Remove(selected);
             // foreach (var interactable in nearbyInteractables)
@@ -772,11 +787,16 @@ namespace KinematicCharacterController.Examples
             {
               AudioManager.Instance?.PlayOneShot(dashActivate);
             }
+            
         }
         
 
         public void Drop()
         {
+            //ignore collision
+            Collider heldItemPhsyicsCollider = GetHeldItemPhysicsCollider(heldObject.gameObject);
+            Physics.IgnoreCollision(heldItemPhsyicsCollider, normalCollider, false);
+
             // Check if dropping a trinket to hide guide
             if (heldObject != null && heldObject.CompareTag("Trinket"))
             {
@@ -788,11 +808,33 @@ namespace KinematicCharacterController.Examples
                 pickUp.Drop(dropPoint.position);
             }
 
+
             _pickUpsList.Clear();
             heldObject = null;
 
             //reset line renderer
             lineRenderer.positionCount = 0;
+            
+        }
+
+        //function used to get the physics collider on whatever object crowley is holding
+        public Collider GetHeldItemPhysicsCollider(GameObject gameObject)
+        {
+            Collider[] heldItemColliders = gameObject.GetComponents<Collider>();
+            Collider heldItemPhsyicsCollider = null;
+
+            foreach(Collider collider in heldItemColliders)
+            {
+                Debug.Log(collider.name + " " + collider.gameObject.name);
+                if(collider.isTrigger == false)
+                {
+                    heldItemPhsyicsCollider = collider;
+                    Debug.Log(heldItemPhsyicsCollider);
+                }
+                
+            }
+
+            return heldItemPhsyicsCollider;
         }
         
         public void RemoveNullItems()
