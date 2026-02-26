@@ -1,23 +1,29 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using KinematicCharacterController.Examples;
 
-public class HeistZonePlayerBlock : MonoBehaviour
+public class HeistZoneBlocker : MonoBehaviour
 {
-    [SerializeField]private Collider zoneCollider;
-    // Start is called before the first frame update
+    private Controller2Point5D playerController;
+
     void Start()
     {
-        zoneCollider = GetComponent<Collider>();
+        playerController = FindObjectOfType<Controller2Point5D>();
     }
-
-    void OnCollisionStay(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        // If it's NOT the player, ignore the collision
-        if (!collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player")) return;
+
+        Debug.Log("Trigger fired by: " + other.gameObject.name + " on layer: " + other.gameObject.layer);
+        
+        RespawnObject respawnObject = other.GetComponentInParent<RespawnObject>();
+        if (respawnObject != null)
         {
-            Physics.IgnoreCollision(collision.collider, zoneCollider);
+            Pickable pickup = respawnObject.gameObject.GetComponent<Pickable>();
+            if(pickup != null && pickup.pickedUp)
+            {
+                playerController.Drop();
+            }
+            respawnObject.Respawn();
         }
     }
-
 }
