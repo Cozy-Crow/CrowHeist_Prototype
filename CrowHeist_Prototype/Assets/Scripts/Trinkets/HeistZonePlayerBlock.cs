@@ -1,23 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class HeistZonePlayerBlock : MonoBehaviour
+public class HeistZoneBlocker : MonoBehaviour
 {
-    [SerializeField]private Collider zoneCollider;
-    // Start is called before the first frame update
-    void Start()
+    void OnTriggerEnter(Collider other)
     {
-        zoneCollider = GetComponent<Collider>();
-    }
-
-    void OnCollisionStay(Collision collision)
-    {
-        // If it's NOT the player, ignore the collision
-        if (!collision.gameObject.CompareTag("Player"))
+        Debug.Log("Trigger fired by: " + other.gameObject.name + " on layer: " + other.gameObject.layer);
+        
+        RespawnObject respawnObject = other.GetComponentInParent<RespawnObject>();
+        if (respawnObject != null)
         {
-            Physics.IgnoreCollision(collision.collider, zoneCollider);
+            respawnObject.Respawn();
         }
     }
-
 }
