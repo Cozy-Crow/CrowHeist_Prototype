@@ -122,6 +122,56 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &16836302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 16836303}
+  - component: {fileID: 16836304}
+  m_Layer: 0
+  m_Name: DoorOpenCutscene
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &16836303
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16836302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 553096218}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &16836304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 16836302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ba0e66c261314127a808febfe8d8226, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCam: {fileID: 1777854338}
+  startDelay: 2
+  cameraSwitches:
+  - virtualCamera: {fileID: 612166668}
+    activeTime: 4
+  playerRb: {fileID: 1276572038}
 --- !u!1 &19398574
 GameObject:
   m_ObjectHideFlags: 0
@@ -5457,6 +5507,7 @@ Transform:
   - {fileID: 1600985120}
   - {fileID: 2040380282}
   - {fileID: 1230506358}
+  - {fileID: 16836303}
   m_Father: {fileID: 1197967113}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &553096219
@@ -5474,8 +5525,9 @@ MonoBehaviour:
   introCutscene: {fileID: 1600985121}
   roombaActivationCutscene: {fileID: 2040380283}
   roombaBreakCutscene: {fileID: 1230506359}
-  doorOpenCutscene: {fileID: 0}
-  doorOpen: {fileID: 0}
+  doorOpenCutscene: {fileID: 16836304}
+  doorOpen: {fileID: 612166667}
+  coinThreshold: 25
 --- !u!1 &553774021
 GameObject:
   m_ObjectHideFlags: 0
@@ -5993,6 +6045,10 @@ PrefabInstance:
     - target: {fileID: 1371138797850375870, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2888124931072908098, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
+      propertyPath: openSpeed
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 7439139727808443805, guid: 95d25b6a7ca8b420399a9884189b2589, type: 3}
       propertyPath: m_Materials.Array.size
@@ -16574,7 +16630,7 @@ MonoBehaviour:
     activeTime: 3
   - virtualCamera: {fileID: 553774023}
     activeTime: 3
-  playerRb: {fileID: 0}
+  playerRb: {fileID: 1276572038}
 --- !u!1001 &1604934565
 PrefabInstance:
   m_ObjectHideFlags: 0

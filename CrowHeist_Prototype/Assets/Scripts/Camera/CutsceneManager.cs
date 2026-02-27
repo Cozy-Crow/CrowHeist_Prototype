@@ -23,6 +23,8 @@ public class CutsceneManager : MonoBehaviour
     bool doorOpenCutscenePlayed = false;
     public DoorOpen doorOpen;
 
+    public int coinThreshold;
+
     void Start()
     {
         introCutscene.PlayCutscene();
@@ -32,7 +34,7 @@ public class CutsceneManager : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Score >= 3 && !doorOpenCutscenePlayed)
+        if(GameManager.Score >= coinThreshold && !doorOpenCutscenePlayed)
         {
             doorOpenCutscene.PlayCutscene();
             doorOpenCutscenePlayed = true;
