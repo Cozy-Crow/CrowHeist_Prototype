@@ -273,7 +273,7 @@ namespace KinematicCharacterController.Examples
                     surfaceTag = "Generic";
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
-                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
             }
         }
         
@@ -380,7 +380,10 @@ namespace KinematicCharacterController.Examples
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
 
                     //plays audio when landing
-                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    //AudioManager.Instance?.PlayInstanceOneShot("LAND");
+                    //above stopped working?? putting bandaid on it for now 
+                    AudioManager.Instance?.PlayOneShot(land);
+                    print("LAND");
                     
                 }
 
