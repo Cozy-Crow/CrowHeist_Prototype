@@ -9,6 +9,9 @@ public class CutsceneManager : MonoBehaviour
     // This script is temporary to play my new easy-to-create cutscenes
     // It will be changed to work with unity events so cutscenes
     // can be triggered by a variety of conditions
+
+    public CreateCutscene introCutscene;
+    bool introCutscenePlayed = false;
     
     public CreateCutscene roombaActivationCutscene;
     bool roombaActivationCutscenePlayed = false;
@@ -19,6 +22,13 @@ public class CutsceneManager : MonoBehaviour
     public CreateCutscene doorOpenCutscene;
     bool doorOpenCutscenePlayed = false;
     public DoorOpen doorOpen;
+
+    void Start()
+    {
+        introCutscene.PlayCutscene();
+        introCutscenePlayed = true;
+    }
+
 
     void Update()
     {
