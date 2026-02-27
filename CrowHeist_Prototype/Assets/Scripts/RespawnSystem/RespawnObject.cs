@@ -15,10 +15,17 @@ public class RespawnObject : MonoBehaviour
 
     public void Respawn()
     {
-        if (spawnLocation != null && prefabToSpawn != null)
+        if (spawnLocation != null)
         {
-            Instantiate(prefabToSpawn, spawnLocation.position, spawnLocation.rotation);
-            Destroy(transform.root.gameObject);
+            transform.root.position = spawnLocation.position;
+            transform.root.rotation = spawnLocation.rotation;
+            
+            Rigidbody rb = transform.root.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
     }
 }

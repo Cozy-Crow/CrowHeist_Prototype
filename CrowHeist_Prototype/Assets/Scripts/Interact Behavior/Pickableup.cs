@@ -104,6 +104,11 @@ public class Pickable : MonoBehaviour, IPickupable
         {
             transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
         }
+        else if (this.CompareTag("Trinket"))
+        {
+            transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+        }
+
         // Adjust rotation to lay flat and face forward
         else
         {
@@ -167,10 +172,10 @@ public class Pickable : MonoBehaviour, IPickupable
         aiEventManager.GroundItemDirty(transform.position);
         //checks if roomba is activated before playing roomba detect sfx
               
-        if(RoombaAiReference.isActivated == true)
-        {
-            AudioManager.Instance?.PlayOneShot(roombaDetect);
-        }
+        // if(RoombaAiReference.isActivated == true)
+        // {
+        //     AudioManager.Instance?.PlayOneShot(roombaDetect);
+        // }
         //Debug.Log("Dirty");
     }
 
