@@ -270,6 +270,7 @@ public class RoombAi : MonoBehaviour
         if(!isActivated && !isBroken)
         {
             isActivated = true;
+            agent.baseOffset = 1f;
             virtualCamManager.StartRoombaActivateSequence();
             AudioManager.Instance?.PlayOneShot(roombaOn);
             roombaEmitter.Play();

@@ -5,9 +5,8 @@ public class Book_Defenestration : MonoBehaviour
 {
     [SerializeField] private Mesh openBookMesh;
     [SerializeField] private GameObject coin;
-    [SerializeField] private string windowTag = "Window";
-    [SerializeField] private float pauseDuration = 1f;
-    [SerializeField] private float coinPopDelay = 0.5f;
+    [SerializeField] private string windowTag = "HeistZone";
+    [SerializeField] private Transform spawnPoint;
     
     private bool puzzleSolved = false;
     private Rigidbody rb;
@@ -23,32 +22,26 @@ public class Book_Defenestration : MonoBehaviour
     {
         if (!puzzleSolved && other.CompareTag(windowTag))
         {
-            StartCoroutine(SolvePuzzle());
+            SolvePuzzle();
         }
     }
 
-    private IEnumerator SolvePuzzle()
+    private void SolvePuzzle()
     {
         puzzleSolved = true;
-        
-        Vector3 velocity = rb.velocity;
-        rb.isKinematic = true;
-        
-        yield return new WaitForSeconds(pauseDuration);
-        
-        if (coin != null) coin.SetActive(true);
-        
-        yield return new WaitForSeconds(coinPopDelay);
-        
+        SpawnItem();
         if (meshFilter != null && openBookMesh != null) meshFilter.mesh = openBookMesh;
-        
-        rb.isKinematic = false;
-        rb.velocity = velocity;
     }
 
-    // alternate animation method:
-    // [SerializeField] private Animator bookAnimator;
-    // [SerializeField] private GameObject coin;
-    // bookAnimator.SetTrigger("Open");
-    // if (coin != null) coin.SetActive(true);}
+    void SpawnItem()
+    {
+        if (coin && spawnPoint)
+        {
+            GameObject spawned = Instantiate(coin, spawnPoint.position, spawnPoint.rotation);
+
+            Rigidbody spawnedRb = spawned.GetComponent<Rigidbody>();
+            if (spawnedRb != null)
+                spawnedRb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
+        }
+    }
 }

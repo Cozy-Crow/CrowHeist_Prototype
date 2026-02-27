@@ -10,21 +10,15 @@ public class RespawnObject : MonoBehaviour
         if (collision.CompareTag("InvalidArea"))
         {
             Respawn();
-            Destroy(transform.root.gameObject);
         }
     }
 
-    private void OnDestroy()
-    {
-        if (gameObject.scene.isLoaded)
-            Respawn();
-    }
-
-    private void Respawn()
+    public void Respawn()
     {
         if (spawnLocation != null && prefabToSpawn != null)
         {
             Instantiate(prefabToSpawn, spawnLocation.position, spawnLocation.rotation);
+            Destroy(transform.root.gameObject);
         }
     }
 }

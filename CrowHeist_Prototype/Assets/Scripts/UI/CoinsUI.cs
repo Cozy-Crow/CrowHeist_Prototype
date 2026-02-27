@@ -20,7 +20,7 @@ public class CoinsUI : MonoBehaviour
         _canvasGroup.alpha = 0f;
         _canvasGroup.interactable = false;
         _canvasGroup.blocksRaycasts = false;
-        gameObject.SetActive(false); 
+        gameObject.SetActive(true); 
         UpdateCoins(0);
     }
 
