@@ -11,6 +11,9 @@ using FMOD;
 [RequireComponent(typeof(NavMeshAgent))]
 public class RoombAi : MonoBehaviour
 {
+
+    public static RoombAi Instance;
+
     [Header("Roomba Settings")]
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
@@ -91,6 +94,15 @@ public class RoombAi : MonoBehaviour
         {  
          roombaEmitter = GetComponent<FMODUnity.StudioEventEmitter>();
          roombaEmitter.SetParameter("RoombaOnOff", 0);
+        }
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -284,5 +296,13 @@ public class RoombAi : MonoBehaviour
         agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
         roombaEmitter.Stop();
+    }
+
+    public void PlayRoombaDetectSFX()
+    {
+        if (isActivated == true)
+        {
+            AudioManager.Instance?.PlayOneShot(roombaDetect);
+        }
     }
 }

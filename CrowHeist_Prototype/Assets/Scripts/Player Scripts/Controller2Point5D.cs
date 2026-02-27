@@ -183,9 +183,6 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
-
-            //creates audio instances
-            AudioManager.Instance?.CreateInstance("land", land);
         }
 
         void Update()
@@ -682,7 +679,8 @@ namespace KinematicCharacterController.Examples
 
                     print("THROW");
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
-                    AudioManager.Instance.GetInstance("Charge").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                     AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                   // Charge.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); EventInstance Charge =
 
                     if (rigidbody != null)
                     {

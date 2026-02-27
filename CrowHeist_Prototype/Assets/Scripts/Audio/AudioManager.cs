@@ -27,6 +27,7 @@ public class AudioManager : MonoBehaviour
     }
 
     //allows you to get instances from their name in other scripts in order to change their playstates
+    //when entering string, name should be all upper case
     public EventInstance GetInstance(string name)
     {
         return eventInstances[name];

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 
 /// <summary>
@@ -62,6 +63,7 @@ public class CrowleySFX : MonoBehaviour
     {
         AudioManager.Instance?.PlayInstanceOneShot(instance);
     }
+
 
     public void PlayInstance(string instance)
     {

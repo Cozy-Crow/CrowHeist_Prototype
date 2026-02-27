@@ -22,7 +22,7 @@ public class Pickable : MonoBehaviour, IPickupable
     [SerializeField] private EventReference ObjPuAudio;
     [SerializeField] public EventReference ObjThrowAudio;
     [SerializeField] private EventReference ObjLandAudio;
-    public RoombAi RoombaAi;
+    private RoombAi RoombaAi;
     private EventReference roombaDetectSFX;
 
     // UniqueID reference for registry integration
@@ -166,14 +166,8 @@ public class Pickable : MonoBehaviour, IPickupable
      {
          _isDirty = true;
          aiEventManager.GroundItemDirty(transform.position);
-         //checks if roomba is activated before playing roomba detect sfx
-         AudioManager.Instance?.PlayOneShot(roombaDetectSFX);
+         RoombAi.Instance?.PlayRoombaDetectSFX();
         print("object is Dirty");
-              
-           //  if(RoombaAi.isActivated == true)
-         //{
-         //    AudioManager.Instance?.PlayOneShot(roombaDetect);
-        // }
          Debug.Log("Dirty");
      }
 
