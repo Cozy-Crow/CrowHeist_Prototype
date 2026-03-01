@@ -686,8 +686,12 @@ namespace KinematicCharacterController.Examples
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
-
-                    DrawThrowTrajectory(storedThrowDirection);
+                    
+                    if(storedThrowDirection != null)
+                    {
+                        DrawThrowTrajectory(storedThrowDirection);
+                    }
+                    
                     
                 }
 

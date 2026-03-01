@@ -77,12 +77,6 @@ public class CollectionZoneCameraUI : MonoBehaviour
 
         // Update display text
         UIManager.Instance.CoinsUI.UpdateCoins(currentScore);
-
-        // Cancel any ongoing fade and fade coin UI in
-        if (coinFadeCoroutine != null)
-            StopCoroutine(coinFadeCoroutine);
-
-        coinFadeCoroutine = StartCoroutine(FadeCoinUI(1f));
     }
 
     private IEnumerator AnimateCameraView(bool isNarrativeItem, Sprite itemSprite)
@@ -137,12 +131,6 @@ public class CollectionZoneCameraUI : MonoBehaviour
         // Hide narrative popup
         if (narrativePopup != null)
             narrativePopup.enabled = false;
-
-        // Fade out coin counter in sync with this UI fading out
-        if (coinFadeCoroutine != null)
-            StopCoroutine(coinFadeCoroutine);
-        coinFadeCoroutine = StartCoroutine(FadeCoinUI(0f));
-
         // Fade out this UI
         elapsed = 0f;
         while (elapsed < fadeDuration)

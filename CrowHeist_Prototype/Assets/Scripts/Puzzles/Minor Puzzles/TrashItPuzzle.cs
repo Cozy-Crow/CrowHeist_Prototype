@@ -12,6 +12,8 @@ public class TrashITPuzzle : MonoBehaviour
     [SerializeField] private GameObject trashBallPrefab;
     [SerializeField] EventReference trashballCollect;
     [SerializeField] EventReference trashPuzzleWin;
+    
+    [SerializeField] int trashballThreshold;
 
     private List<Vector3> originalPositions = new List<Vector3>();
     private List<Quaternion> originalRotations = new List<Quaternion>();
@@ -29,7 +31,7 @@ public class TrashITPuzzle : MonoBehaviour
             AudioManager.Instance?.PlayOneShot3D(trashballCollect, transform.position);
             collectedCount++;
 
-            if (collectedCount == 4)
+            if (collectedCount == trashballThreshold)
             {
                 puzzleCompleted = true;
                 AudioManager.Instance?.PlayOneShot3D(trashPuzzleWin, transform.position);
