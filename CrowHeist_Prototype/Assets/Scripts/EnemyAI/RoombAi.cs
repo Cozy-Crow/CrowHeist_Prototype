@@ -210,10 +210,19 @@ public class RoombAi : MonoBehaviour
 
             if (other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty)
             {
-                Destroy(parentTransform.gameObject);
+                RespawnObject respawnComp = parentTransform.GetComponentInChildren<RespawnObject>();
+                if (respawnComp != null)
+                {
+                    respawnComp.Respawn();
+                }
+                else
+                {
+                    Destroy(parentTransform.gameObject);
+                }
                 AudioManager.Instance?.PlayOneShot(roombaEat);
-                HandleDirtyItemCollection(); // Update list after removal
+                HandleDirtyItemCollection();
             }
+
         }
 
         if (other.CompareTag("Player") && playerController.heldObject != null)
@@ -270,7 +279,8 @@ public class RoombAi : MonoBehaviour
         if(!isActivated && !isBroken)
         {
             isActivated = true;
-            virtualCamManager.StartRoombaActivateSequence();
+            agent.baseOffset = 1f;
+            //virtualCamManager.StartRoombaActivateSequence();
             AudioManager.Instance?.PlayOneShot(roombaOn);
             roombaEmitter.Play();
         }

@@ -10,21 +10,22 @@ public class RespawnObject : MonoBehaviour
         if (collision.CompareTag("InvalidArea"))
         {
             Respawn();
-            Destroy(transform.root.gameObject);
         }
     }
 
-    private void OnDestroy()
+    public void Respawn()
     {
-        if (gameObject.scene.isLoaded)
-            Respawn();
-    }
-
-    private void Respawn()
-    {
-        if (spawnLocation != null && prefabToSpawn != null)
+        if (spawnLocation != null)
         {
-            Instantiate(prefabToSpawn, spawnLocation.position, spawnLocation.rotation);
+            transform.root.position = spawnLocation.position;
+            transform.root.rotation = spawnLocation.rotation;
+            
+            Rigidbody rb = transform.root.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
     }
 }
