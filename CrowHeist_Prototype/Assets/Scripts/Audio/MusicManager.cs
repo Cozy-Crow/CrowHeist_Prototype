@@ -57,6 +57,8 @@ public class MusicManager : MonoBehaviour
         }
     }
 
+
+
     public void Reset()
     {
         Instance.CurrentMusicInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
@@ -88,6 +90,7 @@ public class MusicManager : MonoBehaviour
 
         }
     }
+
 
     public bool WillChangeTo(EventReference newMusic)
     {
@@ -203,6 +206,20 @@ public class MusicManager : MonoBehaviour
 
         return GetEventName(music.ToString());
     }
+
+    //Trigger Music Solo
+    IEnumerator itemYesTrigger()
+    {
+        SetParameterByName("itemYes", 1);
+        yield return new WaitForSeconds(3.0f);
+        SetParameterByName("itemYes", 0);
+    }
+
+    public void triggerMusicSolo()
+    {
+        StartCoroutine(itemYesTrigger());
+    }
+
 }
 
 /*#if UNITY_EDITOR
