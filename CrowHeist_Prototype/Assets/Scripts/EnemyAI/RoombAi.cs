@@ -11,6 +11,9 @@ using FMOD;
 [RequireComponent(typeof(NavMeshAgent))]
 public class RoombAi : MonoBehaviour
 {
+
+    public static RoombAi Instance;
+
     [Header("Roomba Settings")]
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
@@ -91,6 +94,15 @@ public class RoombAi : MonoBehaviour
         {  
          roombaEmitter = GetComponent<FMODUnity.StudioEventEmitter>();
          roombaEmitter.SetParameter("RoombaOnOff", 0);
+        }
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
 
@@ -182,10 +194,10 @@ public class RoombAi : MonoBehaviour
         allDirtyObjects.AddRange(dirtyPickables);
 
         // Add puddles
-        var puddles = GameObject.FindGameObjectsWithTag("Puddle")
-            .Select(obj => obj.transform);
+        //var puddles = GameObject.FindGameObjectsWithTag("Puddle")
+          //  .Select(obj => obj.transform);
 
-        allDirtyObjects.AddRange(puddles);
+        //allDirtyObjects.AddRange(puddles);
 
         // Sort by distance to this Roomba
         allDirtyObjects = allDirtyObjects
@@ -210,10 +222,19 @@ public class RoombAi : MonoBehaviour
 
             if (other.GetComponent<Interactable>() != null && itemScript != null && itemScript._isDirty)
             {
-                Destroy(parentTransform.gameObject);
+                RespawnObject respawnComp = parentTransform.GetComponentInChildren<RespawnObject>();
+                if (respawnComp != null)
+                {
+                    respawnComp.Respawn();
+                }
+                else
+                {
+                    Destroy(parentTransform.gameObject);
+                }
                 AudioManager.Instance?.PlayOneShot(roombaEat);
-                HandleDirtyItemCollection(); // Update list after removal
+                HandleDirtyItemCollection();
             }
+
         }
 
         if (other.CompareTag("Player") && playerController.heldObject != null)
@@ -271,7 +292,7 @@ public class RoombAi : MonoBehaviour
         {
             isActivated = true;
             agent.baseOffset = 1f;
-            virtualCamManager.StartRoombaActivateSequence();
+            //virtualCamManager.StartRoombaActivateSequence();
             AudioManager.Instance?.PlayOneShot(roombaOn);
             roombaEmitter.Play();
         }
@@ -285,5 +306,13 @@ public class RoombAi : MonoBehaviour
         agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
         roombaEmitter.Stop();
+    }
+
+    public void PlayRoombaDetectSFX()
+    {
+        if (isActivated == true)
+        {
+            AudioManager.Instance?.PlayOneShot(roombaDetect);
+        }
     }
 }

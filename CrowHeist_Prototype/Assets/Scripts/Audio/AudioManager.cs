@@ -4,16 +4,16 @@ using UnityEngine;
 using FMODUnity;
 using FMOD.Studio;
 
+// This class is responsible for managing all audio in the game, including one-shot and instance SFX, as well as ambience.
 public class AudioManager : MonoBehaviour
 {
-    //Reference the singleton
     private Dictionary<string, EventInstance> eventInstances = new();
     public static AudioManager Instance { get; private set; }
 
     [SerializeField] private EventReference Ambience;
     private EventInstance AmbienceInstance;
 
-    //This checks if there is only one instance of audio manager
+    // This checks if there is only one instance of audio manager
     private void Awake()
     {
         if (Instance == null)
@@ -26,21 +26,31 @@ public class AudioManager : MonoBehaviour
         }
     }
 
+    //allows you to get instances from their name in other scripts in order to change their playstates
+    //when entering string, name should be all upper case
+    public EventInstance GetInstance(string name)
+    {
+        return eventInstances[name];
+    }
 
-    //starts ambience intance using createinstance function
+
+    // Starts ambience intance using createinstance function
     private void InitializeAmbience(EventReference AmbienceReference)
     {
         AmbienceInstance = CreateInstance("Ambience", AmbienceReference);
         AmbienceInstance.start();
     }
 
-    //starts ambience on start
+    // Starts ambience on start
     private void Start()
     {
         InitializeAmbience(Ambience);
     }
 
-    /// This is used for continous instances, such as looping sfx
+    /// This is used for continous instances, which are created at the start of the game and played/updated when needed.
+    /// ex) 
+    ///  - looping sfx
+    ///  - sfx with parameters that need to be updated
     public EventInstance CreateInstance(string name,EventReference eventSFX)
     {
         string key = name
@@ -57,6 +67,7 @@ public class AudioManager : MonoBehaviour
         return instance;
     }
 
+    // Set exsisting instance parameter by float value
     public void SetInstanceFloatParam(string instance, string parameter, float value)
     {
         string key = instance
@@ -76,6 +87,7 @@ public class AudioManager : MonoBehaviour
         eventInstance.setParameterByName(parameter, value);
     }
 
+    // Set exsisting instance parameter by label value
     public void SetInstanceLabelParam(string instance, string parameter, string label)
     {
         string key = instance
@@ -100,8 +112,11 @@ public class AudioManager : MonoBehaviour
     {
         RuntimeManager.PlayOneShot(sound);
     }
-
-    public void PlayInstanceOneShot(string name)
+    
+    /// <summary>
+    /// Plays an instance SFX that have settable parameters, and does not release it
+    /// <param name="name"> the name of the event instance </param>
+    public void PlayInstance(string name)
     {
         string key = name
             .Trim()                          // Remove leading/trailing spaces
@@ -120,7 +135,36 @@ public class AudioManager : MonoBehaviour
         instance.start();
     }
 
-    //This is to play oneshot SFX that need spatialization
+    /// <summary>
+    /// Play an instance SFX and release it immediately
+    /// </summary>
+    /// <param name="name"> the name of the event instance </param>
+    public void PlayInstanceOneShot(string name)
+    {
+        string key = name
+            .Trim()                          // Remove leading/trailing spaces
+            .Replace(" ", "")                // Remove spaces
+            .Replace("_", "")                // Remove underscores
+            .Replace("-", "")                // Remove dashes
+            .ToUpper();                      // Uppercase consistently
+
+        eventInstances.TryGetValue(key, out EventInstance instance);
+
+        if (!instance.isValid()){
+            Debug.LogWarning("No instance found for: " + key);
+            return;
+        }
+
+        eventInstances.Remove(key);
+        instance.start();
+        instance.release();
+    }
+
+    /// <summary>
+    /// Plays a one-shot 3D sound effect at a specified world position.
+    /// </summary>
+    /// <param name="eventSFX">The event reference for the sound effect.</param>
+    /// <param name="worldPos">The world position where the sound should be played.</param>
     public void PlayOneShot3D(EventReference eventSFX, Vector3 worldPos)
     {
         RuntimeManager.PlayOneShot(eventSFX, worldPos);
