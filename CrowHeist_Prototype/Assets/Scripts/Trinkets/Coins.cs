@@ -189,6 +189,16 @@ public class Coins : MonoBehaviour
             Instantiate(_collectParticlePrefab, sackTarget.position, Quaternion.identity);
         }
 
+        // Update score
+        //GameManager.Score += _coinValue;
+        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+
+        // MusicManager code (if you want to re-enable it)
+       // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+        //float newValue = currentValue + 1;
+        //MusicManager.SetParameterByName("TrinketsCollected", newValue);
+        // Destroy or hide the item
+        MusicManager.Instance.triggerMusicSolo();
         KillObject();
     }
 
