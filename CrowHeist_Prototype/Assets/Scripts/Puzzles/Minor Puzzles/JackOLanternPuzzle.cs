@@ -47,7 +47,8 @@ public class JackOLanternPuzzle : MonoBehaviour
         {
             if (piecePrefab != null)
             {
-                GameObject piece = Instantiate(piecePrefab, transform.position, transform.rotation);
+                Quaternion rotation = transform.rotation * Quaternion.Euler(0, 180, 0);
+                GameObject piece = Instantiate(piecePrefab, transform.position, rotation);
                 spawnedObjects.Add(piece);
             }
         }

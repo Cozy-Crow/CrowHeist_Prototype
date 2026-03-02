@@ -9371,11 +9371,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _musicReference:
     Guid:
-      Data1: -1003063325
-      Data2: 1243931125
-      Data3: 1616946107
-      Data4: -1139620065
-    Path: event:/Music/MIDI MIXES/abuelitaLevel
+      Data1: 1448087088
+      Data2: 1154758169
+      Data3: -550529151
+      Data4: -1432154451
+    Path: event:/Music/LIVE MIXES/MSC_AbuelitaLevel
   _musicName: 
 --- !u!1001 &746684963
 PrefabInstance:
@@ -12691,9 +12691,29 @@ PrefabInstance:
       value: -7.973616e-10
       objectReference: {fileID: 0}
     - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
+      propertyPath: PrinterSFX.Path
+      value: event:/SFX/Objects/PrinterSFX
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
       propertyPath: characterController
       value: 
       objectReference: {fileID: 1276572041}
+    - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
+      propertyPath: PrinterSFX.Guid.Data1
+      value: -1002661710
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
+      propertyPath: PrinterSFX.Guid.Data2
+      value: 1104138510
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
+      propertyPath: PrinterSFX.Guid.Data3
+      value: 270972343
+      objectReference: {fileID: 0}
+    - target: {fileID: 5683380869200371375, guid: 09c571560af5c41babe548bb4720478d, type: 3}
+      propertyPath: PrinterSFX.Guid.Data4
+      value: 1040489449
+      objectReference: {fileID: 0}
     - target: {fileID: 7006865976893813464, guid: 09c571560af5c41babe548bb4720478d, type: 3}
       propertyPath: m_LocalScale.x
       value: 4
@@ -17015,6 +17035,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!65 &1346546282
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -17329,6 +17356,13 @@ MonoBehaviour:
   endRotations:
   - {x: 270, y: 0.0000024148367, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: -168337955
+      Data2: 1296047985
+      Data3: -1601873473
+      Data4: -469486138
+    Path: event:/SFX/Objects/Cabinet/Cabinet1
 --- !u!1 &1366431094
 GameObject:
   m_ObjectHideFlags: 0
@@ -19681,6 +19715,26 @@ PrefabInstance:
       propertyPath: coin
       value: 
       objectReference: {fileID: 1515088501}
+    - target: {fileID: 525433569118053058, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
+      propertyPath: coinSparkle.Path
+      value: event:/SFX/Objects/Coin/CoinSparkle
+      objectReference: {fileID: 0}
+    - target: {fileID: 525433569118053058, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
+      propertyPath: coinSparkle.Guid.Data1
+      value: -1090917005
+      objectReference: {fileID: 0}
+    - target: {fileID: 525433569118053058, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
+      propertyPath: coinSparkle.Guid.Data2
+      value: 1095087163
+      objectReference: {fileID: 0}
+    - target: {fileID: 525433569118053058, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
+      propertyPath: coinSparkle.Guid.Data3
+      value: 1269910968
+      objectReference: {fileID: 0}
+    - target: {fileID: 525433569118053058, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
+      propertyPath: coinSparkle.Guid.Data4
+      value: -478698437
+      objectReference: {fileID: 0}
     - target: {fileID: 2740948640809792708, guid: 166f2b87512dd47d48a514f1d649f0ac, type: 3}
       propertyPath: m_LocalPosition.x
       value: 20.21
@@ -29091,6 +29145,7 @@ GameObject:
   - component: {fileID: 243625564}
   - component: {fileID: 1014353996}
   - component: {fileID: 1014353997}
+  - component: {fileID: 3469287836610967559}
   m_Layer: 0
   m_Name: TV
   m_TagString: Wall
@@ -32420,6 +32475,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 919132148961176857}
   m_Mesh: {fileID: 2144055247762113276, guid: 0d4898ccac275a542b7b59eff7912989, type: 3}
+--- !u!114 &3469287836610967559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148961176857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 827816595
+      Data2: 1239477446
+      Data3: -736104773
+      Data4: -1057114215
+    Path: event:/SFX/Objects/TV/TvEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!33 &3469287836645455515
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -35414,6 +35500,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 517602304
+      Data2: 1074348889
+      Data3: 1536408494
+      Data4: -1183827418
+    Path: event:/SFX/Objects/Cabinet/Cabinet 2
 --- !u!114 &7557136549489880833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -35440,6 +35533,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!1001 &7567857987376381187
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -36293,6 +36393,13 @@ MonoBehaviour:
   - {x: -89.98, y: 0, z: 0}
   - {x: -89.98, y: 0, z: 0}
   moveSpeed: 1
+  movementSFX:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
 --- !u!23 &8907530983064873279
 MeshRenderer:
   m_ObjectHideFlags: 0
