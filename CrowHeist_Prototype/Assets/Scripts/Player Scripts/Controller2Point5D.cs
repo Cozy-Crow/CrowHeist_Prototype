@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -678,10 +678,10 @@ namespace KinematicCharacterController.Examples
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
-                    
+
                     if(storedThrowDirection != null)
                     {
-                        DrawThrowTrajectory(storedThrowDirection);
+                    DrawThrowTrajectory(storedThrowDirection);
                     }
                     
                     
