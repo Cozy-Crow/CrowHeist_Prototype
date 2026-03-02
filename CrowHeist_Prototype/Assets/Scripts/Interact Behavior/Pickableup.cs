@@ -171,13 +171,7 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         _isDirty = true;
         aiEventManager.GroundItemDirty(transform.position);
-        //checks if roomba is activated before playing roomba detect sfx
-              
-        // if(RoombaAiReference.isActivated == true)
-        // {
-        //     AudioManager.Instance?.PlayOneShot(roombaDetect);
-        // }
-        //Debug.Log("Dirty");
+        RoombAi.Instance?.PlayRoombaDetectSFX();
     }
 
     void OnTriggerEnter(Collider other)
