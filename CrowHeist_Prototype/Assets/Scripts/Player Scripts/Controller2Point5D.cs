@@ -479,10 +479,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
-            if(collision.gameObject.layer == 9) //testing
-            {
-                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
-            }
+            // if(collision.gameObject.layer == 9) //testing
+            // {
+            //     Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            // }
 
             if (isDashing)
             {
