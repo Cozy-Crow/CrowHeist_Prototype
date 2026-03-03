@@ -41,6 +41,11 @@ public class TrashITPuzzle : MonoBehaviour
                 spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);
             }
         }
+
+        if (other.CompareTag("Player")) 
+        {
+            other.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
+        }
     }
 
     private IEnumerator RespawnAndShootBalls()
