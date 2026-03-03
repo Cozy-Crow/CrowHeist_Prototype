@@ -12,6 +12,8 @@ public class TrashITPuzzle : MonoBehaviour
     [SerializeField] private GameObject trashBallPrefab;
     [SerializeField] EventReference trashballCollect;
     [SerializeField] EventReference trashPuzzleWin;
+    
+    [SerializeField] int trashballThreshold;
 
     private List<Vector3> originalPositions = new List<Vector3>();
     private List<Quaternion> originalRotations = new List<Quaternion>();
@@ -29,7 +31,7 @@ public class TrashITPuzzle : MonoBehaviour
             AudioManager.Instance?.PlayOneShot3D(trashballCollect, transform.position);
             collectedCount++;
 
-            if (collectedCount == 4)
+            if (collectedCount == trashballThreshold)
             {
                 puzzleCompleted = true;
                 AudioManager.Instance?.PlayOneShot3D(trashPuzzleWin, transform.position);
@@ -38,6 +40,11 @@ public class TrashITPuzzle : MonoBehaviour
                 Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
                 spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);
             }
+        }
+
+        if (other.CompareTag("Player")) 
+        {
+            other.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
         }
     }
 

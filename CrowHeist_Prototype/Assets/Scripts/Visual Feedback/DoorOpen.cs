@@ -23,7 +23,7 @@ public class DoorOpen : MonoBehaviour
         if (!isOpening)
         {
             isOpening = true;
-            roomba.SwitchPatrol();
+            //roomba.SwitchPatrol();
         }
     }
 

@@ -41,8 +41,8 @@ public class VirtualCamManager : MonoBehaviour
         ActivateVcam(playerCam);
     }
 
-    public void StartRoombaActivateSequence() =>
-        StartCoroutine(RoombaActivateSequence());
+    // public void StartRoombaActivateSequence() =>
+    //     StartCoroutine(RoombaActivateSequence());
 
     public void StartRoombaBreakSequence() =>
         StartCoroutine(RoombaBreakSequence());
