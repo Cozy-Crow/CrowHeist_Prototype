@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -260,7 +260,7 @@ namespace KinematicCharacterController.Examples
             float radius = normalCollider.radius * 0.9f;
 
             // Cast distance should reach just below the feet
-            float castDistance = (normalCollider.height * 0.5f) + groundCheckDistance; //1.215
+            float castDistance = normalCollider.height * 0.5f; // -> removed + groundCheckDistance, added extra distance to the ground check when it wasn't needed 
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
@@ -378,7 +378,6 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
                     //plays audio when landing
                     //AudioManager.Instance?.PlayInstanceOneShot("LAND");
                     //above stopped working?? putting bandaid on it for now 
@@ -479,10 +478,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
-            if(collision.gameObject.layer == 9) //testing
-            {
-                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
-            }
+            // if(collision.gameObject.layer == 9) //testing
+            // {
+            //     Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            // }
 
             if (isDashing)
             {
@@ -678,10 +677,10 @@ namespace KinematicCharacterController.Examples
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
-                    
+
                     if(storedThrowDirection != null)
                     {
-                        DrawThrowTrajectory(storedThrowDirection);
+                    DrawThrowTrajectory(storedThrowDirection);
                     }
                     
                     
