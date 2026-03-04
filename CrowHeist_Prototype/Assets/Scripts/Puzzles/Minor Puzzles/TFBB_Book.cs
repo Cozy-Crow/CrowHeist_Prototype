@@ -58,7 +58,7 @@ public class TFBB_Book : MonoBehaviour
 
         if (openBookPrefab)
         {
-            Instantiate(openBookPrefab, transform.position, transform.rotation);
+            Instantiate(openBookPrefab, transform.position, transform.rotation * Quaternion.Euler(0, 180f, 0));
         }
 
         SpawnItem();
