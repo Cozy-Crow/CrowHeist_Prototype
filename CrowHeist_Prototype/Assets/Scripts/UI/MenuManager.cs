@@ -179,6 +179,10 @@ public class PauseManager : MonoBehaviour
             SaveLoadSystem.Instance.DeleteSave();
             Debug.Log("Save file deleted on restart");
         }
+        if (PickupRegistry.Instance != null)
+        {
+            PickupRegistry.Instance.ResetAllStates();
+        }
 
         isGamePaused = false;
         Time.timeScale = 1f; // Resume time
