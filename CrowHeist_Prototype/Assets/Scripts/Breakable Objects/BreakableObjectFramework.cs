@@ -15,9 +15,11 @@ public class BreakableObjectFramework : MonoBehaviour
     public GameObject coinPrefab;
     public float minThrowVelocity = 8f;
     public float minFallTime = 0.5f;
+    public float throwGracePeriod = 0.2f;
     private bool isBroken = false;
     private Rigidbody rb;
     private float fallTime = 0f;
+    private float throwTime = -1f;
     
     void Start()
     {
@@ -29,6 +31,11 @@ public class BreakableObjectFramework : MonoBehaviour
         if (rb != null && rb.velocity.y < -0.1f)
         {
             fallTime += Time.deltaTime;
+        }
+        
+        if (rb != null && rb.velocity.magnitude > minThrowVelocity && throwTime < 0f)
+        {
+            throwTime = Time.time;
         }
     }
     
@@ -53,7 +60,7 @@ public class BreakableObjectFramework : MonoBehaviour
         {
             Break();
         }
-        else if (rb.velocity.magnitude > minThrowVelocity)
+        else if (rb.velocity.magnitude > minThrowVelocity && Time.time - throwTime > throwGracePeriod)
         {
             Break();
         }

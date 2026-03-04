@@ -49,10 +49,10 @@ public class CreateCutscene : MonoBehaviour
     {
         Debug.Log("Cutscene Coroutine");
 
+        yield return new WaitForSeconds(startDelay);
+
         if (playerRb != null)
             FreezePlayer();
-
-        yield return new WaitForSeconds(startDelay);
 
         foreach (var camSwitch in cameraSwitches)
         {
