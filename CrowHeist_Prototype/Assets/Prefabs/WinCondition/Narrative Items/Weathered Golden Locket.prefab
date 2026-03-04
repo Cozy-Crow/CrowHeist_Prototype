@@ -102,7 +102,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 8, y: 8, z: 8}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8759018900554654130}
@@ -219,16 +219,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c150bc0f4833d746a689d9876d6a4b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinValue: 1
+  _coinValue: 2
   _rotateSpeed: 1
-  CubeCollectedSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  _collectSound:
+  collectSound:
     Guid:
       Data1: 0
       Data2: 0
@@ -280,7 +273,6 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &2199610974078468673
 MonoBehaviour:
   m_ObjectHideFlags: 0
