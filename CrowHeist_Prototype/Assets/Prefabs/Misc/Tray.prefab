@@ -102,7 +102,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
@@ -132,7 +132,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 14
   m_CollisionDetection: 0
 --- !u!1 &7887719200792803008
 GameObject:
@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 2582116874696642706}
   - component: {fileID: 2518212623028755110}
   - component: {fileID: 8069907679216995946}
+  - component: {fileID: 8726265334152480475}
   m_Layer: 0
   m_Name: Tray
   m_TagString: Untagged
@@ -163,7 +164,7 @@ Transform:
   m_GameObject: {fileID: 7887719200792803008}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 33.56, y: 3.53, z: -6.39}
+  m_LocalPosition: {x: 33.38, y: 0.32, z: -15.87}
   m_LocalScale: {x: 5, y: 0.15, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -264,8 +265,29 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!65 &8726265334152480475
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7887719200792803008}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 2.4992902, z: 1}
+  m_Center: {x: 0, y: -0.24964531, z: 0}
