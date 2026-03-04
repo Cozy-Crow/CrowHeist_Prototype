@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: -2438999901494196575}
   - component: {fileID: 5921527471549213503}
   - component: {fileID: 4525624663005556792}
-  - component: {fileID: 2353801168521987871}
+  - component: {fileID: 6834641194699737803}
   m_Layer: 0
   m_Name: Narrative Silver Spoon
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 5650296525337355330}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -108.867516, y: 14.269999, z: -32.63}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 19.622473, y: 19.96783, z: 19.622473}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
@@ -230,8 +230,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &2353801168521987871
-CapsuleCollider:
+--- !u!65 &6834641194699737803
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -248,10 +248,8 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.026053008
-  m_Height: 0.16057698
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 0.052106015, y: 0.16057698, z: 0.0147299}
   m_Center: {x: 0, y: 0.080082096, z: 0.00016404386}
 --- !u!1 &6968596424661707873
 GameObject:
@@ -305,8 +303,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 0.2, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.1165676, y: 0.2, z: 1.9307277}
+  m_Center: {x: -0.21657087, y: 0, z: 0.018453866}
 --- !u!114 &3209909114350146872
 MonoBehaviour:
   m_ObjectHideFlags: 0
