@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class WTFA_Book : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class WTFA_Book : MonoBehaviour
     [SerializeField] private GameObject spawnObject;
     [SerializeField] private Transform spawnPoint;
     [SerializeField] private float breakDropHeight = 15f;
+    [SerializeField] private EventReference bookBreakSFX;
 
     private Rigidbody rb;
     private Pickable pickable;
@@ -64,6 +66,7 @@ public class WTFA_Book : MonoBehaviour
     void BreakBook()
     {
         hasBroken = true;
+        AudioManager.Instance?.PlayOneShot3D(bookBreakSFX, transform.position);
 
         Instantiate(brokenBookPrefab, brokenBookSpawnPoint.position, brokenBookSpawnPoint.rotation);
 

@@ -8,14 +8,13 @@ public class Coins : MonoBehaviour
 {
     [SerializeField] private int _coinValue = 1;
     [SerializeField] private float _rotateSpeed = 1.0f;
-    [SerializeField] private EventReference CubeCollectedSound;
     private GameObject player;
     private Controller2Point5D playerController;
     private Pickable pickableUpScript;
     private UniqueID uniqueID;
 
     [Header("Audio")]
-    [SerializeField] private EventReference _collectSound;
+    [SerializeField] private EventReference collectSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
@@ -161,6 +160,7 @@ public class Coins : MonoBehaviour
         if (teleportPoint != null)
         {
             transform.position = teleportPoint.position;
+            AudioManager.Instance?.PlayOneShot(collectSound);
         }
 
         // Small delay before reappearing 
@@ -189,6 +189,16 @@ public class Coins : MonoBehaviour
             Instantiate(_collectParticlePrefab, sackTarget.position, Quaternion.identity);
         }
 
+        // Update score
+        //GameManager.Score += _coinValue;
+        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+
+        // MusicManager code (if you want to re-enable it)
+       // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
+        //float newValue = currentValue + 1;
+        //MusicManager.SetParameterByName("TrinketsCollected", newValue);
+        // Destroy or hide the item
+        MusicManager.Instance.triggerMusicSolo();
         KillObject();
     }
 

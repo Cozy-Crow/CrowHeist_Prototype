@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -15,8 +15,8 @@ namespace KinematicCharacterController.Examples
     public class Controller2Point5D : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Sockets sockets;
-        [SerializeField] private CrowleySFX crowleySFX;
+        [SerializeField] private Sockets sockets;           //  Sockets for holding items
+        [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
 
         #region Movement Variables
         [Header("Movement")]
@@ -154,10 +154,6 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
-        [SerializeField] private EventReference charge;
-        public EventInstance chargeInstance;
-
-
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -195,13 +191,6 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
-
-            //creates audio instances
-            AudioManager.Instance?.CreateInstance("land", land);
-            if(AudioManager.Instance != null)
-            {
-             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
-            }
         }
 
         void Update()
@@ -271,7 +260,7 @@ namespace KinematicCharacterController.Examples
             float radius = normalCollider.radius * 0.9f;
 
             // Cast distance should reach just below the feet
-            float castDistance = (normalCollider.height * 0.5f) + groundCheckDistance; //1.215
+            float castDistance = normalCollider.height * 0.5f; // -> removed + groundCheckDistance, added extra distance to the ground check when it wasn't needed 
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
@@ -284,9 +273,10 @@ namespace KinematicCharacterController.Examples
                     surfaceTag = "Generic";
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
-                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
             }
         }
+        
         private void HandleInput()
         {
             //Note: Zack H. 2/4
@@ -388,9 +378,11 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
                     //plays audio when landing
-                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    //AudioManager.Instance?.PlayInstanceOneShot("LAND");
+                    //above stopped working?? putting bandaid on it for now 
+                    AudioManager.Instance?.PlayOneShot(land);
+                    print("LAND");
                     
                 }
 
@@ -486,10 +478,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
-            if(collision.gameObject.layer == 9) //testing
-            {
-                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
-            }
+            // if(collision.gameObject.layer == 9) //testing
+            // {
+            //     Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            // }
 
             if (isDashing)
             {
@@ -670,7 +662,6 @@ namespace KinematicCharacterController.Examples
                     chargingThrow = true;
                     cancelThrow = false;
                     chargeStartTime = Time.time;
-                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -687,7 +678,11 @@ namespace KinematicCharacterController.Examples
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
+                    if(storedThrowDirection != null)
+                    {
                     DrawThrowTrajectory(storedThrowDirection);
+                    }
+                    
                     
                 }
 
@@ -698,9 +693,9 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
-                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
+                    AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                   // Charge.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); EventInstance Charge =
 
                     if (rigidbody != null)
                     {
@@ -736,7 +731,7 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
-                    targetAssetObject.SetActive(false);
+                    // targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
@@ -746,7 +741,7 @@ namespace KinematicCharacterController.Examples
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
                     storedThrowDirection = Vector3.zero;
-                    targetAssetObject.SetActive(false);
+                    // targetAssetObject.SetActive(false);
                 }
             }
         }
@@ -905,12 +900,12 @@ namespace KinematicCharacterController.Examples
 
             throwDirection = curvedDirection;
             
-            if (!targetAssetObject.activeSelf)
-            {
-                targetAssetObject.SetActive(true);
-            }
+            // if (!targetAssetObject.activeSelf)
+            // {
+            //     targetAssetObject.SetActive(true);
+            // }
 
-            targetAssetObject.transform.position = FindThrowCollisionPoint();
+            // targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
 

@@ -12,6 +12,8 @@ public class TrashITPuzzle : MonoBehaviour
     [SerializeField] private GameObject trashBallPrefab;
     [SerializeField] EventReference trashballCollect;
     [SerializeField] EventReference trashPuzzleWin;
+    
+    [SerializeField] int trashballThreshold;
 
     private List<Vector3> originalPositions = new List<Vector3>();
     private List<Quaternion> originalRotations = new List<Quaternion>();
@@ -20,7 +22,15 @@ public class TrashITPuzzle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("TrashBall") && !puzzleCompleted)
+        if (other.CompareTag("Player")) 
+        {
+            Rigidbody playerRb = other.GetComponent<Rigidbody>();
+            if (playerRb != null)
+            {
+                StartCoroutine(PushPlayerUp(playerRb));
+            }
+        }
+        else if (other.CompareTag("TrashBall") && !puzzleCompleted)
         {
             originalPositions.Add(other.transform.position);
             originalRotations.Add(other.transform.rotation);
@@ -29,7 +39,7 @@ public class TrashITPuzzle : MonoBehaviour
             AudioManager.Instance?.PlayOneShot3D(trashballCollect, transform.position);
             collectedCount++;
 
-            if (collectedCount == 4)
+            if (collectedCount == trashballThreshold)
             {
                 puzzleCompleted = true;
                 AudioManager.Instance?.PlayOneShot3D(trashPuzzleWin, transform.position);
@@ -38,6 +48,15 @@ public class TrashITPuzzle : MonoBehaviour
                 Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
                 spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);
             }
+        }
+    }
+
+    private IEnumerator PushPlayerUp(Rigidbody playerRb)
+    {
+        yield return new WaitForSeconds(0.5f);
+        if (playerRb != null)
+        {
+            playerRb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
         }
     }
 
