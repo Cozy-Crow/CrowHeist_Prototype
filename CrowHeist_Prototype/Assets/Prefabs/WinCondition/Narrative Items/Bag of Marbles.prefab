@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 8807589355809247469}
   - component: {fileID: 8147867795419146000}
   - component: {fileID: 7999408750837673123}
-  - component: {fileID: 3966476757040694678}
+  - component: {fileID: 4733494735475373837}
   m_Layer: 3
   m_Name: Bag of Marbles
   m_TagString: Untagged
@@ -252,27 +252,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: c50730cbb55801041923df731a45f185, type: 2}
---- !u!65 &3966476757040694678
-BoxCollider:
+--- !u!114 &4733494735475373837
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1558804560210039345}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.37193954, y: 0.36623624, z: 0.19614679}
-  m_Center: {x: 0, y: -0.0028517467, z: -0.09322134}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -931559241
+      Data2: 1176371072
+      Data3: -479455084
+      Data4: 700806336
+    Path: event:/SFX/Objects/Coin/CoinEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &2224819246235305922
 GameObject:
   m_ObjectHideFlags: 0

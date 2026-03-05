@@ -182,7 +182,7 @@ public class Pickable : MonoBehaviour, IPickupable
         }
 
         //makes it so the land sfx doesnt trigger on player throwing it initially
-        if (!other.CompareTag("Player") && _isDirty == true && rb.velocity.y < -0.5f)
+        if (!other.CompareTag("Player") && rb.velocity.y < -0.5f)
         {
          AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);
          Debug.Log("LandSFXPlayed"); 
