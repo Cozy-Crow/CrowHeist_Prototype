@@ -198,7 +198,7 @@ public class Coins : MonoBehaviour
         //float newValue = currentValue + 1;
         //MusicManager.SetParameterByName("TrinketsCollected", newValue);
         // Destroy or hide the item
-        MusicManager.Instance.triggerMusicSolo();
+        MusicManager.Instance?.triggerMusicSolo();
         KillObject();
     }
 
