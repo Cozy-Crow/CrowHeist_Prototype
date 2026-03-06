@@ -7,6 +7,7 @@ using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEngine.VFX;
 
 namespace KinematicCharacterController.Examples
 {
@@ -154,6 +155,10 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
+        #region VFX
+        private VisualEffect jumpPoof;
+        #endregion
+
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -185,6 +190,7 @@ namespace KinematicCharacterController.Examples
 
         public void Start()
         {
+            jumpPoof = GetComponent<VisualEffect>();
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
@@ -195,6 +201,7 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+            jumpPoof.SetVector3("TargetPosition", this.transform.position);
             if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
@@ -202,7 +209,7 @@ namespace KinematicCharacterController.Examples
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
-
+            
             HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -401,7 +408,11 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
-            AudioManager.Instance?.PlayOneShot(jump); 
+            AudioManager.Instance?.PlayOneShot(jump);
+
+            jumpPoof.Play();
+
+
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
