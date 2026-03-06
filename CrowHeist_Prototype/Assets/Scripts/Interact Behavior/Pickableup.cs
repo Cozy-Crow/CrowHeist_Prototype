@@ -176,15 +176,16 @@ public class Pickable : MonoBehaviour, IPickupable
 
     void OnTriggerEnter(Collider other)
     {
-        //makes it so the land sfx doesnt trigger on player throwing it initially
-        if (!other.CompareTag("Player"))
-        {
-         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition); 
-        }
-
         if (other.CompareTag("Ground") && _isDirty == false)
         {
             OnObjectDirty();
+        }
+
+        //makes it so the land sfx doesnt trigger on player throwing it initially
+        if (!other.CompareTag("Player") && rb.velocity.y < -0.5f)
+        {
+         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);
+         Debug.Log("LandSFXPlayed"); 
         }
     }
     void OnTriggerExit(Collider other)

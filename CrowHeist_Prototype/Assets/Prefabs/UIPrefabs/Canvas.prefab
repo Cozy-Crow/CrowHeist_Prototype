@@ -1982,13 +1982,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51a9ffcbe21541f4eade2764a7bcd92a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coins:
-  - {fileID: 21300000, guid: 917d2478ae922264db9f064f0932db72, type: 3}
-  - {fileID: 21300000, guid: 0aa96150fec2258469b9e4b0b6fb3b4e, type: 3}
-  - {fileID: 21300000, guid: 7363ffaf8bd737940b92f6654882e486, type: 3}
-  - {fileID: 21300000, guid: 1a41c91778f2a4744817ca7c1309e77f, type: 3}
-  - {fileID: 21300000, guid: 1b2ff4b27b1dfad4496dbcdb1ed857f0, type: 3}
-  - {fileID: 21300000, guid: 235e5a68f10c9434c8b552ab19e225dc, type: 3}
+  _coinText: {fileID: 0}
+  _canvasGroup: {fileID: 0}
+  _maxCoins: 25
 --- !u!1 &3300889593961941274
 GameObject:
   m_ObjectHideFlags: 0
@@ -2314,7 +2310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -4176,6 +4172,9 @@ MonoBehaviour:
   PlayButton: {fileID: 0}
   LoadButton: {fileID: 0}
   BackButton: {fileID: 0}
+  RestartConfirmPanel: {fileID: 0}
+  ConfirmRestartYesButton: {fileID: 0}
+  ConfirmRestartNoButton: {fileID: 0}
 --- !u!1 &6460199932965977063
 GameObject:
   m_ObjectHideFlags: 0

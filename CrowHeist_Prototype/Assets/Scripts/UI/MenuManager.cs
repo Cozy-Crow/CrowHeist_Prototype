@@ -20,12 +20,38 @@ public class PauseManager : MonoBehaviour
     public Button LoadButton; // Reference to the "Load Button"
     public Button BackButton; // Reference to the "Back Button"
 
+    public GameObject RestartConfirmPanel; // Confirmation submenu shown before restarting
+    public Button ConfirmRestartYesButton; // "Yes" button inside the confirm panel
+    public Button ConfirmRestartNoButton;  // "No" / "Cancel" button inside the confirm panel
+
     private Controller2Point5D player; // Reference to player for checking held items
 
     void Start()
     {
         // Find the player in the scene
         player = FindObjectOfType<Controller2Point5D>();
+
+        // Fall back to finding buttons by name if serialized references are null
+        if (ResumeButton == null) ResumeButton = FindButtonInChildren("ResumeButton");
+        if (QuitButton == null) QuitButton = FindButtonInChildren("QuitButton");
+        if (RestartButton == null) RestartButton = FindButtonInChildren("RestartButton");
+        if (SaveButton == null) SaveButton = FindButtonInChildren("SaveButton");
+        if (LoadButton == null) LoadButton = FindButtonInChildren("LoadButton");
+        if (BackButton == null) BackButton = FindButtonInChildren("BackButton");
+        if (PlayButton == null) PlayButton = FindButtonInChildren("PlayButton");
+        if (ConfirmRestartYesButton == null) ConfirmRestartYesButton = FindButtonInChildren("ConfirmYesButton");
+        if (ConfirmRestartNoButton == null) ConfirmRestartNoButton = FindButtonInChildren("ConfirmNoButton");
+        if (RestartConfirmPanel == null)
+        {
+            foreach (Transform t in GetComponentsInChildren<Transform>(true))
+            {
+                if (t.gameObject.name == "RestartConfirmPanel")
+                {
+                    RestartConfirmPanel = t.gameObject;
+                    break;
+                }
+            }
+        }
 
         if (ResumeButton != null)
         {
@@ -39,7 +65,22 @@ public class PauseManager : MonoBehaviour
 
         if (RestartButton != null)
         {
-            RestartButton.onClick.AddListener(RestartGame);
+            RestartButton.onClick.AddListener(ShowRestartConfirm);
+        }
+
+        if (ConfirmRestartYesButton != null)
+        {
+            ConfirmRestartYesButton.onClick.AddListener(RestartGame);
+        }
+
+        if (ConfirmRestartNoButton != null)
+        {
+            ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
+        }
+
+        if (RestartConfirmPanel != null)
+        {
+            RestartConfirmPanel.SetActive(false);
         }
 
         if (SaveButton != null)
@@ -64,6 +105,17 @@ public class PauseManager : MonoBehaviour
 
         // Update button states on start
         UpdateButtonStates();
+    }
+
+    private Button FindButtonInChildren(string buttonName)
+    {
+        Button[] buttons = GetComponentsInChildren<Button>(true);
+        foreach (Button btn in buttons)
+        {
+            if (btn.gameObject.name == buttonName)
+                return btn;
+        }
+        return null;
     }
 
     public void Update()
@@ -127,6 +179,10 @@ public class PauseManager : MonoBehaviour
             SaveLoadSystem.Instance.DeleteSave();
             Debug.Log("Save file deleted on restart");
         }
+        if (PickupRegistry.Instance != null)
+        {
+            PickupRegistry.Instance.ResetAllStates();
+        }
 
         isGamePaused = false;
         Time.timeScale = 1f; // Resume time
@@ -134,9 +190,27 @@ public class PauseManager : MonoBehaviour
         Debug.Log("Game is restarting...");
     }
 
+    public void ShowRestartConfirm()
+    {
+        Debug.Log("restartbuttonwaspressed");
+        if (RestartConfirmPanel != null)
+        {
+            RestartConfirmPanel.SetActive(true);
+        }
+    }
+
+    public void CancelRestart()
+    {
+        if (RestartConfirmPanel != null)
+        {
+            RestartConfirmPanel.SetActive(false);
+        }
+    }
+
     // Called when save button is clicked
     private void OnSaveButtonClicked()
     {
+        Debug.Log("savebuttonwaspressed");
         // Check if player is holding something
         if (IsPlayerHoldingItem())
         {
@@ -151,6 +225,7 @@ public class PauseManager : MonoBehaviour
     // Called when load button is clicked
     private void OnLoadButtonClicked()
     {
+        Debug.Log("loadbuttonwaspressed");
         // Check if save exists before attempting to load
         if (SaveLoadSystem.Instance != null && !SaveLoadSystem.Instance.SaveExists())
         {

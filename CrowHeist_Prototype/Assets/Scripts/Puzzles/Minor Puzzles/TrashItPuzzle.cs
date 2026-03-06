@@ -22,7 +22,15 @@ public class TrashITPuzzle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("TrashBall") && !puzzleCompleted)
+        if (other.CompareTag("Player")) 
+        {
+            Rigidbody playerRb = other.GetComponent<Rigidbody>();
+            if (playerRb != null)
+            {
+                StartCoroutine(PushPlayerUp(playerRb));
+            }
+        }
+        else if (other.CompareTag("TrashBall") && !puzzleCompleted)
         {
             originalPositions.Add(other.transform.position);
             originalRotations.Add(other.transform.rotation);
@@ -41,10 +49,14 @@ public class TrashITPuzzle : MonoBehaviour
                 spawnedObject.GetComponent<Rigidbody>().AddForce(skewedDirection * 10f, ForceMode.Impulse);
             }
         }
+    }
 
-        if (other.CompareTag("Player")) 
+    private IEnumerator PushPlayerUp(Rigidbody playerRb)
+    {
+        yield return new WaitForSeconds(0.2f);
+        if (playerRb != null)
         {
-            other.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
+            playerRb.AddForce(Vector3.up * 8f, ForceMode.Impulse);
         }
     }
 
