@@ -27,7 +27,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float rotationSpeed = 10f;         // Speed of sprite rotation slerp
         [SerializeField] private float flipPadding = 1.5f;          // Padding for slerp blur
         [SerializeField] public float gravityMultiplier = 2f;
-        [SerializeField] private LayerMask groundLayer = -1;        // Set in inspector for ground detection
+        [SerializeField] public LayerMask groundLayer = -1;        // Set in inspector for ground detection
         [SerializeField] private float groundCheckDistance = 0.15f;
         [SerializeField] private float skinWidth = 0.02f;           // Smaller value to prevent bouncing
         private Vector2 input;
@@ -89,7 +89,7 @@ namespace KinematicCharacterController.Examples
         //Physics/Direction
         public Rigidbody rb;
         private CapsuleCollider[] capsuleColliders; //stores both colliders
-        private CapsuleCollider normalCollider; //handles actual collisions
+        public CapsuleCollider normalCollider; //handles actual collisions
         private CapsuleCollider triggerCollider; //handles trigger collider (pickup range)
         public bool isFacingRight = true;
         public bool isThrowing = false;
@@ -157,6 +157,8 @@ namespace KinematicCharacterController.Examples
 
         #region VFX
         private VisualEffect jumpPoof;
+        [SerializeField] private ParticleSystem GlidePS;
+        private bool glideSpawned = false;
         #endregion
 
         #region  Trinket Guide
@@ -236,6 +238,12 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
+                        
+                        GlidePS.Play();
+                        GlidePS.transform.position = transform.position;
+
+                        if (isGrounded) { GlidePS.Stop(); }
+
                     }
                 }
             }
@@ -256,6 +264,7 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
+            
         }
     
         private void CheckGrounded()
@@ -281,6 +290,8 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
+                GlidePS.Stop();
+                 
             }
         }
         

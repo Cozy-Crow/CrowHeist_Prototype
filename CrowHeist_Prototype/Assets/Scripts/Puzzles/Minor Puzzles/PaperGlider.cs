@@ -6,14 +6,21 @@ namespace KinematicCharacterController.Examples
     {
         private Controller2Point5D controller;
 
+
+
         private void Start()
         {
             controller = FindObjectOfType<Controller2Point5D>();
+            
         }
 
+ 
         public void HandleGliding()
         {
             ApplyGliding();
+            
+            
+            
         }
 
         private void ApplyGliding()
