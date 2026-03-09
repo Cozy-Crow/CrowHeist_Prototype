@@ -11,6 +11,8 @@ public class Cascaron : MonoBehaviour
 
     public float breakSpeed = 5f;
     public GameObject confettiEffect;
+    public GameObject smokeEffect;
+    public Color baseColor;
     public GameObject coinPrefab;
 
     private Vector3 zero = new Vector3(0, 0, 0);
