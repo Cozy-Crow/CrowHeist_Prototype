@@ -332,6 +332,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -404,6 +405,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1253526763}
     m_Modifications:
+    - target: {fileID: 1588769681261656685, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6099800089077584851, guid: 38fe322644334174d93367b8cee8f5f9, type: 3}
     - target: {fileID: 2215518168272987683, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
       propertyPath: sackTarget
       value: 
@@ -456,6 +461,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldTrinketPaintTube (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2703,6 +2720,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3951,6 +3969,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5158,6 +5177,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5385,6 +5405,16 @@ Transform:
 Transform:
   m_CorrespondingSourceObject: {fileID: 4234737217897916428, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
   m_PrefabInstance: {fileID: 974195124}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &411728426 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+  m_PrefabInstance: {fileID: 1679090875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &411728428 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 3557985536197049141, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+  m_PrefabInstance: {fileID: 1679090875}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &418327425
 GameObject:
@@ -5853,6 +5883,14 @@ PrefabInstance:
       value: Crowley
       objectReference: {fileID: 0}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: GlidePS
+      value: 
+      objectReference: {fileID: 411728428}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: glidePS
+      value: 
+      objectReference: {fileID: 3557985536197049141, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: jumpPoof
       value: 
       objectReference: {fileID: 8926484042661614526, guid: 597cc2619d4956c4fbf62fa132759ab5, type: 3}
@@ -5910,7 +5948,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 411728426}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 948529252563037752, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       insertIndex: -1
@@ -7138,6 +7179,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1253526763}
     m_Modifications:
+    - target: {fileID: 1588769681261656685, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6099800089077584851, guid: 38fe322644334174d93367b8cee8f5f9, type: 3}
     - target: {fileID: 2215518168272987683, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
       propertyPath: sackTarget
       value: 
@@ -7190,6 +7235,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldTrinketPaintTube (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8313,6 +8370,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15047,6 +15105,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15935,6 +15994,14 @@ PrefabInstance:
       propertyPath: keyBackOffset
       value: -0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 7929963914269241909, guid: a3bcad6bc5982aa4e9a4458bad346a0d, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7929963914269241909, guid: a3bcad6bc5982aa4e9a4458bad346a0d, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -21508,7 +21575,7 @@ Transform:
   m_GameObject: {fileID: 1611945334}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071069, y: -0, z: 0.0000000023942823, w: 0.7071067}
-  m_LocalPosition: {x: 6.15, y: -3.34, z: 0.06}
+  m_LocalPosition: {x: 6.15, y: -3.34, z: 0.084}
   m_LocalScale: {x: 91.61832, y: 100.00006, z: 133.94073}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -22413,6 +22480,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -22450,6 +22518,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1253526763}
     m_Modifications:
+    - target: {fileID: 1588769681261656685, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6099800089077584851, guid: 38fe322644334174d93367b8cee8f5f9, type: 3}
     - target: {fileID: 2215518168272987683, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
       propertyPath: sackTarget
       value: 
@@ -22502,6 +22574,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldTrinketPaintTube
       objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -22571,6 +22655,71 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4234737217897916428, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
   m_PrefabInstance: {fileID: 850300338}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1679090875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 473277727}
+    m_Modifications:
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3557985536197049141, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3557985536197049141, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7169369635529993626, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
+      propertyPath: m_Name
+      value: GlidePS
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
 --- !u!1 &1684477176
 GameObject:
   m_ObjectHideFlags: 0
@@ -23340,6 +23489,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -26325,117 +26475,6 @@ MonoBehaviour:
   - virtualCamera: {fileID: 1386956809}
     activeTime: 3
   playerRb: {fileID: 1276572038}
---- !u!1 &2042099625
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2042099628}
-  - component: {fileID: 2042099627}
-  - component: {fileID: 2042099626}
-  m_Layer: 0
-  m_Name: SmokePoof
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!73398921 &2042099626
-VFXRenderer:
-  serializedVersion: 1
-  m_ObjectHideFlags: 2
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042099625}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 0
-  m_LightProbeUsage: 0
-  m_ReflectionProbeUsage: 0
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!2083052967 &2042099627
-VisualEffect:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042099625}
-  m_Enabled: 1
-  m_Asset: {fileID: 8926484042661614526, guid: 597cc2619d4956c4fbf62fa132759ab5, type: 3}
-  m_InitialEventName: OnPlay
-  m_InitialEventNameOverriden: 0
-  m_StartSeed: 0
-  m_ResetSeedOnPlay: 1
-  m_AllowInstancing: 1
-  m_ResourceVersion: 1
-  m_PropertySheet:
-    m_Float:
-      m_Array: []
-    m_Vector2f:
-      m_Array: []
-    m_Vector3f:
-      m_Array: []
-    m_Vector4f:
-      m_Array: []
-    m_Uint:
-      m_Array: []
-    m_Int:
-      m_Array: []
-    m_Matrix4x4f:
-      m_Array: []
-    m_AnimationCurve:
-      m_Array: []
-    m_Gradient:
-      m_Array: []
-    m_NamedObject:
-      m_Array: []
-    m_Bool:
-      m_Array: []
---- !u!4 &2042099628
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2042099625}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.374507, y: 11.89, z: -48.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2044789680
 GameObject:
   m_ObjectHideFlags: 0
@@ -26802,6 +26841,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1253526763}
     m_Modifications:
+    - target: {fileID: 1588769681261656685, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6099800089077584851, guid: 38fe322644334174d93367b8cee8f5f9, type: 3}
     - target: {fileID: 2215518168272987683, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
       propertyPath: sackTarget
       value: 
@@ -26854,6 +26897,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldTrinketPaintTube (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 3596272540761329319, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -28457,6 +28512,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -29726,9 +29782,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3497016928794901151, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3497016928794901151, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 3497016928794901151, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 5178312874094190537, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
       propertyPath: m_Name
       value: Weathered Golden Locket
@@ -31210,6 +31274,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -35469,6 +35534,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wedding Band
       objectReference: {fileID: 0}
+    - target: {fileID: 7456735605800307154, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7456735605800307154, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 8227812877910624028, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
       propertyPath: m_LocalScale.x
       value: 20
@@ -36530,6 +36603,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
   - {fileID: 2100000, guid: b2e3ef13c0e1d49b4887d75070aff38b, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -38327,10 +38401,22 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7909818196378491727, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 6099800089077584851, guid: 38fe322644334174d93367b8cee8f5f9, type: 3}
+    - target: {fileID: 8221245999876047970, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8221245999876047970, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
+    - target: {fileID: 8221245999876047970, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38721,4 +38807,3 @@ SceneRoots:
   - {fileID: 473277725}
   - {fileID: 110157875}
   - {fileID: 717761086}
-  - {fileID: 2042099628}
