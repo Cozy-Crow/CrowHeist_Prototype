@@ -36,7 +36,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 velocity;
         private bool isGrounded = false;
 
-        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within in game menus (puzzle menus))
         private string surfaceTag = "";
 
         public Vector3 Velocity => velocity;
@@ -303,6 +303,7 @@ namespace KinematicCharacterController.Examples
             // Handle jump buffering and coyote time
             if (jumpBufferCounter > 0f)
             {
+                // if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 {
                     Jump();
@@ -421,7 +422,7 @@ namespace KinematicCharacterController.Examples
 
         private void UpdateCoyoteTime()
         {
-            // If grounded, reset coyote time
+            // If groundeds, reset coyote time
             if (isGrounded)
             {
                 coyoteTimeCounter = coyoteTime;
