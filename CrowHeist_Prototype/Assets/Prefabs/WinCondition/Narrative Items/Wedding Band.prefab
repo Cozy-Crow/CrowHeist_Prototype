@@ -11,13 +11,13 @@ GameObject:
   - component: {fileID: 8227812877910624028}
   - component: {fileID: 970867111312217813}
   - component: {fileID: 7456735605800307154}
-  - component: {fileID: 977677520851352330}
   - component: {fileID: -2497642924530707422}
   - component: {fileID: -3682782621143938102}
   - component: {fileID: 7014356997941657760}
   - component: {fileID: 4885088754047989030}
   - component: {fileID: 5112283573810327749}
   - component: {fileID: -6341380445790306818}
+  - component: {fileID: 5171818371032631046}
   m_Layer: 0
   m_Name: Wedding Band
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   m_GameObject: {fileID: 6002339126378704819}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -7.576515, y: 6.6199994, z: 20.36}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 7, y: 7, z: 7}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -91,27 +91,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &977677520851352330
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6002339126378704819}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.018071525
-  m_Center: {x: 0, y: 0.018071525, z: 0.000033332268}
 --- !u!114 &-2497642924530707422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -152,24 +131,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c150bc0f4833d746a689d9876d6a4b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinValue: 1
+  _coinValue: 2
   _rotateSpeed: 1
-  CubeCollectedSound:
+  collectSound:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  _collectSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  _collectParticlePrefab: {fileID: 0}
-  _popupPrefab: {fileID: 0}
+  _collectParticlePrefab: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
+  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
   isNarrativeItem: 1
   teleportPoint: {fileID: 0}
   sackTarget: {fileID: 0}
@@ -213,7 +185,6 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &5112283573810327749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -227,7 +198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
@@ -259,6 +230,27 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!65 &5171818371032631046
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6002339126378704819}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.03385924, y: 0.036143046, z: 0.015588456}
+  m_Center: {x: 0, y: 0.018071523, z: 0.000033332264}
 --- !u!1 &8767769712312008536
 GameObject:
   m_ObjectHideFlags: 0

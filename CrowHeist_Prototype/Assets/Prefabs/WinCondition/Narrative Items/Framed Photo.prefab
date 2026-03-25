@@ -52,8 +52,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2, z: 1}
-  m_Center: {x: 0, y: 0.6, z: 0}
+  m_Size: {x: 2.2774582, y: 2, z: 1}
+  m_Center: {x: -0.035793304, y: 0.6, z: 4.2632566e-15}
 --- !u!114 &3992888215419656823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -101,7 +101,7 @@ Transform:
   m_GameObject: {fileID: 4371834898098492077}
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -89.51752, y: -4.16, z: -54.910004}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.9311109, y: 2.9311106, z: 2.9311106}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -219,24 +219,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c150bc0f4833d746a689d9876d6a4b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _coinValue: 1
+  _coinValue: 2
   _rotateSpeed: 1
-  CubeCollectedSound:
+  collectSound:
     Guid:
       Data1: 0
       Data2: 0
       Data3: 0
       Data4: 0
     Path: 
-  _collectSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  _collectParticlePrefab: {fileID: 0}
-  _popupPrefab: {fileID: 0}
+  _collectParticlePrefab: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
+  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
   isNarrativeItem: 1
   teleportPoint: {fileID: 0}
   sackTarget: {fileID: 0}
@@ -280,7 +273,6 @@ MonoBehaviour:
       Data3: 0
       Data4: 0
     Path: 
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &1041731944390757310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -294,7 +286,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
