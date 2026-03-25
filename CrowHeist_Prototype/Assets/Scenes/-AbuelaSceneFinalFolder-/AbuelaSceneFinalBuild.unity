@@ -3105,6 +3105,7 @@ Transform:
   - {fileID: 1787938144100687281}
   - {fileID: 2165848748917720780}
   - {fileID: 6874737723102338412}
+  - {fileID: 1433348049}
   m_Father: {fileID: 1285168908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &173997233
@@ -5896,15 +5897,15 @@ PrefabInstance:
       objectReference: {fileID: 8926484042661614526, guid: 597cc2619d4956c4fbf62fa132759ab5, type: 3}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.y
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8961,8 +8962,16 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: -6202954167296085942, guid: 5037f35640032b04bbe01537093453ac, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: -6202954167296085942, guid: 5037f35640032b04bbe01537093453ac, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 651011521706373398, guid: 5037f35640032b04bbe01537093453ac, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -19594,6 +19603,11 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!4 &1433348049 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3703781021863909796, guid: 5037f35640032b04bbe01537093453ac, type: 3}
+  m_PrefabInstance: {fileID: 717761086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &1434467305
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -21498,7 +21512,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1600985120
 Transform:
   m_ObjectHideFlags: 0
@@ -29737,6 +29751,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: 84254238112903093, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: 84254238112903093, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 931386214409536322, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.16
@@ -32923,6 +32945,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: 575986866038632422, guid: b752431065b6f9145a9f75cc4a1ba981, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: 575986866038632422, guid: b752431065b6f9145a9f75cc4a1ba981, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
+    - target: {fileID: 575986866038632422, guid: b752431065b6f9145a9f75cc4a1ba981, type: 3}
+      propertyPath: _collectParticlePrefab
+      value: 
+      objectReference: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
     - target: {fileID: 1103880781443394757, guid: b752431065b6f9145a9f75cc4a1ba981, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -33039,15 +33073,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -26.75
+      value: -22.19
       objectReference: {fileID: 0}
     - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.62
+      value: 7.04
       objectReference: {fileID: 0}
     - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7.89
+      value: 2.22
       objectReference: {fileID: 0}
     - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_LocalRotation.w
@@ -33093,6 +33127,14 @@ PrefabInstance:
       propertyPath: _coinValue
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 2989108001495624341, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: 2989108001495624341, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 5650296525337355330, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_Name
       value: Narrative Silver Spoon
@@ -33276,6 +33318,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: -7517173707382219169, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: -7517173707382219169, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 1176763496815263469, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
       propertyPath: m_Size.x
       value: 3.0962334
@@ -35534,6 +35584,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Wedding Band
       objectReference: {fileID: 0}
+    - target: {fileID: 7014356997941657760, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: 7014356997941657760, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 7456735605800307154, guid: f9a2926416ee4a64b8c3207e645e721b, type: 3}
       propertyPath: m_Materials.Array.size
       value: 1
@@ -36933,6 +36991,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: -1948102585755839094, guid: 2e84831e8ac32e0459bd96aad273162d, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: -1948102585755839094, guid: 2e84831e8ac32e0459bd96aad273162d, type: 3}
+      propertyPath: _popupPrefab
+      value: 
+      objectReference: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
+    - target: {fileID: -1948102585755839094, guid: 2e84831e8ac32e0459bd96aad273162d, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
+    - target: {fileID: -1948102585755839094, guid: 2e84831e8ac32e0459bd96aad273162d, type: 3}
+      propertyPath: _collectParticlePrefab
+      value: 
+      objectReference: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
     - target: {fileID: 842993655528313111, guid: 2e84831e8ac32e0459bd96aad273162d, type: 3}
       propertyPath: m_LocalScale.x
       value: 150
@@ -37084,7 +37158,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8093198450808590136, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -37.85
+      value: -55.33
       objectReference: {fileID: 0}
     - target: {fileID: 8093198450808590136, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_LocalPosition.y
@@ -37092,7 +37166,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8093198450808590136, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 8.31
+      value: -6.17
       objectReference: {fileID: 0}
     - target: {fileID: 8093198450808590136, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_LocalRotation.w
@@ -37491,6 +37565,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: -2810985535166301649, guid: 40ffea63c6f1ea1469975b059b59319a, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: -2810985535166301649, guid: 40ffea63c6f1ea1469975b059b59319a, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 1558804560210039345, guid: 40ffea63c6f1ea1469975b059b59319a, type: 3}
       propertyPath: m_Name
       value: Bag of Marbles
@@ -38349,6 +38431,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: 1343795674060317116, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
+      propertyPath: sackTarget
+      value: 
+      objectReference: {fileID: 1460766678}
+    - target: {fileID: 1343795674060317116, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
+      propertyPath: teleportPoint
+      value: 
+      objectReference: {fileID: 835508622}
     - target: {fileID: 1918144581857522019, guid: b39ce911a288a9c409e0f31435dec29d, type: 3}
       propertyPath: m_Name
       value: Canary Paint Tube
@@ -38806,4 +38896,3 @@ SceneRoots:
   - {fileID: 867725931}
   - {fileID: 473277725}
   - {fileID: 110157875}
-  - {fileID: 717761086}
