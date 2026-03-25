@@ -7,6 +7,7 @@ using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEngine.VFX;
 
 namespace KinematicCharacterController.Examples
 {
@@ -26,7 +27,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float rotationSpeed = 10f;         // Speed of sprite rotation slerp
         [SerializeField] private float flipPadding = 1.5f;          // Padding for slerp blur
         [SerializeField] public float gravityMultiplier = 2f;
-        [SerializeField] private LayerMask groundLayer = -1;        // Set in inspector for ground detection
+        [SerializeField] public LayerMask groundLayer = -1;        // Set in inspector for ground detection
         [SerializeField] private float groundCheckDistance = 0.15f;
         [SerializeField] private float skinWidth = 0.02f;           // Smaller value to prevent bouncing
         private Vector2 input;
@@ -88,7 +89,7 @@ namespace KinematicCharacterController.Examples
         //Physics/Direction
         public Rigidbody rb;
         private CapsuleCollider[] capsuleColliders; //stores both colliders
-        private CapsuleCollider normalCollider; //handles actual collisions
+        public CapsuleCollider normalCollider; //handles actual collisions
         private CapsuleCollider triggerCollider; //handles trigger collider (pickup range)
         public bool isFacingRight = true;
         public bool isThrowing = false;
@@ -154,6 +155,12 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
+        #region VFX
+        private VisualEffect jumpPoof;
+        [SerializeField] private ParticleSystem GlidePS;
+        private bool glideSpawned = false;
+        #endregion
+
         #region  Trinket Guide
         [Header("Trinket Guide")]
         [SerializeField] private Material trinketGuideMaterial;
@@ -185,6 +192,7 @@ namespace KinematicCharacterController.Examples
 
         public void Start()
         {
+            jumpPoof = GetComponent<VisualEffect>();
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
@@ -195,6 +203,7 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+            jumpPoof.SetVector3("TargetPosition", this.transform.position);
             if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
@@ -202,7 +211,7 @@ namespace KinematicCharacterController.Examples
             UpdateCoyoteTime();
             // Input and state checks in Update
             HandleInput();
-
+            
             HandleMove();
             // Handle item-specific mechanics
             if (heldObject != null)
@@ -229,6 +238,12 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
+                        
+                        GlidePS.Play();
+                        GlidePS.transform.position = transform.position;
+
+                        if (isGrounded) { GlidePS.Stop(); }
+
                     }
                 }
             }
@@ -249,6 +264,7 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
+            
         }
     
         private void CheckGrounded()
@@ -274,6 +290,8 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
+                GlidePS.Stop();
+                 
             }
         }
         
@@ -401,7 +419,11 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
-            AudioManager.Instance?.PlayOneShot(jump); 
+            AudioManager.Instance?.PlayOneShot(jump);
+
+            jumpPoof.Play();
+
+
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);

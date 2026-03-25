@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5709998782736351906}
   - component: {fileID: 4805780428663359531}
   - component: {fileID: 6336902834618570499}
-  - component: {fileID: 1088463571465403969}
   - component: {fileID: 4354323620063712959}
   - component: {fileID: 8783775520117917393}
   - component: {fileID: -2810985535166301649}
@@ -19,6 +18,7 @@ GameObject:
   - component: {fileID: 8807589355809247469}
   - component: {fileID: 8147867795419146000}
   - component: {fileID: 7999408750837673123}
+  - component: {fileID: 4733494735475373837}
   m_Layer: 3
   m_Name: Bag of Marbles
   m_TagString: Untagged
@@ -35,7 +35,7 @@ Transform:
   m_GameObject: {fileID: 1558804560210039345}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -73.99751, y: -5.46, z: -76.68}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1.8740909, y: 1.7419184, z: 1.9027123}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -92,27 +92,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!135 &1088463571465403969
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1558804560210039345}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.18596977
-  m_Center: {x: 0, y: -0.0028517467, z: -0.09322134}
 --- !u!114 &4354323620063712959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,7 +234,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
+  outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
   outlineWidth: 2
   precomputeOutline: 0
   bakeKeys: []
@@ -273,6 +252,37 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemData: {fileID: 11400000, guid: c50730cbb55801041923df731a45f185, type: 2}
+--- !u!114 &4733494735475373837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558804560210039345}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -931559241
+      Data2: 1176371072
+      Data3: -479455084
+      Data4: 700806336
+    Path: event:/SFX/Objects/Coin/CoinEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &2224819246235305922
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,8 +335,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.6920455, y: 1, z: 1.6856319}
+  m_Center: {x: 0.027009755, y: 0, z: 0.13454777}
 --- !u!114 &2643288510986749957
 MonoBehaviour:
   m_ObjectHideFlags: 0
