@@ -210,9 +210,11 @@ namespace KinematicCharacterController.Examples
             }
             UpdateCoyoteTime();
             // Input and state checks in Update
-            HandleInput();
-            
-            HandleMove();
+            if(canInput) //set can input to false if you want input off
+            {
+                HandleInput();
+                HandleMove();
+            }
             // Handle item-specific mechanics
             if (heldObject != null)
             {
