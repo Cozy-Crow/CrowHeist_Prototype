@@ -170,6 +170,11 @@ public class NarrativeMenu : MonoBehaviour
         }
         else
         {
+            // Don't open if the pause menu is already open
+            PauseManager pauseManager = FindObjectOfType<PauseManager>();
+            if (pauseManager != null && pauseManager.isGamePaused)
+                return;
+
             // Open item grid
             // Late-bind registry if it wasn't available at Start
             if (trackedItemIDs.Count == 0 && PickupRegistry.Instance != null)
@@ -185,6 +190,18 @@ public class NarrativeMenu : MonoBehaviour
             narrativeMenuFirst.SetActive(true);
             RefreshItemGrid();
         }
+    }
+
+    /// <summary>
+    /// Immediately closes all narrative menu panels.
+    /// Called by PauseManager when the pause menu opens.
+    /// </summary>
+    public void ForceClose()
+    {
+        isFirstMenuActive = false;
+        isSecondMenuActive = false;
+        if (narrativeMenuFirst  != null) narrativeMenuFirst.SetActive(false);
+        if (narrativeMenuSecond != null) narrativeMenuSecond.SetActive(false);
     }
 
     /// <summary>
