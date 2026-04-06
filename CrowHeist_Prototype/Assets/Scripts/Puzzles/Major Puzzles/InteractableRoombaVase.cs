@@ -18,6 +18,7 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private Rigidbody rb;
 
+    public CreateCutscene createCutscene;
     public CutsceneManager cutsceneManager;
 
     public RoombAi roombAi;
@@ -48,6 +49,7 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private void TipVase()
     {
+        createCutscene.FreezePlayer();
         rb.isKinematic = false;
         rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
         cutsceneManager.RoombaBreakCutscene();
