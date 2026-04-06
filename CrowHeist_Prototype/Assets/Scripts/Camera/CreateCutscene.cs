@@ -93,7 +93,7 @@ public class CreateCutscene : MonoBehaviour
 
     private void UnfreezePlayer()
     {
-        // playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+        playerRb.constraints = RigidbodyConstraints.FreezeRotation;
 
         playerObject.SetCanInput(true);        
 
