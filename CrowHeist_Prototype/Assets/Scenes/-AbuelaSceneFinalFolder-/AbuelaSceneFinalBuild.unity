@@ -6371,7 +6371,11 @@ PrefabInstance:
       objectReference: {fileID: 8926484042661614526, guid: 597cc2619d4956c4fbf62fa132759ab5, type: 3}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: jumpForce
-      value: 30
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: moveSpeed
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.x
@@ -7723,11 +7727,6 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1355755927235879722, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
   m_PrefabInstance: {fileID: 583373455}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &590649610 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8266549675316877170, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
-  m_PrefabInstance: {fileID: 1099528371}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &591399610
 PrefabInstance:
@@ -14769,11 +14768,11 @@ PrefabInstance:
     - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: breakDoor
       value: 
-      objectReference: {fileID: 1099528381}
+      objectReference: {fileID: 8354077319471325509}
     - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: roombaAttackDoor
       value: 
-      objectReference: {fileID: 1099528381}
+      objectReference: {fileID: 0}
     - target: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: virtualCamManager
       value: 
@@ -14898,6 +14897,10 @@ PrefabInstance:
       propertyPath: dispenseObjects.Array.data[2]
       value: 
       objectReference: {fileID: 3091855981957459826, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+    - target: {fileID: 6266804038415268384, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
+      propertyPath: m_TagString
+      value: RoombaTrigger
+      objectReference: {fileID: 0}
     - target: {fileID: 8266549675316877170, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
       propertyPath: m_Name
       value: Roomba
@@ -14917,10 +14920,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8266549675316877170, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1099528381}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
 --- !u!4 &1099528372 stripped
 Transform:
@@ -14932,7 +14932,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7896481612906206451, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
   m_PrefabInstance: {fileID: 1099528371}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590649610}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dc91b3b2cfaef42db92667c9c48c1926, type: 3}
@@ -14943,7 +14943,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6206648810514300098, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
   m_PrefabInstance: {fileID: 1099528371}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590649610}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6264deb6faa634847ac9cf5fab23c3f6, type: 3}
@@ -14954,26 +14954,12 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3031293307280382077, guid: 541edd44eab21a34fb82b61218bedc47, type: 3}
   m_PrefabInstance: {fileID: 1099528371}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590649610}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2116831f02cce1e4792a2fbbd687da21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1099528381
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 590649610}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 684f99e08035041b79de3f7b087d6353, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  door: {fileID: 1886233799767386270}
-  brokenDoor: {fileID: 5507059122075374768}
 --- !u!4 &1107149894 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7fed0b5f457ed00418b55c0b584298b4, type: 3}
@@ -23018,8 +23004,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.46174866, z: 0, w: 0.8870109}
-  m_LocalPosition: {x: 19.8313, y: -13.2525835, z: -59.986675}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 41.98239, y: -21.805758, z: -42.09272}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34006,11 +33992,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
---- !u!1 &1886233799767386270 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 185390654311743297, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
-  m_PrefabInstance: {fileID: 9125188254028411461}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1935051879034683867
 GameObject:
   m_ObjectHideFlags: 0
@@ -39397,6 +39378,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4169131610831309432, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
   m_PrefabInstance: {fileID: 9125188254028411461}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &8354077319471325509 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5045178098490935894, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+  m_PrefabInstance: {fileID: 9125188254028411461}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 684f99e08035041b79de3f7b087d6353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8394744195725183533 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6142523634463006257, guid: f883abf3dfe8a4b8e9114ff0b56302d1, type: 3}
@@ -40116,6 +40108,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Transition Door (break)
       objectReference: {fileID: 0}
+    - target: {fileID: 3767741208026510668, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3767741208026510668, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 4169131610831309432, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
       propertyPath: m_LocalPosition.x
       value: 53.1
@@ -40155,6 +40155,18 @@ PrefabInstance:
     - target: {fileID: 4169131610831309432, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5045178098490935894, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+      propertyPath: roomba
+      value: 
+      objectReference: {fileID: 1099528372}
+    - target: {fileID: 5045178098490935894, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+      propertyPath: brokenDoor
+      value: 
+      objectReference: {fileID: 5507059122075374768}
+    - target: {fileID: 5045178098490935894, guid: 7fd26f3d2cb2a4fb08f0c649ae1b0eda, type: 3}
+      propertyPath: breakDistance
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
