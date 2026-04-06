@@ -7,40 +7,48 @@ using KinematicCharacterController.Examples;
 
 public class PauseManager : MonoBehaviour
 {
-    public bool isGamePaused = false; // Variable to track pause state
+    public bool isGamePaused = false;
 
-    public GameObject PauseMenu; // UI element to show/hide Pause Menu
-    public GameObject loadSaveSlots; // UI element to show/hide Save Slots
+    [Header("Panels")]
+    public GameObject PauseMenu;
+    public GameObject RestartConfirmPanel;
 
-    public Button QuitButton; // Reference to the "Quit Button"
-    public Button ResumeButton; // Reference to the "Resume Button"
-    public Button RestartButton; // Reference to the "Restart Button"
-    public Button SaveButton; // Reference to the "Save Button"
-    public Button PlayButton; // Reference to the "Play Button"
-    public Button LoadButton; // Reference to the "Load Button"
-    public Button BackButton; // Reference to the "Back Button"
+    [Header("Save/Load Slot Panel")]
+    [SerializeField] private SaveSlotPanel saveSlotPanel;
 
-    public GameObject RestartConfirmPanel; // Confirmation submenu shown before restarting
-    public Button ConfirmRestartYesButton; // "Yes" button inside the confirm panel
-    public Button ConfirmRestartNoButton;  // "No" / "Cancel" button inside the confirm panel
+    [Header("Settings")]
+    [SerializeField] private SettingsMenu settingsMenu;
 
-    private Controller2Point5D player; // Reference to player for checking held items
+    [Header("Buttons")]
+    public Button QuitButton;
+    public Button ResumeButton;
+    public Button RestartButton;
+    public Button SaveButton;
+    public Button LoadButton;
+    public Button BackButton;
+    public Button PlayButton;
+    public Button SettingsButton;
+    public Button ConfirmRestartYesButton;
+    public Button ConfirmRestartNoButton;
+
+    private Controller2Point5D player;
 
     void Start()
     {
-        // Find the player in the scene
         player = FindObjectOfType<Controller2Point5D>();
 
         // Fall back to finding buttons by name if serialized references are null
-        if (ResumeButton == null) ResumeButton = FindButtonInChildren("ResumeButton");
-        if (QuitButton == null) QuitButton = FindButtonInChildren("QuitButton");
+        if (ResumeButton  == null) ResumeButton  = FindButtonInChildren("ResumeButton");
+        if (QuitButton    == null) QuitButton    = FindButtonInChildren("QuitButton");
         if (RestartButton == null) RestartButton = FindButtonInChildren("RestartButton");
-        if (SaveButton == null) SaveButton = FindButtonInChildren("SaveButton");
-        if (LoadButton == null) LoadButton = FindButtonInChildren("LoadButton");
-        if (BackButton == null) BackButton = FindButtonInChildren("BackButton");
-        if (PlayButton == null) PlayButton = FindButtonInChildren("PlayButton");
+        if (SaveButton    == null) SaveButton    = FindButtonInChildren("SaveButton");
+        if (LoadButton    == null) LoadButton    = FindButtonInChildren("LoadButton");
+        if (BackButton    == null) BackButton    = FindButtonInChildren("BackButton");
+        if (PlayButton    == null) PlayButton    = FindButtonInChildren("PlayButton");
+        if (SettingsButton == null) SettingsButton = FindButtonInChildren("SettingsButton");
         if (ConfirmRestartYesButton == null) ConfirmRestartYesButton = FindButtonInChildren("ConfirmYesButton");
-        if (ConfirmRestartNoButton == null) ConfirmRestartNoButton = FindButtonInChildren("ConfirmNoButton");
+        if (ConfirmRestartNoButton  == null) ConfirmRestartNoButton  = FindButtonInChildren("ConfirmNoButton");
+
         if (RestartConfirmPanel == null)
         {
             foreach (Transform t in GetComponentsInChildren<Transform>(true))
@@ -53,113 +61,111 @@ public class PauseManager : MonoBehaviour
             }
         }
 
-        if (ResumeButton != null)
-        {
-            ResumeButton.onClick.AddListener(ResumeGame);
-        }
+        // Auto-find SaveSlotPanel and SettingsMenu if not set in Inspector
+        if (saveSlotPanel == null)
+            saveSlotPanel = GetComponentInChildren<SaveSlotPanel>(true);
 
-        if (QuitButton != null)
-        {
-            QuitButton.onClick.AddListener(QuitGame);
-        }
+        if (settingsMenu == null)
+            settingsMenu = GetComponentInChildren<SettingsMenu>(true);
 
-        if (RestartButton != null)
-        {
-            RestartButton.onClick.AddListener(ShowRestartConfirm);
-        }
+        // Wire listeners
+        if (ResumeButton  != null) ResumeButton.onClick.AddListener(ResumeGame);
+        if (QuitButton    != null) QuitButton.onClick.AddListener(QuitGame);
+        if (RestartButton != null) RestartButton.onClick.AddListener(ShowRestartConfirm);
+        if (PlayButton    != null) PlayButton.onClick.AddListener(PlayGame);
+        if (SaveButton    != null) SaveButton.onClick.AddListener(OnSaveButtonClicked);
+        if (LoadButton    != null) LoadButton.onClick.AddListener(OnLoadButtonClicked);
+        if (BackButton    != null) BackButton.onClick.AddListener(GoBack);
+        if (SettingsButton != null) SettingsButton.onClick.AddListener(OpenSettings);
+        if (ConfirmRestartYesButton != null) ConfirmRestartYesButton.onClick.AddListener(RestartGame);
+        if (ConfirmRestartNoButton  != null) ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
 
-        if (ConfirmRestartYesButton != null)
+        // Wire slot panel callbacks
+        if (saveSlotPanel != null)
         {
-            ConfirmRestartYesButton.onClick.AddListener(RestartGame);
-        }
-
-        if (ConfirmRestartNoButton != null)
-        {
-            ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
+            saveSlotPanel.OnBack          += OnSlotPanelBack;
+            saveSlotPanel.OnSlotSelected  += OnSlotSelected;
         }
 
         if (RestartConfirmPanel != null)
-        {
             RestartConfirmPanel.SetActive(false);
-        }
 
-        if (SaveButton != null)
-        {
-            SaveButton.onClick.AddListener(OnSaveButtonClicked);
-        }
-
-        if (PlayButton != null)
-        {
-            PlayButton.onClick.AddListener(PlayGame);
-        }
-
-        if (LoadButton != null)
-        {
-            LoadButton.onClick.AddListener(OnLoadButtonClicked);
-        }
-
-        if (BackButton != null)
-        {
-            BackButton.onClick.AddListener(GoBack);
-        }
-
-        // Update button states on start
         UpdateButtonStates();
     }
 
-    private Button FindButtonInChildren(string buttonName)
-    {
-        Button[] buttons = GetComponentsInChildren<Button>(true);
-        foreach (Button btn in buttons)
-        {
-            if (btn.gameObject.name == buttonName)
-                return btn;
-        }
-        return null;
-    }
+    // ──────────────────────────────────────────────
+    //  Update
+    // ──────────────────────────────────────────────
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape)) // Check for Escape key press
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
+            // If a sub-panel is open, close it first instead of toggling the whole menu
+            if (saveSlotPanel != null && saveSlotPanel.IsOpen)
+            {
+                saveSlotPanel.Close();
+                return;
+            }
+            if (settingsMenu != null && settingsMenu.IsOpen)
+            {
+                settingsMenu.CloseSettings();
+                return;
+            }
+            if (RestartConfirmPanel != null && RestartConfirmPanel.activeSelf)
+            {
+                CancelRestart();
+                return;
+            }
+
             if (isGamePaused)
-            {
                 ResumeGame();
-            }
             else
-            {
                 PauseGame();
-            }
         }
     }
 
-    public void PlayGame()
-    {
-        MusicManager.Instance.StopMusic();
-        SceneManager.LoadSceneAsync(1);
-    }
+    // ──────────────────────────────────────────────
+    //  Pause / Resume
+    // ──────────────────────────────────────────────
 
     public void PauseGame()
     {
-        isGamePaused = true;
-        Time.timeScale = 0f; // Freeze time
-        if (PauseMenu != null)
-        {
-            PauseMenu.SetActive(true); // Show pause menu
-        }
+        // Close narrative menu if it is open so both can't be visible simultaneously
+        if (NarrativeMenu.Instance != null)
+            NarrativeMenu.Instance.ForceClose();
 
-        // Update button states when menu opens
+        isGamePaused = true;
+        Time.timeScale = 0f;
+
+        if (PauseMenu != null)
+            PauseMenu.SetActive(true);
+
         UpdateButtonStates();
     }
 
     public void ResumeGame()
     {
         isGamePaused = false;
-        Time.timeScale = 1f; // Resume time
+        Time.timeScale = 1f;
+
         if (PauseMenu != null)
-        {
-            PauseMenu.SetActive(false); // Hide pause menu
-        }
+            PauseMenu.SetActive(false);
+
+        // Also close any sub-panels that may still be open
+        if (saveSlotPanel != null) saveSlotPanel.Close();
+        if (settingsMenu  != null) settingsMenu.CloseSettings();
+        if (RestartConfirmPanel != null) RestartConfirmPanel.SetActive(false);
+    }
+
+    // ──────────────────────────────────────────────
+    //  Scene Transitions
+    // ──────────────────────────────────────────────
+
+    public void PlayGame()
+    {
+        MusicManager.Instance.StopMusic();
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void QuitGame()
@@ -171,186 +177,162 @@ public class PauseManager : MonoBehaviour
 #endif
     }
 
+    // ──────────────────────────────────────────────
+    //  Restart
+    // ──────────────────────────────────────────────
+
     public void RestartGame()
     {
-        // Delete the save file before restarting
         if (SaveLoadSystem.Instance != null)
         {
-            SaveLoadSystem.Instance.DeleteSave();
-            Debug.Log("Save file deleted on restart");
+            SaveLoadSystem.Instance.DeleteAllSaveData();
+            Debug.Log("All save files deleted on restart.");
         }
         if (PickupRegistry.Instance != null)
-        {
             PickupRegistry.Instance.ResetAllStates();
-        }
 
         isGamePaused = false;
-        Time.timeScale = 1f; // Resume time
+        Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
     }
 
     public void ShowRestartConfirm()
     {
-        Debug.Log("restartbuttonwaspressed");
         if (RestartConfirmPanel != null)
-        {
             RestartConfirmPanel.SetActive(true);
-        }
     }
 
     public void CancelRestart()
     {
         if (RestartConfirmPanel != null)
-        {
             RestartConfirmPanel.SetActive(false);
-        }
     }
 
-    // Called when save button is clicked
+    // ──────────────────────────────────────────────
+    //  Save / Load (slot-based)
+    // ──────────────────────────────────────────────
+
     private void OnSaveButtonClicked()
     {
-        Debug.Log("savebuttonwaspressed");
-        // Check if player is holding something
+        Debug.Log("Save button pressed");
         if (IsPlayerHoldingItem())
         {
             Debug.LogWarning("Cannot save while holding an item!");
             return;
         }
-
-        SaveGame();
-        UpdateButtonStates(); // Update button states after saving
+        OpenSaveSlotPanel(SaveSlotPanel.Mode.Save);
     }
 
-    // Called when load button is clicked
     private void OnLoadButtonClicked()
     {
-        Debug.Log("loadbuttonwaspressed");
-        // Check if save exists before attempting to load
-        if (SaveLoadSystem.Instance != null && !SaveLoadSystem.Instance.SaveExists())
+        Debug.Log("Load button pressed");
+        OpenSaveSlotPanel(SaveSlotPanel.Mode.Load);
+    }
+
+    private void OpenSaveSlotPanel(SaveSlotPanel.Mode mode)
+    {
+        if (saveSlotPanel == null)
         {
-            Debug.LogWarning("No save file found!");
+            // Fallback: save/load current slot directly if no slot panel is set up
+            if (mode == SaveSlotPanel.Mode.Save)
+                SaveLoadSystem.Instance?.SaveGame();
+            else
+                LoadGameDirect(SaveLoadSystem.Instance != null ? SaveLoadSystem.Instance.CurrentSlot : 1);
             return;
         }
 
-        LoadGame();
-    }
-
-    public void SaveGame()
-    {
-        if (SaveLoadSystem.Instance != null)
-        {
-            SaveLoadSystem.Instance.SaveGame();
-            Debug.Log("Game saved from UI button!");
-        }
+        if (mode == SaveSlotPanel.Mode.Save)
+            saveSlotPanel.OpenForSave();
         else
-        {
-            Debug.LogWarning("SaveLoadSystem not found!");
-        }
+            saveSlotPanel.OpenForLoad();
     }
 
-    public void LoadGame()
+    private void OnSlotSelected(int slot)
     {
-        if (loadSaveSlots != null)
-        {
-            loadSaveSlots.SetActive(true); // Show Save Slot selection
-        }
-        else
-        {
-            // If no save slots UI, load directly
-            LoadGameDirect();
-        }
+        UpdateButtonStates();
     }
 
-    public void LoadGameDirect()
+    private void OnSlotPanelBack()
     {
-        if (SaveLoadSystem.Instance != null)
-        {
-            if (!SaveLoadSystem.Instance.SaveExists())
-            {
-                Debug.LogWarning("No save file to load!");
-                return;
-            }
-
-            // Resume time before loading 
-            Time.timeScale = 1f;
-            isGamePaused = false;
-
-            SaveLoadSystem.Instance.LoadGame();
-            Debug.Log("Game loaded from UI button!");
-        }
-        else
-        {
-            Debug.LogWarning("SaveLoadSystem not found!");
-        }
+        // Nothing extra needed; slot panel closes itself
     }
+
+    public void LoadGameDirect(int slot = 1)
+    {
+        if (SaveLoadSystem.Instance == null) return;
+        if (!SaveLoadSystem.Instance.SaveExists(slot))
+        {
+            Debug.LogWarning($"No save file found for slot {slot}!");
+            return;
+        }
+
+        Time.timeScale = 1f;
+        isGamePaused = false;
+        SaveLoadSystem.Instance.LoadGame(slot);
+        Debug.Log($"Game loaded from slot {slot} via UI.");
+    }
+
+    // Legacy no-arg version kept for any external callers
+    public void LoadGameDirect() => LoadGameDirect(
+        SaveLoadSystem.Instance != null ? SaveLoadSystem.Instance.CurrentSlot : 1);
 
     public void GoBack()
     {
-        if (loadSaveSlots != null)
-        {
-            loadSaveSlots.SetActive(false); // Hide Save Slot selection
-        }
+        if (saveSlotPanel != null && saveSlotPanel.IsOpen)
+            saveSlotPanel.Close();
     }
 
-    // Updates both Save and Load button states
+    // ──────────────────────────────────────────────
+    //  Settings
+    // ──────────────────────────────────────────────
+
+    public void OpenSettings()
+    {
+        if (settingsMenu != null)
+            settingsMenu.OpenSettings();
+    }
+
+    // ──────────────────────────────────────────────
+    //  Button State Helpers
+    // ──────────────────────────────────────────────
+
     private void UpdateButtonStates()
     {
-        UpdateSaveButtonState();
-        UpdateLoadButtonState();
-    }
-
-    // Updates the Save button's interactable state based on whether player is holding an item
-    private void UpdateSaveButtonState()
-    {
         if (SaveButton != null)
-        {
-            bool canSave = !IsPlayerHoldingItem();
-            SaveButton.interactable = canSave;
+            SaveButton.interactable = !IsPlayerHoldingItem();
 
-            if (!canSave)
-            {
-                Debug.Log("Save button disabled - player is holding an item");
-            }
-            else
-            {
-                Debug.Log("Save button enabled - player is not holding anything");
-            }
-        }
-    }
-
-    // Updates the Load button's interactable state based on save file existence
-    private void UpdateLoadButtonState()
-    {
         if (LoadButton != null && SaveLoadSystem.Instance != null)
         {
-            bool saveExists = SaveLoadSystem.Instance.SaveExists();
-            LoadButton.interactable = saveExists;
-
-            if (saveExists)
+            // Enable load button if at least one slot has a save
+            bool anySlotExists = false;
+            for (int i = 1; i <= SaveLoadSystem.SlotCount; i++)
             {
-                Debug.Log("Load button enabled - save file exists");
+                if (SaveLoadSystem.Instance.SaveExists(i))
+                {
+                    anySlotExists = true;
+                    break;
+                }
             }
-            else
-            {
-                Debug.Log("Load button disabled - no save file");
-            }
+            LoadButton.interactable = anySlotExists;
         }
     }
 
-    // Checks if the player is currently holding an item
     private bool IsPlayerHoldingItem()
     {
         if (player == null)
-        {
             player = FindObjectOfType<Controller2Point5D>();
-        }
+        return player != null && player.heldObject != null;
+    }
 
-        if (player != null)
+    private Button FindButtonInChildren(string buttonName)
+    {
+        Button[] buttons = GetComponentsInChildren<Button>(true);
+        foreach (Button btn in buttons)
         {
-            return player.heldObject != null;
+            if (btn.gameObject.name == buttonName)
+                return btn;
         }
-
-        return false;
+        return null;
     }
 }
