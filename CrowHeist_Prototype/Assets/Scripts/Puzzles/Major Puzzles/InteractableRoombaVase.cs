@@ -23,9 +23,7 @@ public class InteractableRoombaVase : MonoBehaviour
 
     public RoombAi roombAi;
     public RoombaDispense roombaDispense;
-    public RoombaLightsOff roombaLightsOff;
-    public RoombaAttackDoor roombaAttackDoor;
-    
+    public RoombaLightsOff roombaLightsOff;    
 
     void Start()
     {
@@ -62,9 +60,9 @@ public class InteractableRoombaVase : MonoBehaviour
         {
             GameObject broken = Instantiate(brokenPrefab, transform.position, transform.rotation);
             AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
-            roombAi.Deactivate();
             roombaLightsOff.LightsOff();
             roombaDispense.Dispense();
+            roombAi.StartAttackDoorSequence();
             Destroy(gameObject);
         }
     }

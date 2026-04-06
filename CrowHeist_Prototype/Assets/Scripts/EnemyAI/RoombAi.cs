@@ -49,7 +49,8 @@ public class RoombAi : MonoBehaviour
     private bool anyObjectDirty = false;
 
     [Header("Attack Door Sequence")]
-    [SerializeField] private RoombaAttackDoor roombaAttackDoor;
+    [SerializeField] private BreakDoor breakDoor;
+    [SerializeField] private Transform breakDoorTransform;
     [SerializeField] private float attackDoorSpeed = 15f;
     [SerializeField] private float circleRadius = 1f;
     [SerializeField] private float spinDuration = 2f;
@@ -117,7 +118,6 @@ public class RoombAi : MonoBehaviour
     {
         if (isInAttackDoorSequence)
         {
-            UnityEngine.Debug.Log("IN ATTACK SEQUENCE - destination: " + agent.destination);
             return;
         }
 
@@ -318,10 +318,9 @@ public class RoombAi : MonoBehaviour
     {
         isActivated = false;
         isBroken = true;
-        // agent.isStopped = true;
+        agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
         roombaEmitter.Stop();
-        StartCoroutine(AttackDoorSequence());
     }
 
     public void PlayRoombaDetectSFX()
@@ -332,8 +331,15 @@ public class RoombAi : MonoBehaviour
         }
     }
 
+    public void StartAttackDoorSequence()
+    {
+        UnityEngine.Debug.Log("StartAttackDoorSequence");
+        StartCoroutine(AttackDoorSequence());
+    }
+
     private IEnumerator AttackDoorSequence()
     {
+        UnityEngine.Debug.Log("AttackDoorSequence");
         isInAttackDoorSequence = true;
 
         // Generate circle waypoints around current position
@@ -366,8 +372,7 @@ public class RoombAi : MonoBehaviour
 
         // Charge the door
         agent.speed = attackDoorSpeed;
-        roombaAttackDoor.ArmForAttack();
-        agent.SetDestination(roombaAttackDoor.transform.position);
-        UnityEngine.Debug.Log("ATTACK DOOR SEQUENCE: Charging door at position " + roombaAttackDoor.transform.position);
+        breakDoor.SetAttacking();
+        agent.SetDestination(breakDoorTransform.transform.position);
     }
 }
