@@ -660,8 +660,8 @@ namespace KinematicCharacterController.Examples
                                 //check if both items are the same (item hit vs object we are trying to grab)
                                 if(hit.transform.gameObject != selected.realObject)
                                 {
-                                    // Debug.Log("collider blocking " + hit.transform.name);
-                                    // Debug.Log("collider on object " + selected.realObject);
+                                    Debug.Log("collider blocking " + hit.transform.name);
+                                    Debug.Log("collider on object " + selected.realObject);
                                     return;
                                 }
                             }
