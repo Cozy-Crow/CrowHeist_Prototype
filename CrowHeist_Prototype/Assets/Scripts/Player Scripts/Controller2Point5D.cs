@@ -8,6 +8,7 @@ using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
+using UnityEditor.Experimental.GraphView;
 
 namespace KinematicCharacterController.Examples
 {
@@ -37,7 +38,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 velocity;
         private bool isGrounded = false;
 
-        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within in game menus (puzzle menus))
         private string surfaceTag = "";
 
         public Vector3 Velocity => velocity;
@@ -207,12 +208,16 @@ namespace KinematicCharacterController.Examples
             if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
+                //cancel if the player is throwing
+                CancelThrow();
             }
             UpdateCoyoteTime();
             // Input and state checks in Update
-            HandleInput();
-            
-            HandleMove();
+            if(canInput) //set can input to false if you want input off
+            {
+                HandleInput();
+                HandleMove();
+            }
             // Handle item-specific mechanics
             if (heldObject != null)
             {
@@ -264,7 +269,6 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
-            
         }
     
         private void CheckGrounded()
@@ -321,6 +325,7 @@ namespace KinematicCharacterController.Examples
             // Handle jump buffering and coyote time
             if (jumpBufferCounter > 0f)
             {
+                // if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 {
                     Jump();
@@ -443,7 +448,7 @@ namespace KinematicCharacterController.Examples
 
         private void UpdateCoyoteTime()
         {
-            // If grounded, reset coyote time
+            // If groundeds, reset coyote time
             if (isGrounded)
             {
                 coyoteTimeCounter = coyoteTime;
@@ -644,6 +649,24 @@ namespace KinematicCharacterController.Examples
                         {
                             if (_pickUpsList.Count > 0) return;
 
+                            //Added by Zack H. 4/6
+                            //system to check whether or not crowley has Line of Sight of an item he tries to pick up
+                            Vector3 directionFromItemToPlayer = selected.realObject.transform.position - playerSprite.transform.position;
+                            RaycastHit hit;
+
+                            // Debug.DrawRay(transform.position, directionFromItemToPlayer * 10f, Color.red, 10f);
+                            //check between the two points
+                            if(Physics.Raycast(transform.position, directionFromItemToPlayer*10f, out hit))
+                            {
+                                //check if both items are the same (item hit vs object we are trying to grab)
+                                if(hit.transform.gameObject != selected.realObject)
+                                {
+                                    Debug.Log("collider blocking " + hit.transform.name);
+                                    Debug.Log("collider on object " + selected.realObject);
+                                    return;
+                                }
+                            }
+
                             Debug.Log("selcted" + selected.name);
                             Pickup(selected, pickUp);
                         }
@@ -758,14 +781,19 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    chargingThrow = false;
-                    cancelThrow = true;
-                    throwForce = 0f;
-                    lineRenderer.positionCount = 0;
-                    storedThrowDirection = Vector3.zero;
-                    // targetAssetObject.SetActive(false);
+                    CancelThrow();
                 }
             }
+        }
+
+        public void CancelThrow()
+        {
+            chargingThrow = false;
+            cancelThrow = true;
+            throwForce = 0f;
+            lineRenderer.positionCount = 0;
+            storedThrowDirection = Vector3.zero;
+            // targetAssetObject.SetActive(false);
         }
 
         public List<IPickupable> GetHeldItems()
@@ -842,11 +870,11 @@ namespace KinematicCharacterController.Examples
 
             foreach(Collider collider in heldItemColliders)
             {
-                Debug.Log(collider.name + " " + collider.gameObject.name);
+                // Debug.Log(collider.name + " " + collider.gameObject.name);
                 if(collider.isTrigger == false)
                 {
                     heldItemPhsyicsCollider = collider;
-                    Debug.Log(heldItemPhsyicsCollider);
+                    // Debug.Log(heldItemPhsyicsCollider);
                 }
                 
             }
