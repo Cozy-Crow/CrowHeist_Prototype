@@ -65,7 +65,6 @@ public class InteractableRoombaVase : MonoBehaviour
             roombAi.Deactivate();
             roombaLightsOff.LightsOff();
             roombaDispense.Dispense();
-            roombaAttackDoor.AttackDoor();
             Destroy(gameObject);
         }
     }

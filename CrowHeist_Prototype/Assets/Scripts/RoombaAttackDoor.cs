@@ -14,11 +14,11 @@ public class RoombaAttackDoor : MonoBehaviour
         isAttacking = true;
     }
 
-    public void AttackDoor()
-    {
-        // Called externally if needed, arms the system
-        isAttacking = true;
-    }
+    // public void AttackDoor()
+    // {
+    //     // Called externally if needed, arms the system
+    //     isAttacking = true;
+    // }
 
     private void OnTriggerEnter(Collider other)
     {

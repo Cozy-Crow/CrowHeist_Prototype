@@ -25,7 +25,7 @@ public class RoombAi : MonoBehaviour
 
     //Patrol Mode for both rooms - added 1/29/25 by Mark D.
     [SerializeField] private List<Transform> patrolPoints_Room1;
-    [SerializeField] private List<Transform> patrolPoints_Room2;
+    // [SerializeField] private List<Transform> patrolPoints_Room2;
     //active patrol points (one of the lists above will be assigned)
     private List<Transform> patrolPoints;
 
@@ -120,7 +120,7 @@ public class RoombAi : MonoBehaviour
             UnityEngine.Debug.Log("IN ATTACK SEQUENCE - destination: " + agent.destination);
             return;
         }
-        
+
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
 
         if (isInAttackDoorSequence) return;
@@ -281,7 +281,7 @@ public class RoombAi : MonoBehaviour
     // Patrol method added by Mark D. 9/9/25
     private void Patrol()
     {
-        if (patrolPoints.Count == 0) return;
+        if (patrolPoints.Count == 0 || isInAttackDoorSequence) return;
 
         Transform target = patrolPoints[currentPatrolIndex];
         agent.SetDestination(target.position);
@@ -294,11 +294,11 @@ public class RoombAi : MonoBehaviour
     }
 
     // Called when door opens, roomba goes into other room - added 1/29/25 by Mark D.
-    public void SwitchPatrol()
-    {
-        patrolPoints = patrolPoints_Room2;
-        currentPatrolIndex = 0;
-    }
+    // public void SwitchPatrol()
+    // {
+    //     patrolPoints = patrolPoints_Room2;
+    //     currentPatrolIndex = 0;
+    // }
 
     // Activate method added by Mark D. 9/10/25
     public void Activate()
@@ -369,8 +369,5 @@ public class RoombAi : MonoBehaviour
         roombaAttackDoor.ArmForAttack();
         agent.SetDestination(roombaAttackDoor.transform.position);
         UnityEngine.Debug.Log("ATTACK DOOR SEQUENCE: Charging door at position " + roombaAttackDoor.transform.position);
-
-
-        // isInAttackDoorSequence = false;
     }
 }
