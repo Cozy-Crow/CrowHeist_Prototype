@@ -208,6 +208,8 @@ namespace KinematicCharacterController.Examples
             if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
+                //cancel if the player is throwing
+                CancelThrow();
             }
             UpdateCoyoteTime();
             // Input and state checks in Update
@@ -267,7 +269,6 @@ namespace KinematicCharacterController.Examples
             HandleGravity();
             HandleExternalForces();
             HandleKnockback();
-            
         }
     
         private void CheckGrounded()
@@ -780,14 +781,19 @@ namespace KinematicCharacterController.Examples
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    chargingThrow = false;
-                    cancelThrow = true;
-                    throwForce = 0f;
-                    lineRenderer.positionCount = 0;
-                    storedThrowDirection = Vector3.zero;
-                    // targetAssetObject.SetActive(false);
+                    CancelThrow();
                 }
             }
+        }
+
+        public void CancelThrow()
+        {
+            chargingThrow = false;
+            cancelThrow = true;
+            throwForce = 0f;
+            lineRenderer.positionCount = 0;
+            storedThrowDirection = Vector3.zero;
+            // targetAssetObject.SetActive(false);
         }
 
         public List<IPickupable> GetHeldItems()
