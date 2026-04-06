@@ -19,9 +19,9 @@ public class CutsceneManager : MonoBehaviour
     public CreateCutscene roombaBreakCutscene;
     bool roombaBreakCutscenePlayed = false;
 
-    public CreateCutscene doorOpenCutscene;
-    bool doorOpenCutscenePlayed = false;
-    public DoorOpen doorOpen;
+    // public CreateCutscene doorOpenCutscene;
+    // bool doorOpenCutscenePlayed = false;
+    // public DoorOpen doorOpen;
 
     public int coinThreshold;
 
@@ -34,24 +34,22 @@ public class CutsceneManager : MonoBehaviour
 
     void Update()
     {
-        if(GameManager.Score >= coinThreshold && !doorOpenCutscenePlayed)
-        {
-            doorOpenCutscene.PlayCutscene();
-            doorOpenCutscenePlayed = true;
-            doorOpen.OpenDoor();
-        }
+        // if(GameManager.Score >= coinThreshold && !doorOpenCutscenePlayed)
+        // {
+        //     doorOpenCutscene.PlayCutscene();
+        //     doorOpenCutscenePlayed = true;
+        //     doorOpen.OpenDoor();
+        // }
     }
 
     public void RoombaActivationCutscene()
     {
-        Debug.Log("cutscene manager roomba activation cutscene");
         roombaActivationCutscene.PlayCutscene();
         roombaActivationCutscenePlayed = true;
     }
 
     public void RoombaBreakCutscene()
     {
-        Debug.Log("cutscene manager roomba break cutscene");
         roombaBreakCutscene.PlayCutscene();
         roombaBreakCutscenePlayed = true;
     }

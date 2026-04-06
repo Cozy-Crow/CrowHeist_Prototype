@@ -48,6 +48,13 @@ public class RoombAi : MonoBehaviour
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
 
+    [Header("Attack Door Sequence")]
+    [SerializeField] private RoombaAttackDoor roombaAttackDoor;
+    [SerializeField] private float attackDoorSpeed = 15f;
+    [SerializeField] private float circleRadius = 1f;
+    [SerializeField] private float spinDuration = 2f;
+    private bool isInAttackDoorSequence = false;
+
     [Header("Audio")]
     [SerializeField] public EventReference roombaDetect;
     [SerializeField] public EventReference roombaOn;
@@ -109,6 +116,8 @@ public class RoombAi : MonoBehaviour
     private void Update()
     {
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
+
+        if (isInAttackDoorSequence) return;
 
         // check if Roomba has been activated before movement logic - edited by Mark D. 9/10/25
         if(isActivated)
@@ -303,9 +312,10 @@ public class RoombAi : MonoBehaviour
     {
         isActivated = false;
         isBroken = true;
-        agent.isStopped = true;
+        // agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
         roombaEmitter.Stop();
+        StartCoroutine(AttackDoorSequence());
     }
 
     public void PlayRoombaDetectSFX()
@@ -314,5 +324,45 @@ public class RoombAi : MonoBehaviour
         {
             AudioManager.Instance?.PlayOneShot(roombaDetect);
         }
+    }
+
+    private IEnumerator AttackDoorSequence()
+    {
+        isInAttackDoorSequence = true;
+
+        // Generate circle waypoints around current position
+        Vector3 center = transform.position;
+        int pointCount = 8;
+        List<Vector3> circlePoints = new List<Vector3>();
+        for (int i = 0; i < pointCount; i++)
+        {
+            float angle = i * (360f / pointCount) * Mathf.Deg2Rad;
+            Vector3 point = center + new Vector3(Mathf.Cos(angle) * circleRadius, 0f, Mathf.Sin(angle) * circleRadius);
+            circlePoints.Add(point);
+        }
+
+        // Loop circle waypoints for spinDuration seconds
+        float elapsed = 0f;
+        int circleIndex = 0;
+        agent.isStopped = false;
+        agent.speed = 6f;
+
+        while (elapsed < spinDuration)
+        {
+            if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
+            {
+                circleIndex = (circleIndex + 1) % pointCount;
+                agent.SetDestination(circlePoints[circleIndex]);
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Charge the door
+        agent.speed = attackDoorSpeed;
+        roombaAttackDoor.ArmForAttack();
+        agent.SetDestination(roombaAttackDoor.transform.position);
+
+        isInAttackDoorSequence = false;
     }
 }
