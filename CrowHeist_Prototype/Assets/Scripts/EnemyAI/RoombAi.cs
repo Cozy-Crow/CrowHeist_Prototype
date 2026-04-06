@@ -115,6 +115,12 @@ public class RoombAi : MonoBehaviour
 
     private void Update()
     {
+        if (isInAttackDoorSequence)
+        {
+            UnityEngine.Debug.Log("IN ATTACK SEQUENCE - destination: " + agent.destination);
+            return;
+        }
+        
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
 
         if (isInAttackDoorSequence) return;
@@ -362,7 +368,9 @@ public class RoombAi : MonoBehaviour
         agent.speed = attackDoorSpeed;
         roombaAttackDoor.ArmForAttack();
         agent.SetDestination(roombaAttackDoor.transform.position);
+        UnityEngine.Debug.Log("ATTACK DOOR SEQUENCE: Charging door at position " + roombaAttackDoor.transform.position);
 
-        isInAttackDoorSequence = false;
+
+        // isInAttackDoorSequence = false;
     }
 }
