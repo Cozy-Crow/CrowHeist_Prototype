@@ -8,18 +8,23 @@ public class SaveLoadSystem : MonoBehaviour
 {
     public static SaveLoadSystem Instance { get; private set; }
 
+    public const int SlotCount = 3;
+
     [Header("Save Settings")]
-    [SerializeField] private string saveFileName = "gamesave.json";
+    [SerializeField] private string saveFilePrefix = "gamesave_slot";
 
     [Header("References")]
     [SerializeField] private Controller2Point5D player;
     [SerializeField] private RoombAi roomba;
 
-    private string SavePath => Path.Combine(Application.persistentDataPath, saveFileName);
+    /// <summary>The last slot used for save or load (1-based). Defaults to 1.</summary>
+    public int CurrentSlot { get; private set; } = 1;
+
+    private string GetSavePath(int slot) =>
+        Path.Combine(Application.persistentDataPath, $"{saveFilePrefix}{slot}.json");
 
     private void Awake()
     {
-        // Singleton pattern
         if (Instance == null)
         {
             Instance = this;
@@ -34,64 +39,52 @@ public class SaveLoadSystem : MonoBehaviour
 
     private void Start()
     {
-        // Auto-find references if not set
         if (player == null)
-        {
             player = FindObjectOfType<Controller2Point5D>();
-        }
 
         if (roomba == null)
-        {
             roomba = FindObjectOfType<RoombAi>();
-        }
     }
 
     private void Update()
     {
-        // Manual save/load with keyboard shortcuts
+        // Quick-save / quick-load still target the last used slot (default slot 1)
         if (Input.GetKeyDown(KeyCode.F5))
-        {
-            SaveGame();
-        }
+            SaveGame(CurrentSlot);
 
         if (Input.GetKeyDown(KeyCode.F9))
-        {
-            LoadGame();
-        }
+            LoadGame(CurrentSlot);
 
-        // Debug: delete all save data
         if (Input.GetKeyDown(KeyCode.F10))
-        {
             DeleteAllSaveData();
-        }
     }
 
-    public void SaveGame()
+    // ──────────────────────────────────────────────
+    //  Save
+    // ──────────────────────────────────────────────
+
+    /// <summary>Save to the specified slot (1-3).</summary>
+    public void SaveGame(int slot)
     {
+        slot = ClampSlot(slot);
+        CurrentSlot = slot;
+        string savePath = GetSavePath(slot);
+
         try
         {
             SaveData data = new SaveData();
 
-            // Save player data
+            // Player data
             if (player != null)
             {
                 data.playerPosition = new Vector3Data(player.transform.position);
                 data.playerRotation = new QuaternionData(player.transform.rotation);
                 data.playerIsDirty = player.isDirty;
 
-                // Save held object ID if player is holding something
                 if (player.heldObject != null)
                 {
-                    // heldObject is a Rigidbody, so get UniqueID from its GameObject
                     UniqueID heldID = player.heldObject.gameObject.GetComponent<UniqueID>();
-                    if (heldID != null)
-                    {
-                        data.heldObjectID = heldID.ID;
-                    }
-                    else
-                    {
-                        data.heldObjectID = string.Empty;
-                    }
+                    data.heldObjectID = heldID != null ? heldID.ID : string.Empty;
                 }
                 else
                 {
@@ -103,19 +96,18 @@ public class SaveLoadSystem : MonoBehaviour
                 Debug.LogWarning("SaveLoadSystem: Player reference is null!");
             }
 
-            // Save score data
+            // Score data
             data.score = GameManager.Score;
             data.altCoinsScore = GameManager.AltCoinsScore;
 
-            // Save roomba data
+            // Roomba data
             if (roomba != null)
             {
                 data.roombaData = new RoombaData
                 {
-                    position = new Vector3Data(roomba.transform.position),
+                    position    = new Vector3Data(roomba.transform.position),
                     isActivated = roomba.isActivated,
-                    isBroken = roomba.isBroken
-                    // Note: isDocked is private in RoombAi and cannot be accessed
+                    isBroken    = roomba.isBroken
                 };
             }
             else
@@ -124,248 +116,247 @@ public class SaveLoadSystem : MonoBehaviour
                 data.roombaData = new RoombaData();
             }
 
-            // Save all items with UniqueID component
+            // Item data
             UniqueID[] allItems = FindObjectsOfType<UniqueID>();
             foreach (UniqueID item in allItems)
             {
-                // Don't save the player or roomba as items
                 if (item.GetComponent<Controller2Point5D>() != null ||
                     item.GetComponent<RoombAi>() != null)
-                {
                     continue;
-                }
 
                 Pickable pickable = item.GetComponent<Pickable>();
-                bool isDirty = false;
-                bool isHeld = false;
-                bool hasBeenPickedUp = false;
+                bool isDirty = false, isHeld = false, hasBeenPickedUp = false;
 
                 if (pickable != null)
                 {
-                    isDirty = pickable._isDirty;
-                    isHeld = pickable.pickedUp;
+                    isDirty         = pickable._isDirty;
+                    isHeld          = pickable.pickedUp;
                     hasBeenPickedUp = pickable.HasBeenPickedUp;
                 }
 
-                ItemData itemData = new ItemData(
+                data.items.Add(new ItemData(
                     item.ID,
                     item.gameObject.name.Replace("(Clone)", "").Trim(),
                     (int)item.ObjectType,
                     item.transform.position,
                     item.transform.eulerAngles,
-                    isDirty,
-                    isHeld,
+                    isDirty, isHeld,
                     item.gameObject.activeSelf,
                     hasBeenPickedUp
-                );
-
-                data.items.Add(itemData);
+                ));
             }
 
-            // Save PickupRegistry state
+            // Registry data
             if (PickupRegistry.Instance != null)
-            {
                 data.registryData = PickupRegistry.Instance.GenerateSaveData();
-            }
 
-            // Add timestamp
             data.saveTimestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            // Convert to JSON and save
             string json = JsonUtility.ToJson(data, true);
-            File.WriteAllText(SavePath, json);
+            File.WriteAllText(savePath, json);
 
-            Debug.Log($"Game saved successfully to: {SavePath}");
-            Debug.Log($"Saved {data.items.Count} items, Score: {data.score}, Player pos: {data.playerPosition.ToVector3()}");
+            Debug.Log($"[SaveLoadSystem] Slot {slot} saved → {savePath}");
+            Debug.Log($"Saved {data.items.Count} items, Score: {data.score}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to save game: {e.Message}");
+            Debug.LogError($"[SaveLoadSystem] Failed to save slot {slot}: {e.Message}");
         }
     }
 
-    public void LoadGame()
+    // ──────────────────────────────────────────────
+    //  Load
+    // ──────────────────────────────────────────────
+
+    /// <summary>Load from the specified slot (1-3).</summary>
+    public void LoadGame(int slot)
     {
-        if (!File.Exists(SavePath))
+        slot = ClampSlot(slot);
+        CurrentSlot = slot;
+        string savePath = GetSavePath(slot);
+
+        if (!File.Exists(savePath))
         {
-            Debug.LogWarning($"No save file found at: {SavePath}");
+            Debug.LogWarning($"[SaveLoadSystem] No save file for slot {slot} at: {savePath}");
             return;
         }
 
         try
         {
-            string json = File.ReadAllText(SavePath);
+            string json = File.ReadAllText(savePath);
             SaveData data = JsonUtility.FromJson<SaveData>(json);
 
             if (data == null)
             {
-                Debug.LogError("Failed to deserialize save data!");
+                Debug.LogError("[SaveLoadSystem] Failed to deserialize save data!");
                 return;
             }
 
-            // Load player data
+            // Player
             if (player != null)
             {
                 player.transform.position = data.playerPosition.ToVector3();
                 player.transform.rotation = data.playerRotation.ToQuaternion();
                 player.isDirty = data.playerIsDirty;
 
-                // Clear currently held object if any
                 if (player.heldObject != null)
                 {
-                    // heldObject is a Rigidbody, get Pickable from its GameObject
                     Pickable currentHeld = player.heldObject.gameObject.GetComponent<Pickable>();
                     if (currentHeld != null)
-                    {
                         currentHeld.Drop(currentHeld.transform.position);
-                    }
                 }
             }
 
-            // Load score data
+            // Scores
             GameManager.Score = data.score;
             GameManager.AltCoinsScore = data.altCoinsScore;
 
-            // Update UI
             if (UIManager.Instance != null && UIManager.Instance.CoinsUI != null)
-            {
                 UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
-            }
 
-            // Load roomba data
+            // Roomba
             if (roomba != null && data.roombaData != null)
             {
                 roomba.transform.position = data.roombaData.position.ToVector3();
                 roomba.isActivated = data.roombaData.isActivated;
                 roomba.isBroken = data.roombaData.isBroken;
-                // Note: isDocked is private in RoombAi and cannot be set
 
-                // Update roomba state
                 if (data.roombaData.isActivated)
-                {
                     roomba.Activate();
-                }
                 else
-                {
                     roomba.Deactivate();
-                }
             }
 
-            // Load item data
+            // Items
             Dictionary<string, ItemData> itemDataDict = new Dictionary<string, ItemData>();
             foreach (ItemData itemData in data.items)
-            {
                 itemDataDict[itemData.uniqueID] = itemData;
-            }
 
-            // Apply loaded data to items in scene
             UniqueID[] allItems = FindObjectsOfType<UniqueID>();
             foreach (UniqueID item in allItems)
             {
-                // Skip player and roomba
                 if (item.GetComponent<Controller2Point5D>() != null ||
                     item.GetComponent<RoombAi>() != null)
-                {
                     continue;
-                }
 
                 if (itemDataDict.TryGetValue(item.ID, out ItemData savedData))
                 {
-                    // Restore position and rotation
-                    item.transform.position = savedData.position.ToVector3();
+                    item.transform.position   = savedData.position.ToVector3();
                     item.transform.eulerAngles = savedData.rotation.ToVector3();
                     item.gameObject.SetActive(savedData.isActive);
 
-                    // Restore pickable state
                     Pickable pickable = item.GetComponent<Pickable>();
                     if (pickable != null)
                     {
-                        pickable._isDirty = savedData.isDirty;
+                        pickable._isDirty        = savedData.isDirty;
                         pickable.HasBeenPickedUp = savedData.hasBeenPickedUp;
 
-                        // If this item should be held by player
-                        if (savedData.isHeld && !string.IsNullOrEmpty(data.heldObjectID) &&
-                            savedData.uniqueID == data.heldObjectID)
+                        if (savedData.isHeld &&
+                            !string.IsNullOrEmpty(data.heldObjectID) &&
+                            savedData.uniqueID == data.heldObjectID &&
+                            player != null)
                         {
-                            // Player will pick this up
-                            if (player != null)
-                            {
-                                pickable.PickUp(player.transform);
-                                player.heldObject = pickable.GetComponent<Rigidbody>();
-                            }
+                            pickable.PickUp(player.transform);
+                            player.heldObject = pickable.GetComponent<Rigidbody>();
                         }
                     }
                 }
             }
 
-            // Load PickupRegistry state
+            // Registry
             if (PickupRegistry.Instance != null && data.registryData != null)
-            {
                 PickupRegistry.Instance.LoadFromSaveData(data.registryData);
-            }
 
-            Debug.Log($"Game loaded successfully from: {SavePath}");
-            Debug.Log($"Loaded {data.items.Count} items, Score: {data.score}, Player pos: {data.playerPosition.ToVector3()}");
-            Debug.Log($"Save timestamp: {data.saveTimestamp}");
+            Debug.Log($"[SaveLoadSystem] Slot {slot} loaded ← {savePath}");
+            Debug.Log($"Loaded {data.items.Count} items, Score: {data.score}, Timestamp: {data.saveTimestamp}");
         }
         catch (Exception e)
         {
-            Debug.LogError($"Failed to load game: {e.Message}");
+            Debug.LogError($"[SaveLoadSystem] Failed to load slot {slot}: {e.Message}");
         }
     }
 
-    public bool SaveExists()
-    {
-        return File.Exists(SavePath);
-    }
+    // ──────────────────────────────────────────────
+    //  Slot Queries
+    // ──────────────────────────────────────────────
 
-    public void DeleteSave()
+    public bool SaveExists(int slot) => File.Exists(GetSavePath(ClampSlot(slot)));
+
+    /// <summary>Returns the timestamp string stored in a slot, or null if no save exists.</summary>
+    public string GetSlotTimestamp(int slot)
     {
-        if (File.Exists(SavePath))
+        slot = ClampSlot(slot);
+        string path = GetSavePath(slot);
+        if (!File.Exists(path)) return null;
+
+        try
         {
-            File.Delete(SavePath);
-            Debug.Log("Save file deleted.");
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            return data?.saveTimestamp;
+        }
+        catch
+        {
+            return null;
         }
     }
+
+    public void DeleteSave(int slot)
+    {
+        string path = GetSavePath(ClampSlot(slot));
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+            Debug.Log($"[SaveLoadSystem] Slot {slot} save file deleted.");
+        }
+    }
+
+    // ──────────────────────────────────────────────
+    //  Legacy / Compat helpers (used by PauseManager)
+    // ──────────────────────────────────────────────
+
+    /// <summary>Saves to the current slot. Kept for backward compatibility.</summary>
+    public void SaveGame() => SaveGame(CurrentSlot);
+
+    /// <summary>Loads from the current slot. Kept for backward compatibility.</summary>
+    public void LoadGame() => LoadGame(CurrentSlot);
+
+    /// <summary>Returns true if the current slot has a save file.</summary>
+    public bool SaveExists() => SaveExists(CurrentSlot);
+
+    /// <summary>Deletes the current slot's save file.</summary>
+    public void DeleteSave() => DeleteSave(CurrentSlot);
 
     /// <summary>
-    /// DEBUG: Deletes the save file and resets ALL runtime save-related state.
-    /// Wipes scores, registry pickup/read states, and ItemDataSO read flags.
+    /// DEBUG: Deletes ALL slot save files and resets all runtime save-related state.
     /// Bound to F10 in Update.
     /// </summary>
     public void DeleteAllSaveData()
     {
-        // Delete save file from disk
-        DeleteSave();
+        for (int i = 1; i <= SlotCount; i++)
+            DeleteSave(i);
 
-        // Reset scores
         GameManager.Score = 0;
         GameManager.AltCoinsScore = 0;
 
-        // Update coins UI
         if (UIManager.Instance != null && UIManager.Instance.CoinsUI != null)
-        {
             UIManager.Instance.CoinsUI.UpdateCoins(0);
-        }
 
-        // Reset PickupRegistry (pickup/read states and ItemDataSO read flags)
         if (PickupRegistry.Instance != null)
-        {
             PickupRegistry.Instance.ResetAllStates();
-        }
 
-        // Reset pickup state on all Pickable objects in scene
         Pickable[] allPickables = FindObjectsOfType<Pickable>();
         foreach (Pickable p in allPickables)
-        {
             p.HasBeenPickedUp = false;
-        }
 
         Debug.Log("<color=red>[DEBUG] All save data deleted and runtime state reset.</color>");
     }
 
-    public string GetSaveFilePath()
-    {
-        return SavePath;
-    }
+    public string GetSaveFilePath() => GetSavePath(CurrentSlot);
+
+    // ──────────────────────────────────────────────
+    //  Private Helpers
+    // ──────────────────────────────────────────────
+
+    private static int ClampSlot(int slot) => Mathf.Clamp(slot, 1, SlotCount);
 }
