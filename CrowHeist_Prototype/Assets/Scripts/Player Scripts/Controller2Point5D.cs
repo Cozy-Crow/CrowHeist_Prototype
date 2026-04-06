@@ -8,6 +8,7 @@ using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
+using UnityEditor.Experimental.GraphView;
 
 namespace KinematicCharacterController.Examples
 {
@@ -647,6 +648,24 @@ namespace KinematicCharacterController.Examples
                         {
                             if (_pickUpsList.Count > 0) return;
 
+                            //Added by Zack H. 4/6
+                            //system to check whether or not crowley has Line of Sight of an item he tries to pick up
+                            Vector3 directionFromItemToPlayer = selected.realObject.transform.position - playerSprite.transform.position;
+                            RaycastHit hit;
+
+                            // Debug.DrawRay(transform.position, directionFromItemToPlayer * 10f, Color.red, 10f);
+                            //check between the two points
+                            if(Physics.Raycast(transform.position, directionFromItemToPlayer*10f, out hit))
+                            {
+                                //check if both items are the same (item hit vs object we are trying to grab)
+                                if(hit.transform.gameObject != selected.realObject)
+                                {
+                                    // Debug.Log("collider blocking " + hit.transform.name);
+                                    // Debug.Log("collider on object " + selected.realObject);
+                                    return;
+                                }
+                            }
+
                             Debug.Log("selcted" + selected.name);
                             Pickup(selected, pickUp);
                         }
@@ -845,11 +864,11 @@ namespace KinematicCharacterController.Examples
 
             foreach(Collider collider in heldItemColliders)
             {
-                Debug.Log(collider.name + " " + collider.gameObject.name);
+                // Debug.Log(collider.name + " " + collider.gameObject.name);
                 if(collider.isTrigger == false)
                 {
                     heldItemPhsyicsCollider = collider;
-                    Debug.Log(heldItemPhsyicsCollider);
+                    // Debug.Log(heldItemPhsyicsCollider);
                 }
                 
             }
