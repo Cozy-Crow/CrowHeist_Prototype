@@ -17,6 +17,7 @@ public class RespawnObject : MonoBehaviour
     {
         if (spawnLocation != null)
         {
+            transform.SetParent(null);
             transform.root.position = spawnLocation.position;
             transform.root.rotation = spawnLocation.rotation;
             

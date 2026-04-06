@@ -6379,7 +6379,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 65.6
+      value: 23
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalPosition.y
@@ -7145,7 +7145,7 @@ MonoBehaviour:
   roombaBreakCutscene: {fileID: 1230506359}
   doorOpenCutscene: {fileID: 16836304}
   doorOpen: {fileID: 612166667}
-  coinThreshold: 10
+  coinThreshold: 20
 --- !u!1 &553774021
 GameObject:
   m_ObjectHideFlags: 0
@@ -17808,7 +17808,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9192850426392321633, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 59.1313
+      value: 16.531305
       objectReference: {fileID: 0}
     - target: {fileID: 9192850426392321633, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -22266,7 +22266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1600985120
 Transform:
   m_ObjectHideFlags: 0
@@ -22999,8 +22999,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.46174866, z: 0, w: 0.8870109}
-  m_LocalPosition: {x: 19.8313, y: -13.2525835, z: -59.986675}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 44.985504, y: 1.3965836, z: -48.740677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -34098,6 +34098,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlantPuzzle
       objectReference: {fileID: 0}
+    - target: {fileID: 1627446238460993355, guid: 93dd134216747f0468458680929cc3a7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -35596,6 +35600,10 @@ PrefabInstance:
     - target: {fileID: 7505017693314609029, guid: cd9d1180524ad974fb7ad86f08ac73b7, type: 3}
       propertyPath: m_Name
       value: Fertilizer
+      objectReference: {fileID: 0}
+    - target: {fileID: 7505017693314609029, guid: cd9d1180524ad974fb7ad86f08ac73b7, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -38283,9 +38291,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 835508622}
     - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: collectSound.Path
+      value: event:/SFX/Objects/Coin/CoinCollect
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: _collectParticlePrefab
       value: 
       objectReference: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
+    - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: collectSound.Guid.Data1
+      value: 484010483
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: collectSound.Guid.Data2
+      value: 1159383769
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: collectSound.Guid.Data3
+      value: 2019980200
+      objectReference: {fileID: 0}
+    - target: {fileID: 9072279679638554596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: collectSound.Guid.Data4
+      value: -2126844190
+      objectReference: {fileID: 0}
     - target: {fileID: 9219834258887484596, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_IsTrigger
       value: 1
