@@ -19,7 +19,7 @@ public class BreakDoor : MonoBehaviour
 
     private void Update()
     {
-        if (!isAttacking) return;
+        if (!isAttacking || roomba == null) return;
 
         float distance = Vector3.Distance(roomba.position, door.transform.position);
         UnityEngine.Debug.Log("Roomba distance to door: " + distance);
@@ -30,6 +30,8 @@ public class BreakDoor : MonoBehaviour
             brokenDoor.SetActive(true);
             door.SetActive(false);
             isAttacking = false;
+
+            Destroy(roomba.gameObject);
         }
     }
 

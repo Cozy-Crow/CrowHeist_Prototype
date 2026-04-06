@@ -10,10 +10,13 @@ public class RoombaCamFollow : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 pos = transform.position;
-        pos.x = roombaPos.position.x;
-        pos.z = roombaPos.position.z - offsetZ;
-        pos.y = roombaPos.position.y + offsetY;
-        transform.position = pos;
+        if (roombaPos != null)
+        {
+            Vector3 pos = transform.position;
+            pos.x = roombaPos.position.x;
+            pos.z = roombaPos.position.z - offsetZ;
+            pos.y = roombaPos.position.y + offsetY;
+            transform.position = pos;
+        }
     }
 }
