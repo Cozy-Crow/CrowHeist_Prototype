@@ -5,7 +5,7 @@ using UnityEngine;
 public class RoombaAttackDoor : MonoBehaviour
 {
     [SerializeField] private GameObject door;
-    [SerializeField] private GameObject brokenDoorPrefab;
+    [SerializeField] private GameObject brokenDoor;
 
     private bool isAttacking = false;
 
@@ -26,7 +26,7 @@ public class RoombaAttackDoor : MonoBehaviour
 
         if (other.CompareTag("BreakDoor"))
         {
-            Instantiate(brokenDoorPrefab, door.transform.position, door.transform.rotation);
+            brokenDoor.SetActive(true);
             Destroy(door);
             isAttacking = false;
         }
