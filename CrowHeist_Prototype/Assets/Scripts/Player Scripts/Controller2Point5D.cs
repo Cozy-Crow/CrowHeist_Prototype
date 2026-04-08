@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
 using UnityEditor.Experimental.GraphView;
+using Cinemachine;
 
 namespace KinematicCharacterController.Examples
 {
@@ -19,6 +20,8 @@ namespace KinematicCharacterController.Examples
         [Header("References")]
         [SerializeField] private Sockets sockets;           //  Sockets for holding items
         [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
+        [SerializeField] private CinemachineVirtualCamera playerCam;
+        [SerializeField] private GameObject throwCamTarget;
 
         #region Movement Variables
         [Header("Movement")]
@@ -719,13 +722,15 @@ namespace KinematicCharacterController.Examples
                     mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
 
+
+
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
 
                     if(storedThrowDirection != null)
                     {
-                    DrawThrowTrajectory(storedThrowDirection);
+                        DrawThrowTrajectory(storedThrowDirection);
                     }
                     
                     
@@ -947,9 +952,14 @@ namespace KinematicCharacterController.Examples
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
                 lineRenderer.SetPosition(i, point);
             }
-
-            throwDirection = curvedDirection;
             
+            //camera following throw
+            // throwDirection = curvedDirection;
+            // throwCamTarget.transform.position = throwDirection;
+
+            // playerCam.Follow = throwCamTarget.transform;
+            // Debug.Log("camera pos " + playerCam.transform.position);   
+
             // if (!targetAssetObject.activeSelf)
             // {
             //     targetAssetObject.SetActive(true);
