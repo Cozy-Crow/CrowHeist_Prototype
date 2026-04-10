@@ -18,12 +18,12 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private Rigidbody rb;
 
+    public CreateCutscene createCutscene;
     public CutsceneManager cutsceneManager;
 
     public RoombAi roombAi;
     public RoombaDispense roombaDispense;
-    public RoombaLightsOff roombaLightsOff;
-    
+    public RoombaLightsOff roombaLightsOff;    
 
     void Start()
     {
@@ -48,6 +48,7 @@ public class InteractableRoombaVase : MonoBehaviour
 
     private void TipVase()
     {
+        createCutscene.FreezePlayer();
         rb.isKinematic = false;
         rb.AddForce(Vector3.back * 3f, ForceMode.Impulse);
         cutsceneManager.RoombaBreakCutscene();
@@ -59,9 +60,9 @@ public class InteractableRoombaVase : MonoBehaviour
         {
             GameObject broken = Instantiate(brokenPrefab, transform.position, transform.rotation);
             AudioManager.Instance?.PlayOneShot(BreakVaseSFX);
-            roombAi.Deactivate();
             roombaLightsOff.LightsOff();
             roombaDispense.Dispense();
+            roombAi.StartAttackDoorSequence();
             Destroy(gameObject);
         }
     }

@@ -82,18 +82,18 @@ public class CreateCutscene : MonoBehaviour
         vcam.Priority = 10;
     }
 
-    private void FreezePlayer()
+    public void FreezePlayer()
     {
-        // playerRb.constraints =
-        //     RigidbodyConstraints.FreezePosition |
-        //     RigidbodyConstraints.FreezeRotation;
+        playerRb.constraints =
+            RigidbodyConstraints.FreezePosition |
+            RigidbodyConstraints.FreezeRotation;
 
         playerObject.SetCanInput(false);        
     }
 
     private void UnfreezePlayer()
     {
-        // playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+        playerRb.constraints = RigidbodyConstraints.FreezeRotation;
 
         playerObject.SetCanInput(true);        
 
