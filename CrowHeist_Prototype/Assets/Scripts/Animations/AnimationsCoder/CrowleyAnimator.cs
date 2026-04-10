@@ -7,11 +7,17 @@ using KinematicCharacterController.Examples;
 public class CrowleyAnimator : AnimatorCoder
 {
     [SerializeField] private Controller2Point5D controller;
-    private AnimationData WALK = new AnimationData("Walk");
     private AnimationData IDLE = new AnimationData("Idle");
+    private AnimationData IDLEHOLD = new AnimationData("IdleHold");
+    private AnimationData IDLECHARGE = new AnimationData("IdleCharge");
+    private AnimationData WALK = new AnimationData("Walk");
+    private AnimationData WALKHOLD = new AnimationData("WalkHold");
+    private AnimationData WALKCHARGE = new AnimationData("WalkCharge");
+    
     private AnimationData JUMP = new AnimationData("Jump", true, new AnimationData());
-    private AnimationData THROWREADY = new AnimationData("ThrowReady");
-    private AnimationData CHARGETHROW = new AnimationData("ChargeThrow");
+    private AnimationData AIRHOLD = new AnimationData("AirHold");
+    private AnimationData AIRCHARGE = new AnimationData("AirCharge");
+
     private AnimationData THROW = new AnimationData("Throw", true, new AnimationData());
 
     void Awake()
@@ -31,36 +37,44 @@ public class CrowleyAnimator : AnimatorCoder
 
     public override void DefaultAnimation(int layer)
     {
-            animator.SetFloat("MoveX", controller.FaceDirection.x);
-            animator.SetFloat("MoveZ", controller.FaceDirection.z);
+        animator.SetFloat("MoveX", controller.FaceDirection.x);
+        animator.SetFloat("MoveZ", controller.FaceDirection.z);
+        
+        if (controller.IsThrowing)
+        {
+            Play(THROW);
+            controller.IsThrowing = false;
+            return;
+        }
 
-            if (controller.ChargeThrowing)
-            {
-                Play(CHARGETHROW);
-                return;
-            }
+        if (controller.ChargeThrowing)
+        {
+            if (!controller.IsGrounded) { Play(AIRCHARGE); return; }
+            if (!controller.IsMoving && controller.IsGrounded) { Play(IDLECHARGE); return;}
+            if (controller.IsMoving) { Play(WALKCHARGE); return;}
+        }
 
-            if (controller.IsThrowing)
-            {
-                Play(THROW);
-                controller.IsThrowing = false;
-                return;
-            }
+        if (controller.IsHoldingItem)
+        {
+            if (!controller.IsGrounded) { Play(AIRHOLD); return; }
+            if (!controller.IsMoving && controller.IsGrounded) { Play(IDLEHOLD); return;}
+            if (controller.IsMoving) { Play(WALKHOLD); return;}
+        }
 
-            if (controller.Velocity.y > 0.1f || !controller.IsGrounded)
-            {
-                Play(JUMP);
-                return;
-            }
+        if (controller.IsMoving && !controller.IsGrounded)
+        {
+            Play(JUMP);
+            return;
+        }
 
-            if (controller.Velocity.magnitude < 0.1f && controller.IsGrounded)
-            {
-                Play(IDLE);
-            }
-            else if (controller.Velocity.magnitude > 0.1f)
-            {
-                Play(WALK);
-            }
+        if (!controller.IsMoving && controller.IsGrounded)
+        {
+            Play(IDLE);
+        }
+        else if (controller.IsMoving)
+        {
+            Play(WALK);
+        }
     }
 
 }
