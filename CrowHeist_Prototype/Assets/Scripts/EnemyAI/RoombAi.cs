@@ -252,7 +252,7 @@ public class RoombAi : MonoBehaviour
 
         }
 
-        if (other.CompareTag("Player") && playerController.heldObject != null)
+        if (other.CompareTag("Player") && playerController.heldObject != null && isActivated && !isBroken)
         {
             playerController.Drop();
             playerController._pickUpsList.Clear();
