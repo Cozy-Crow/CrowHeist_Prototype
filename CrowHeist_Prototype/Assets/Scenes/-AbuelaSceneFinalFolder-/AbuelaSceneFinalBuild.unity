@@ -1671,10 +1671,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 110157875}
     m_Modifications:
-    - target: {fileID: -7511558181221131132, guid: a3c8436bd2348474a824d0baa0786aa9, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
     - target: {fileID: -8679921383154817045, guid: f6af9d977e30470449aa20a641fe6450, type: 3}
       propertyPath: m_LocalScale.x
       value: 10
@@ -1731,6 +1727,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Yellow Vase
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: a3c8436bd2348474a824d0baa0786aa9, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f9840e2cd3f1044baab6e2b15092ef7, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1993,7 +1993,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 61744151019939646ad45f827ca61a89, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball
+      value: Trash Ball 2
       objectReference: {fileID: 0}
     - target: {fileID: 4234737217897916428, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2035,6 +2035,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 434683823}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3303,6 +3307,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7fed0b5f457ed00418b55c0b584298b4, type: 3}
   m_PrefabInstance: {fileID: 173997233}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &174586712
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 174586713}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &174586713
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 174586712}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -60.76, y: 8.25, z: -8.2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &177786916
 GameObject:
   m_ObjectHideFlags: 0
@@ -3505,6 +3540,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9d15120ecac685a488944561e2cb456f, type: 3}
+--- !u!1 &185735217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 185735218}
+  m_Layer: 0
+  m_Name: Dart1SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &185735218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185735217}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 17.7, y: 8.16, z: 11.05}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &187446535
 GameObject:
   m_ObjectHideFlags: 0
@@ -4614,6 +4680,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1399208541}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -4684,7 +4754,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 6
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -5150,7 +5220,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e499137679821b342b6ffb8d81b5c138, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball
+      value: Trash Ball 1
       objectReference: {fileID: 0}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_IsActive
@@ -5208,6 +5278,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 795921837}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5459,6 +5533,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 185735218}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -5525,7 +5603,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 1
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
@@ -5960,6 +6038,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4234737217897916428, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
   m_PrefabInstance: {fileID: 974195124}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &405056773
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 405056774}
+  m_Layer: 0
+  m_Name: Dart5SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &405056774
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 405056773}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 31.039999, y: 3.56, z: -5.5600004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &411728426 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 825281226464387213, guid: 88bcf3efb4f6f1e4f8063e53c353f05e, type: 3}
@@ -5994,12 +6103,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 418327425}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 32.5, y: 3.67, z: -12.53}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1236145316}
+  m_Father: {fileID: 1394003641}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &422534761
 BoxCollider:
@@ -6075,6 +6184,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 913154949}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &425812329 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+  m_PrefabInstance: {fileID: 974195124}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &429873892
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6201,6 +6315,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 432905448}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &434683822
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 434683823}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &434683823
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 434683822}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -60.34, y: 0.36, z: -12.94}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &452186934
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6371,11 +6516,11 @@ PrefabInstance:
       objectReference: {fileID: 8926484042661614526, guid: 597cc2619d4956c4fbf62fa132759ab5, type: 3}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: jumpForce
-      value: 12
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: moveSpeed
-      value: 8
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.x
@@ -6713,6 +6858,37 @@ Transform:
   - {fileID: 760696094}
   - {fileID: 129826050}
   m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &524480168
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 524480169}
+  m_Layer: 0
+  m_Name: TFBBSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &524480169
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 524480168}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.9, y: 3.37, z: -14.22}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 920235860}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &539711801
 GameObject:
@@ -7642,6 +7818,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1952194782}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -7712,7 +7892,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 4
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -10630,6 +10810,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.0795189, y: 0.020000003, z: 0.0034062767}
   m_Center: {x: 0.00011581103, y: -0.004028054, z: 0.0055685993}
+--- !u!1 &795921836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 795921837}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &795921837
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 795921836}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -61.41, y: 0.36, z: -15.63}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &803213195
 GameObject:
   m_ObjectHideFlags: 0
@@ -11141,6 +11352,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 405056774}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -11211,7 +11426,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 5
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -11257,7 +11472,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 61744151019939646ad45f827ca61a89, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball
+      value: Trash Ball 3
       objectReference: {fileID: 0}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_IsActive
@@ -11315,6 +11530,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 174586713}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12167,6 +12386,70 @@ Transform:
   - {fileID: 1177734430}
   m_Father: {fileID: 2017429406}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &920235859
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920235860}
+  m_Layer: 0
+  m_Name: BookPuzzleSpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &920235860
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920235859}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1148421003}
+  - {fileID: 524480169}
+  m_Father: {fileID: 1236145316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &920897389
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 920897390}
+  m_Layer: 0
+  m_Name: Dart2SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &920897390
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 920897389}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 18.66, y: 8.16, z: 11.51}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &931152227
 GameObject:
   m_ObjectHideFlags: 0
@@ -12670,7 +12953,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 61744151019939646ad45f827ca61a89, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball
+      value: Trash Ball 6
       objectReference: {fileID: 0}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_IsActive
@@ -12728,6 +13011,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: prefabToSpawn
+      value: 
+      objectReference: {fileID: 425812329}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1294604040}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -14213,6 +14504,37 @@ Transform:
   - {fileID: 543450651721468013}
   m_Father: {fileID: 1397231707}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1033224698
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1033224699}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_5
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1033224699
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1033224698}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -54.67, y: 6.262, z: -13.39}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1052702610
 GameObject:
   m_ObjectHideFlags: 0
@@ -14459,7 +14781,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 61744151019939646ad45f827ca61a89, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball
+      value: Trash Ball 5
       objectReference: {fileID: 0}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_IsActive
@@ -14517,6 +14839,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1033224699}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -15313,6 +15639,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1355755927235879722, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
   m_PrefabInstance: {fileID: 363703669}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1129528978
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1129528979}
+  m_Layer: 0
+  m_Name: ToasterSpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1129528979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1129528978}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -44.77, y: 8.559999, z: 3.59}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1236145316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1130226690
 GameObject:
   m_ObjectHideFlags: 0
@@ -15574,6 +15931,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1130859627}
   m_Mesh: {fileID: 6255687079079774844, guid: dc391aa8125c6436d822265efc40d1a8, type: 3}
+--- !u!1 &1148421002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1148421003}
+  m_Layer: 0
+  m_Name: WTFASpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1148421003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1148421002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 16.08, y: 3.41, z: -13.18}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 920235860}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1152197607
 GameObject:
   m_ObjectHideFlags: 0
@@ -17206,8 +17594,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 418327426}
-  - {fileID: 1633800937}
+  - {fileID: 1394003641}
+  - {fileID: 1713263641}
+  - {fileID: 1129528979}
+  - {fileID: 920235860}
+  - {fileID: 1979939739}
   m_Father: {fileID: 110157875}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1241214138
@@ -18049,6 +18440,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1285298899}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1294604039
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1294604040}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_6
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1294604040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1294604039}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -52.76, y: 6.53, z: -10.07}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1299519203
 GameObject:
   m_ObjectHideFlags: 0
@@ -18156,7 +18578,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e499137679821b342b6ffb8d81b5c138, type: 2}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_Name
-      value: Trash Ball (1)
+      value: Trash Ball 4
       objectReference: {fileID: 0}
     - target: {fileID: 3997557014110355284, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
       propertyPath: m_IsActive
@@ -18214,6 +18636,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6244887614619238369, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1975000464}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -18654,6 +19080,10 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[2]
       value: 
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
+    - target: {fileID: 8560701640923680930, guid: 23250e465ba030e44a1126da4f79a814, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1129528979}
     - target: {fileID: 8755494990127241016, guid: 23250e465ba030e44a1126da4f79a814, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -19356,6 +19786,39 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5358966294579700644, guid: 02219e2963bd14094b778610439582f9, type: 3}
   m_PrefabInstance: {fileID: 1386956808}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1394003640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1394003641}
+  m_Layer: 0
+  m_Name: KeySpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1394003641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394003640}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 418327426}
+  - {fileID: 1633800937}
+  m_Father: {fileID: 1236145316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1395255078
 GameObject:
   m_ObjectHideFlags: 0
@@ -19433,6 +19896,37 @@ Transform:
   - {fileID: 1773744703}
   - {fileID: 1028700761}
   m_Father: {fileID: 2044789681}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1399208540
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1399208541}
+  m_Layer: 0
+  m_Name: Dart6SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1399208541
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1399208540}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 34.78, y: 3.3500001, z: -6.3500004}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1403538143
 GameObject:
@@ -19907,6 +20401,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1419444869}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1421190013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1421190014}
+  m_Layer: 0
+  m_Name: Dart3SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1421190014
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1421190013}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 19.78, y: 8.16, z: 10.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1423700923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -20990,6 +21515,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 920897390}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -21056,7 +21585,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 2
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
@@ -22650,12 +23179,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1633800936}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 40.65, y: 8.39, z: 11.63}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1236145316}
+  m_Father: {fileID: 1394003641}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1638318451
 PrefabInstance:
@@ -23696,6 +24225,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1362958248}
     m_Modifications:
+    - target: {fileID: 1195147787455488809, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1421190014}
     - target: {fileID: 1294690923271403016, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -23762,7 +24295,7 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
     - target: {fileID: 4924741449385226290, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Name
-      value: Dart
+      value: Dart 3
       objectReference: {fileID: 0}
     - target: {fileID: 7108786233587025211, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
       propertyPath: m_Materials.Array.size
@@ -23931,6 +24464,43 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1355755927235879722, guid: 4566ea462cc0a47e88f403a3b64c5b79, type: 3}
   m_PrefabInstance: {fileID: 1502204423}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1713263640
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1713263641}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1713263641
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1713263640}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 795921837}
+  - {fileID: 434683823}
+  - {fileID: 174586713}
+  - {fileID: 1975000464}
+  - {fileID: 1033224699}
+  - {fileID: 1294604040}
+  m_Father: {fileID: 1236145316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1721923796
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26424,6 +26994,37 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1936388096}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1952194781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1952194782}
+  m_Layer: 0
+  m_Name: Dart4SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1952194782
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1952194781}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 32.96, y: 3.51, z: -5.86}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1979939739}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1952772034
 GameObject:
   m_ObjectHideFlags: 0
@@ -26547,11 +27148,79 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8698811937108261029, guid: fe2c1e591ecb90842859efc2ad2ff916, type: 3}
   m_PrefabInstance: {fileID: 739010444}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1975000463
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1975000464}
+  m_Layer: 0
+  m_Name: TrashBallSpawnPoint_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1975000464
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1975000463}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -57.57, y: 8.25, z: -7.73}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1713263641}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1976670435 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 9d15120ecac685a488944561e2cb456f, type: 3}
   m_PrefabInstance: {fileID: 2106822777}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1979939738
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1979939739}
+  m_Layer: 0
+  m_Name: DartSpawnPoints
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1979939739
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1979939738}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 185735218}
+  - {fileID: 920897390}
+  - {fileID: 1421190014}
+  - {fileID: 1952194782}
+  - {fileID: 405056774}
+  - {fileID: 1399208541}
+  m_Father: {fileID: 1236145316}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1989080254
 GameObject:
   m_ObjectHideFlags: 0
@@ -30218,6 +30887,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 147980643}
     m_Modifications:
+    - target: {fileID: 1362074354080623257, guid: 66c217c9bf364463d8f372145de4c6c9, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 1148421003}
     - target: {fileID: 3820054010243716346, guid: 66c217c9bf364463d8f372145de4c6c9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 16.08
@@ -31015,6 +31688,18 @@ PrefabInstance:
       propertyPath: teleportPoint
       value: 
       objectReference: {fileID: 835508622}
+    - target: {fileID: 931386214409536322, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 931386214409536322, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 931386214409536322, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 931386214409536322, guid: 13e3d35543d28d044a8945c3d263fb08, type: 3}
       propertyPath: m_LocalPosition.x
       value: -26.16
@@ -33919,6 +34604,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
     - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 496704253866849619, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_LocalPosition.x
       value: -22.19
       objectReference: {fileID: 0}
@@ -33989,6 +34686,10 @@ PrefabInstance:
     - target: {fileID: 5921527471549213503, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5921527471549213503, guid: e3e1b3ab00a30a240b24df9766d9bafc, type: 3}
+      propertyPath: outlineWidth
+      value: 5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -34284,6 +34985,18 @@ PrefabInstance:
     - target: {fileID: 8506639981751491581, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8508681944020181164, guid: 60e5a506b607d2845a990615fded44a4, type: 3}
       propertyPath: m_LocalPosition.x
@@ -37496,6 +38209,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
       objectReference: {fileID: 0}
+    - target: {fileID: 8062703328218626506, guid: b23ba35c0a6e142caa27b61212c26dba, type: 3}
+      propertyPath: spawnLocation
+      value: 
+      objectReference: {fileID: 524480169}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -38246,6 +38963,66 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 170173534}
     m_Modifications:
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjPuAudio.Path
+      value: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuGeneric
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjLandAudio.Path
+      value: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjThrowAudio.Path
+      value: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowGeneric
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjPuAudio.Guid.Data1
+      value: 1928567591
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjPuAudio.Guid.Data2
+      value: 1073893775
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjPuAudio.Guid.Data3
+      value: -485036669
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjPuAudio.Guid.Data4
+      value: -330886907
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjLandAudio.Guid.Data1
+      value: 1863926533
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjLandAudio.Guid.Data2
+      value: 1280584236
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjLandAudio.Guid.Data3
+      value: 625027717
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjLandAudio.Guid.Data4
+      value: -210996343
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjThrowAudio.Guid.Data1
+      value: -1274667687
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjThrowAudio.Guid.Data2
+      value: 1324500975
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjThrowAudio.Guid.Data3
+      value: 1674253190
+      objectReference: {fileID: 0}
+    - target: {fileID: 3828698649142745680, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
+      propertyPath: ObjThrowAudio.Guid.Data4
+      value: -1940928456
+      objectReference: {fileID: 0}
     - target: {fileID: 7848914525966027063, guid: 1bbacc4b8c9a7cd48bf1b8dd69c05814, type: 3}
       propertyPath: m_Name
       value: Coin Collection

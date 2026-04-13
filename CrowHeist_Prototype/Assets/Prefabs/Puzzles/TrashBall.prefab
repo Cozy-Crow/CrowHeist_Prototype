@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 9147278277975285522}
   - component: {fileID: 1330290542081752036}
   - component: {fileID: 941872476761764344}
+  - component: {fileID: 6244887614619238369}
   m_Layer: 3
   m_Name: TrashBall
   m_TagString: TrashBall
@@ -177,7 +178,6 @@ MonoBehaviour:
       Data3: 1081564042
       Data4: -1668383604
     Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandTrash
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &9147278277975285522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,7 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
+  outlineWidth: 5
   precomputeOutline: 1
   bakeKeys:
   - {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
@@ -741,6 +741,20 @@ MonoBehaviour:
   id: 0685b5af-eb4f-41de-b80e-d3e6ededa8ff
   objectType: 0
   itemData: {fileID: 0}
+--- !u!114 &6244887614619238369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3997557014110355284}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52777ee9ff0b01e44b59dad69de6ec4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 3997557014110355284}
+  spawnLocation: {fileID: 0}
 --- !u!1 &6493438704350783935
 GameObject:
   m_ObjectHideFlags: 0
