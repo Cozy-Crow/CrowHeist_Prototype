@@ -198,6 +198,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4db0c334b71d9854a9522e2b8c6c51e5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6956909315001882979}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4db0c334b71d9854a9522e2b8c6c51e5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8560701640923680930}
   m_SourcePrefab: {fileID: 100100000, guid: 4db0c334b71d9854a9522e2b8c6c51e5, type: 3}
 --- !u!1 &5000631074821259815 stripped
 GameObject:
@@ -314,7 +317,6 @@ MonoBehaviour:
       Data3: 205681282
       Data4: -2010710272
     Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandMetal
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &312329632179638417
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,7 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
+  outlineWidth: 5.5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -348,6 +350,20 @@ MonoBehaviour:
   id: c8d498a8-4156-494d-a3f2-a52c5a4cd60c
   objectType: 0
   itemData: {fileID: 0}
+--- !u!114 &8560701640923680930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5000631074821259815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52777ee9ff0b01e44b59dad69de6ec4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 5000631074821259815}
+  spawnLocation: {fileID: 0}
 --- !u!4 &5633475210573256861 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 4db0c334b71d9854a9522e2b8c6c51e5, type: 3}

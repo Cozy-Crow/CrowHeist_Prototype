@@ -49,7 +49,9 @@ namespace KinematicCharacterController.Examples
         public bool IsGrounded => isGrounded;
         public string SurfaceTag => surfaceTag;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
+        public bool IsHoldingItem => heldObject != null;    
         public bool ChargeThrowing { get => chargingThrow;}
+        public bool IsMoving => input.magnitude > 0.1f;
         #endregion
 
         #region Animation
