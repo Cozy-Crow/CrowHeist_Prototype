@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
+using KinematicCharacterController.Examples;
 
 // Script by Mark D. - created 1/25/2026
 // This script allows for easy creation of cutscenes
@@ -28,6 +29,7 @@ public class CreateCutscene : MonoBehaviour
 
     [Header("Optional")]
     public Rigidbody playerRb;
+    Controller2Point5D playerObject; 
 
     private CinemachineVirtualCamera[] allCams;
 
@@ -36,6 +38,8 @@ public class CreateCutscene : MonoBehaviour
         // Collect all vcams in scene (including children)
         allCams = FindObjectsOfType<CinemachineVirtualCamera>();
         ActivateVcam(playerCam);
+        if(playerCam != null)
+            playerObject = playerRb.GetComponent<Controller2Point5D>();
     }
 
     public void PlayCutscene()
@@ -49,11 +53,12 @@ public class CreateCutscene : MonoBehaviour
     {
         Debug.Log("Cutscene Coroutine");
 
+
         if (playerRb != null)
             FreezePlayer();
 
         yield return new WaitForSeconds(startDelay);
-
+        
         foreach (var camSwitch in cameraSwitches)
         {
             if (camSwitch.virtualCamera == null)
@@ -77,16 +82,21 @@ public class CreateCutscene : MonoBehaviour
         vcam.Priority = 10;
     }
 
-    private void FreezePlayer()
+    public void FreezePlayer()
     {
         playerRb.constraints =
             RigidbodyConstraints.FreezePosition |
             RigidbodyConstraints.FreezeRotation;
+
+        playerObject.SetCanInput(false);        
     }
 
     private void UnfreezePlayer()
     {
         playerRb.constraints = RigidbodyConstraints.FreezeRotation;
+
+        playerObject.SetCanInput(true);        
+
     }
 }
 

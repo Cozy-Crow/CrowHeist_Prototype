@@ -11,7 +11,11 @@ public class Cascaron : MonoBehaviour
 
     public float breakSpeed = 5f;
     public GameObject confettiEffect;
+    public GameObject smokeEffect;
+    public Color baseColor;
     public GameObject coinPrefab;
+
+    private Vector3 zero = new Vector3(0, 0, 0);
 
     void OnCollisionEnter(Collision collision)
     {
@@ -37,7 +41,15 @@ public class Cascaron : MonoBehaviour
     void Break()
     {
         if (confettiEffect)
+        {
+            Debug.Log(confettiEffect.GetComponent<ParticleSystem>());
+            confettiEffect.GetComponent<ParticleSystem>().time = 0f;
             Instantiate(confettiEffect, transform.position, Quaternion.identity);
+            confettiEffect.GetComponent<ParticleSystem>().Play();
+            
+           
+            
+        }
 
         if (FindObjectsOfType<Cascaron>().Length == 1 && coinPrefab)
         {

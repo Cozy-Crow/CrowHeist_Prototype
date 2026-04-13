@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
@@ -7,6 +7,8 @@ using SHG.AnimatorCoder;
 using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEngine.VFX;
+using UnityEditor.Experimental.GraphView;
 
 namespace KinematicCharacterController.Examples
 {
@@ -15,8 +17,8 @@ namespace KinematicCharacterController.Examples
     public class Controller2Point5D : MonoBehaviour
     {
         [Header("References")]
-        [SerializeField] private Sockets sockets;
-        [SerializeField] private CrowleySFX crowleySFX;
+        [SerializeField] private Sockets sockets;           //  Sockets for holding items
+        [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
 
         #region Movement Variables
         [Header("Movement")]
@@ -26,7 +28,7 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private float rotationSpeed = 10f;         // Speed of sprite rotation slerp
         [SerializeField] private float flipPadding = 1.5f;          // Padding for slerp blur
         [SerializeField] public float gravityMultiplier = 2f;
-        [SerializeField] private LayerMask groundLayer = -1;        // Set in inspector for ground detection
+        [SerializeField] public LayerMask groundLayer = -1;        // Set in inspector for ground detection
         [SerializeField] private float groundCheckDistance = 0.15f;
         [SerializeField] private float skinWidth = 0.02f;           // Smaller value to prevent bouncing
         private Vector2 input;
@@ -36,7 +38,7 @@ namespace KinematicCharacterController.Examples
         private Vector3 velocity;
         private bool isGrounded = false;
 
-        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within a menu
+        private bool canInput = true; // Zack H (2/4) used to track if inputs are accepted (mainly within in game menus (puzzle menus))
         private string surfaceTag = "";
 
         public Vector3 Velocity => velocity;
@@ -44,7 +46,9 @@ namespace KinematicCharacterController.Examples
         public bool IsGrounded => isGrounded;
         public string SurfaceTag => surfaceTag;
         public bool IsThrowing { get => isThrowing; set => isThrowing = value; }
+        public bool IsHoldingItem => heldObject != null;    
         public bool ChargeThrowing { get => chargingThrow;}
+        public bool IsMoving => input.magnitude > 0.1f;
         #endregion
 
         #region Animation
@@ -88,7 +92,7 @@ namespace KinematicCharacterController.Examples
         //Physics/Direction
         public Rigidbody rb;
         private CapsuleCollider[] capsuleColliders; //stores both colliders
-        private CapsuleCollider normalCollider; //handles actual collisions
+        public CapsuleCollider normalCollider; //handles actual collisions
         private CapsuleCollider triggerCollider; //handles trigger collider (pickup range)
         public bool isFacingRight = true;
         public bool isThrowing = false;
@@ -154,9 +158,11 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private EventReference land;
         private EventReference ObjThrowAudio;
 
-        [SerializeField] private EventReference charge;
-        public EventInstance chargeInstance;
-
+        #region VFX
+        private VisualEffect jumpPoof;
+        [SerializeField] private ParticleSystem GlidePS;
+        private bool glideSpawned = false;
+        #endregion
 
         #region  Trinket Guide
         [Header("Trinket Guide")]
@@ -189,32 +195,31 @@ namespace KinematicCharacterController.Examples
 
         public void Start()
         {
+            jumpPoof = GetComponent<VisualEffect>();
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             lineRenderer = GetComponent<LineRenderer>();
             lineRenderer.positionCount = 0;
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
-
-            //creates audio instances
-            AudioManager.Instance?.CreateInstance("land", land);
-            if(AudioManager.Instance != null)
-            {
-             chargeInstance = AudioManager.Instance.CreateInstance("charge", charge);   
-            }
         }
 
         void Update()
         {
+            jumpPoof.SetVector3("TargetPosition", this.transform.position);
             if (Input.GetKeyDown(KeyCode.M))
             {
                 TrinketMenu.instance.ToggleMenu();
+                //cancel if the player is throwing
+                CancelThrow();
             }
             UpdateCoyoteTime();
             // Input and state checks in Update
-            HandleInput();
-
-            HandleMove();
+            if(canInput) //set can input to false if you want input off
+            {
+                HandleInput();
+                HandleMove();
+            }
             // Handle item-specific mechanics
             if (heldObject != null)
             {
@@ -240,6 +245,12 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
+                        
+                        GlidePS.Play();
+                        GlidePS.transform.position = transform.position;
+
+                        if (isGrounded) { GlidePS.Stop(); }
+
                     }
                 }
             }
@@ -271,7 +282,7 @@ namespace KinematicCharacterController.Examples
             float radius = normalCollider.radius * 0.9f;
 
             // Cast distance should reach just below the feet
-            float castDistance = (normalCollider.height * 0.5f) + groundCheckDistance; //1.215
+            float castDistance = normalCollider.height * 0.5f; // -> removed + groundCheckDistance, added extra distance to the ground check when it wasn't needed 
 
             // Main ground check using a raycast for more precision
             isGrounded = Physics.Raycast(origin, Vector3.down, out RaycastHit hitMain, castDistance, groundLayer, QueryTriggerInteraction.Ignore);
@@ -284,9 +295,12 @@ namespace KinematicCharacterController.Examples
                     surfaceTag = "Generic";
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
-                 AudioManager.Instance?.SetInstanceLabelParam("land", "Surface", surfaceTag);
+                 AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
+                GlidePS.Stop();
+                 
             }
         }
+        
         private void HandleInput()
         {
             //Note: Zack H. 2/4
@@ -313,6 +327,7 @@ namespace KinematicCharacterController.Examples
             // Handle jump buffering and coyote time
             if (jumpBufferCounter > 0f)
             {
+                // if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 if ((isGrounded || coyoteTimeCounter > 0f) && !isJumping)
                 {
                     Jump();
@@ -388,9 +403,11 @@ namespace KinematicCharacterController.Examples
                 if (rb.velocity.y < -0.5f)
                 {
                     rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-
                     //plays audio when landing
-                    AudioManager.Instance?.PlayInstanceOneShot("land");
+                    //AudioManager.Instance?.PlayInstanceOneShot("LAND");
+                    //above stopped working?? putting bandaid on it for now 
+                    AudioManager.Instance?.PlayOneShot(land);
+                    print("LAND");
                     
                 }
 
@@ -409,7 +426,11 @@ namespace KinematicCharacterController.Examples
             isGrounded = false;
             coyoteTimeCounter = 0f;
             canJump = false;
-            AudioManager.Instance?.PlayOneShot(jump); 
+            AudioManager.Instance?.PlayOneShot(jump);
+
+            jumpPoof.Play();
+
+
 
             // Reset vertical velocity before jump
             rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
@@ -429,7 +450,7 @@ namespace KinematicCharacterController.Examples
 
         private void UpdateCoyoteTime()
         {
-            // If grounded, reset coyote time
+            // If groundeds, reset coyote time
             if (isGrounded)
             {
                 coyoteTimeCounter = coyoteTime;
@@ -486,10 +507,10 @@ namespace KinematicCharacterController.Examples
 
         private void HandleCollisionLogic(Collision collision)
         {
-            if(collision.gameObject.layer == 9) //testing
-            {
-                Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
-            }
+            // if(collision.gameObject.layer == 9) //testing
+            // {
+            //     Physics.IgnoreCollision(collision.gameObject.GetComponent<Collider>(), this.GetComponent<Collider>());
+            // }
 
             if (isDashing)
             {
@@ -630,6 +651,24 @@ namespace KinematicCharacterController.Examples
                         {
                             if (_pickUpsList.Count > 0) return;
 
+                            //Added by Zack H. 4/6
+                            //system to check whether or not crowley has Line of Sight of an item he tries to pick up
+                            Vector3 directionFromItemToPlayer = selected.realObject.transform.position - playerSprite.transform.position;
+                            RaycastHit hit;
+
+                            // Debug.DrawRay(transform.position, directionFromItemToPlayer * 10f, Color.red, 10f);
+                            //check between the two points
+                            if(Physics.Raycast(transform.position, directionFromItemToPlayer*10f, out hit))
+                            {
+                                //check if both items are the same (item hit vs object we are trying to grab)
+                                if(hit.transform.gameObject != selected.realObject)
+                                {
+                                    Debug.Log("collider blocking " + hit.transform.name);
+                                    Debug.Log("collider on object " + selected.realObject);
+                                    return;
+                                }
+                            }
+
                             Debug.Log("selcted" + selected.name);
                             Pickup(selected, pickUp);
                         }
@@ -670,7 +709,6 @@ namespace KinematicCharacterController.Examples
                     chargingThrow = true;
                     cancelThrow = false;
                     chargeStartTime = Time.time;
-                    chargeInstance.start();
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -686,10 +724,10 @@ namespace KinematicCharacterController.Examples
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
                     storedThrowDirection = (worldMousePos - playerPosition).normalized;
-                    
+
                     if(storedThrowDirection != null)
                     {
-                        DrawThrowTrajectory(storedThrowDirection);
+                    DrawThrowTrajectory(storedThrowDirection);
                     }
                     
                     
@@ -702,9 +740,9 @@ namespace KinematicCharacterController.Examples
                     Rigidbody rigidbody = heldObject.GetComponent<Rigidbody>();
 
                     print("THROW");
-                    chargeInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                     AudioManager.Instance?.PlayOneShot(ObjThrowAudio);
-                    //RuntimeManager.PlayOneShot("event:/SFX/Objects/Coin/CoinCollect");
+                    AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+                   // Charge.stop(FMOD.Studio.STOP_MODE.IMMEDIATE); EventInstance Charge =
 
                     if (rigidbody != null)
                     {
@@ -740,19 +778,24 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
-                    targetAssetObject.SetActive(false);
+                    // targetAssetObject.SetActive(false);
                 }
 
                 if (Input.GetMouseButtonDown(1))
                 {
-                    chargingThrow = false;
-                    cancelThrow = true;
-                    throwForce = 0f;
-                    lineRenderer.positionCount = 0;
-                    storedThrowDirection = Vector3.zero;
-                    targetAssetObject.SetActive(false);
+                    CancelThrow();
                 }
             }
+        }
+
+        public void CancelThrow()
+        {
+            chargingThrow = false;
+            cancelThrow = true;
+            throwForce = 0f;
+            lineRenderer.positionCount = 0;
+            storedThrowDirection = Vector3.zero;
+            // targetAssetObject.SetActive(false);
         }
 
         public List<IPickupable> GetHeldItems()
@@ -829,11 +872,11 @@ namespace KinematicCharacterController.Examples
 
             foreach(Collider collider in heldItemColliders)
             {
-                Debug.Log(collider.name + " " + collider.gameObject.name);
+                // Debug.Log(collider.name + " " + collider.gameObject.name);
                 if(collider.isTrigger == false)
                 {
                     heldItemPhsyicsCollider = collider;
-                    Debug.Log(heldItemPhsyicsCollider);
+                    // Debug.Log(heldItemPhsyicsCollider);
                 }
                 
             }
@@ -909,12 +952,12 @@ namespace KinematicCharacterController.Examples
 
             throwDirection = curvedDirection;
             
-            if (!targetAssetObject.activeSelf)
-            {
-                targetAssetObject.SetActive(true);
-            }
+            // if (!targetAssetObject.activeSelf)
+            // {
+            //     targetAssetObject.SetActive(true);
+            // }
 
-            targetAssetObject.transform.position = FindThrowCollisionPoint();
+            // targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
 

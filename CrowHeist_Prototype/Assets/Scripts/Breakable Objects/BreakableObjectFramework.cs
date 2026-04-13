@@ -13,11 +13,13 @@ public class BreakableObjectFramework : MonoBehaviour
     public AudioClip breakSound;
     public float BreakForce = 5f;
     public GameObject coinPrefab;
-    public float minThrowVelocity = 3f;
+    public float minThrowVelocity = 8f;
     public float minFallTime = 0.5f;
+    public float throwGracePeriod = 0.2f;
     private bool isBroken = false;
     private Rigidbody rb;
     private float fallTime = 0f;
+    private float throwTime = -1f;
     
     void Start()
     {
@@ -30,29 +32,35 @@ public class BreakableObjectFramework : MonoBehaviour
         {
             fallTime += Time.deltaTime;
         }
+        
+        if (rb != null && rb.velocity.magnitude > minThrowVelocity && throwTime < 0f)
+        {
+            throwTime = Time.time;
+        }
     }
     
     void OnTriggerEnter(Collider other)
     {
         if (isBroken) return;
         
-        if (other.CompareTag("Player"))
+        // if (other.CompareTag("Player"))
+        // {
+        //     Controller2Point5D player = other.GetComponent<Controller2Point5D>();
+        //     if(player != null && player.fallingTime >= 0.4f)
+        //     {
+        //         Break();
+        //     }
+        // }
+        
+        if (other.CompareTag("Player") && other.attachedRigidbody != null)
         {
-            Controller2Point5D player = other.GetComponent<Controller2Point5D>();
-            if(player != null && player.fallingTime >= 0.4f)
-            {
-                Break();
-            }
+            return;
         }
         else if (other.attachedRigidbody != null && other.attachedRigidbody.velocity.magnitude > minThrowVelocity)
         {
             Break();
         }
-        else if (rb != null && rb.velocity.magnitude > minThrowVelocity)
-        {
-            Break();
-        }
-        else if (fallTime >= minFallTime)
+        else if (rb.velocity.magnitude > minThrowVelocity && Time.time - throwTime > throwGracePeriod)
         {
             Break();
         }
@@ -66,14 +74,19 @@ public class BreakableObjectFramework : MonoBehaviour
         if (breakEffect) breakEffect.Play();
         if (breakSound) AudioSource.PlayClipAtPoint(breakSound, transform.position);
         
+        Vector3 currentVelocity = rb != null ? rb.velocity : Vector3.zero;
+        Vector3 currentAngularVelocity = rb != null ? rb.angularVelocity : Vector3.zero;
+        
         foreach (var piece in brokenPieces)
         {
             var spawnedPiece = Instantiate(piece, transform.position, transform.rotation);
-            var rb = spawnedPiece.GetComponent<Rigidbody>();
-            if (rb)
+            var pieceRb = spawnedPiece.GetComponent<Rigidbody>();
+            if (pieceRb)
             {
-                rb.AddForce(Random.insideUnitSphere * BreakForce);
-                rb.AddTorque(Random.insideUnitSphere * BreakForce);
+                pieceRb.velocity = currentVelocity;
+                pieceRb.angularVelocity = currentAngularVelocity;
+                pieceRb.AddForce(Random.insideUnitSphere * BreakForce, ForceMode.Impulse);
+                pieceRb.AddTorque(Random.insideUnitSphere * BreakForce, ForceMode.Impulse);
             }
         }
         
@@ -86,5 +99,4 @@ public class BreakableObjectFramework : MonoBehaviour
         
         Destroy(gameObject);
     }
-
 }

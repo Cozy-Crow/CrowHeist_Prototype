@@ -22,8 +22,8 @@ public class Pickable : MonoBehaviour, IPickupable
     [SerializeField] private EventReference ObjPuAudio;
     [SerializeField] public EventReference ObjThrowAudio;
     [SerializeField] private EventReference ObjLandAudio;
-    public RoombAi RoombaAiReference;
-    EventReference roombaDetect;
+    private RoombAi RoombaAi;
+    private EventReference roombaDetectSFX;
 
     // UniqueID reference for registry integration
     private UniqueID uniqueID;
@@ -45,16 +45,17 @@ public class Pickable : MonoBehaviour, IPickupable
         rb = GetComponent<Rigidbody>();
         uniqueID = GetComponent<UniqueID>();
         player = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
-        // roombaDetect = RoombaAiReference.roombaDetect;
     }
     void Start()
     {
         itemEventManager = FindObjectOfType<ItemEventManager>();
         aiEventManager = FindObjectOfType<AIEventManager>();
-        // if (aiEventManager != null)
-        // {
-        //     aiEventManager.e_makedirty.AddListener(OnObjectDirty);
-        // }
+         if (aiEventManager != null)
+         {
+             aiEventManager.e_makedirty.AddListener(OnObjectDirty);
+         }
+         string eventpath = "event:/SFX/Roomba/RoombaDetect";
+         roombaDetectSFX = RuntimeManager.PathToEventReference(eventpath);
     }
     public virtual void PickUp(Transform parent)
     {
@@ -124,7 +125,7 @@ public class Pickable : MonoBehaviour, IPickupable
 
         if (player != null)
         {
-            //Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
+            Controller2Point5D playerController = player.GetComponent<Controller2Point5D>();
             if (_isDirty)
             {
                 player.isDirty = true;
@@ -170,26 +171,21 @@ public class Pickable : MonoBehaviour, IPickupable
     {
         _isDirty = true;
         aiEventManager.GroundItemDirty(transform.position);
-        //checks if roomba is activated before playing roomba detect sfx
-              
-        // if(RoombaAiReference.isActivated == true)
-        // {
-        //     AudioManager.Instance?.PlayOneShot(roombaDetect);
-        // }
-        //Debug.Log("Dirty");
+        RoombAi.Instance?.PlayRoombaDetectSFX();
     }
 
     void OnTriggerEnter(Collider other)
     {
-        //makes it so the land sfx doesnt trigger on player throwing it initially
-        if (!other.CompareTag("Player"))
-        {
-         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition); 
-        }
-
         if (other.CompareTag("Ground") && _isDirty == false)
         {
             OnObjectDirty();
+        }
+
+        //makes it so the land sfx doesnt trigger on player throwing it initially
+        if (!other.CompareTag("Player") && rb.velocity.y < -0.5f)
+        {
+         AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);
+         Debug.Log("LandSFXPlayed"); 
         }
     }
     void OnTriggerExit(Collider other)

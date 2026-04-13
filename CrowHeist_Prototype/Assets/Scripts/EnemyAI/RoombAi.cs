@@ -11,6 +11,9 @@ using FMOD;
 [RequireComponent(typeof(NavMeshAgent))]
 public class RoombAi : MonoBehaviour
 {
+
+    public static RoombAi Instance;
+
     [Header("Roomba Settings")]
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
@@ -22,7 +25,7 @@ public class RoombAi : MonoBehaviour
 
     //Patrol Mode for both rooms - added 1/29/25 by Mark D.
     [SerializeField] private List<Transform> patrolPoints_Room1;
-    [SerializeField] private List<Transform> patrolPoints_Room2;
+    // [SerializeField] private List<Transform> patrolPoints_Room2;
     //active patrol points (one of the lists above will be assigned)
     private List<Transform> patrolPoints;
 
@@ -44,6 +47,14 @@ public class RoombAi : MonoBehaviour
 
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
+
+    [Header("Attack Door Sequence")]
+    [SerializeField] private BreakDoor breakDoor;
+    [SerializeField] private Transform breakDoorTransform;
+    [SerializeField] private float attackDoorSpeed = 15f;
+    [SerializeField] private float circleRadius = 1f;
+    [SerializeField] private float spinDuration = 2f;
+    private bool isInAttackDoorSequence = false;
 
     [Header("Audio")]
     [SerializeField] public EventReference roombaDetect;
@@ -92,11 +103,27 @@ public class RoombAi : MonoBehaviour
          roombaEmitter = GetComponent<FMODUnity.StudioEventEmitter>();
          roombaEmitter.SetParameter("RoombaOnOff", 0);
         }
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
     {
+        if (isInAttackDoorSequence)
+        {
+            return;
+        }
+
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
+
+        if (isInAttackDoorSequence) return;
 
         // check if Roomba has been activated before movement logic - edited by Mark D. 9/10/25
         if(isActivated)
@@ -182,10 +209,10 @@ public class RoombAi : MonoBehaviour
         allDirtyObjects.AddRange(dirtyPickables);
 
         // Add puddles
-        var puddles = GameObject.FindGameObjectsWithTag("Puddle")
-            .Select(obj => obj.transform);
+        //var puddles = GameObject.FindGameObjectsWithTag("Puddle")
+          //  .Select(obj => obj.transform);
 
-        allDirtyObjects.AddRange(puddles);
+        //allDirtyObjects.AddRange(puddles);
 
         // Sort by distance to this Roomba
         allDirtyObjects = allDirtyObjects
@@ -254,7 +281,7 @@ public class RoombAi : MonoBehaviour
     // Patrol method added by Mark D. 9/9/25
     private void Patrol()
     {
-        if (patrolPoints.Count == 0) return;
+        if (patrolPoints.Count == 0 || isInAttackDoorSequence) return;
 
         Transform target = patrolPoints[currentPatrolIndex];
         agent.SetDestination(target.position);
@@ -267,11 +294,11 @@ public class RoombAi : MonoBehaviour
     }
 
     // Called when door opens, roomba goes into other room - added 1/29/25 by Mark D.
-    public void SwitchPatrol()
-    {
-        patrolPoints = patrolPoints_Room2;
-        currentPatrolIndex = 0;
-    }
+    // public void SwitchPatrol()
+    // {
+    //     patrolPoints = patrolPoints_Room2;
+    //     currentPatrolIndex = 0;
+    // }
 
     // Activate method added by Mark D. 9/10/25
     public void Activate()
@@ -294,5 +321,58 @@ public class RoombAi : MonoBehaviour
         agent.isStopped = true;
         AudioManager.Instance?.PlayOneShot(roombaOff);
         roombaEmitter.Stop();
+    }
+
+    public void PlayRoombaDetectSFX()
+    {
+        if (isActivated == true)
+        {
+            AudioManager.Instance?.PlayOneShot(roombaDetect);
+        }
+    }
+
+    public void StartAttackDoorSequence()
+    {
+        UnityEngine.Debug.Log("StartAttackDoorSequence");
+        StartCoroutine(AttackDoorSequence());
+    }
+
+    private IEnumerator AttackDoorSequence()
+    {
+        UnityEngine.Debug.Log("AttackDoorSequence");
+        isInAttackDoorSequence = true;
+
+        // Generate circle waypoints around current position
+        Vector3 center = transform.position;
+        int pointCount = 8;
+        List<Vector3> circlePoints = new List<Vector3>();
+        for (int i = 0; i < pointCount; i++)
+        {
+            float angle = i * (360f / pointCount) * Mathf.Deg2Rad;
+            Vector3 point = center + new Vector3(Mathf.Cos(angle) * circleRadius, 0f, Mathf.Sin(angle) * circleRadius);
+            circlePoints.Add(point);
+        }
+
+        // Loop circle waypoints for spinDuration seconds
+        float elapsed = 0f;
+        int circleIndex = 0;
+        agent.isStopped = false;
+        agent.speed = 6f;
+
+        while (elapsed < spinDuration)
+        {
+            if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
+            {
+                circleIndex = (circleIndex + 1) % pointCount;
+                agent.SetDestination(circlePoints[circleIndex]);
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Charge the door
+        agent.speed = attackDoorSpeed;
+        breakDoor.SetAttacking();
+        agent.SetDestination(breakDoorTransform.transform.position);
     }
 }
