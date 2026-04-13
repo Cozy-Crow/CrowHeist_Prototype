@@ -631,12 +631,16 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        //tracks if left click button has be clicked and released (complete cycle, fixes throwing)
+        private bool pickupComplete = false;
+
         private void HandlePickUp()
         {
             // Notes: Zack H 1/25
             //E for left hand on keyboard
             //U for Right hand on keyboard
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
+            //Left click as another option
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -666,8 +670,8 @@ namespace KinematicCharacterController.Examples
                                 //check if both items are the same (item hit vs object we are trying to grab)
                                 if(hit.transform.gameObject != selected.realObject)
                                 {
-                                    Debug.Log("collider blocking " + hit.transform.name);
-                                    Debug.Log("collider on object " + selected.realObject);
+                                    // Debug.Log("collider blocking " + hit.transform.name);
+                                    // Debug.Log("collider on object " + selected.realObject);
                                     return;
                                 }
                             }
@@ -698,7 +702,7 @@ namespace KinematicCharacterController.Examples
             }
 
             // Charged Throwing
-            if (heldObject != null)
+            if (heldObject != null && pickupComplete == true)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
                 
@@ -723,8 +727,6 @@ namespace KinematicCharacterController.Examples
                     //mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
-
-
 
                     //Vector3 playerPosition = transform.position;
                     Vector3 playerPosition = handPoint.position;
@@ -786,11 +788,28 @@ namespace KinematicCharacterController.Examples
                     // targetAssetObject.SetActive(false);
                 }
 
+                //cancel throw on right click
                 if (Input.GetMouseButtonDown(1))
                 {
                     CancelThrow();
                 }
             }
+
+            if (heldObject != null)
+            {
+                if (pickupComplete == false)
+                {
+                    if (Input.GetMouseButtonUp(0))
+                    {
+                        pickupComplete = true;
+                    }
+                }
+            }
+            else
+            {
+                pickupComplete = false;
+            }
+
         }
 
         public void CancelThrow()
