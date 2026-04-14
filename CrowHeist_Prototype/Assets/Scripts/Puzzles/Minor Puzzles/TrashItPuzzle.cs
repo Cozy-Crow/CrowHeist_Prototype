@@ -53,7 +53,7 @@ public class TrashITPuzzle : MonoBehaviour
 
     private IEnumerator PushPlayerUp(Rigidbody playerRb)
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.2f);
         if (playerRb != null)
         {
             playerRb.AddForce(Vector3.up * 8f, ForceMode.Impulse);

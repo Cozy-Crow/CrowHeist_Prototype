@@ -25,7 +25,7 @@ Transform:
   m_GameObject: {fileID: 2882291010219929077}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.01}
+  m_LocalPosition: {x: 0, y: 0, z: -0.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 3702914015266819902}
   - component: {fileID: 6159845909325908050}
   - component: {fileID: 7320702474230775559}
+  - component: {fileID: 1362074354080623257}
   m_Layer: 3
   m_Name: WTFA Book
   m_TagString: Untagged
@@ -102,6 +103,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: fe53ebdb786e347e0a0053ea0cb191ba, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -176,7 +178,6 @@ MonoBehaviour:
       Data3: 2092986010
       Data4: 1256570047
     Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandBook
-  RoombaAiReference: {fileID: 0}
 --- !u!114 &1232487891856501545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,7 +192,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
+  outlineWidth: 5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -257,7 +258,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   brokenBookPrefab: {fileID: 7937272968394706950, guid: 99a7fff00630948a480dadf660d68fbb, type: 3}
   brokenBookSpawnPoint: {fileID: 760210543530881993}
-  spawnObject: {fileID: 0}
+  spawnObject: {fileID: 3091855981957459826, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
   spawnPoint: {fileID: 4335315193330402231}
   breakDropHeight: 5
   bookBreakSFX:
@@ -267,6 +268,20 @@ MonoBehaviour:
       Data3: -1515486841
       Data4: -1829890395
     Path: event:/SFX/Objects/BookSpecifics/BookBreak
+--- !u!114 &1362074354080623257
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4823957395364765781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52777ee9ff0b01e44b59dad69de6ec4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 4823957395364765781}
+  spawnLocation: {fileID: 0}
 --- !u!1 &5255101406810262143
 GameObject:
   m_ObjectHideFlags: 0
