@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class PlantPuzzle : MonoBehaviour
 {
     [SerializeField] private float timeToGrow = 5f;
@@ -11,8 +12,9 @@ public class PlantPuzzle : MonoBehaviour
     [SerializeField] private GameObject flowerCenter;
     [SerializeField] private float flowerGrowDuration = 1f;
 
-    private List<Transform> branches = new List<Transform>();
+    private readonly List<Transform> branches = new List<Transform>();
     private Vector3 originalPlantPos;
+    private float branchDuration;
 
     void Start()
     {
@@ -26,7 +28,10 @@ public class PlantPuzzle : MonoBehaviour
             }
         }
 
-        if (flowerCenter != null) flowerCenter.transform.localScale = new Vector3(0f, 0f, flowerCenter.transform.localScale.z);
+        branchDuration = timeToGrow / branches.Count;
+
+        if (flowerCenter != null)
+            flowerCenter.transform.localScale = new Vector3(0f, 0f, flowerCenter.transform.localScale.z);
     }
 
     void OnTriggerEnter(Collider other)
@@ -42,8 +47,6 @@ public class PlantPuzzle : MonoBehaviour
         Vector3 originalScale = plantPrefab.transform.localScale;
         Vector3 targetScale = Vector3.one * growthScale;
         Vector3 targetPos = originalPlantPos + new Vector3(0, 4f, 0);
-
-        float branchInterval = timeToGrow / branches.Count;
         int branchIndex = 0;
         float elapsedTime = 0f;
 
@@ -53,12 +56,9 @@ public class PlantPuzzle : MonoBehaviour
             plantPrefab.transform.localScale = Vector3.Lerp(originalScale, targetScale, t);
             plantPrefab.transform.localPosition = Vector3.Lerp(originalPlantPos, targetPos, t);
 
-            int targetBranchIndex = Mathf.FloorToInt(elapsedTime / branchInterval);
-            if (targetBranchIndex > branchIndex && branchIndex < branches.Count)
-            {
-                StartCoroutine(GrowBranch(branches[branchIndex]));
-                branchIndex++;
-            }
+            int targetBranchIndex = Mathf.FloorToInt(t * branches.Count);
+            while (branchIndex < targetBranchIndex && branchIndex < branches.Count)
+                StartCoroutine(GrowBranch(branches[branchIndex++]));
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -92,11 +92,10 @@ public class PlantPuzzle : MonoBehaviour
         Vector3 start = new Vector3(0f, 0.5f, 0f);
         Vector3 target = Vector3.one * branchTargetScale;
         float elapsed = 0f;
-        float duration = timeToGrow / branches.Count;
 
-        while (elapsed < duration)
+        while (elapsed < branchDuration)
         {
-            branch.localScale = Vector3.Lerp(start, target, elapsed / duration);
+            branch.localScale = Vector3.Lerp(start, target, elapsed / branchDuration);
             elapsed += Time.deltaTime;
             yield return null;
         }
