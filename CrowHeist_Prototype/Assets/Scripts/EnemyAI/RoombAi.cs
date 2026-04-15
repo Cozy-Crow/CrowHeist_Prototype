@@ -381,9 +381,12 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator HandleDoorImpact()
     {
-        // Wait until agent reaches door
-        while (agent.pathPending || agent.remainingDistance > bufferDistance)
+        while (agent.enabled && (agent.pathPending || agent.remainingDistance > bufferDistance))
+        {
             yield return null;
+        }
+
+        if (!agent.enabled) yield break;
 
         // Stop NavMesh cleanly BEFORE anything else
         agent.isStopped = true;
