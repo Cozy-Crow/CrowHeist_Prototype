@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class PuzzleVase : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class PuzzleVase : MonoBehaviour
     public Transform coinSpawnPoint;
 
     public float explodeForce = 2f;
+    [SerializeField] private EventReference breakSFX;
 
     private bool broken;
 
@@ -30,6 +32,7 @@ public class PuzzleVase : MonoBehaviour
     void Break()
     {
         broken = true;
+        AudioManager.Instance?.PlayOneShot3D(breakSFX, transform.position);
 
         GameObject brokenInstance = Instantiate(brokenVasePrefab, coinSpawnPoint.position, transform.rotation);
 
