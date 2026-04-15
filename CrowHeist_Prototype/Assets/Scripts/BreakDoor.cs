@@ -19,20 +19,26 @@ public class BreakDoor : MonoBehaviour
 
     private void Update()
     {
-        if (!isAttacking || roomba == null) return;
+        // if (!isAttacking || roomba == null) return;
 
-        float distance = Vector3.Distance(roomba.position, door.transform.position);
-        UnityEngine.Debug.Log("Roomba distance to door: " + distance);
+        // float distance = Vector3.Distance(roomba.position, door.transform.position);
+        // UnityEngine.Debug.Log("Roomba distance to door: " + distance);
 
-        if (distance <= breakDistance)
-        {
-            UnityEngine.Debug.Log("Roomba broke the door!");
-            brokenDoor.SetActive(true);
-            door.SetActive(false);
-            isAttacking = false;
+        // if (distance <= breakDistance)
+        // {
+        //     UnityEngine.Debug.Log("Roomba broke the door!");
+        //     brokenDoor.SetActive(true);
+        //     door.SetActive(false);
+        //     isAttacking = false;
 
-            Destroy(roomba.gameObject);
-        }
+        //     Destroy(roomba.gameObject);
+        // }
+    }
+
+    public void Break()
+    {
+        brokenDoor.SetActive(true);
+        door.SetActive(false);
     }
 
     // private void OnTriggerEnter(Collider other)
