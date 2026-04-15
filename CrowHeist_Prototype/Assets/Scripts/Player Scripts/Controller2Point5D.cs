@@ -192,6 +192,7 @@ namespace KinematicCharacterController.Examples
 
         public void Start()
         {
+            
             jumpPoof = GetComponent<VisualEffect>();
             AIEventManager aiEventManager = FindObjectOfType<AIEventManager>();
             lineRenderer = GetComponent<LineRenderer>();
@@ -203,6 +204,7 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+            Cursor.visible = false;
             jumpPoof.SetVector3("TargetPosition", this.transform.position);
             if (Input.GetKeyDown(KeyCode.M))
             {
