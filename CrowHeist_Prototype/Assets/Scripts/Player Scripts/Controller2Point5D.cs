@@ -975,18 +975,18 @@ namespace KinematicCharacterController.Examples
             }
             
             //camera following throw
-            // throwDirection = curvedDirection;
-            // throwCamTarget.transform.position = throwDirection;
+            throwDirection = curvedDirection;
+            throwCamTarget.transform.position = throwDirection;
 
-            // playerCam.Follow = throwCamTarget.transform;
-            // Debug.Log("camera pos " + playerCam.transform.position);   
+            playerCam.Follow = throwCamTarget.transform;
+            Debug.Log("camera pos " + playerCam.transform.position);   
 
-            // if (!targetAssetObject.activeSelf)
-            // {
-            //     targetAssetObject.SetActive(true);
-            // }
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
 
-            // targetAssetObject.transform.position = FindThrowCollisionPoint();
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
 
