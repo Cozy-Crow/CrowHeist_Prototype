@@ -180,7 +180,7 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator WaitAndCheckForMoreDirtyObjects()
     {
-        yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= bufferDistance);
+        yield return new WaitUntil(() => agent.enabled && !agent.pathPending && agent.remainingDistance <= bufferDistance);
 
         HandleDirtyItemCollection();
 
