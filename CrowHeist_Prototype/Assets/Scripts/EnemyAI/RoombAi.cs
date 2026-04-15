@@ -372,7 +372,39 @@ public class RoombAi : MonoBehaviour
 
         // Charge the door
         agent.speed = attackDoorSpeed;
-        breakDoor.SetAttacking();
+        // breakDoor.SetAttacking();
         agent.SetDestination(breakDoorTransform.transform.position);
+
+        // added apr 15, 2025 by Mark D.
+        StartCoroutine(HandleDoorImpact());
     }
+
+    private IEnumerator HandleDoorImpact()
+    {
+        // Wait until agent reaches door
+        while (agent.pathPending || agent.remainingDistance > bufferDistance)
+            yield return null;
+
+        // Stop NavMesh cleanly BEFORE anything else
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        // Break door EXACTLY here (no Update timing issues)
+        breakDoor.Break();
+
+        // Small delay to avoid 1-frame visual pop (important)
+        yield return null;
+
+        // Move right manually
+        float moveTime = 2f;
+        float elapsed = 0f;
+
+        while (elapsed < moveTime)
+        {
+            transform.position += Vector3.right * attackDoorSpeed * Time.deltaTime;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+    }
+
 }
