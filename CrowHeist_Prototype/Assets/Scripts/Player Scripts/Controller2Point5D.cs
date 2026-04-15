@@ -22,6 +22,8 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
         [SerializeField] private CinemachineVirtualCamera playerCam;
         [SerializeField] private GameObject throwCamTarget;
+        private Vector3 initalThrowCamTargetPos;
+        [SerializeField] float throwCamClampVal;
 
         #region Movement Variables
         [Header("Movement")]
@@ -194,6 +196,9 @@ namespace KinematicCharacterController.Examples
             } 
 
             crowleySFX = GetComponent<CrowleySFX>();
+
+            //get inital pos to reset later
+            initalThrowCamTargetPos = throwCamTarget.transform.position;
         }
 
         public void Start()
@@ -967,19 +972,43 @@ namespace KinematicCharacterController.Examples
 
             lineRenderer.positionCount = resolution;
 
+            Vector3 point =  new Vector3();
+
             for (int i = 0; i < resolution; i++)
             {
                 float time = i * timeStep;
-                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
+                point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
                 lineRenderer.SetPosition(i, point);
             }
             
-            //camera following throw
-            throwDirection = curvedDirection;
-            throwCamTarget.transform.position = throwDirection;
 
-            playerCam.Follow = throwCamTarget.transform;
-            Debug.Log("camera pos " + playerCam.transform.position);   
+            // if(throwCamTarget != null && playerCam != null)
+            // {
+            //     //camera following throw
+            //     //get direction of the curve
+            //     throwDirection = curvedDirection;
+            //     Debug.Log("curved Dir " + curvedDirection);
+            //     //get the intial pos +- value for bounds
+            //     Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
+            //     Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
+            //     Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
+
+            //     //clamp the values
+            //     float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMaxBounds.x, throwCamMinBounds.x);
+            //     float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMaxBounds.y, throwCamMinBounds.y);
+            //     float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMaxBounds.z, throwCamMinBounds.z);
+
+            //     //update the position
+            //     Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
+            //     throwCamTarget.transform.position = throwCamTargetNewPos;
+
+            //     //make the camera follow the target
+            //     playerCam.Follow = throwCamTarget.transform;
+            //     Debug.Log("camera pos " + playerCam.transform.position);                 
+            // }
+
+
+
 
             if (!targetAssetObject.activeSelf)
             {

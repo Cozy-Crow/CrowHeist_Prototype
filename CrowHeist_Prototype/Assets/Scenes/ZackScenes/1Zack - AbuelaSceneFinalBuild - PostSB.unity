@@ -5858,6 +5858,18 @@ PrefabInstance:
       value: Crowley
       objectReference: {fileID: 0}
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: playerCam
+      value: 
+      objectReference: {fileID: 1777854338}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: throwCamTarget
+      value: 
+      objectReference: {fileID: 1860671144}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: throwCamClampVal
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: throwPowerScaler
       value: 0.8
       objectReference: {fileID: 0}
@@ -5903,7 +5915,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1860671145}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
 --- !u!4 &473277727 stripped
@@ -6651,8 +6666,6 @@ MonoBehaviour:
   introCutscene: {fileID: 1600985121}
   roombaActivationCutscene: {fileID: 2040380283}
   roombaBreakCutscene: {fileID: 1230506359}
-  doorOpenCutscene: {fileID: 16836304}
-  doorOpen: {fileID: 612166667}
   coinThreshold: 10
 --- !u!1 &553774021
 GameObject:
@@ -24564,6 +24577,37 @@ Transform:
   m_Children:
   - {fileID: 8394744195725183533}
   m_Father: {fileID: 1782054529}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1860671144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1860671145}
+  m_Layer: 7
+  m_Name: ThrowCamTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1860671145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860671144}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 473277727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1878723487
 GameObject:
