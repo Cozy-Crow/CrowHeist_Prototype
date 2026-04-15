@@ -20,6 +20,7 @@ namespace KinematicCharacterController.Examples
         private float driftTimer;
         private float settleTimer;
         private int paperLayer;
+        private bool isColliding;
 
         private void Start()
         {
@@ -42,7 +43,7 @@ namespace KinematicCharacterController.Examples
             bool isFalling = rb.velocity.y < -0.1f;
             bool isGrounded = IsGrounded();
 
-            if (isHeld || isGrounded)
+            if (isHeld || isGrounded || isColliding)
             {
                 settleTimer = 0f;
                 driftTimer = 0f;
@@ -73,6 +74,9 @@ namespace KinematicCharacterController.Examples
             Quaternion targetRot = Quaternion.Euler(0f, rb.rotation.eulerAngles.y, tiltAngle);
             rb.MoveRotation(Quaternion.RotateTowards(rb.rotation, targetRot, settleRotationSpeed * Time.fixedDeltaTime * 60f));
         }
+
+        private void OnCollisionStay(Collision _) => isColliding = true;
+        private void OnCollisionExit(Collision _) => isColliding = false;
 
         public void HandleGliding()
         {

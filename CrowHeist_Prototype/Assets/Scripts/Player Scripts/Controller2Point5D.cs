@@ -721,6 +721,7 @@ namespace KinematicCharacterController.Examples
                     chargingThrow = true;
                     cancelThrow = false;
                     chargeStartTime = Time.time;
+                    AudioManager.Instance?.PlayInstance("CHARGE");
                 }
 
                 if (Input.GetMouseButton(0) && !cancelThrow)
@@ -825,6 +826,7 @@ namespace KinematicCharacterController.Examples
             lineRenderer.positionCount = 0;
             storedThrowDirection = Vector3.zero;
             // targetAssetObject.SetActive(false);
+            AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
 
         public List<IPickupable> GetHeldItems()
