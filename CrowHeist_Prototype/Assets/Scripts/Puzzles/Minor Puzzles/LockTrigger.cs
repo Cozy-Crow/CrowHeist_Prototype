@@ -77,7 +77,7 @@ public class LockTrigger : MonoBehaviour
         key.rotation = endRot;
 
         key.SetParent(transform);
-        if (keyRb) keyRb.isKinematic = true;
+        keyRb = key.GetComponent<Rigidbody>();
 
         Collider keyCollider = key.GetComponent<Collider>();
         Collider lockCollider = GetComponent<Collider>();
@@ -95,5 +95,7 @@ public class LockTrigger : MonoBehaviour
         lockRb.useGravity = true;
 
         checkpoint.MoveObjectsToEndPositions();
+
+        if (keyRb) Destroy(keyRb);
     }
 }
