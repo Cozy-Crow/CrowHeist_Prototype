@@ -198,7 +198,7 @@ namespace KinematicCharacterController.Examples
             crowleySFX = GetComponent<CrowleySFX>();
 
             //get inital pos to reset later
-            initalThrowCamTargetPos = throwCamTarget.transform.position;
+            // initalThrowCamTargetPos = throwCamTarget.transform.position;
         }
 
         public void Start()
@@ -972,12 +972,12 @@ namespace KinematicCharacterController.Examples
 
             lineRenderer.positionCount = resolution;
 
-            Vector3 point =  new Vector3();
+            // Vector3 point =  new Vector3();
 
             for (int i = 0; i < resolution; i++)
             {
                 float time = i * timeStep;
-                point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
+                Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
                 lineRenderer.SetPosition(i, point);
             }
             
