@@ -22,8 +22,9 @@ namespace KinematicCharacterController.Examples
         [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
         [SerializeField] private CinemachineVirtualCamera playerCam;
         [SerializeField] private GameObject throwCamTarget;
-        private Vector3 initalThrowCamTargetPos;
         [SerializeField] float throwCamClampVal;
+        private Vector3 initalThrowCamTargetPos;
+        private string lastThrowInput;
 
         #region Movement Variables
         [Header("Movement")]
@@ -645,7 +646,14 @@ namespace KinematicCharacterController.Examples
             //E for left hand on keyboard
             //U for Right hand on keyboard
             //Left click as another option
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
+
+            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U))
+                lastThrowInput = "E";
+            if(Input.GetMouseButtonDown(0))
+                lastThrowInput = "0";
+
+            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
+            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -707,7 +715,8 @@ namespace KinematicCharacterController.Examples
             }
 
             // Charged Throwing
-            if (heldObject != null && pickupComplete == true)
+            // if (heldObject != null && pickupComplete == true )
+            if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
                 
@@ -801,20 +810,15 @@ namespace KinematicCharacterController.Examples
                 }
             }
 
-            if (heldObject != null)
-            {
-                if (pickupComplete == false)
-                {
-                    if (Input.GetMouseButtonUp(0))
-                    {
-                        pickupComplete = true;
-                    }
-                }
-            }
-            else
-            {
-                pickupComplete = false;
-            }
+            //used for left click pickup 
+            // - allows charge throwing to work correctly if enabled
+            // ---currently disabled since it breaks normal throwing logic---
+            // if (heldObject != null)
+            //     if (pickupComplete == false)
+            //         if (Input.GetMouseButtonUp(0))
+            //             pickupComplete = true;
+            // else
+            //     pickupComplete = false;
 
         }
 
@@ -865,7 +869,7 @@ namespace KinematicCharacterController.Examples
             {
               AudioManager.Instance?.PlayOneShot(dashActivate);
             }
-            
+
         }
         
 
@@ -984,33 +988,30 @@ namespace KinematicCharacterController.Examples
             }
             
 
-            // if(throwCamTarget != null && playerCam != null)
-            // {
-            //     //camera following throw
-            //     //get direction of the curve
-            //     throwDirection = curvedDirection;
-            //     Debug.Log("curved Dir " + curvedDirection);
-            //     //get the intial pos +- value for bounds
-            //     Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
-            //     Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
-            //     Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
+            if(throwCamTarget != null && playerCam != null)
+            {
+                //camera following throw
+                //get direction of the curve
+                throwDirection = curvedDirection;
+                Debug.Log("curved Dir " + curvedDirection);
+                //get the intial pos +- value for bounds
+                Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
+                Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
+                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
 
-            //     //clamp the values
-            //     float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMaxBounds.x, throwCamMinBounds.x);
-            //     float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMaxBounds.y, throwCamMinBounds.y);
-            //     float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMaxBounds.z, throwCamMinBounds.z);
+                //clamp the values
+                float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMaxBounds.x, throwCamMinBounds.x);
+                float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMaxBounds.y, throwCamMinBounds.y);
+                float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMaxBounds.z, throwCamMinBounds.z);
 
-            //     //update the position
-            //     Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
-            //     throwCamTarget.transform.position = throwCamTargetNewPos;
+                //update the position
+                Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
+                throwCamTarget.transform.position = throwCamTargetNewPos;
 
-            //     //make the camera follow the target
-            //     playerCam.Follow = throwCamTarget.transform;
-            //     Debug.Log("camera pos " + playerCam.transform.position);                 
-            // }
-
-
-
+                //make the camera follow the target
+                playerCam.Follow = throwCamTarget.transform;
+                Debug.Log("camera pos " + playerCam.transform.position);                 
+            }
 
             if (!targetAssetObject.activeSelf)
             {
