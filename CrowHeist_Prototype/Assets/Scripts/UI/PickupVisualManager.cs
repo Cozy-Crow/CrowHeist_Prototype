@@ -27,6 +27,7 @@ public class PickupVisualManager : MonoBehaviour
     private GameObject currentModel;
     private ItemDataSO currentItemData;
     private HashSet<string> shownItems = new HashSet<string>();
+    private Vector3 originalPanelScale;
 
 
     private void Awake()
@@ -39,6 +40,7 @@ public class PickupVisualManager : MonoBehaviour
             return;
         }
 
+        originalPanelScale = panel.localScale;
         panel.gameObject.SetActive(false);
     }
 
@@ -71,6 +73,7 @@ public class PickupVisualManager : MonoBehaviour
     {
         panel.gameObject.SetActive(true);
         panel.anchoredPosition = offscreenRightPos;
+        panel.localScale = originalPanelScale;
 
         float holdTime = centerHoldTime;
         currentItemData = GetItemDataSO(item);
@@ -98,34 +101,72 @@ public class PickupVisualManager : MonoBehaviour
             else
             {
                 itemName.text = CleanItemName(item.name);
-                itemDescription.text = "";
+                itemDescription.text = item.CompareTag("Glider")
+                    ? "Paper can be used to glide!"
+                    : "I think I can use this to solve a puzzle...";
             }
         }
 
-        yield return MovePanel(offscreenRightPos, centerPos);
+        yield return AnimatePanelIn(offscreenRightPos, centerPos);
 
         SpawnModelFromSource(previewSource);
 
         yield return new WaitForSeconds(holdTime);
 
-        yield return MovePanel(centerPos, offscreenRightPos);
+        yield return AnimatePanelOut();
 
         ClearModel();
         currentItemData = null;
         panel.gameObject.SetActive(false);
     }
 
+    private IEnumerator AnimatePanelIn(Vector2 from, Vector2 to)
+    {
+        float t = 0f;
+        while (t < slideDuration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / slideDuration;
+            panel.anchoredPosition = Vector2.Lerp(from, to, normalized);
+            panel.localScale = originalPanelScale * RubberBandScale(normalized);
+            yield return null;
+        }
+        panel.anchoredPosition = to;
+        panel.localScale = originalPanelScale;
+    }
+
+    private IEnumerator AnimatePanelOut()
+    {
+        float t = 0f;
+        while (t < slideDuration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / slideDuration;
+            panel.localScale = originalPanelScale * Mathf.Lerp(1f, 0f, normalized);
+            yield return null;
+        }
+        panel.localScale = originalPanelScale;
+    }
+
+    private float RubberBandScale(float t)
+    {
+        if (t < 0.6f)
+            return Mathf.Lerp(1f, 1.2f, t / 0.6f);
+        else if (t < 0.8f)
+            return Mathf.Lerp(1.2f, 0.9f, (t - 0.6f) / 0.2f);
+        else
+            return Mathf.Lerp(0.9f, 1.0f, (t - 0.8f) / 0.2f);
+    }
+
     private IEnumerator MovePanel(Vector2 from, Vector2 to)
     {
         float t = 0f;
-
         while (t < slideDuration)
         {
             t += Time.deltaTime;
             panel.anchoredPosition = Vector2.Lerp(from, to, t / slideDuration);
             yield return null;
         }
-
         panel.anchoredPosition = to;
     }
 
@@ -180,7 +221,6 @@ public class PickupVisualManager : MonoBehaviour
             if (item.CompareTag(data.tag))
                 return data;
         }
-
         return null;
     }
 
@@ -188,9 +228,7 @@ public class PickupVisualManager : MonoBehaviour
     {
         UniqueID uniqueID = item.GetComponent<UniqueID>();
         if (uniqueID != null && uniqueID.ItemData != null)
-        {
             return uniqueID.ItemData;
-        }
         return null;
     }
 
