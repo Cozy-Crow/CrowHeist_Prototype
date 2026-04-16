@@ -205,6 +205,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &14576798
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -255,6 +256,7 @@ GameObject:
   - component: {fileID: 104297680}
   - component: {fileID: 104297679}
   - component: {fileID: 104297678}
+  - component: {fileID: 104297681}
   m_Layer: 5
   m_Name: PlayButton
   m_TagString: Untagged
@@ -326,6 +328,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &104297679
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -364,6 +367,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 104297676}
   m_CullTransparentMesh: 1
+--- !u!114 &104297681
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 104297676}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f2d68594d11399448ca88e86cba52ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonClick:
+    Guid:
+      Data1: -1748791972
+      Data2: 1283417866
+      Data3: 1989337276
+      Data4: -1068350695
+    Path: event:/SFX/TempUI/Select
 --- !u!1 &235679426
 GameObject:
   m_ObjectHideFlags: 0
@@ -624,11 +646,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Ambience:
     Guid:
-      Data1: -2108607817
-      Data2: 1280256464
-      Data3: -779780991
-      Data4: -1785143012
-    Path: event:/Empty
+      Data1: -1583348303
+      Data2: 1094804858
+      Data3: -588377188
+      Data4: -1810660037
+    Path: event:/SFX/Empty
 --- !u!1 &310883821
 GameObject:
   m_ObjectHideFlags: 0
@@ -1282,6 +1304,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &845431428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,6 +1426,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &967626914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1803,6 +1827,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &1331701427
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2846,6 +2871,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+  buttonSFXClick: 0
 --- !u!114 &1872824946
 MonoBehaviour:
   m_ObjectHideFlags: 0
