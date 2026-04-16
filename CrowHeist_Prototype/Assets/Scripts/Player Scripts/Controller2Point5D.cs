@@ -836,6 +836,11 @@ namespace KinematicCharacterController.Examples
             storedThrowDirection = Vector3.zero;
             // targetAssetObject.SetActive(false);
             AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            //on completed throw reset the camera
+            // and charge follow position
+            //get inital pos to reset later
+            initalThrowCamTargetPos = transform.position;
+            playerCam.Follow = transform;
         }
 
         public List<IPickupable> GetHeldItems()
