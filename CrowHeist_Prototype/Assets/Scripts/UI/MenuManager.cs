@@ -108,7 +108,6 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // If a sub-panel is open, close it first instead of toggling the whole menu
             if (saveSlotPanel != null && saveSlotPanel.IsOpen)
             {
                 saveSlotPanel.Close();
@@ -131,17 +130,13 @@ public class PauseManager : MonoBehaviour
             }
             else
             {
-                // Ensure trinket/narrative menus are closed before opening pause menu
                 if (TrinketMenu.instance != null)
                     TrinketMenu.instance.ForceClose();
                 if (NarrativeMenu.Instance != null)
                     NarrativeMenu.Instance.ForceClose();
                 PauseGame();
+                PlayButtonSFX(close);  // ← moved inside else, only plays when pausing
             }
-                PauseGame();
-                PlayButtonSFX(close);   
-            }   
-               
         }
     }
 
