@@ -7,12 +7,12 @@ public class PlantPuzzle : MonoBehaviour
 {
     [SerializeField] private float timeToGrow = 5f;
     [SerializeField] private float growthScale = 2f;
-    [SerializeField] private float branchTargetScale = 0.5f;
     [SerializeField] private GameObject plantPrefab;
     [SerializeField] private GameObject flowerCenter;
     [SerializeField] private float flowerGrowDuration = 1f;
 
     private readonly List<Transform> branches = new List<Transform>();
+    private readonly List<Vector3> branchInitialScales = new List<Vector3>();
     private Vector3 originalPlantPos;
     private float branchDuration;
 
@@ -20,9 +20,10 @@ public class PlantPuzzle : MonoBehaviour
     {
         originalPlantPos = plantPrefab.transform.localPosition;
         foreach (Transform child in plantPrefab.GetComponentsInChildren<Transform>(true))
-        {
+        { 
             if (child.CompareTag("Branch"))
             {
+                branchInitialScales.Add(child.localScale);
                 child.localScale = new Vector3(0f, 0.5f, 0f);
                 branches.Add(child);
             }
@@ -37,9 +38,7 @@ public class PlantPuzzle : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Fertilizer"))
-        {
             StartCoroutine(GrowPlant());
-        }
     }
 
     private IEnumerator GrowPlant()
@@ -58,7 +57,10 @@ public class PlantPuzzle : MonoBehaviour
 
             int targetBranchIndex = Mathf.FloorToInt(t * branches.Count);
             while (branchIndex < targetBranchIndex && branchIndex < branches.Count)
-                StartCoroutine(GrowBranch(branches[branchIndex++]));
+            {
+                StartCoroutine(GrowBranch(branches[branchIndex], branchInitialScales[branchIndex]));
+                branchIndex++;
+            }
 
             elapsedTime += Time.deltaTime;
             yield return null;
@@ -87,10 +89,9 @@ public class PlantPuzzle : MonoBehaviour
         flowerCenter.transform.localScale = target;
     }
 
-    private IEnumerator GrowBranch(Transform branch)
+    private IEnumerator GrowBranch(Transform branch, Vector3 target)
     {
         Vector3 start = new Vector3(0f, 0.5f, 0f);
-        Vector3 target = Vector3.one * branchTargetScale;
         float elapsed = 0f;
 
         while (elapsed < branchDuration)
