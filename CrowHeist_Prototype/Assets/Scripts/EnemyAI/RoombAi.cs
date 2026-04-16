@@ -18,7 +18,7 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
     [SerializeField] private RoombaPathing pathing;
-    [SerializeField] private float bufferDistance = 0.5f;
+    [SerializeField] private float bufferDistance = 0.1f;
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
@@ -180,7 +180,7 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator WaitAndCheckForMoreDirtyObjects()
     {
-        yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= bufferDistance);
+        yield return new WaitUntil(() => agent.enabled && !agent.pathPending && agent.remainingDistance <= bufferDistance);
 
         HandleDirtyItemCollection();
 
@@ -381,22 +381,26 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator HandleDoorImpact()
     {
-        // Wait until agent reaches door
-        while (agent.pathPending || agent.remainingDistance > bufferDistance)
+        while (agent.enabled && (agent.pathPending || agent.remainingDistance > bufferDistance))
+        {
             yield return null;
+        }
+
+        if (!agent.enabled) yield break;
 
         // Stop NavMesh cleanly BEFORE anything else
         agent.isStopped = true;
         agent.enabled = false;
 
         // Break door EXACTLY here (no Update timing issues)
-        breakDoor.Break();
+        // breakDoor.Break();
+        breakDoor.SetAttacking();
 
         // Small delay to avoid 1-frame visual pop (important)
         yield return null;
 
         // Move right manually
-        float moveTime = 2f;
+        float moveTime = .7f;
         float elapsed = 0f;
 
         while (elapsed < moveTime)
@@ -405,6 +409,8 @@ public class RoombAi : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
+        breakDoor.Break();
+        Destroy(gameObject);
     }
 
 }
