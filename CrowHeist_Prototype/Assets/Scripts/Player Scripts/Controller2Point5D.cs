@@ -997,20 +997,21 @@ namespace KinematicCharacterController.Examples
                 //get the intial pos +- value for bounds
                 Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
                 Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
-                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
+                Vector3 updateThrowCamTarget = throwCamTarget.transform.localPosition + throwDirection;
 
                 //clamp the values
-                float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMaxBounds.x, throwCamMinBounds.x);
-                float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMaxBounds.y, throwCamMinBounds.y);
-                float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMaxBounds.z, throwCamMinBounds.z);
+                float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMinBounds.x, throwCamMaxBounds.x);
+                float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMinBounds.y, throwCamMaxBounds.y);
+                float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMinBounds.z, throwCamMaxBounds.z);
 
                 //update the position
                 Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
                 throwCamTarget.transform.position = throwCamTargetNewPos;
 
+                Debug.Log("camera pos1 " + playerCam.transform.position);                 
                 //make the camera follow the target
                 playerCam.Follow = throwCamTarget.transform;
-                Debug.Log("camera pos " + playerCam.transform.position);                 
+                Debug.Log("camera pos2 " + playerCam.transform.position);                 
             }
 
             if (!targetAssetObject.activeSelf)
