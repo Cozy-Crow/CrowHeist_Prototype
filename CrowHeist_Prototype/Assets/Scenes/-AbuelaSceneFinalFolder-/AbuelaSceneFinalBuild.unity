@@ -172,6 +172,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 612166668}
     activeTime: 4
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &19398574
 GameObject:
   m_ObjectHideFlags: 0
@@ -12399,6 +12404,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1429792361552853640, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2815556463359762643, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -12422,6 +12431,10 @@ PrefabInstance:
     - target: {fileID: 2815556463359762643, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3046275925461900364, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_Interactable
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3888263807488108608, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_Name
@@ -12536,6 +12549,10 @@ PrefabInstance:
       value: '0/10
 
 '
+      objectReference: {fileID: 0}
+    - target: {fileID: 6036827509908317104, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6571930548810818195, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_AnchorMax.y
@@ -18137,6 +18154,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 1298135485}
     activeTime: 5
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1235131440
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23544,7 +23566,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1600985120
 Transform:
   m_ObjectHideFlags: 0
@@ -23592,6 +23614,23 @@ MonoBehaviour:
   - virtualCamera: {fileID: 553774023}
     activeTime: 3
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 1
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 892601135252806791, guid: 306be67fb20652144bdf35b478305e4b, type: 3}
+        m_TargetAssemblyTypeName: TutorialPopup, Assembly-CSharp
+        m_MethodName: Show
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!1 &1611945334
 GameObject:
   m_ObjectHideFlags: 0
@@ -24278,7 +24317,7 @@ Transform:
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: 41.531303, y: -15.842584, z: -52.13729}
+  m_LocalPosition: {x: -10.119524, y: -4.0114613, z: -25.844975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -28911,6 +28950,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 1386956809}
     activeTime: 3
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2044789680
 GameObject:
   m_ObjectHideFlags: 0

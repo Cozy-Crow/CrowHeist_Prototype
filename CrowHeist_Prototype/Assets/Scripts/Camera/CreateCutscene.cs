@@ -1,15 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using Cinemachine;
 using KinematicCharacterController.Examples;
-
-// Script by Mark D. - created 1/25/2026
-// This script allows for easy creation of cutscenes
-// Create and empty game object called "Blank Cutscene" and add this script to it
-// Create Cinemachine virtual cameras for the cutscene and place them where you want in the scene
-// Drag the virtual cameras into the inspector for the cutscene object and enter activation times
-// Call the PlayCutscene method using the CutsceneManager script
 
 [System.Serializable]
 public class CutsceneCameraSwitch
@@ -29,16 +23,20 @@ public class CreateCutscene : MonoBehaviour
 
     [Header("Optional")]
     public Rigidbody playerRb;
-    Controller2Point5D playerObject; 
+    Controller2Point5D playerObject;
+
+    [Header("Intro Cutscene")]
+    public bool isIntroCutscene = false;
+    public float tutorialDelay = 0.2f;
+    public UnityEvent onCutsceneComplete;
 
     private CinemachineVirtualCamera[] allCams;
 
     private void Awake()
     {
-        // Collect all vcams in scene (including children)
         allCams = FindObjectsOfType<CinemachineVirtualCamera>();
         ActivateVcam(playerCam);
-        if(playerCam != null)
+        if (playerCam != null)
             playerObject = playerRb.GetComponent<Controller2Point5D>();
     }
 
@@ -51,14 +49,12 @@ public class CreateCutscene : MonoBehaviour
 
     private IEnumerator CutsceneSequence()
     {
-        Debug.Log("Cutscene Coroutine");
-
 
         if (playerRb != null)
             FreezePlayer();
 
         yield return new WaitForSeconds(startDelay);
-        
+
         foreach (var camSwitch in cameraSwitches)
         {
             if (camSwitch.virtualCamera == null)
@@ -72,6 +68,18 @@ public class CreateCutscene : MonoBehaviour
 
         if (playerRb != null)
             UnfreezePlayer();
+
+
+        if (isIntroCutscene)
+        {
+            StartCoroutine(DelayedTutorial());
+        }
+    }
+
+    private IEnumerator DelayedTutorial()
+    {
+        yield return new WaitForSeconds(tutorialDelay);
+        onCutsceneComplete?.Invoke();
     }
 
     private void ActivateVcam(CinemachineVirtualCamera vcam)
@@ -88,15 +96,13 @@ public class CreateCutscene : MonoBehaviour
             RigidbodyConstraints.FreezePosition |
             RigidbodyConstraints.FreezeRotation;
 
-        playerObject.SetCanInput(false);        
+        playerObject.SetCanInput(false);
     }
 
     private void UnfreezePlayer()
     {
         playerRb.constraints = RigidbodyConstraints.FreezeRotation;
 
-        playerObject.SetCanInput(true);        
-
+        playerObject.SetCanInput(true);
     }
 }
-
