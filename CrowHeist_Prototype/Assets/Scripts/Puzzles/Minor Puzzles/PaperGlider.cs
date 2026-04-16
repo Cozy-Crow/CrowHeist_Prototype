@@ -10,12 +10,12 @@ namespace KinematicCharacterController.Examples
         private Collider col;
 
         [Header("Paper Fall Settings")]
-        [SerializeField] private float driftForce = 0.4f;
-        [SerializeField] private float driftFrequency = 0.65f;
-        [SerializeField] private float maxFallSpeed = 2f;
-        [SerializeField] private float tiltAmount = 25f;
-        [SerializeField] private float settleTime = 3f;
-        [SerializeField] private float settleRotationSpeed = 2f;
+        [SerializeField] private float driftForce = 0.8f;
+        [SerializeField] private float driftFrequency = 3f;
+        [SerializeField] private float maxFallSpeed = 4f;
+        [SerializeField] private float tiltAmount = 20f;
+        [SerializeField] private float settleTime = 2f;
+        [SerializeField] private float settleRotationSpeed = 1.5f;
 
         private float driftTimer;
         private float settleTimer;
