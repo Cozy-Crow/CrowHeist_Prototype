@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class Cascaron : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class Cascaron : MonoBehaviour
     public GameObject smokeEffect;
     public Color baseColor;
     public GameObject coinPrefab;
+
+    [SerializeField] private EventReference breakSFX;
 
     private Vector3 zero = new Vector3(0, 0, 0);
 
@@ -46,9 +49,7 @@ public class Cascaron : MonoBehaviour
             confettiEffect.GetComponent<ParticleSystem>().time = 0f;
             Instantiate(confettiEffect, transform.position, Quaternion.identity);
             confettiEffect.GetComponent<ParticleSystem>().Play();
-            
-           
-            
+            AudioManager.Instance?.PlayOneShot3D(breakSFX, transform.position);
         }
 
         if (FindObjectsOfType<Cascaron>().Length == 1 && coinPrefab)
