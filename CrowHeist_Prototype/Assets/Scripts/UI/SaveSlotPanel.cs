@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using FMODUnity;
 
 /// <summary>
 /// Manages the slot-selection panel used for both saving and loading.
@@ -28,6 +29,8 @@ public class SaveSlotPanel : MonoBehaviour
 
     [Header("Back Button")]
     [SerializeField] private Button backButton;
+
+    [SerializeField] private EventReference select;
 
     private Mode currentMode;
 
@@ -115,6 +118,8 @@ public class SaveSlotPanel : MonoBehaviour
     private void OnSlotClicked(int slot)
     {
         if (SaveLoadSystem.Instance == null) return;
+
+        AudioManager.Instance?.PlayOneShot(select);
 
         if (currentMode == Mode.Save)
         {

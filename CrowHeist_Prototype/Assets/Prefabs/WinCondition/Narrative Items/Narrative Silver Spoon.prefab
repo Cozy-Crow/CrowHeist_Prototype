@@ -34,14 +34,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5650296525337355330}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 19.622473, y: 19.96783, z: 19.622473}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5944451618690910115}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!33 &2546271241914819944
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -283,6 +283,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.052106015, y: 0.16057698, z: 0.0147299}
   m_Center: {x: 0, y: 0.080082096, z: 0.00016404386}
+--- !u!114 &6857497601896726358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5650296525337355330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -931559241
+      Data2: 1176371072
+      Data3: -479455084
+      Data4: 700806336
+    Path: event:/SFX/Objects/Coin/CoinEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &6968596424661707873
 GameObject:
   m_ObjectHideFlags: 0
