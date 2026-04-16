@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -25,6 +26,7 @@ public class PickupVisualManager : MonoBehaviour
 
     private GameObject currentModel;
     private ItemDataSO currentItemData;
+    private HashSet<string> shownItems = new HashSet<string>();
 
 
     private void Awake()
@@ -48,34 +50,45 @@ public class PickupVisualManager : MonoBehaviour
         }
     }
 
-
     public void PlayFirstPickupAnim(GameObject item)
     {
+        if (item.GetComponent<Trinket>() != null) return;
+
+        string key = CleanItemName(item.name);
+        if (shownItems.Contains(key)) return;
+        shownItems.Add(key);
+
         StopAllCoroutines();
         StartCoroutine(PickupRoutine(item));
     }
 
+    public void ResetShownItems()
+    {
+        shownItems.Clear();
+    }
 
     private IEnumerator PickupRoutine(GameObject item)
     {
-        // 1. Unhide but offscreen
         panel.gameObject.SetActive(true);
         panel.anchoredPosition = offscreenRightPos;
 
-        // 2. Set name & description - try ItemDataSO first, then fall back to tag-based
         float holdTime = centerHoldTime;
         currentItemData = GetItemDataSO(item);
 
+        GameObject previewSource = null;
+        if (currentItemData != null && currentItemData.PreviewModelPrefab != null)
+            previewSource = currentItemData.PreviewModelPrefab;
+        else
+            previewSource = item;
+
         if (currentItemData != null)
         {
-            // Use new ItemDataSO system
             itemName.text = currentItemData.ItemName;
             itemDescription.text = currentItemData.Description;
             holdTime = currentItemData.DisplayDuration;
         }
         else
         {
-            // Fall back to legacy tag-based system
             PickupVisualData data = GetDataForItem(item);
             if (data != null)
             {
@@ -84,29 +97,23 @@ public class PickupVisualManager : MonoBehaviour
             }
             else
             {
-                itemName.text = item.name;
+                itemName.text = CleanItemName(item.name);
                 itemDescription.text = "";
             }
         }
 
-        // 3. Animate to center
         yield return MovePanel(offscreenRightPos, centerPos);
 
-        // 4. Spawn model
-        SpawnModel(item);
+        SpawnModelFromSource(previewSource);
 
-        // 5. Hold at center
         yield return new WaitForSeconds(holdTime);
 
-        // 6. Animate off screen
         yield return MovePanel(centerPos, offscreenRightPos);
 
-        // 7. Cleanup & hide
         ClearModel();
         currentItemData = null;
         panel.gameObject.SetActive(false);
     }
-
 
     private IEnumerator MovePanel(Vector2 from, Vector2 to)
     {
@@ -121,22 +128,18 @@ public class PickupVisualManager : MonoBehaviour
 
         panel.anchoredPosition = to;
     }
-    private void SpawnModel(GameObject item)
+
+    private void SpawnModelFromSource(GameObject modelSource)
     {
         ClearModel();
+
+        if (modelSource == null) return;
 
         GameObject container = new GameObject("PreviewContainer");
         container.transform.SetParent(modelAnchor, false);
         container.transform.localPosition = Vector3.zero;
         container.transform.localRotation = Quaternion.identity;
         container.transform.localScale = Vector3.one;
-
-        // Use preview model from ItemDataSO if available, otherwise clone the item
-        GameObject modelSource = item;
-        if (currentItemData != null && currentItemData.PreviewModelPrefab != null)
-        {
-            modelSource = currentItemData.PreviewModelPrefab;
-        }
 
         GameObject model = Instantiate(modelSource);
         model.transform.SetParent(container.transform, false);
@@ -150,7 +153,6 @@ public class PickupVisualManager : MonoBehaviour
         foreach (Rigidbody rb in model.GetComponentsInChildren<Rigidbody>())
             Destroy(rb);
 
-        // Disable any scripts that could interfere with preview
         foreach (MonoBehaviour script in model.GetComponentsInChildren<MonoBehaviour>())
         {
             if (!(script is Transform))
@@ -182,7 +184,6 @@ public class PickupVisualManager : MonoBehaviour
         return null;
     }
 
-    
     private ItemDataSO GetItemDataSO(GameObject item)
     {
         UniqueID uniqueID = item.GetComponent<UniqueID>();
@@ -193,17 +194,12 @@ public class PickupVisualManager : MonoBehaviour
         return null;
     }
 
-    /// <summary>
-    /// Returns the current item data if available.
-    /// Useful for other systems that need to know what item is being displayed.
-    /// </summary>
-    public ItemDataSO GetCurrentItemData()
+    private string CleanItemName(string rawName)
     {
-        return currentItemData;
+        string name = rawName.Replace("(Clone)", "");
+        return System.Text.RegularExpressions.Regex.Replace(name, @"\s*\d+$", "").Trim();
     }
 }
-
-// Data Class
 
 [System.Serializable]
 public class PickupVisualData
