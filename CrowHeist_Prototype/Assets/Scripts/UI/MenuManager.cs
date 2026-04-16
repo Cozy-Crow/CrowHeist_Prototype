@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using KinematicCharacterController.Examples;
+using FMODUnity;
 
 public class PauseManager : MonoBehaviour
 {
@@ -32,6 +33,12 @@ public class PauseManager : MonoBehaviour
     public Button ConfirmRestartNoButton;
 
     private Controller2Point5D player;
+
+    [Header("Audio")]
+
+    [SerializeField] private EventReference select;
+    [SerializeField] private EventReference open;
+    [SerializeField] public EventReference close;
 
     void Start()
     {
@@ -119,9 +126,16 @@ public class PauseManager : MonoBehaviour
             }
 
             if (isGamePaused)
+            {
                 ResumeGame();
+                PlayButtonSFX(open);
+            }   
             else
+            {
                 PauseGame();
+                PlayButtonSFX(close);   
+            }
+            
         }
     }
 
@@ -156,6 +170,7 @@ public class PauseManager : MonoBehaviour
         if (saveSlotPanel != null) saveSlotPanel.Close();
         if (settingsMenu  != null) settingsMenu.CloseSettings();
         if (RestartConfirmPanel != null) RestartConfirmPanel.SetActive(false);
+        PlayButtonSFX(open);
     }
 
     // ──────────────────────────────────────────────
@@ -165,11 +180,13 @@ public class PauseManager : MonoBehaviour
     public void PlayGame()
     {
         MusicManager.Instance.StopMusic();
+        PlayButtonSFX(open);
         SceneManager.LoadSceneAsync(1);
     }
 
     public void QuitGame()
     {
+        PlayButtonSFX(close);
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else
@@ -192,6 +209,7 @@ public class PauseManager : MonoBehaviour
             PickupRegistry.Instance.ResetAllStates();
 
         isGamePaused = false;
+        PlayButtonSFX(open);
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Debug.Log("Game is restarting...");
@@ -201,12 +219,16 @@ public class PauseManager : MonoBehaviour
     {
         if (RestartConfirmPanel != null)
             RestartConfirmPanel.SetActive(true);
+
+        PlayButtonSFX(select);    
     }
 
     public void CancelRestart()
     {
         if (RestartConfirmPanel != null)
             RestartConfirmPanel.SetActive(false);
+
+        PlayButtonSFX(close);    
     }
 
     // ──────────────────────────────────────────────
@@ -222,11 +244,13 @@ public class PauseManager : MonoBehaviour
             return;
         }
         OpenSaveSlotPanel(SaveSlotPanel.Mode.Save);
+        PlayButtonSFX(select);
     }
 
     private void OnLoadButtonClicked()
     {
         Debug.Log("Load button pressed");
+        PlayButtonSFX(select);
         OpenSaveSlotPanel(SaveSlotPanel.Mode.Load);
     }
 
@@ -291,6 +315,7 @@ public class PauseManager : MonoBehaviour
     {
         if (settingsMenu != null)
             settingsMenu.OpenSettings();
+            PlayButtonSFX(open);
     }
 
     // ──────────────────────────────────────────────
@@ -334,5 +359,10 @@ public class PauseManager : MonoBehaviour
                 return btn;
         }
         return null;
+    }
+
+    private void PlayButtonSFX(EventReference sound)
+    {
+        AudioManager.Instance?.PlayOneShot(sound);
     }
 }

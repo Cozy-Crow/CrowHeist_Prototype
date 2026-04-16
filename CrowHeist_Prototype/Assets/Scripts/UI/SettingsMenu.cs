@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,9 @@ public class SettingsMenu : MonoBehaviour
 
     [Header("Back Button")]
     [SerializeField] private Button backButton;
+
+    [SerializeField] private EventReference close;
+
 
     private void Start()
     {
@@ -52,6 +56,7 @@ public class SettingsMenu : MonoBehaviour
     {
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+            AudioManager.Instance?.PlayOneShot(close);
     }
 
     public bool IsOpen => settingsPanel != null && settingsPanel.activeSelf;
