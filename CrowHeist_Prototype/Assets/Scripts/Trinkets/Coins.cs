@@ -116,9 +116,6 @@ public class Coins : MonoBehaviour
             {
                 PickupRegistry.Instance.MarkNarrativeAsCollected(uniqueID);
             }
-            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-             // float newValue = currentValue + 1;
-             // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
             // Drop item if picked up
             if (pickableUpScript.pickedUp)
@@ -207,12 +204,11 @@ public class Coins : MonoBehaviour
         //GameManager.Score += _coinValue;
         UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
 
-        // MusicManager code (if you want to re-enable it)
-       // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-        //float newValue = currentValue + 1;
-        //MusicManager.SetParameterByName("TrinketsCollected", newValue);
+       //Vertical Adaptive Music, 4 trinkets trigger the parameter
+       MusicManager.Instance?.CurrentMusicInstance.setParameterByName("trinketsCollected", Mathf.Clamp(Mathf.Floor(GameManager.Score / 4),0,7)); 
+    
+        //MusicManager.Instance?.triggerMusicSolo();       
         // Destroy or hide the item
-        MusicManager.Instance?.triggerMusicSolo();
         KillObject();
     }
 

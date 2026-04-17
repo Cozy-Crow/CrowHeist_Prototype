@@ -842,6 +842,7 @@ namespace KinematicCharacterController.Examples
             // and charge follow position
             //get inital pos to reset later
             initalThrowCamTargetPos = transform.position;
+            
             CamFocusOnCrowley();
         }
 
