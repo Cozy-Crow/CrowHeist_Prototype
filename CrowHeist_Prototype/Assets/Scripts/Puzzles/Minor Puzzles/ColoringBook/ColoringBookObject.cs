@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cinemachine;
 using KinematicCharacterController.Examples;
 using UnityEngine;
 using UnityEngine.AI;
@@ -26,12 +27,16 @@ public class ColoringBookObject : Interactable
     [SerializeField] Sprite sprite3;
     [SerializeField] GameObject openBook; //open and closed book models
     [SerializeField] GameObject closedBook;
-
+    [SerializeField] CinemachineVirtualCamera playerCam; //cam to swap for the ending anim
+    [SerializeField] Transform camPoint;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        //Get crowley reference
+        crowley = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Controller2Point5D>();
+
         spriteRenderer.enabled = false; //turn of sprite initally
 
         if(menu == null)
@@ -84,7 +89,6 @@ public class ColoringBookObject : Interactable
     //handles the End of Puzzle Routine (playing the animation/spitting out coin)
     IEnumerator EndPuzzleRoutine()
     {
-
         //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(1);
 
@@ -92,6 +96,8 @@ public class ColoringBookObject : Interactable
         menu.gameObject.SetActive(false);
         //hide crowley
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = false;
+
+        playerCam.Follow = camPoint; //set camera point for the cutscene
 
         //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
         yield return new WaitForSeconds(animTime); //.25 sec before it starts
@@ -144,6 +150,7 @@ public class ColoringBookObject : Interactable
         //enable movement
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = true;
         crowley.SetCanInput(true);
+        crowley.CamFocusOnCrowley(); //refocus cam onto crowley
         //play animation, pop reward
         //remove interaction capability
         isInteractable = false;

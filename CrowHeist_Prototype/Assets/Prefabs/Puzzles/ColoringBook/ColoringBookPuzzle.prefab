@@ -84,6 +84,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &3296370596722587684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2721658727230520244}
+  m_Layer: 0
+  m_Name: EndAnimCameraPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2721658727230520244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3296370596722587684}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
+  m_LocalPosition: {x: -0.0018, y: 0.02111, z: 0.0265}
+  m_LocalScale: {x: 0.013791289, y: 0.039999988, z: 0.009999997}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 351661632964170611}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4173167000086943310
 GameObject:
   m_ObjectHideFlags: 0
@@ -111,7 +142,7 @@ Transform:
   m_GameObject: {fileID: 4173167000086943310}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: -0.0035, z: 0}
+  m_LocalPosition: {x: -0.0019, y: -0.003, z: 0.0194}
   m_LocalScale: {x: 0.013791289, y: 0.040000007, z: 0.015}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -136,7 +167,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5, y: 1.56, z: 2.5}
+  m_Size: {x: 2.5, y: 1.02, z: 2.5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &8231987692254262994
 MonoBehaviour:
@@ -155,7 +186,7 @@ MonoBehaviour:
   crowley: {fileID: 0}
   closeButton: {fileID: 0}
   puzzleController: {fileID: 0}
-  coinPrefab: {fileID: 3078150366677145011, guid: 317c088e1f7a4194ba8199101aff5841, type: 3}
+  coinPrefab: {fileID: 3091855981957459826, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
   coinSpawnPoint: {fileID: 3048198836701699232}
   spriteRenderer: {fileID: 2927654625766056314}
   sprite1: {fileID: 21300000, guid: c15c085b24db2624a98d6c80b271ac04, type: 3}
@@ -163,6 +194,8 @@ MonoBehaviour:
   sprite3: {fileID: 21300000, guid: 12be0996425204a4188eeffea673d5f9, type: 3}
   openBook: {fileID: 44339083981112355}
   closedBook: {fileID: 3206325797807414542}
+  playerCam: {fileID: 0}
+  camPoint: {fileID: 2721658727230520244}
 --- !u!1 &4988602448806366451
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,19 +269,19 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.462814
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.10398388
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -14.03313
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalRotation.x
@@ -260,11 +293,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -302,6 +335,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 3048198836701699232}
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2721658727230520244}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
 --- !u!4 &351661632964170611 stripped
