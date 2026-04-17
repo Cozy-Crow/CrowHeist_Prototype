@@ -160,8 +160,14 @@ namespace KinematicCharacterController.Examples
 
         #region VFX
         private VisualEffect jumpPoof;
-        [SerializeField] private ParticleSystem GlidePS;
+        [SerializeField] private ParticleSystem GlidePSL;
+        [SerializeField] private ParticleSystem GlidePSR;
+        private GameObject paperLCorner;
+        private GameObject paperRCorner;
         private bool glideSpawned = false;
+        private SpriteRenderer crowleySprite;
+        [SerializeField] private Material crowleyMat;
+        [SerializeField] private ShakeOnPlayerHit shakeScript;
         #endregion
 
         #region  Trinket Guide
@@ -191,6 +197,8 @@ namespace KinematicCharacterController.Examples
             } 
 
             crowleySFX = GetComponent<CrowleySFX>();
+
+            crowleySprite = GetComponentInChildren<SpriteRenderer>();
         }
 
         public void Start()
@@ -202,6 +210,8 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            
         }
 
         void Update()
@@ -246,10 +256,21 @@ namespace KinematicCharacterController.Examples
                     {
                         glider.HandleGliding();
                         
-                        GlidePS.Play();
-                        GlidePS.transform.position = transform.position;
+                        GlidePSL.Play();
+                        GlidePSR.Play();
 
-                        if (isGrounded) { GlidePS.Stop(); }
+                        if (GameObject.FindWithTag("PaperLCorner") && GameObject.FindWithTag("PaperRCorner"))
+                        {
+                            paperLCorner = GameObject.FindGameObjectWithTag("PaperLCorner");
+                            paperRCorner = GameObject.FindGameObjectWithTag("PaperRCorner");
+                            GlidePSL.transform.position = paperLCorner.transform.position;
+                            GlidePSR.transform.position = paperRCorner.transform.position;
+                        }
+
+                        if (isGrounded) {
+                            GlidePSL.Stop();
+                            GlidePSR.Stop();
+                        }
 
                     }
                 }
@@ -296,7 +317,7 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
-                GlidePS.Stop();
+                 
                  
             }
         }
@@ -407,8 +428,9 @@ namespace KinematicCharacterController.Examples
                     //AudioManager.Instance?.PlayInstanceOneShot("LAND");
                     //above stopped working?? putting bandaid on it for now 
                     AudioManager.Instance?.PlayOneShot(land);
-                    print("LAND");
-                    
+                    GlidePSL.Stop();
+                    GlidePSR.Stop();
+
                 }
 
                 isJumping = false;
@@ -491,6 +513,11 @@ namespace KinematicCharacterController.Examples
         private void OnCollisionEnter(Collision collision)
         {
             HandleCollisionLogic(collision);
+
+            if (collision.gameObject.tag.Equals("Roomba"))
+            {
+                StartCoroutine(FlashRed());
+            }
         }
 
         private void OnCollisionStay(Collision collision)
@@ -1103,6 +1130,14 @@ namespace KinematicCharacterController.Examples
                 trinketGuideLine.SetPosition(0, startPos);
                 trinketGuideLine.SetPosition(1, endPos);
             }
+        }
+
+        private IEnumerator FlashRed()
+        {
+            crowleySprite.color = Color.red;
+            shakeScript.Shake();
+            yield return new WaitForSeconds(0.2f);
+            crowleySprite.color = Color.white;
         }
     }
 }

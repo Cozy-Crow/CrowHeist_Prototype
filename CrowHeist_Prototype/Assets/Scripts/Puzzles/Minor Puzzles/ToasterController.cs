@@ -14,6 +14,8 @@ public class ToasterController : MonoBehaviour
     [SerializeField] GameObject plugReference;
     [SerializeField] private EventReference coinSparkle;
 
+    // vfx stuff
+    [SerializeField] GameObject toasterExplosion;
     void Awake()
     {
         if(plugReference == null)
@@ -56,6 +58,14 @@ public class ToasterController : MonoBehaviour
         {
             Instantiate(paintTubePrefab, paintTubeSpawnPoint.position, paintTubeSpawnPoint.rotation);
             AudioManager.Instance?.PlayOneShot3D(coinSparkle, transform.position);
+            toasterExplosion.transform.position = transform.position;
+            ParticleSystem[] particleSystems = toasterExplosion.GetComponentsInChildren<ParticleSystem>(true);
+            
+            foreach (ParticleSystem ps in particleSystems)
+            {
+
+                ps.Play();
+            }
             Destroy(gameObject);
 
         }
