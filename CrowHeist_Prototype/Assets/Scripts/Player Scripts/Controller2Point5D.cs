@@ -304,8 +304,10 @@ namespace KinematicCharacterController.Examples
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
                 GlidePS.Stop();
-                 
             }
+
+            if(playerCam == null)
+                Debug.Log("Camera Not Attached to CharacterController Script");
         }
         
         private void HandleInput()
