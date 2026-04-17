@@ -35,14 +35,11 @@ public class TutorialPopup : MonoBehaviour
 
     public void Show()
     {
-        Debug.Log("TutorialPopup.Show called");
-        
         if (panelCanvasGroup == null)
         {
             CanvasGroup[] all = FindObjectsOfType<CanvasGroup>(true);
             foreach (CanvasGroup cg in all)
             {
-                Debug.Log("Found CanvasGroup on: " + cg.gameObject.name);
                 if (cg.gameObject.name == "TutorialMenu")
                 {
                     panelCanvasGroup = cg;
@@ -51,11 +48,21 @@ public class TutorialPopup : MonoBehaviour
             }
         }
 
-        if (panelCanvasGroup == null)
+        if (closeButton == null)
         {
-            Debug.LogError("Still null!");
-            return;
+            Button[] allButtons = FindObjectsOfType<Button>(true);
+            foreach (Button btn in allButtons)
+            {
+                if (btn.gameObject.name == "CloseButton")
+                {
+                    closeButton = btn;
+                    closeButton.onClick.AddListener(Hide);
+                    break;
+                }
+            }
         }
+
+        if (panelCanvasGroup == null) return;
 
         panelCanvasGroup.alpha = 1f;
         panelCanvasGroup.interactable = true;
