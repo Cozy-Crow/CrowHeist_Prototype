@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
@@ -25,6 +26,8 @@ public class PickupVisualManager : MonoBehaviour
 
     private GameObject currentModel;
     private ItemDataSO currentItemData;
+    private HashSet<string> shownItems = new HashSet<string>();
+    private Vector3 originalPanelScale;
 
 
     private void Awake()
@@ -37,6 +40,7 @@ public class PickupVisualManager : MonoBehaviour
             return;
         }
 
+        originalPanelScale = panel.localScale;
         panel.gameObject.SetActive(false);
     }
 
@@ -48,34 +52,46 @@ public class PickupVisualManager : MonoBehaviour
         }
     }
 
-
     public void PlayFirstPickupAnim(GameObject item)
     {
+        if (item.GetComponent<Trinket>() != null) return;
+
+        string key = CleanItemName(item.name);
+        if (shownItems.Contains(key)) return;
+        shownItems.Add(key);
+
         StopAllCoroutines();
         StartCoroutine(PickupRoutine(item));
     }
 
+    public void ResetShownItems()
+    {
+        shownItems.Clear();
+    }
 
     private IEnumerator PickupRoutine(GameObject item)
     {
-        // 1. Unhide but offscreen
         panel.gameObject.SetActive(true);
         panel.anchoredPosition = offscreenRightPos;
+        panel.localScale = originalPanelScale;
 
-        // 2. Set name & description - try ItemDataSO first, then fall back to tag-based
         float holdTime = centerHoldTime;
         currentItemData = GetItemDataSO(item);
 
+        GameObject previewSource = null;
+        if (currentItemData != null && currentItemData.PreviewModelPrefab != null)
+            previewSource = currentItemData.PreviewModelPrefab;
+        else
+            previewSource = item;
+
         if (currentItemData != null)
         {
-            // Use new ItemDataSO system
             itemName.text = currentItemData.ItemName;
             itemDescription.text = currentItemData.Description;
             holdTime = currentItemData.DisplayDuration;
         }
         else
         {
-            // Fall back to legacy tag-based system
             PickupVisualData data = GetDataForItem(item);
             if (data != null)
             {
@@ -84,59 +100,87 @@ public class PickupVisualManager : MonoBehaviour
             }
             else
             {
-                itemName.text = item.name;
-                itemDescription.text = "";
+                itemName.text = CleanItemName(item.name);
+                itemDescription.text = item.CompareTag("Glider")
+                    ? "Paper can be used to glide!"
+                    : "I think I can use this to solve a puzzle...";
             }
         }
 
-        // 3. Animate to center
-        yield return MovePanel(offscreenRightPos, centerPos);
+        yield return AnimatePanelIn(offscreenRightPos, centerPos);
 
-        // 4. Spawn model
-        SpawnModel(item);
+        SpawnModelFromSource(previewSource);
 
-        // 5. Hold at center
         yield return new WaitForSeconds(holdTime);
 
-        // 6. Animate off screen
-        yield return MovePanel(centerPos, offscreenRightPos);
+        yield return AnimatePanelOut();
 
-        // 7. Cleanup & hide
         ClearModel();
         currentItemData = null;
         panel.gameObject.SetActive(false);
     }
 
+    private IEnumerator AnimatePanelIn(Vector2 from, Vector2 to)
+    {
+        float t = 0f;
+        while (t < slideDuration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / slideDuration;
+            panel.anchoredPosition = Vector2.Lerp(from, to, normalized);
+            panel.localScale = originalPanelScale * RubberBandScale(normalized);
+            yield return null;
+        }
+        panel.anchoredPosition = to;
+        panel.localScale = originalPanelScale;
+    }
+
+    private IEnumerator AnimatePanelOut()
+    {
+        float t = 0f;
+        while (t < slideDuration)
+        {
+            t += Time.deltaTime;
+            float normalized = t / slideDuration;
+            panel.localScale = originalPanelScale * Mathf.Lerp(1f, 0f, normalized);
+            yield return null;
+        }
+        panel.localScale = originalPanelScale;
+    }
+
+    private float RubberBandScale(float t)
+    {
+        if (t < 0.6f)
+            return Mathf.Lerp(1f, 1.2f, t / 0.6f);
+        else if (t < 0.8f)
+            return Mathf.Lerp(1.2f, 0.9f, (t - 0.6f) / 0.2f);
+        else
+            return Mathf.Lerp(0.9f, 1.0f, (t - 0.8f) / 0.2f);
+    }
 
     private IEnumerator MovePanel(Vector2 from, Vector2 to)
     {
         float t = 0f;
-
         while (t < slideDuration)
         {
             t += Time.deltaTime;
             panel.anchoredPosition = Vector2.Lerp(from, to, t / slideDuration);
             yield return null;
         }
-
         panel.anchoredPosition = to;
     }
-    private void SpawnModel(GameObject item)
+
+    private void SpawnModelFromSource(GameObject modelSource)
     {
         ClearModel();
+
+        if (modelSource == null) return;
 
         GameObject container = new GameObject("PreviewContainer");
         container.transform.SetParent(modelAnchor, false);
         container.transform.localPosition = Vector3.zero;
         container.transform.localRotation = Quaternion.identity;
         container.transform.localScale = Vector3.one;
-
-        // Use preview model from ItemDataSO if available, otherwise clone the item
-        GameObject modelSource = item;
-        if (currentItemData != null && currentItemData.PreviewModelPrefab != null)
-        {
-            modelSource = currentItemData.PreviewModelPrefab;
-        }
 
         GameObject model = Instantiate(modelSource);
         model.transform.SetParent(container.transform, false);
@@ -150,7 +194,6 @@ public class PickupVisualManager : MonoBehaviour
         foreach (Rigidbody rb in model.GetComponentsInChildren<Rigidbody>())
             Destroy(rb);
 
-        // Disable any scripts that could interfere with preview
         foreach (MonoBehaviour script in model.GetComponentsInChildren<MonoBehaviour>())
         {
             if (!(script is Transform))
@@ -178,32 +221,23 @@ public class PickupVisualManager : MonoBehaviour
             if (item.CompareTag(data.tag))
                 return data;
         }
-
         return null;
     }
 
-    
     private ItemDataSO GetItemDataSO(GameObject item)
     {
         UniqueID uniqueID = item.GetComponent<UniqueID>();
         if (uniqueID != null && uniqueID.ItemData != null)
-        {
             return uniqueID.ItemData;
-        }
         return null;
     }
 
-    /// <summary>
-    /// Returns the current item data if available.
-    /// Useful for other systems that need to know what item is being displayed.
-    /// </summary>
-    public ItemDataSO GetCurrentItemData()
+    private string CleanItemName(string rawName)
     {
-        return currentItemData;
+        string name = rawName.Replace("(Clone)", "");
+        return System.Text.RegularExpressions.Regex.Replace(name, @"\s*\d+$", "").Trim();
     }
 }
-
-// Data Class
 
 [System.Serializable]
 public class PickupVisualData

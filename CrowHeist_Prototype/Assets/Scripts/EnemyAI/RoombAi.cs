@@ -18,7 +18,7 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
     [SerializeField] private RoombaPathing pathing;
-    [SerializeField] private float bufferDistance = 0.5f;
+    [SerializeField] private float bufferDistance = 0.1f;
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
@@ -180,7 +180,7 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator WaitAndCheckForMoreDirtyObjects()
     {
-        yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= bufferDistance);
+        yield return new WaitUntil(() => agent.enabled && !agent.pathPending && agent.remainingDistance <= bufferDistance);
 
         HandleDirtyItemCollection();
 
@@ -252,7 +252,7 @@ public class RoombAi : MonoBehaviour
 
         }
 
-        if (other.CompareTag("Player") && playerController.heldObject != null)
+        if (other.CompareTag("Player") && playerController.heldObject != null && isActivated && !isBroken)
         {
             playerController.Drop();
             playerController._pickUpsList.Clear();
@@ -372,7 +372,45 @@ public class RoombAi : MonoBehaviour
 
         // Charge the door
         agent.speed = attackDoorSpeed;
-        breakDoor.SetAttacking();
+        // breakDoor.SetAttacking();
         agent.SetDestination(breakDoorTransform.transform.position);
+
+        // added apr 15, 2025 by Mark D.
+        StartCoroutine(HandleDoorImpact());
     }
+
+    private IEnumerator HandleDoorImpact()
+    {
+        while (agent.enabled && (agent.pathPending || agent.remainingDistance > bufferDistance))
+        {
+            yield return null;
+        }
+
+        if (!agent.enabled) yield break;
+
+        // Stop NavMesh cleanly BEFORE anything else
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        // Break door EXACTLY here (no Update timing issues)
+        // breakDoor.Break();
+        breakDoor.SetAttacking();
+
+        // Small delay to avoid 1-frame visual pop (important)
+        yield return null;
+
+        // Move right manually
+        float moveTime = .7f;
+        float elapsed = 0f;
+
+        while (elapsed < moveTime)
+        {
+            transform.position += Vector3.right * attackDoorSpeed * Time.deltaTime;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        breakDoor.Break();
+        Destroy(gameObject);
+    }
+
 }
