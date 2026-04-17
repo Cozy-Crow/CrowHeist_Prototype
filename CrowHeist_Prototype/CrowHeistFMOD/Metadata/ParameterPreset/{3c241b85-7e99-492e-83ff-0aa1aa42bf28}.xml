@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3c241b85-7e99-492e-83ff-0aa1aa42bf28}">
+		<property name="name">
+			<value>soloRandomizer</value>
+		</property>
+		<relationship name="folder">
+			<destination>{bebd5c12-bc4b-4997-9848-2a72c355d13c}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ac2f225b-e340-4b6c-b529-71be12853288}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ac2f225b-e340-4b6c-b529-71be12853288}">
+		<property name="isGlobal">
+			<value>true</value>
+		</property>
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="isExposedRecursively">
+			<value>false</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{a30e19ce-189b-4f79-80d8-5a353a104ee3}</destination>
+		</relationship>
+	</object>
+	<object class="RandomizerModulator" id="{a30e19ce-189b-4f79-80d8-5a353a104ee3}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>cursorPosition</value>
+		</property>
+	</object>
+</objects>
