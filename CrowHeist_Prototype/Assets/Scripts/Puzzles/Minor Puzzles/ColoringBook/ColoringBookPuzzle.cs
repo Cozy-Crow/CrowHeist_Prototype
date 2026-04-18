@@ -63,6 +63,8 @@ public class ColoringBookPuzzle : MonoBehaviour
 
     public void StartPuzzle()
     {
+        Debug.Log("coloringbook Starting Puzzle");
+
         //function called by the coloring book to start the puzzle
         puzzleOn = true;
         puzzleComplete = false;
@@ -112,24 +114,10 @@ public class ColoringBookPuzzle : MonoBehaviour
 
         //on left click
         if(Input.GetMouseButtonDown(0))
-        {
             isDrawing = true;         
-        }
 
         if(Input.GetMouseButtonUp(0))
-        {
             isDrawing = false;
-        }
-
-        //updates the linerenderer every frame 
-        // if(currentAnchorLocal != null && lineRenderer.points.Count >= 2 && !puzzleComplete && isDrawing)
-        // {
-        //     //set the last 2 most recent to be able to move (last hit)
-        //     lineRenderer.points[lineRenderer.points.Count-2] = currentAnchorLocal;
-        //     //cursor should always be at the end
-        //     lineRenderer.points[lineRenderer.points.Count-1] = localMousePosition;
-        //     lineRenderer.SetAllDirty(); //refesh the graphic
-        // }
 
         if (lineRenderer.points.Count >= 1 && !puzzleComplete && isDrawing)
         {

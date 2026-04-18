@@ -161,13 +161,20 @@ public class ColoringBookObject : Interactable
     {
         if(isInteractable)
         {
+            Debug.Log("COLORINGBOOK inside trigger");
             //show UI
             menu.gameObject.SetActive(true);
             // //disable player movement
             crowley.SetCanInput(false);
             //start the puzzle
-            puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
+            StartCoroutine(startRoutine());
         }
+    }
+
+    IEnumerator startRoutine()
+    {
+        yield return new WaitForSeconds(.05f);
+        puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
     }
 
     private void OpenBook()
