@@ -170,9 +170,14 @@ public class NarrativeMenu : MonoBehaviour
         }
         else
         {
-            // Don't open if the pause menu is already open
+            // Don't open if the pause menu is already open (check both the flag and the UI state
+            // so the narrative menu stays closed even when the pause menu is shown as a main menu
+            // with isGamePaused still false)
             PauseManager pauseManager = FindObjectOfType<PauseManager>();
-            if (pauseManager != null && pauseManager.isGamePaused)
+            bool pauseMenuActive = pauseManager != null &&
+                (pauseManager.isGamePaused ||
+                 (pauseManager.PauseMenu != null && pauseManager.PauseMenu.activeSelf));
+            if (pauseMenuActive)
                 return;
 
             // Open item grid
@@ -200,7 +205,7 @@ public class NarrativeMenu : MonoBehaviour
     {
         isFirstMenuActive = false;
         isSecondMenuActive = false;
-        if (narrativeMenuFirst  != null) narrativeMenuFirst.SetActive(false);
+        if (narrativeMenuFirst != null) narrativeMenuFirst.SetActive(false);
         if (narrativeMenuSecond != null) narrativeMenuSecond.SetActive(false);
     }
 

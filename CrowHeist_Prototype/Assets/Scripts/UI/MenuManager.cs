@@ -45,16 +45,16 @@ public class PauseManager : MonoBehaviour
         player = FindObjectOfType<Controller2Point5D>();
 
         // Fall back to finding buttons by name if serialized references are null
-        if (ResumeButton  == null) ResumeButton  = FindButtonInChildren("ResumeButton");
-        if (QuitButton    == null) QuitButton    = FindButtonInChildren("QuitButton");
+        if (ResumeButton == null) ResumeButton = FindButtonInChildren("ResumeButton");
+        if (QuitButton == null) QuitButton = FindButtonInChildren("QuitButton");
         if (RestartButton == null) RestartButton = FindButtonInChildren("RestartButton");
-        if (SaveButton    == null) SaveButton    = FindButtonInChildren("SaveButton");
-        if (LoadButton    == null) LoadButton    = FindButtonInChildren("LoadButton");
-        if (BackButton    == null) BackButton    = FindButtonInChildren("BackButton");
-        if (PlayButton    == null) PlayButton    = FindButtonInChildren("PlayButton");
+        if (SaveButton == null) SaveButton = FindButtonInChildren("SaveButton");
+        if (LoadButton == null) LoadButton = FindButtonInChildren("LoadButton");
+        if (BackButton == null) BackButton = FindButtonInChildren("BackButton");
+        if (PlayButton == null) PlayButton = FindButtonInChildren("PlayButton");
         if (SettingsButton == null) SettingsButton = FindButtonInChildren("SettingsButton");
         if (ConfirmRestartYesButton == null) ConfirmRestartYesButton = FindButtonInChildren("ConfirmYesButton");
-        if (ConfirmRestartNoButton  == null) ConfirmRestartNoButton  = FindButtonInChildren("ConfirmNoButton");
+        if (ConfirmRestartNoButton == null) ConfirmRestartNoButton = FindButtonInChildren("ConfirmNoButton");
 
         if (RestartConfirmPanel == null)
         {
@@ -76,22 +76,22 @@ public class PauseManager : MonoBehaviour
             settingsMenu = GetComponentInChildren<SettingsMenu>(true);
 
         // Wire listeners
-        if (ResumeButton  != null) ResumeButton.onClick.AddListener(ResumeGame);
-        if (QuitButton    != null) QuitButton.onClick.AddListener(QuitGame);
+        if (ResumeButton != null) ResumeButton.onClick.AddListener(ResumeGame);
+        if (QuitButton != null) QuitButton.onClick.AddListener(QuitGame);
         if (RestartButton != null) RestartButton.onClick.AddListener(ShowRestartConfirm);
-        if (PlayButton    != null) PlayButton.onClick.AddListener(PlayGame);
-        if (SaveButton    != null) SaveButton.onClick.AddListener(OnSaveButtonClicked);
-        if (LoadButton    != null) LoadButton.onClick.AddListener(OnLoadButtonClicked);
-        if (BackButton    != null) BackButton.onClick.AddListener(GoBack);
+        if (PlayButton != null) PlayButton.onClick.AddListener(PlayGame);
+        if (SaveButton != null) SaveButton.onClick.AddListener(OnSaveButtonClicked);
+        if (LoadButton != null) LoadButton.onClick.AddListener(OnLoadButtonClicked);
+        if (BackButton != null) BackButton.onClick.AddListener(GoBack);
         if (SettingsButton != null) SettingsButton.onClick.AddListener(OpenSettings);
         if (ConfirmRestartYesButton != null) ConfirmRestartYesButton.onClick.AddListener(RestartGame);
-        if (ConfirmRestartNoButton  != null) ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
+        if (ConfirmRestartNoButton != null) ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
 
         // Wire slot panel callbacks
         if (saveSlotPanel != null)
         {
-            saveSlotPanel.OnBack          += OnSlotPanelBack;
-            saveSlotPanel.OnSlotSelected  += OnSlotSelected;
+            saveSlotPanel.OnBack += OnSlotPanelBack;
+            saveSlotPanel.OnSlotSelected += OnSlotSelected;
         }
 
         if (RestartConfirmPanel != null)
@@ -108,7 +108,6 @@ public class PauseManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // If a sub-panel is open, close it first instead of toggling the whole menu
             if (saveSlotPanel != null && saveSlotPanel.IsOpen)
             {
                 saveSlotPanel.Close();
@@ -128,14 +127,16 @@ public class PauseManager : MonoBehaviour
             if (isGamePaused)
             {
                 ResumeGame();
-                PlayButtonSFX(open);
-            }   
+            }
             else
             {
+                if (TrinketMenu.instance != null)
+                    TrinketMenu.instance.ForceClose();
+                if (NarrativeMenu.Instance != null)
+                    NarrativeMenu.Instance.ForceClose();
                 PauseGame();
-                PlayButtonSFX(close);   
+                PlayButtonSFX(close);  // ← moved inside else, only plays when pausing
             }
-            
         }
     }
 
@@ -145,7 +146,9 @@ public class PauseManager : MonoBehaviour
 
     public void PauseGame()
     {
-        // Close narrative menu if it is open so both can't be visible simultaneously
+        // Close any open menus so they can't overlap with the pause menu
+        if (TrinketMenu.instance != null)
+            TrinketMenu.instance.ForceClose();
         if (NarrativeMenu.Instance != null)
             NarrativeMenu.Instance.ForceClose();
 
@@ -168,7 +171,7 @@ public class PauseManager : MonoBehaviour
 
         // Also close any sub-panels that may still be open
         if (saveSlotPanel != null) saveSlotPanel.Close();
-        if (settingsMenu  != null) settingsMenu.CloseSettings();
+        if (settingsMenu != null) settingsMenu.CloseSettings();
         if (RestartConfirmPanel != null) RestartConfirmPanel.SetActive(false);
         PlayButtonSFX(open);
     }

@@ -9,6 +9,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
 using UnityEditor.Experimental.GraphView;
+using Cinemachine;
 
 namespace KinematicCharacterController.Examples
 {
@@ -19,6 +20,11 @@ namespace KinematicCharacterController.Examples
         [Header("References")]
         [SerializeField] private Sockets sockets;           //  Sockets for holding items
         [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
+        [SerializeField] private CinemachineVirtualCamera playerCam;
+        [SerializeField] private GameObject throwCamTarget;
+        [SerializeField] float throwCamClampVal;
+        private Vector3 initalThrowCamTargetPos;
+        private string lastThrowInput;
 
         #region Movement Variables
         [Header("Movement")]
@@ -206,6 +212,7 @@ namespace KinematicCharacterController.Examples
 
         void Update()
         {
+
             jumpPoof.SetVector3("TargetPosition", this.transform.position);
             if (Input.GetKeyDown(KeyCode.M))
             {
@@ -297,8 +304,10 @@ namespace KinematicCharacterController.Examples
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
                 GlidePS.Stop();
-                 
             }
+
+            if(playerCam == null)
+                Debug.Log("Camera Not Attached to CharacterController Script");
         }
         
         private void HandleInput()
@@ -628,11 +637,22 @@ namespace KinematicCharacterController.Examples
             }
         }
 
+        //tracks if left click button has be clicked and released (complete cycle, fixes throwing)
+        private bool pickupComplete = false;
+
         private void HandlePickUp()
         {
             // Notes: Zack H 1/25
             //E for left hand on keyboard
             //U for Right hand on keyboard
+            //Left click as another option
+
+            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U))
+                lastThrowInput = "E";
+            if(Input.GetMouseButtonDown(0))
+                lastThrowInput = "0";
+
+            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
             if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
             {
                 AIEventManager.instance.e_pickup.Invoke();
@@ -663,8 +683,8 @@ namespace KinematicCharacterController.Examples
                                 //check if both items are the same (item hit vs object we are trying to grab)
                                 if(hit.transform.gameObject != selected.realObject)
                                 {
-                                    Debug.Log("collider blocking " + hit.transform.name);
-                                    Debug.Log("collider on object " + selected.realObject);
+                                    // Debug.Log("collider blocking " + hit.transform.name);
+                                    // Debug.Log("collider on object " + selected.realObject);
                                     return;
                                 }
                             }
@@ -695,6 +715,7 @@ namespace KinematicCharacterController.Examples
             }
 
             // Charged Throwing
+            // if (heldObject != null && pickupComplete == true )
             if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
@@ -728,7 +749,7 @@ namespace KinematicCharacterController.Examples
 
                     if(storedThrowDirection != null)
                     {
-                    DrawThrowTrajectory(storedThrowDirection);
+                        DrawThrowTrajectory(storedThrowDirection);
                     }
                     
                     
@@ -779,14 +800,33 @@ namespace KinematicCharacterController.Examples
                     Drop();
                     throwForce = 0f;
                     lineRenderer.positionCount = 0;
+
+                    //on completed throw reset the camera
+                    // and charge follow position
+                    //get inital pos to reset later
+                    initalThrowCamTargetPos = transform.position;
+                    playerCam.Follow = transform;
+
                     // targetAssetObject.SetActive(false);
                 }
 
+                //cancel throw on right click
                 if (Input.GetMouseButtonDown(1))
                 {
                     CancelThrow();
                 }
             }
+
+            //used for left click pickup 
+            // - allows charge throwing to work correctly if enabled
+            // ---currently disabled since it breaks normal throwing logic---
+            // if (heldObject != null)
+            //     if (pickupComplete == false)
+            //         if (Input.GetMouseButtonUp(0))
+            //             pickupComplete = true;
+            // else
+            //     pickupComplete = false;
+
         }
 
         public void CancelThrow()
@@ -798,6 +838,11 @@ namespace KinematicCharacterController.Examples
             storedThrowDirection = Vector3.zero;
             // targetAssetObject.SetActive(false);
             AudioManager.Instance.GetInstance("CHARGE").stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            //on completed throw reset the camera
+            // and charge follow position
+            //get inital pos to reset later
+            initalThrowCamTargetPos = transform.position;
+            playerCam.Follow = transform;
         }
 
         public List<IPickupable> GetHeldItems()
@@ -836,7 +881,7 @@ namespace KinematicCharacterController.Examples
             {
               AudioManager.Instance?.PlayOneShot(dashActivate);
             }
-            
+
         }
         
 
@@ -945,21 +990,53 @@ namespace KinematicCharacterController.Examples
 
             lineRenderer.positionCount = resolution;
 
+            // Vector3 point =  new Vector3();
+
             for (int i = 0; i < resolution; i++)
             {
                 float time = i * timeStep;
                 Vector3 point = startPosition + velocity * time + 0.5f * Physics.gravity * 2f * time * time;
                 lineRenderer.SetPosition(i, point);
             }
-
-            throwDirection = curvedDirection;
             
-            // if (!targetAssetObject.activeSelf)
-            // {
-            //     targetAssetObject.SetActive(true);
-            // }
 
-            // targetAssetObject.transform.position = FindThrowCollisionPoint();
+            if(throwCamTarget != null && playerCam != null)
+            {
+                //get inital pos to reset later
+                initalThrowCamTargetPos = transform.position;
+
+                //camera following throw
+                //get direction of the curve
+                throwDirection = curvedDirection;
+                // Debug.Log("curved Dir " + curvedDirection);
+                // Debug.Log("throwcam dir " + throwCamTarget.transform.position);
+
+                //get the intial pos +- value for bounds
+                Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
+                Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
+                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
+
+                //clamp the values
+                float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMinBounds.x, throwCamMaxBounds.x);
+                float throwCamTargetNewY = Math.Clamp(updateThrowCamTarget.y, throwCamMinBounds.y, throwCamMaxBounds.y);
+                float throwCamTargetNewZ = Math.Clamp(updateThrowCamTarget.z, throwCamMinBounds.z, throwCamMaxBounds.z);
+
+                //update the position
+                Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
+                throwCamTarget.transform.position = throwCamTargetNewPos;
+
+                // Debug.Log("camera pos1 " + playerCam.transform.position);                 
+                //make the camera follow the target
+                playerCam.Follow = throwCamTarget.transform;
+                // Debug.Log("camera pos2 " + playerCam.transform.position);                 
+            }
+
+            if (!targetAssetObject.activeSelf)
+            {
+                targetAssetObject.SetActive(true);
+            }
+
+            targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
 

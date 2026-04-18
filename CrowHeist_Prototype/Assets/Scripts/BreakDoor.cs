@@ -7,8 +7,8 @@ public class BreakDoor : MonoBehaviour
     [SerializeField] private GameObject door;
     [SerializeField] private GameObject brokenDoor;
 
-    [SerializeField] private Transform roomba;
-    [SerializeField] private float breakDistance = 9f;
+    // [SerializeField] private Transform roomba;
+    // [SerializeField] private float breakDistance = 9f;
 
     private bool isAttacking = false;
 
@@ -43,14 +43,17 @@ public class BreakDoor : MonoBehaviour
 
     // private void OnTriggerEnter(Collider other)
     // {
-    //     if (!isAttacking) return;
+    //     // if (!isAttacking) return;
 
     //     if (other.CompareTag("RoombaTrigger"))
     //     {
-    //         UnityEngine.Debug.Log("roomba hit door");
     //         brokenDoor.SetActive(true);
-    //         Destroy(door);
+    //         door.SetActive(false);
     //         isAttacking = false;
+
+    //         UnityEngine.Debug.Log("roomba hit door");
+    //         // brokenDoor.SetActive(true);
+    //         // Destroy(door);
     //     }
     // }
 }
