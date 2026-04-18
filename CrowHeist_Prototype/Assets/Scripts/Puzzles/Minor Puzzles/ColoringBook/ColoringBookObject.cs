@@ -55,10 +55,10 @@ public class ColoringBookObject : Interactable
 
         // hide UI on start
         menu.gameObject.SetActive(false);
-        Debug.Log("Starting");
+        // Debug.Log("Starting");
 
-        Debug.Log("ClosedBook ref: " + closedBook);
-        Debug.Log("OpenBook ref: " + openBook);
+        // Debug.Log("ClosedBook ref: " + closedBook);
+        // Debug.Log("OpenBook ref: " + openBook);
 
         openBook.SetActive(false);
         closedBook.SetActive(true);
@@ -89,6 +89,8 @@ public class ColoringBookObject : Interactable
     //handles the End of Puzzle Routine (playing the animation/spitting out coin)
     IEnumerator EndPuzzleRoutine()
     {
+        Debug.Log("COLORINGBOOK Starting end Routine");
+
         //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(1);
 
@@ -161,7 +163,7 @@ public class ColoringBookObject : Interactable
     {
         if(isInteractable)
         {
-            Debug.Log("COLORINGBOOK inside trigger");
+            // Debug.Log("COLORINGBOOK inside trigger");
             //show UI
             menu.gameObject.SetActive(true);
             // //disable player movement
@@ -173,7 +175,7 @@ public class ColoringBookObject : Interactable
 
     IEnumerator startRoutine()
     {
-        yield return new WaitForSeconds(.05f);
+        yield return new WaitForSeconds(.005f);
         puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
     }
 

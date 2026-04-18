@@ -318,7 +318,7 @@ namespace KinematicCharacterController.Examples
             if(!canInput)
             {
                 // 0 the input vector to stop movement
-                input = new Vector2();
+                input = new Vector3();
                 return;
             }
 

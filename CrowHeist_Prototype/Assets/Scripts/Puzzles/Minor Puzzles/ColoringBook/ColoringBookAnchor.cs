@@ -29,8 +29,6 @@ public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler, IPointerC
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("clickpos: " + eventData.position);
-
         if(puzzleManager.isDrawing)
         {
             puzzleManager.HitAnchor(this);
