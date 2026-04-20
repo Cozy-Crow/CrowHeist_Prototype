@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using FMODUnity;
+using Unity.VisualScripting;
 
 public class ToasterController : MonoBehaviour
 {
@@ -63,10 +64,9 @@ public class ToasterController : MonoBehaviour
             
             foreach (ParticleSystem ps in particleSystems)
             {
-
                 ps.Play();
             }
-            Destroy(gameObject);
+            gameObject.SetActive(false);
 
         }
 
@@ -83,6 +83,8 @@ public class ToasterController : MonoBehaviour
         //     }
         // }
     }
+
+   
 
 
 }

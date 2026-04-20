@@ -168,6 +168,7 @@ namespace KinematicCharacterController.Examples
         private VisualEffect jumpPoof;
         [SerializeField] private ParticleSystem GlidePS;
         private bool glideSpawned = false;
+        private ShakeOnPlayerHit shake = new ShakeOnPlayerHit();
         #endregion
 
         #region  Trinket Guide
@@ -513,6 +514,13 @@ namespace KinematicCharacterController.Examples
         private void OnCollisionEnter(Collision collision)
         {
             HandleCollisionLogic(collision);
+
+            if (collision.gameObject.CompareTag("Roomba"))
+            {
+                playerCam.GetComponent<ShakeOnPlayerHit>().Shake();
+                StartCoroutine(flashRed());
+                
+            }
         }
 
         private void OnCollisionStay(Collision collision)
@@ -1200,6 +1208,12 @@ namespace KinematicCharacterController.Examples
                 trinketGuideLine.SetPosition(0, startPos);
                 trinketGuideLine.SetPosition(1, endPos);
             }
+        }
+        private IEnumerator flashRed()
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(.6f);
+            GetComponentInChildren<SpriteRenderer>().color = Color.white;
         }
     }
 }
