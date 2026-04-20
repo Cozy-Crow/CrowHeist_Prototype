@@ -162,6 +162,7 @@ public class TrinketMenu : MonoBehaviour
         if (!isOpen) return;
         container.DOKill();
         isOpen = false;
+        Time.timeScale = 1f;
         container.alpha = 0f;
         container.gameObject.SetActive(false);
         close.Invoke();
@@ -187,6 +188,7 @@ public class TrinketMenu : MonoBehaviour
 
             //Open Menu
             isOpen = true;
+            Time.timeScale = 0f;
             container.alpha = 0f;
             container.gameObject.SetActive(true);
             container.DOFade(1, 0.2f).SetUpdate(true);
@@ -206,6 +208,7 @@ public class TrinketMenu : MonoBehaviour
         {
             //Close Menu
             isOpen = false;
+            Time.timeScale = 1f;
             container.DOFade(0, 0.2f).SetUpdate(true).onComplete = () =>
             {
                 container.gameObject.SetActive(false);
