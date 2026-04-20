@@ -15,6 +15,7 @@ public class Coins : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private EventReference collectSound;
+    [SerializeField] private EventReference poofSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
@@ -161,6 +162,7 @@ public class Coins : MonoBehaviour
         if (_collectParticlePrefab != null)
         {
             Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            AudioManager.Instance?.PlayOneShot(poofSound);
         }
 
         // Briefly hide coin during "teleport"

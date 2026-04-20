@@ -1,4 +1,5 @@
 using FMODUnity;
+using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +23,8 @@ public class SettingsMenu : MonoBehaviour
 
     [SerializeField] private EventReference close;
 
+    private VCA MasterVolumeControl;
+
 
     private void Start()
     {
@@ -39,6 +42,8 @@ public class SettingsMenu : MonoBehaviour
 
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
+
+        MasterVolumeControl = FMODUnity.RuntimeManager.GetVCA("vca:/MasterVolumeControl");
     }
 
     // ──────────────────────────────────────────────
@@ -89,6 +94,7 @@ public class SettingsMenu : MonoBehaviour
     private void OnMasterVolumeChanged(float value)
     {
         SettingsManager.Instance?.SetMasterVolume(value);
+        MasterVolumeControl.setVolume(value);
     }
 
     private void OnMouseSensitivityChanged(float value)
