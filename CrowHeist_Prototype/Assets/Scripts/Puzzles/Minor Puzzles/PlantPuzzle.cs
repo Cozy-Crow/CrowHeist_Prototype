@@ -38,7 +38,10 @@ public class PlantPuzzle : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Fertilizer"))
+        {
             StartCoroutine(GrowPlant());
+            Destroy(other.gameObject);
+        }
     }
 
     private IEnumerator GrowPlant()
