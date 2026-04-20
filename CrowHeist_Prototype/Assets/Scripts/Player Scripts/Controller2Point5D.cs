@@ -8,7 +8,7 @@ using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using Cinemachine;
 
 namespace KinematicCharacterController.Examples
