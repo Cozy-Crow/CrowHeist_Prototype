@@ -240,6 +240,7 @@ public class RoombAi : MonoBehaviour
                 RespawnObject respawnComp = parentTransform.GetComponentInChildren<RespawnObject>();
                 if (respawnComp != null)
                 {
+                    itemScript._isDirty = false; // added to fix tracking respawned items
                     respawnComp.Respawn();
                 }
                 else
