@@ -246,7 +246,7 @@ public class RoombAi : MonoBehaviour
                 {
                     Destroy(parentTransform.gameObject);
                 }
-                AudioManager.Instance?.PlayOneShot(roombaEat);
+                AudioManager.Instance?.PlayOneShot3D(roombaEat, transform.position);
                 HandleDirtyItemCollection();
             }
 
