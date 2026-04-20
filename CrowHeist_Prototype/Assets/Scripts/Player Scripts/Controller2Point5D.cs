@@ -326,7 +326,20 @@ namespace KinematicCharacterController.Examples
             // Changed from Input.GetAxis to Input.GetAxisRaw
             // Apparently GetAxis has smoothing to it to slowly progress to 0
             // instead of instantly setting to 0, making you not stop.
-            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            if (SettingsManager.Instance != null && SettingsManager.Instance.LeftHandMode)
+            {
+                float h = 0f;
+                float v = 0f;
+                if (Input.GetKey(KeyCode.J)) h -= 1f;
+                if (Input.GetKey(KeyCode.L)) h += 1f;
+                if (Input.GetKey(KeyCode.I)) v += 1f;
+                if (Input.GetKey(KeyCode.K)) v -= 1f;
+                input = new Vector2(h, v).normalized;
+            }
+            else
+            {
+                input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            }
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -647,13 +660,16 @@ namespace KinematicCharacterController.Examples
             //U for Right hand on keyboard
             //Left click as another option
 
-            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U))
+            bool leftHand = SettingsManager.Instance != null && SettingsManager.Instance.LeftHandMode;
+            int primaryMouseBtn = leftHand ? 1 : 0;
+            KeyCode pickupKey = leftHand ? KeyCode.U : KeyCode.E;
+            if(Input.GetKeyDown(pickupKey))
                 lastThrowInput = "E";
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(primaryMouseBtn))
                 lastThrowInput = "0";
 
-            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
+            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(pickupKey))
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -719,13 +735,17 @@ namespace KinematicCharacterController.Examples
             if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
-                
+
                 if (heldCollider != null)
                 {
                     heldCollider.enabled = true;
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                int throwBtn = leftHand ? 1 : 0;
+                int cancelBtn = leftHand ? 0 : 1;
+                float mouseSensitivity = SettingsManager.Instance?.MouseSensitivity ?? 1f;
+
+                if (Input.GetMouseButtonDown(throwBtn))
                 {
                     chargingThrow = true;
                     cancelThrow = false;
@@ -733,12 +753,12 @@ namespace KinematicCharacterController.Examples
                     AudioManager.Instance?.PlayInstance("CHARGE");
                 }
 
-                if (Input.GetMouseButton(0) && !cancelThrow)
+                if (Input.GetMouseButton(throwBtn) && !cancelThrow)
                 {
-                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce * mouseSensitivity, 0, maxThrowForce);
 
                     Vector3 mousePosition = Input.mousePosition;
-                    
+
                     //mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -751,11 +771,11 @@ namespace KinematicCharacterController.Examples
                     {
                         DrawThrowTrajectory(storedThrowDirection);
                     }
-                    
-                    
+
+
                 }
 
-                if (Input.GetMouseButtonUp(0) && !cancelThrow)
+                if (Input.GetMouseButtonUp(throwBtn) && !cancelThrow)
                 {
                     isThrowing = true;
                     chargingThrow = false;
@@ -810,8 +830,8 @@ namespace KinematicCharacterController.Examples
                     // targetAssetObject.SetActive(false);
                 }
 
-                //cancel throw on right click
-                if (Input.GetMouseButtonDown(1))
+                //cancel throw (opposite mouse button from throw)
+                if (Input.GetMouseButtonDown(cancelBtn))
                 {
                     CancelThrow();
                 }

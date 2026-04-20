@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using FMODUnity;
 
 public class BreakDoor : MonoBehaviour
 {
     [SerializeField] private GameObject door;
     [SerializeField] private GameObject brokenDoor;
+    [SerializeField] private EventReference breakSFX;
 
     // [SerializeField] private Transform roomba;
     // [SerializeField] private float breakDistance = 9f;
@@ -37,6 +39,7 @@ public class BreakDoor : MonoBehaviour
 
     public void Break()
     {
+        AudioManager.Instance?.PlayOneShot(breakSFX);
         brokenDoor.SetActive(true);
         door.SetActive(false);
     }
