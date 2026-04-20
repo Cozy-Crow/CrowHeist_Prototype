@@ -172,6 +172,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 612166668}
     activeTime: 4
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &19398574
 GameObject:
   m_ObjectHideFlags: 0
@@ -1083,6 +1088,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1773744703}
   m_LocalEulerAnglesHint: {x: 0, y: 33.273, z: 0}
+--- !u!1 &79576265 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+  m_PrefabInstance: {fileID: 1280868091}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &82591327
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6791,6 +6801,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Crowley
       objectReference: {fileID: 0}
+    - target: {fileID: 1004988967069545340, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1004988967069545340, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1004988967069545340, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554201391841256853, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 6691536915930585342, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -6814,6 +6840,10 @@ PrefabInstance:
     - target: {fileID: 7006240957033417057, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: moveSpeed
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7485018844187144204, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 9180097840579429086, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
       propertyPath: m_LocalScale.x
@@ -9347,6 +9377,11 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 650854848}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &651352333 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1004988967069545340, guid: 88e0f58988299804c9dffa47dccf6237, type: 3}
+  m_PrefabInstance: {fileID: 473277725}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &652614801 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4234737217897916428, guid: b4322bf930cc54de6930e213dbe7b614, type: 3}
@@ -11951,7 +11986,7 @@ GameObject:
   - component: {fileID: 854594878}
   - component: {fileID: 854594877}
   - component: {fileID: 854594876}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TVStatic
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -18237,6 +18272,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 1298135485}
     activeTime: 5
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1235131440
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -18939,8 +18979,16 @@ PrefabInstance:
       value: PlayerCamera
       objectReference: {fileID: 0}
     - target: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_Follow
@@ -18949,6 +18997,14 @@ PrefabInstance:
     - target: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6125784043895074422, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8205140928608851602, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9192850426392321633, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       propertyPath: m_LocalPosition.x
@@ -18994,6 +19050,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 436765776582315607, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1777854339}
     - targetCorrespondingSourceObject: {fileID: 1039805506970188613, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1280868094}
@@ -23692,6 +23751,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 553774023}
     activeTime: 3
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1611945334
 GameObject:
   m_ObjectHideFlags: 0
@@ -24377,8 +24441,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.30070582, z: 0, w: 0.95371693}
-  m_LocalPosition: {x: 31.191053, y: -17.052584, z: -58.754707}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 44.985504, y: 1.3965836, z: -48.740677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -25997,12 +26061,32 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3547954630236677046, guid: ca0e6fc5ed85f75488f38bc2597d59d0, type: 3}
   m_PrefabInstance: {fileID: 1280868091}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 79576265}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 45e653bab7fb20e499bda25e1b646fea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1777854339
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 79576265}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 14059f45d59192349a75c9d02b1ba92e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maskObject:
+    transform: {fileID: 651352333}
+    targetScale: {x: 5, y: 5, z: 0}
+  maskLayer:
+    serializedVersion: 2
+    m_Bits: 384
+  expandTime: 0.3
+  retractTime: 0.1
 --- !u!1 &1782054528
 GameObject:
   m_ObjectHideFlags: 0
@@ -29011,6 +29095,11 @@ MonoBehaviour:
   - virtualCamera: {fileID: 1386956809}
     activeTime: 3
   playerRb: {fileID: 1276572038}
+  isIntroCutscene: 0
+  tutorialDelay: 0.2
+  onCutsceneComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &2044789680
 GameObject:
   m_ObjectHideFlags: 0
@@ -33393,7 +33482,7 @@ GameObject:
   - component: {fileID: 1014353996}
   - component: {fileID: 1014353997}
   - component: {fileID: 3469287836610967559}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: TV
   m_TagString: Wall
   m_Icon: {fileID: 0}
