@@ -39,12 +39,11 @@ public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler, IPointerC
     public void triggerAnchor()
     {
         GetComponent<Image>().color = Color.green;
-        //play anchor hit sound here
+        // --- play anchor hit sound here ---
     }
 
     public void disableAnchor()
     {
         GetComponent<Image>().color = Color.red;
-        //play anchor hit sound here
     }
 }
