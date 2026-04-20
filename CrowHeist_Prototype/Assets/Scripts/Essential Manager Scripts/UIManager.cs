@@ -18,16 +18,21 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         if (Instance == null)
-        {
             Instance = this;
-        }
         else
         {
             Destroy(gameObject);
+            return;
         }
 
-        _coinsUI = GameObject.Find("CoinsUI").GetComponent<CoinsUI>();
-        _altWinCoinsUI = GameObject.Find("AltWinCoinsUI").GetComponent<AltWinCoinsUI>();
-        CollectionZoneCameraUI = GameObject.Find("CollectionZoneCameraUI").GetComponent<CollectionZoneCameraUI>();
+        GameObject coinsUIObj = GameObject.Find("CoinsUI");
+        if (coinsUIObj != null) _coinsUI = coinsUIObj.GetComponent<CoinsUI>();
+
+        GameObject altWinCoinsUIObj = GameObject.Find("AltWinCoinsUI");
+        if (altWinCoinsUIObj != null) _altWinCoinsUI = altWinCoinsUIObj.GetComponent<AltWinCoinsUI>();
+
+        GameObject collectionZoneObj = GameObject.Find("CollectionZoneCameraUI");
+        if (collectionZoneObj != null) CollectionZoneCameraUI = collectionZoneObj.GetComponent<CollectionZoneCameraUI>();
     }
+
 }
