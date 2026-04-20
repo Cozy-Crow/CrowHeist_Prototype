@@ -12385,6 +12385,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 31.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 55332400964089918, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 35.2
+      objectReference: {fileID: 0}
     - target: {fileID: 92253969265662334, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: close.Path
       value: event:/SFX/TempUI/Close
@@ -12432,6 +12456,22 @@ PrefabInstance:
     - target: {fileID: 459202394539926605, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 533370960159452423, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.80517
+      objectReference: {fileID: 0}
+    - target: {fileID: 533370960159452423, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 3.3864
+      objectReference: {fileID: 0}
+    - target: {fileID: 533370960159452423, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 305
+      objectReference: {fileID: 0}
+    - target: {fileID: 533370960159452423, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 365
       objectReference: {fileID: 0}
     - target: {fileID: 699438926937026269, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: select.Path
@@ -12500,6 +12540,14 @@ PrefabInstance:
     - target: {fileID: 2815556463359762643, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3425442362409525766, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3700137316436475989, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3888263807488108608, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_Name
@@ -23754,11 +23802,23 @@ MonoBehaviour:
   - virtualCamera: {fileID: 553774023}
     activeTime: 3
   playerRb: {fileID: 1276572038}
-  isIntroCutscene: 0
+  isIntroCutscene: 1
   tutorialDelay: 0.2
   onCutsceneComplete:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 892601135252806791, guid: 306be67fb20652144bdf35b478305e4b, type: 3}
+        m_TargetAssemblyTypeName: TutorialPopup, Assembly-CSharp
+        m_MethodName: Show
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1611945334
 GameObject:
   m_ObjectHideFlags: 0
@@ -24445,7 +24505,7 @@ Transform:
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
   m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
-  m_LocalPosition: {x: 41.531303, y: -15.842584, z: -52.13729}
+  m_LocalPosition: {x: 44.985504, y: 1.3965836, z: -48.740677}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
