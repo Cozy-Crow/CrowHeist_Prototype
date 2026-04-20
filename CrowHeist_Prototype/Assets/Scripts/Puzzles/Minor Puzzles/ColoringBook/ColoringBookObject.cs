@@ -18,6 +18,7 @@ public class ColoringBookObject : Interactable
     bool isInteractable = true; //tells whether or not the book can be interacted with
     [SerializeField] GameObject coinPrefab;
     [SerializeField] Transform coinSpawnPoint;
+    [SerializeField] Transform crowleyEndPoint;
 
     //animation vars
     float animTime = 0.5f; //holds animation time for the ending animation for the puzzle
@@ -156,6 +157,8 @@ public class ColoringBookObject : Interactable
         //play animation, pop reward
         //remove interaction capability
         isInteractable = false;
+
+        crowley.transform.position = crowleyEndPoint.position;
     }
 
     //function handling on interaction
