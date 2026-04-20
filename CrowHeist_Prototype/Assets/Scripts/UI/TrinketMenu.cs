@@ -48,7 +48,7 @@ public class TrinketMenu : MonoBehaviour
     public Sprite DefaultSprite { get => defaultSprite; }
     private void Awake()
     {
-        if (instance != null )
+        if (instance != null)
         {
             Destroy(gameObject);
             return;
@@ -112,13 +112,13 @@ public class TrinketMenu : MonoBehaviour
         container.gameObject.SetActive(false);
         isOpen = false;
 
-        if(trinketsDataLst.Count == 0)
+        if (trinketsDataLst.Count == 0)
         {
             Debug.LogWarning("Trinket Data List is Empty");
             return;
         }
 
-        for(int i = 0; i < trinketImageArray.Length; i++)
+        for (int i = 0; i < trinketImageArray.Length; i++)
         {
             trinketImageArray[i].IconSprite = null;
         }
@@ -153,6 +153,21 @@ public class TrinketMenu : MonoBehaviour
         pageNumber.text = $"Page {pageIndex + 1} / {maxPageIndex + 1}";
     }
 
+    /// <summary>
+    /// Immediately closes the trinket menu without animation.
+    /// Called by PauseManager when the pause menu opens.
+    /// </summary>
+    public void ForceClose()
+    {
+        if (!isOpen) return;
+        container.DOKill();
+        isOpen = false;
+        Time.timeScale = 1f;
+        container.alpha = 0f;
+        container.gameObject.SetActive(false);
+        close.Invoke();
+    }
+
     public void ToggleMenu()
     {
         // Prevent multiple toggles on the same frame (e.g. duplicate controllers)
@@ -164,18 +179,26 @@ public class TrinketMenu : MonoBehaviour
 
         if (!isOpen)
         {
+            // Don't open if the pause menu is already visible
+            PauseManager pauseManager = FindObjectOfType<PauseManager>();
+            if (pauseManager != null &&
+                (pauseManager.isGamePaused ||
+                 (pauseManager.PauseMenu != null && pauseManager.PauseMenu.activeSelf)))
+                return;
+
             //Open Menu
             isOpen = true;
+            Time.timeScale = 0f;
             container.alpha = 0f;
             container.gameObject.SetActive(true);
             container.DOFade(1, 0.2f).SetUpdate(true);
 
             Debug.Log("Opening Trinket Menu");
 
-                if (AudioManager.Instance != null)
-                {
-                    AudioManager.Instance.PlayOneShot(openMenuSFX);
-                }
+            if (AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayOneShot(openMenuSFX);
+            }
 
             UpdateMenu();
 
@@ -185,6 +208,7 @@ public class TrinketMenu : MonoBehaviour
         {
             //Close Menu
             isOpen = false;
+            Time.timeScale = 1f;
             container.DOFade(0, 0.2f).SetUpdate(true).onComplete = () =>
             {
                 container.gameObject.SetActive(false);
@@ -227,7 +251,7 @@ public class TrinketMenu : MonoBehaviour
     /// </summary>
     public void UpdateItem(ItemDataSO item)
     {
-        if(item != null)
+        if (item != null)
         {
             item.MarkAsRead();
             Debug.Log($"Trinket Collected (stage 2): {item.DisplayName}");
@@ -258,10 +282,10 @@ public class TrinketMenu : MonoBehaviour
     public void PageUp()
     {
         if (pageIndex >= maxPageIndex) return;
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayOneShot(pageUpSFX);
-            }
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayOneShot(pageUpSFX);
+        }
 
         pageIndex++;
         UpdateMenu();
@@ -270,10 +294,10 @@ public class TrinketMenu : MonoBehaviour
     public void PageDown()
     {
         if (pageIndex <= 0) return;
-            if (AudioManager.Instance != null)
-            {
-                AudioManager.Instance.PlayOneShot(pageDownSFX);
-            }
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlayOneShot(pageDownSFX);
+        }
         pageIndex--;
         UpdateMenu();
     }
