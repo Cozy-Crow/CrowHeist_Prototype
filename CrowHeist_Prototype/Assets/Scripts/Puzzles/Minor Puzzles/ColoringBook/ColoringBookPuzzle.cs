@@ -63,6 +63,9 @@ public class ColoringBookPuzzle : MonoBehaviour
 
     public void StartPuzzle()
     {
+        // Debug.Log("coloringbook Starting Puzzle");
+
+
         //function called by the coloring book to start the puzzle
         puzzleOn = true;
         puzzleComplete = false;
@@ -87,7 +90,7 @@ public class ColoringBookPuzzle : MonoBehaviour
     {
         //function called by the button to end the puzzle (finish)
         puzzleComplete = true;
-        
+
         //remove the last index (the mouse)
         lineRenderer.SetAllDirty(); //refesh the graphic
 
@@ -96,12 +99,11 @@ public class ColoringBookPuzzle : MonoBehaviour
 
         //hide close button (to prevent menuing errors)
         coloringBook.closeButton.enabled = false;
-        
-        
-        Debug.Log("Ending puzzle");
 
         //end puzzle
         coloringBook.EndPuzzle();
+
+   
     }
 
     public void HandlePuzzle()
@@ -112,24 +114,10 @@ public class ColoringBookPuzzle : MonoBehaviour
 
         //on left click
         if(Input.GetMouseButtonDown(0))
-        {
             isDrawing = true;         
-        }
 
         if(Input.GetMouseButtonUp(0))
-        {
             isDrawing = false;
-        }
-
-        //updates the linerenderer every frame 
-        // if(currentAnchorLocal != null && lineRenderer.points.Count >= 2 && !puzzleComplete && isDrawing)
-        // {
-        //     //set the last 2 most recent to be able to move (last hit)
-        //     lineRenderer.points[lineRenderer.points.Count-2] = currentAnchorLocal;
-        //     //cursor should always be at the end
-        //     lineRenderer.points[lineRenderer.points.Count-1] = localMousePosition;
-        //     lineRenderer.SetAllDirty(); //refesh the graphic
-        // }
 
         if (lineRenderer.points.Count >= 1 && !puzzleComplete && isDrawing)
         {
@@ -203,6 +191,7 @@ public class ColoringBookPuzzle : MonoBehaviour
         {
             lineRenderer.points.RemoveAt(lineRenderer.points.Count - 1); // remove cursor
             lineRenderer.points.Add(lineRenderer.points[0]); // close loop
+            // Debug.Log("COLORING BOOK ending in manager");
 
             lineRenderer.SetAllDirty();
             EndPuzzle();
