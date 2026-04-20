@@ -122,6 +122,11 @@ public class Pickable : MonoBehaviour, IPickupable
         pickedUp = true;
 
         AudioManager.Instance?.PlayOneShot(ObjPuAudio);
+        //stops coin emitter SFX when object is picked up
+         if (GetComponent<FMODUnity.StudioEventEmitter>() != null)
+        {
+            GetComponent<FMODUnity.StudioEventEmitter>().Stop();   
+        }
 
         if (player != null)
         {
@@ -149,6 +154,13 @@ public class Pickable : MonoBehaviour, IPickupable
 
         rb.isKinematic = false;
         pickedUp = false;
+
+        //starts emitter SFX when player drops narrative object
+        // if (GetComponent<FMODUnity.StudioEventEmitter>() != null)
+       // {
+        //    GetComponent<FMODUnity.StudioEventEmitter>().Play();   
+        //}
+
         if (MusicManager.Instance != null)
         {
             MusicManager.SetParameterByName("ItemYes", 0);

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2670215298662073596}
   - component: {fileID: 1458000392750078226}
   - component: {fileID: 3888098434420643915}
+  - component: {fileID: 8062703328218626506}
   m_Layer: 3
   m_Name: TFBB Book
   m_TagString: Untagged
@@ -70,6 +71,7 @@ MeshRenderer:
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: b3ba16e74cfd2424bb417ccad498ef76, type: 2}
+  - {fileID: 2100000, guid: ec0d940a5a0a7af44b0f0d2f1b81f68d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -158,7 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 2
+  outlineWidth: 5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -232,6 +234,20 @@ MonoBehaviour:
       Data3: -1778671211
       Data4: -997145487
     Path: event:/SFX/Objects/BookSpecifics/BookOpen
+--- !u!114 &8062703328218626506
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2375626477530196579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52777ee9ff0b01e44b59dad69de6ec4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 2375626477530196579}
+  spawnLocation: {fileID: 0}
 --- !u!1 &5563648545888869816
 GameObject:
   m_ObjectHideFlags: 0

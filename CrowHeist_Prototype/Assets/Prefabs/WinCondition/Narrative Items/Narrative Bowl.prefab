@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 7851757670227042760}
   - component: {fileID: -7774172985403079679}
   - component: {fileID: 3465872770891274157}
+  - component: {fileID: 920720520383050628}
   m_Layer: 0
   m_Name: Narrative Bowl
   m_TagString: Untagged
@@ -135,13 +136,20 @@ MonoBehaviour:
   _rotateSpeed: 1
   collectSound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  _collectParticlePrefab: {fileID: 0}
-  _popupPrefab: {fileID: 0}
+      Data1: 484010483
+      Data2: 1159383769
+      Data3: 2019980200
+      Data4: -2126844190
+    Path: event:/SFX/Objects/Coin/CoinCollect
+  poofSound:
+    Guid:
+      Data1: -1772732791
+      Data2: 1145071372
+      Data3: -1470930019
+      Data4: -413526329
+    Path: event:/SFX/Objects/Poof
+  _collectParticlePrefab: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
+  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
   isNarrativeItem: 0
   teleportPoint: {fileID: 0}
   sackTarget: {fileID: 0}
@@ -166,25 +174,25 @@ MonoBehaviour:
   mySpawner: {fileID: 0}
   ObjPuAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -44454266
+      Data2: 1144463817
+      Data3: 2132997260
+      Data4: 1787005409
+    Path: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuMetal
   ObjThrowAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -671456361
+      Data2: 1201201834
+      Data3: 115927985
+      Data4: -2058434188
+    Path: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowMetal
   ObjLandAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1979183355
+      Data2: 1107028669
+      Data3: 205681282
+      Data4: -2010710272
+    Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandMetal
 --- !u!114 &7851757670227042760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -199,7 +207,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
-  outlineWidth: 2
+  outlineWidth: 8
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -251,6 +259,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.011981266, y: 0.011981266, z: 0.004537906}
   m_Center: {x: 0, y: 4.6566126e-10, z: -0.0002772129}
+--- !u!114 &920720520383050628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4303228296242761904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -931559241
+      Data2: 1176371072
+      Data3: -479455084
+      Data4: 700806336
+    Path: event:/SFX/Objects/Coin/CoinEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &6795449760503656950
 GameObject:
   m_ObjectHideFlags: 0

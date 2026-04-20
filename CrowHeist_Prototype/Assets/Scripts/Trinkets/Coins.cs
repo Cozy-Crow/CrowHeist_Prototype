@@ -15,6 +15,7 @@ public class Coins : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private EventReference collectSound;
+    [SerializeField] private EventReference poofSound;
 
     [Header("Visual Effects")]
     [SerializeField] private GameObject _collectParticlePrefab;
@@ -41,10 +42,10 @@ public class Coins : MonoBehaviour
         {
             pickableUpScript._isDirty = false;
         }
-        if (pickableUpScript.pickedUp == true)
-        {
-            GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up
-        }
+        // if (pickableUpScript.pickedUp == true)
+        // {
+        //     GetComponent<FMODUnity.StudioEventEmitter>().Stop(); //stops emitter audio when picked up
+        // }
     }
 
     private void Awake()
@@ -75,7 +76,21 @@ public class Coins : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("HeistZone"))
+        if (other.CompareTag("TrashCan"))
+        {
+            Pickable pickable = GetComponent<Pickable>();
+            if (pickable != null && pickable.pickedUp)
+                pickable.Drop(transform.position);
+
+            Rigidbody rb = GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.velocity = Vector3.zero;
+                Vector3 skewedDirection = new Vector3(0.2f, 1f, 0.2f).normalized;
+                rb.AddForce(skewedDirection * 20f, ForceMode.Impulse);
+            }
+        }
+        else if (other.CompareTag("HeistZone"))
         {
             GameManager.Score += _coinValue;
             UIManager.Instance.CollectionZoneCameraUI.UpdateCoinCounter(GameManager.Score);
@@ -102,9 +117,6 @@ public class Coins : MonoBehaviour
             {
                 PickupRegistry.Instance.MarkNarrativeAsCollected(uniqueID);
             }
-            // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-             // float newValue = currentValue + 1;
-             // MusicManager.SetParameterByName("TrinketsCollected", newValue);
 
             // Drop item if picked up
             if (pickableUpScript.pickedUp)
@@ -150,6 +162,7 @@ public class Coins : MonoBehaviour
         if (_collectParticlePrefab != null)
         {
             Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            AudioManager.Instance?.PlayOneShot(poofSound);
         }
 
         // Briefly hide coin during "teleport"
@@ -193,12 +206,11 @@ public class Coins : MonoBehaviour
         //GameManager.Score += _coinValue;
         UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
 
-        // MusicManager code (if you want to re-enable it)
-       // MusicManager.Instance.CurrentMusicInstance.getParameterByName("trinketsCollected", out float currentValue);
-        //float newValue = currentValue + 1;
-        //MusicManager.SetParameterByName("TrinketsCollected", newValue);
+       //Vertical Adaptive Music, 4 trinkets trigger the parameter
+       MusicManager.Instance?.CurrentMusicInstance.setParameterByName("trinketsCollected", Mathf.Clamp(Mathf.Floor(GameManager.Score / 4),0,7)); 
+    
+        //MusicManager.Instance?.triggerMusicSolo();       
         // Destroy or hide the item
-        MusicManager.Instance?.triggerMusicSolo();
         KillObject();
     }
 

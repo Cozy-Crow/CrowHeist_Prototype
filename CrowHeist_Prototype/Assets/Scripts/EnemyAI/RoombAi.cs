@@ -18,14 +18,14 @@ public class RoombAi : MonoBehaviour
     [SerializeField] private NavMeshAgent agent;
     [SerializeField] private List<Transform> targets;
     [SerializeField] private RoombaPathing pathing;
-    [SerializeField] private float bufferDistance = 0.5f;
+    [SerializeField] private float bufferDistance = 0.1f;
     [SerializeField] private float detectionRadius = 5f;
     [SerializeField] private LayerMask dirtyLayerMask;
     [SerializeField] private Transform dock;
 
     //Patrol Mode for both rooms - added 1/29/25 by Mark D.
     [SerializeField] private List<Transform> patrolPoints_Room1;
-    [SerializeField] private List<Transform> patrolPoints_Room2;
+    // [SerializeField] private List<Transform> patrolPoints_Room2;
     //active patrol points (one of the lists above will be assigned)
     private List<Transform> patrolPoints;
 
@@ -47,6 +47,14 @@ public class RoombAi : MonoBehaviour
 
     private bool playerIsDirty = false;
     private bool anyObjectDirty = false;
+
+    [Header("Attack Door Sequence")]
+    [SerializeField] private BreakDoor breakDoor;
+    [SerializeField] private Transform breakDoorTransform;
+    [SerializeField] private float attackDoorSpeed = 15f;
+    [SerializeField] private float circleRadius = 1f;
+    [SerializeField] private float spinDuration = 2f;
+    private bool isInAttackDoorSequence = false;
 
     [Header("Audio")]
     [SerializeField] public EventReference roombaDetect;
@@ -108,7 +116,14 @@ public class RoombAi : MonoBehaviour
 
     private void Update()
     {
+        if (isInAttackDoorSequence)
+        {
+            return;
+        }
+
         HandleDirtyItemCollection(); // Keep list of dirty objects updated
+
+        if (isInAttackDoorSequence) return;
 
         // check if Roomba has been activated before movement logic - edited by Mark D. 9/10/25
         if(isActivated)
@@ -165,7 +180,7 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator WaitAndCheckForMoreDirtyObjects()
     {
-        yield return new WaitUntil(() => !agent.pathPending && agent.remainingDistance <= bufferDistance);
+        yield return new WaitUntil(() => agent.enabled && !agent.pathPending && agent.remainingDistance <= bufferDistance);
 
         HandleDirtyItemCollection();
 
@@ -231,13 +246,13 @@ public class RoombAi : MonoBehaviour
                 {
                     Destroy(parentTransform.gameObject);
                 }
-                AudioManager.Instance?.PlayOneShot(roombaEat);
+                AudioManager.Instance?.PlayOneShot3D(roombaEat, transform.position);
                 HandleDirtyItemCollection();
             }
 
         }
 
-        if (other.CompareTag("Player") && playerController.heldObject != null)
+        if (other.CompareTag("Player") && playerController.heldObject != null && isActivated && !isBroken)
         {
             playerController.Drop();
             playerController._pickUpsList.Clear();
@@ -266,7 +281,7 @@ public class RoombAi : MonoBehaviour
     // Patrol method added by Mark D. 9/9/25
     private void Patrol()
     {
-        if (patrolPoints.Count == 0) return;
+        if (patrolPoints.Count == 0 || isInAttackDoorSequence) return;
 
         Transform target = patrolPoints[currentPatrolIndex];
         agent.SetDestination(target.position);
@@ -279,11 +294,11 @@ public class RoombAi : MonoBehaviour
     }
 
     // Called when door opens, roomba goes into other room - added 1/29/25 by Mark D.
-    public void SwitchPatrol()
-    {
-        patrolPoints = patrolPoints_Room2;
-        currentPatrolIndex = 0;
-    }
+    // public void SwitchPatrol()
+    // {
+    //     patrolPoints = patrolPoints_Room2;
+    //     currentPatrolIndex = 0;
+    // }
 
     // Activate method added by Mark D. 9/10/25
     public void Activate()
@@ -315,4 +330,87 @@ public class RoombAi : MonoBehaviour
             AudioManager.Instance?.PlayOneShot(roombaDetect);
         }
     }
+
+    public void StartAttackDoorSequence()
+    {
+        UnityEngine.Debug.Log("StartAttackDoorSequence");
+        StartCoroutine(AttackDoorSequence());
+    }
+
+    private IEnumerator AttackDoorSequence()
+    {
+        UnityEngine.Debug.Log("AttackDoorSequence");
+        isInAttackDoorSequence = true;
+
+        // Generate circle waypoints around current position
+        Vector3 center = transform.position;
+        int pointCount = 8;
+        List<Vector3> circlePoints = new List<Vector3>();
+        for (int i = 0; i < pointCount; i++)
+        {
+            float angle = i * (360f / pointCount) * Mathf.Deg2Rad;
+            Vector3 point = center + new Vector3(Mathf.Cos(angle) * circleRadius, 0f, Mathf.Sin(angle) * circleRadius);
+            circlePoints.Add(point);
+        }
+
+        // Loop circle waypoints for spinDuration seconds
+        float elapsed = 0f;
+        int circleIndex = 0;
+        agent.isStopped = false;
+        agent.speed = 6f;
+
+        while (elapsed < spinDuration)
+        {
+            if (!agent.pathPending && agent.remainingDistance <= bufferDistance)
+            {
+                circleIndex = (circleIndex + 1) % pointCount;
+                agent.SetDestination(circlePoints[circleIndex]);
+            }
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // Charge the door
+        agent.speed = attackDoorSpeed;
+        // breakDoor.SetAttacking();
+        agent.SetDestination(breakDoorTransform.transform.position);
+
+        // added apr 15, 2025 by Mark D.
+        StartCoroutine(HandleDoorImpact());
+    }
+
+    private IEnumerator HandleDoorImpact()
+    {
+        while (agent.enabled && (agent.pathPending || agent.remainingDistance > bufferDistance))
+        {
+            yield return null;
+        }
+
+        if (!agent.enabled) yield break;
+
+        // Stop NavMesh cleanly BEFORE anything else
+        agent.isStopped = true;
+        agent.enabled = false;
+
+        // Break door EXACTLY here (no Update timing issues)
+        // breakDoor.Break();
+        breakDoor.SetAttacking();
+
+        // Small delay to avoid 1-frame visual pop (important)
+        yield return null;
+
+        // Move right manually
+        float moveTime = .7f;
+        float elapsed = 0f;
+
+        while (elapsed < moveTime)
+        {
+            transform.position += Vector3.right * attackDoorSpeed * Time.deltaTime;
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        breakDoor.Break();
+        Destroy(gameObject);
+    }
+
 }

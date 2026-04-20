@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 7333473412425108737}
   - component: {fileID: 8560393173687937537}
   - component: {fileID: 2981352729683451048}
+  - component: {fileID: 933790689040220087}
   m_Layer: 0
   m_Name: Fountain Pen
   m_TagString: Untagged
@@ -79,7 +80,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3027796706964954633}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 78f01915d2702ed45872bf38a9ee5c6b, type: 3}
@@ -224,13 +225,13 @@ MonoBehaviour:
   _rotateSpeed: 1
   collectSound:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
-  _collectParticlePrefab: {fileID: 0}
-  _popupPrefab: {fileID: 0}
+      Data1: 484010483
+      Data2: 1159383769
+      Data3: 2019980200
+      Data4: -2126844190
+    Path: event:/SFX/Objects/Coin/CoinCollect
+  _collectParticlePrefab: {fileID: 4386700885207067131, guid: 5cb2928f38f63b0408f722c1270711c1, type: 3}
+  _popupPrefab: {fileID: 8266473116343983122, guid: 7f211292500acf4408c59e4d5e410f08, type: 3}
   isNarrativeItem: 1
   teleportPoint: {fileID: 0}
   sackTarget: {fileID: 0}
@@ -255,25 +256,25 @@ MonoBehaviour:
   mySpawner: {fileID: 0}
   ObjPuAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 1928567591
+      Data2: 1073893775
+      Data3: -485036669
+      Data4: -330886907
+    Path: event:/SFX/Objects/ObjectSystem/ObjPickUp/ObjPuGeneric
   ObjThrowAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: -1274667687
+      Data2: 1324500975
+      Data3: 1674253190
+      Data4: -1940928456
+    Path: event:/SFX/Objects/ObjectSystem/ObjThrow/ObjThrowGeneric
   ObjLandAudio:
     Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
+      Data1: 2129253713
+      Data2: 1138599730
+      Data3: 14035086
+      Data4: 1015578522
+    Path: event:/SFX/Objects/ObjectSystem/ObjLand/ObjLandGeneric
 --- !u!114 &8560393173687937537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -288,7 +289,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineMode: 0
   outlineColor: {r: 1, g: 0.84313726, b: 0, a: 1}
-  outlineWidth: 2
+  outlineWidth: 4.5
   precomputeOutline: 0
   bakeKeys: []
   bakeValues: []
@@ -313,6 +314,37 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.04167109, y: 0.026125351, z: 0.3094467}
   m_Center: {x: 0.012260182, y: 0.0027670702, z: 0.00068905525}
+--- !u!114 &933790689040220087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3027796706964954633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -931559241
+      Data2: 1176371072
+      Data3: -479455084
+      Data4: 700806336
+    Path: event:/SFX/Objects/Coin/CoinEmitter
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &3287493197583243910
 GameObject:
   m_ObjectHideFlags: 0
