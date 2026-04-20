@@ -319,6 +319,7 @@ namespace KinematicCharacterController.Examples
             {
                 // 0 the input vector to stop movement
                 input = new Vector3();
+                rb.velocity = new Vector3();
                 return;
             }
 
@@ -989,6 +990,13 @@ namespace KinematicCharacterController.Examples
         public void SetCanInput(bool val)
         {
             canInput = val;
+
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector3();
+                rb.velocity = new Vector3();
+            }
         }
 
         public void CamFocusOnCrowley()
