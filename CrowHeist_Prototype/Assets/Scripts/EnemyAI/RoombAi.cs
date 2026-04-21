@@ -65,6 +65,8 @@ public class RoombAi : MonoBehaviour
     [SerializeField] public EventReference damageCaw;
     public StudioEventEmitter roombaEmitter;
 
+    [SerializeField] private ParticleSystem electricity;
+
 
     //For roomba activation cutscene - added 12/2/25 by Mark D.
     // public RoombaCamManager roombaCamManager;
@@ -81,6 +83,8 @@ public class RoombAi : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerController = player.GetComponent<Controller2Point5D>();
         agent = GetComponent<NavMeshAgent>();
+
+        electricity.gameObject.SetActive(false);
     }
 
     private void Start()
@@ -146,6 +150,8 @@ public class RoombAi : MonoBehaviour
                 Patrol();
             }
         }
+
+        electricity.transform.position = transform.position;
     }
 
     private void ItemPath(Vector3 targetPos)
@@ -240,6 +246,7 @@ public class RoombAi : MonoBehaviour
                 RespawnObject respawnComp = parentTransform.GetComponentInChildren<RespawnObject>();
                 if (respawnComp != null)
                 {
+                    itemScript._isDirty = false; // added to fix tracking respawned items
                     respawnComp.Respawn();
                 }
                 else
@@ -381,6 +388,8 @@ public class RoombAi : MonoBehaviour
 
     private IEnumerator HandleDoorImpact()
     {
+
+        electricity.gameObject.SetActive(true);
         while (agent.enabled && (agent.pathPending || agent.remainingDistance > bufferDistance))
         {
             yield return null;
@@ -411,6 +420,8 @@ public class RoombAi : MonoBehaviour
         }
         breakDoor.Break();
         Destroy(gameObject);
+
+        electricity.gameObject.SetActive(false);
     }
 
 }

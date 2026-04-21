@@ -23,12 +23,18 @@ public class InteractableRoombaVase : MonoBehaviour
 
     public RoombAi roombAi;
     public RoombaDispense roombaDispense;
-    public RoombaLightsOff roombaLightsOff;    
+    public RoombaLightsOff roombaLightsOff;
+
+    //VFX
+    [SerializeField] GameObject electricExplosion;
+    private ParticleSystem[] ps;
 
     void Start()
     {
         interactDistance = 2.6f;
         rb = GetComponent<Rigidbody>();
+        
+        ps = electricExplosion.GetComponentsInChildren<ParticleSystem>();
     }
 
     private void Update()
@@ -63,7 +69,13 @@ public class InteractableRoombaVase : MonoBehaviour
             roombaLightsOff.LightsOff();
             roombaDispense.Dispense();
             roombAi.StartAttackDoorSequence();
-            Destroy(gameObject);
+
+            electricExplosion.transform.position = transform.position;
+            foreach (ParticleSystem p in ps)
+            {
+                p.Play();
+            }
+            gameObject.SetActive(false);
         }
     }
 }

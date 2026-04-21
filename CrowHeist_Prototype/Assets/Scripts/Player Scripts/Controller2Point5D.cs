@@ -8,7 +8,7 @@ using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using Cinemachine;
 
 namespace KinematicCharacterController.Examples
@@ -166,8 +166,12 @@ namespace KinematicCharacterController.Examples
 
         #region VFX
         private VisualEffect jumpPoof;
-        [SerializeField] private ParticleSystem GlidePS;
+        [SerializeField] private ParticleSystem GlidePSL;
+        [SerializeField] private ParticleSystem GlidePSR;
         private bool glideSpawned = false;
+        private ShakeOnPlayerHit shake = new ShakeOnPlayerHit();
+        private GameObject paperLCorner;
+        private GameObject paperRCorner;
         #endregion
 
         #region  Trinket Guide
@@ -208,6 +212,8 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            
         }
 
         void Update()
@@ -252,11 +258,20 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
-                        
-                        GlidePS.Play();
-                        GlidePS.transform.position = transform.position;
 
-                        if (isGrounded) { GlidePS.Stop(); }
+
+                        paperLCorner = GameObject.FindWithTag("PaperLCorner");
+                        paperRCorner = GameObject.FindWithTag("PaperRCorner");
+
+                        GlidePSL.Play();
+                        GlidePSL.transform.position = paperLCorner.transform.position;
+                        GlidePSR.Play();
+                        GlidePSR.transform.position = paperRCorner.transform.position;
+
+                        if (isGrounded) { 
+                            GlidePSL.Stop(); 
+                            GlidePSR.Stop();                        
+                        }
 
                     }
                 }
@@ -303,7 +318,8 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
-                GlidePS.Stop();
+                GlidePSL.Stop();
+                GlidePSR.Stop();
             }
 
             if(playerCam == null)
@@ -318,7 +334,8 @@ namespace KinematicCharacterController.Examples
             if(!canInput)
             {
                 // 0 the input vector to stop movement
-                input = new Vector2();
+                input = new Vector3();
+                rb.velocity = new Vector3();
                 return;
             }
 
@@ -326,7 +343,20 @@ namespace KinematicCharacterController.Examples
             // Changed from Input.GetAxis to Input.GetAxisRaw
             // Apparently GetAxis has smoothing to it to slowly progress to 0
             // instead of instantly setting to 0, making you not stop.
-            input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            if (SettingsManager.Instance != null && SettingsManager.Instance.LeftHandMode)
+            {
+                float h = 0f;
+                float v = 0f;
+                if (Input.GetKey(KeyCode.J)) h -= 1f;
+                if (Input.GetKey(KeyCode.L)) h += 1f;
+                if (Input.GetKey(KeyCode.I)) v += 1f;
+                if (Input.GetKey(KeyCode.K)) v -= 1f;
+                input = new Vector2(h, v).normalized;
+            }
+            else
+            {
+                input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
+            }
 
             if (Input.GetButtonDown("Jump"))
             {
@@ -417,6 +447,8 @@ namespace KinematicCharacterController.Examples
                     //above stopped working?? putting bandaid on it for now 
                     AudioManager.Instance?.PlayOneShot(land);
                     print("LAND");
+                    GlidePSL.Stop();
+                    GlidePSR.Stop();
                     
                 }
 
@@ -500,6 +532,13 @@ namespace KinematicCharacterController.Examples
         private void OnCollisionEnter(Collision collision)
         {
             HandleCollisionLogic(collision);
+
+            if (collision.gameObject.CompareTag("Roomba"))
+            {
+                playerCam.GetComponent<ShakeOnPlayerHit>().Shake();
+                StartCoroutine(flashRed());
+                
+            }
         }
 
         private void OnCollisionStay(Collision collision)
@@ -647,13 +686,16 @@ namespace KinematicCharacterController.Examples
             //U for Right hand on keyboard
             //Left click as another option
 
-            if(Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U))
+            bool leftHand = SettingsManager.Instance != null && SettingsManager.Instance.LeftHandMode;
+            int primaryMouseBtn = leftHand ? 1 : 0;
+            KeyCode pickupKey = leftHand ? KeyCode.U : KeyCode.E;
+            if(Input.GetKeyDown(pickupKey))
                 lastThrowInput = "E";
-            if(Input.GetMouseButtonDown(0))
+            if(Input.GetMouseButtonDown(primaryMouseBtn))
                 lastThrowInput = "0";
 
-            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0)) 
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U)) 
+            // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(pickupKey))
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -719,13 +761,17 @@ namespace KinematicCharacterController.Examples
             if (heldObject != null)
             {
                 Collider heldCollider = heldObject.GetComponent<Collider>();
-                
+
                 if (heldCollider != null)
                 {
                     heldCollider.enabled = true;
                 }
 
-                if (Input.GetMouseButtonDown(0))
+                int throwBtn = leftHand ? 1 : 0;
+                int cancelBtn = leftHand ? 0 : 1;
+                float mouseSensitivity = SettingsManager.Instance?.MouseSensitivity ?? 1f;
+
+                if (Input.GetMouseButtonDown(throwBtn))
                 {
                     chargingThrow = true;
                     cancelThrow = false;
@@ -733,12 +779,12 @@ namespace KinematicCharacterController.Examples
                     AudioManager.Instance?.PlayInstance("CHARGE");
                 }
 
-                if (Input.GetMouseButton(0) && !cancelThrow)
+                if (Input.GetMouseButton(throwBtn) && !cancelThrow)
                 {
-                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce, 0, maxThrowForce);
+                    throwForce = Mathf.Clamp((Time.time - chargeStartTime) / chargeTime * maxThrowForce * mouseSensitivity, 0, maxThrowForce);
 
                     Vector3 mousePosition = Input.mousePosition;
-                    
+
                     //mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z + 5f;
                     Vector3 worldMousePos = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -751,11 +797,11 @@ namespace KinematicCharacterController.Examples
                     {
                         DrawThrowTrajectory(storedThrowDirection);
                     }
-                    
-                    
+
+
                 }
 
-                if (Input.GetMouseButtonUp(0) && !cancelThrow)
+                if (Input.GetMouseButtonUp(throwBtn) && !cancelThrow)
                 {
                     isThrowing = true;
                     chargingThrow = false;
@@ -805,13 +851,13 @@ namespace KinematicCharacterController.Examples
                     // and charge follow position
                     //get inital pos to reset later
                     initalThrowCamTargetPos = transform.position;
-                    playerCam.Follow = transform;
+                    CamFocusOnCrowley(); //refocus the camera
 
                     // targetAssetObject.SetActive(false);
                 }
 
-                //cancel throw on right click
-                if (Input.GetMouseButtonDown(1))
+                //cancel throw (opposite mouse button from throw)
+                if (Input.GetMouseButtonDown(cancelBtn))
                 {
                     CancelThrow();
                 }
@@ -842,7 +888,8 @@ namespace KinematicCharacterController.Examples
             // and charge follow position
             //get inital pos to reset later
             initalThrowCamTargetPos = transform.position;
-            playerCam.Follow = transform;
+            
+            CamFocusOnCrowley();
         }
 
         public List<IPickupable> GetHeldItems()
@@ -968,6 +1015,18 @@ namespace KinematicCharacterController.Examples
         public void SetCanInput(bool val)
         {
             canInput = val;
+
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector3();
+                rb.velocity = new Vector3();
+            }
+        }
+
+        public void CamFocusOnCrowley()
+        {
+            playerCam.Follow = transform;
         }
 
         void DrawThrowTrajectory(Vector3 direction)
@@ -1180,6 +1239,12 @@ namespace KinematicCharacterController.Examples
                 trinketGuideLine.SetPosition(0, startPos);
                 trinketGuideLine.SetPosition(1, endPos);
             }
+        }
+        private IEnumerator flashRed()
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(.6f);
+            GetComponentInChildren<SpriteRenderer>().color = Color.white;
         }
     }
 }
