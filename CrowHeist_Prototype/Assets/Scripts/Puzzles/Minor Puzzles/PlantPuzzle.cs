@@ -38,7 +38,10 @@ public class PlantPuzzle : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Fertilizer"))
+        {
             StartCoroutine(GrowPlant());
+            Destroy(other.gameObject);
+        }
     }
 
     private IEnumerator GrowPlant()
@@ -69,25 +72,25 @@ public class PlantPuzzle : MonoBehaviour
         plantPrefab.transform.localScale = targetScale;
         plantPrefab.transform.localPosition = targetPos;
 
-        if (flowerCenter != null) yield return StartCoroutine(GrowFlower());
+       // if (flowerCenter != null) yield return StartCoroutine(GrowFlower());
     }
 
-    private IEnumerator GrowFlower()
-    {
-        float originalZ = flowerCenter.transform.localScale.z;
-        Vector3 start = new Vector3(0f, 0f, originalZ);
-        Vector3 target = new Vector3(0.4f, 0.4f, originalZ);
-        float elapsed = 0f;
+    // private IEnumerator GrowFlower()
+    // {
+    //     float originalZ = flowerCenter.transform.localScale.z;
+    //     Vector3 start = new Vector3(0f, 0f, originalZ);
+    //     Vector3 target = new Vector3(0.4f, 0.4f, originalZ);
+    //     float elapsed = 0f;
 
-        while (elapsed < flowerGrowDuration)
-        {
-            flowerCenter.transform.localScale = Vector3.Lerp(start, target, elapsed / flowerGrowDuration);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+    //     while (elapsed < flowerGrowDuration)
+    //     {
+    //         flowerCenter.transform.localScale = Vector3.Lerp(start, target, elapsed / flowerGrowDuration);
+    //         elapsed += Time.deltaTime;
+    //         yield return null;
+    //     }
 
-        flowerCenter.transform.localScale = target;
-    }
+    //     flowerCenter.transform.localScale = target;
+    // }
 
     private IEnumerator GrowBranch(Transform branch, Vector3 target)
     {
