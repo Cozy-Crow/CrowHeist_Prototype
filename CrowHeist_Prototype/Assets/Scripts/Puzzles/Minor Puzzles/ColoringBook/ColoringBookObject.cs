@@ -18,6 +18,7 @@ public class ColoringBookObject : Interactable
     bool isInteractable = true; //tells whether or not the book can be interacted with
     [SerializeField] GameObject coinPrefab;
     [SerializeField] Transform coinSpawnPoint;
+    [SerializeField] Transform crowleyEndPoint;
 
     //animation vars
     float animTime = 0.5f; //holds animation time for the ending animation for the puzzle
@@ -156,6 +157,8 @@ public class ColoringBookObject : Interactable
         //play animation, pop reward
         //remove interaction capability
         isInteractable = false;
+
+        crowley.transform.position = crowleyEndPoint.position;
     }
 
     //function handling on interaction
@@ -191,9 +194,10 @@ public class ColoringBookObject : Interactable
         //normal close book sequence
         openBook.gameObject.SetActive(false);
         closedBook.gameObject.SetActive(true);
+        // --- play sfx here probably (book slamming closed + crowley hurt?) ---
+
         closedBook.transform.eulerAngles = new Vector3(0,-180,-90); //rotate so book is on top
 
-        //play sfx here probably (book slamming closed + crowley hurt?)
     }
 
     private void SpawnReward()
