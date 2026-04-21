@@ -319,7 +319,8 @@ namespace KinematicCharacterController.Examples
             if(!canInput)
             {
                 // 0 the input vector to stop movement
-                input = new Vector2();
+                input = new Vector3();
+                rb.velocity = new Vector3();
                 return;
             }
 
@@ -833,7 +834,7 @@ namespace KinematicCharacterController.Examples
                     // and charge follow position
                     //get inital pos to reset later
                     initalThrowCamTargetPos = transform.position;
-                    playerCam.Follow = transform;
+                    CamFocusOnCrowley(); //refocus the camera
 
                     // targetAssetObject.SetActive(false);
                 }
@@ -870,7 +871,8 @@ namespace KinematicCharacterController.Examples
             // and charge follow position
             //get inital pos to reset later
             initalThrowCamTargetPos = transform.position;
-            playerCam.Follow = transform;
+            
+            CamFocusOnCrowley();
         }
 
         public List<IPickupable> GetHeldItems()
@@ -996,6 +998,18 @@ namespace KinematicCharacterController.Examples
         public void SetCanInput(bool val)
         {
             canInput = val;
+
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector3();
+                rb.velocity = new Vector3();
+            }
+        }
+
+        public void CamFocusOnCrowley()
+        {
+            playerCam.Follow = transform;
         }
 
         void DrawThrowTrajectory(Vector3 direction)
