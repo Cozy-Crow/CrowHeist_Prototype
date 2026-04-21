@@ -166,9 +166,12 @@ namespace KinematicCharacterController.Examples
 
         #region VFX
         private VisualEffect jumpPoof;
-        [SerializeField] private ParticleSystem GlidePS;
+        [SerializeField] private ParticleSystem GlidePSL;
+        [SerializeField] private ParticleSystem GlidePSR;
         private bool glideSpawned = false;
         private ShakeOnPlayerHit shake = new ShakeOnPlayerHit();
+        private GameObject paperLCorner;
+        private GameObject paperRCorner;
         #endregion
 
         #region  Trinket Guide
@@ -209,6 +212,8 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            
         }
 
         void Update()
@@ -253,11 +258,20 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
-                        
-                        GlidePS.Play();
-                        GlidePS.transform.position = transform.position;
 
-                        if (isGrounded) { GlidePS.Stop(); }
+
+                        paperLCorner = GameObject.FindWithTag("PaperLCorner");
+                        paperRCorner = GameObject.FindWithTag("PaperRCorner");
+
+                        GlidePSL.Play();
+                        GlidePSL.transform.position = paperLCorner.transform.position;
+                        GlidePSR.Play();
+                        GlidePSR.transform.position = paperRCorner.transform.position;
+
+                        if (isGrounded) { 
+                            GlidePSL.Stop(); 
+                            GlidePSR.Stop();                        
+                        }
 
                     }
                 }
@@ -304,7 +318,8 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
-                GlidePS.Stop();
+                GlidePSL.Stop();
+                GlidePSR.Stop();
             }
 
             if(playerCam == null)
@@ -432,6 +447,8 @@ namespace KinematicCharacterController.Examples
                     //above stopped working?? putting bandaid on it for now 
                     AudioManager.Instance?.PlayOneShot(land);
                     print("LAND");
+                    GlidePSL.Stop();
+                    GlidePSR.Stop();
                     
                 }
 

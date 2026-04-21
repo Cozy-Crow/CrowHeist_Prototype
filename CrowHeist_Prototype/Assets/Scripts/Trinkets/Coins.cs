@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
+using UnityEngine.VFX;
 
 public class Coins : MonoBehaviour
 {
@@ -162,6 +163,7 @@ public class Coins : MonoBehaviour
         if (_collectParticlePrefab != null)
         {
             Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            _collectParticlePrefab.GetComponent<VisualEffect>().Play();
             AudioManager.Instance?.PlayOneShot(poofSound);
         }
 
