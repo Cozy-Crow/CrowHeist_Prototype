@@ -162,9 +162,10 @@ public class Coins : MonoBehaviour
         // Teleport to start position
         if (_collectParticlePrefab != null)
         {
-            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
-            _collectParticlePrefab.GetComponent<VisualEffect>().Play();
+            GameObject spawnedEffect = Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            spawnedEffect.GetComponent<VisualEffect>()?.Play();
             AudioManager.Instance?.PlayOneShot(poofSound);
+
         }
 
         // Briefly hide coin during "teleport"
