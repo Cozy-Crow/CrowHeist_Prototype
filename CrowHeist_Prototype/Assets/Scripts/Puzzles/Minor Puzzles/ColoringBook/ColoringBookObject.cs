@@ -5,6 +5,7 @@ using KinematicCharacterController.Examples;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class ColoringBookObject : Interactable
 {
@@ -30,6 +31,10 @@ public class ColoringBookObject : Interactable
     [SerializeField] GameObject closedBook;
     [SerializeField] CinemachineVirtualCamera playerCam; //cam to swap for the ending anim
     [SerializeField] Transform camPoint;
+
+    [SerializeField] private EventReference BookCloseSFX;
+    [SerializeField] private EventReference crowPainSFX;
+
 
 
     // Start is called before the first frame update
@@ -194,8 +199,8 @@ public class ColoringBookObject : Interactable
         //normal close book sequence
         openBook.gameObject.SetActive(false);
         closedBook.gameObject.SetActive(true);
-        // --- play sfx here probably (book slamming closed + crowley hurt?) ---
-
+        AudioManager.Instance?.PlayOneShot(BookCloseSFX);
+        AudioManager.Instance?.PlayOneShot(crowPainSFX);
         closedBook.transform.eulerAngles = new Vector3(0,-180,-90); //rotate so book is on top
 
     }

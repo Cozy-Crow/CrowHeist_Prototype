@@ -4,12 +4,13 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using FMODUnity;
 
 public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
     [SerializeField] public int index;
     [SerializeField] private ColoringBookPuzzle puzzleManager;
-
+    [SerializeField] private EventReference dingSFX;
 
     void Update()
     {
@@ -39,7 +40,7 @@ public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler, IPointerC
     public void triggerAnchor()
     {
         GetComponent<Image>().color = Color.green;
-        // --- play anchor hit sound here ---
+        AudioManager.Instance?.PlayOneShot(dingSFX);
     }
 
     public void disableAnchor()
