@@ -14,7 +14,7 @@ public class JackOLanternPuzzle : MonoBehaviour
     public GameObject confettiEffect;
     [SerializeField] private float popForce = 2f;
     [SerializeField] private Vector3 spawnOffset = new Vector3(0, -0.5f, 0);
-    [SerializeField] private EventReference coinSparkle;
+    [SerializeField] private EventReference coinSparkleSFX;
 
 
     public void OnTriggerEnter(Collider other)
@@ -67,7 +67,7 @@ public class JackOLanternPuzzle : MonoBehaviour
             rb.AddForce(obj.transform.forward * popForce, ForceMode.Impulse);
         }
 
-        AudioManager.Instance?.PlayOneShot3D(coinSparkle, transform.position);
+        AudioManager.Instance?.PlayOneShot3D(coinSparkleSFX, transform.position);
 
         if (confettiEffect)
         {
