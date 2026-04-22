@@ -698,7 +698,7 @@ namespace KinematicCharacterController.Examples
                 lastThrowInput = "0";
 
             // if (Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.U) || Input.GetMouseButtonDown(0))
-            if (Input.GetKeyDown(pickupKey))
+            if(Input.GetKeyDown(pickupKey))
             {
                 AIEventManager.instance.e_pickup.Invoke();
 
@@ -1073,10 +1073,12 @@ namespace KinematicCharacterController.Examples
                 // Debug.Log("curved Dir " + curvedDirection);
                 // Debug.Log("throwcam dir " + throwCamTarget.transform.position);
 
+                float clampCamvalnew = throwCamClampVal*chargePercent;
+
                 //get the intial pos +- value for bounds
-                Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
-                Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
-                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection*throwCamScalar;
+                Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + clampCamvalnew, initalThrowCamTargetPos.y + clampCamvalnew, initalThrowCamTargetPos.z + clampCamvalnew);
+                Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - clampCamvalnew, initalThrowCamTargetPos.y - clampCamvalnew, initalThrowCamTargetPos.z - clampCamvalnew); 
+                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection*throwCamScalar;                
 
                 //clamp the values
                 float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMinBounds.x, throwCamMaxBounds.x);
@@ -1085,6 +1087,7 @@ namespace KinematicCharacterController.Examples
 
                 //update the position
                 Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
+                Debug.Log("TCT " + throwCamTargetNewPos);
                 throwCamTarget.transform.position = throwCamTargetNewPos;
 
                 // Debug.Log("camera pos1 " + playerCam.transform.position);                 
