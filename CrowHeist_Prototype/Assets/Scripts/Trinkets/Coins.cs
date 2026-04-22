@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
+using UnityEngine.VFX;
 
 public class Coins : MonoBehaviour
 {
@@ -161,8 +162,10 @@ public class Coins : MonoBehaviour
         // Teleport to start position
         if (_collectParticlePrefab != null)
         {
-            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            GameObject spawnedEffect = Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            spawnedEffect.GetComponent<VisualEffect>()?.Play();
             AudioManager.Instance?.PlayOneShot(poofSound);
+
         }
 
         // Briefly hide coin during "teleport"
