@@ -20,9 +20,10 @@ namespace KinematicCharacterController.Examples
         [Header("References")]
         [SerializeField] private Sockets sockets;           //  Sockets for holding items
         [SerializeField] private CrowleySFX crowleySFX;     // Reference to CrowleySFX
-        [SerializeField] private CinemachineVirtualCamera playerCam;
-        [SerializeField] private GameObject throwCamTarget;
-        [SerializeField] float throwCamClampVal;
+        [SerializeField] private CinemachineVirtualCamera playerCam; //reference to the playercam
+        [SerializeField] private GameObject throwCamTarget; //reference to the camera target object on crowley
+        [SerializeField] float throwCamClampVal; //how far we want the camera to pan
+        [SerializeField] float throwCamScalar = 1; //used to determine how fast the camera is panned --value between >0 and 1
         private Vector3 initalThrowCamTargetPos;
         private string lastThrowInput;
 
@@ -201,6 +202,8 @@ namespace KinematicCharacterController.Examples
             } 
 
             crowleySFX = GetComponent<CrowleySFX>();
+            if(throwCamScalar <= 0) //avoid divide by 0
+                throwCamScalar = 1;
         }
 
         public void Start()
@@ -1073,7 +1076,7 @@ namespace KinematicCharacterController.Examples
                 //get the intial pos +- value for bounds
                 Vector3 throwCamMaxBounds = new Vector3(initalThrowCamTargetPos.x + throwCamClampVal, initalThrowCamTargetPos.y + throwCamClampVal, initalThrowCamTargetPos.z + throwCamClampVal);
                 Vector3 throwCamMinBounds = new Vector3(initalThrowCamTargetPos.x - throwCamClampVal, initalThrowCamTargetPos.y - throwCamClampVal, initalThrowCamTargetPos.z - throwCamClampVal); 
-                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection;
+                Vector3 updateThrowCamTarget = throwCamTarget.transform.position + throwDirection*throwCamScalar;
 
                 //clamp the values
                 float throwCamTargetNewX = Math.Clamp(updateThrowCamTarget.x, throwCamMinBounds.x, throwCamMaxBounds.x);
