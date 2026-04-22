@@ -115,88 +115,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 351661632964170611}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &4173167000086943310
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5596181345463513396}
-  - component: {fileID: 4795318974883473866}
-  - component: {fileID: 8231987692254262994}
-  m_Layer: 0
-  m_Name: ColoringBookIT
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5596181345463513396
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4173167000086943310}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: -0.0019, y: -0.003, z: 0.0194}
-  m_LocalScale: {x: 0.013791289, y: 0.040000007, z: 0.015}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 351661632964170611}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &4795318974883473866
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4173167000086943310}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.5, y: 1.02, z: 2.5}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &8231987692254262994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4173167000086943310}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40f9ffe9b092b4948bcb16142d7baa3f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  realObject: {fileID: 1128867251484019145}
-  menu: {fileID: 0}
-  crowley: {fileID: 0}
-  closeButton: {fileID: 0}
-  puzzleController: {fileID: 0}
-  coinPrefab: {fileID: 3091855981957459826, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
-  coinSpawnPoint: {fileID: 3048198836701699232}
-  crowleyEndPoint: {fileID: 1322767147322127905}
-  spriteRenderer: {fileID: 2927654625766056314}
-  sprite1: {fileID: 21300000, guid: c15c085b24db2624a98d6c80b271ac04, type: 3}
-  sprite2: {fileID: 21300000, guid: 91fac2b2e13230f43a7f95eb58cd124a, type: 3}
-  sprite3: {fileID: 21300000, guid: 12be0996425204a4188eeffea673d5f9, type: 3}
-  openBook: {fileID: 44339083981112355}
-  closedBook: {fileID: 3206325797807414542}
-  playerCam: {fileID: 0}
-  camPoint: {fileID: 2721658727230520244}
 --- !u!1 &4988602448806366451
 GameObject:
   m_ObjectHideFlags: 0
@@ -254,7 +172,7 @@ Transform:
   m_GameObject: {fileID: 5782887537664956979}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.00293, z: 0.0329}
+  m_LocalPosition: {x: 0, y: -0.0029, z: 0.0413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -354,9 +272,6 @@ PrefabInstance:
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5596181345463513396}
-    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 2825156644106340276}
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 7f32c86a975dbf841a87245a4b0a1fe2, type: 3}
       insertIndex: -1
@@ -445,13 +360,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ad393ba7c0150d146b3baf54fd4d5a42, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ad393ba7c0150d146b3baf54fd4d5a42, type: 3}
       propertyPath: m_Name
       value: Art Book Open
       objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: ad393ba7c0150d146b3baf54fd4d5a42, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -483,7 +402,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 2.9999993, y: 0.54416174, z: 4.2993016}
   m_Center: {x: 0.00000002387988, y: -0.20031899, z: 0.52245635}
@@ -570,6 +489,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4453ff545ebcde24ca9d7ae802ab2468, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5954018793573932742}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4453ff545ebcde24ca9d7ae802ab2468, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1659156956596398306}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 4453ff545ebcde24ca9d7ae802ab2468, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7096379116352452936}
   m_SourcePrefab: {fileID: 100100000, guid: 4453ff545ebcde24ca9d7ae802ab2468, type: 3}
 --- !u!4 &2825156644106340276 stripped
 Transform:
@@ -620,3 +545,56 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 2.9999995, y: 0.60000056, z: 2.0000002}
   m_Center: {x: 3.5527128e-15, y: -0.00000020861626, z: 0}
+--- !u!114 &1659156956596398306
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3206325797807414542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40f9ffe9b092b4948bcb16142d7baa3f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  realObject: {fileID: 1128867251484019145}
+  menu: {fileID: 0}
+  crowley: {fileID: 0}
+  closeButton: {fileID: 0}
+  puzzleController: {fileID: 0}
+  coinPrefab: {fileID: 3091855981957459826, guid: 69b31929e9a63144784d72730fc0435e, type: 3}
+  coinSpawnPoint: {fileID: 3048198836701699232}
+  crowleyEndPoint: {fileID: 1322767147322127905}
+  spriteRenderer: {fileID: 2927654625766056314}
+  sprite1: {fileID: 21300000, guid: c15c085b24db2624a98d6c80b271ac04, type: 3}
+  sprite2: {fileID: 21300000, guid: 91fac2b2e13230f43a7f95eb58cd124a, type: 3}
+  sprite3: {fileID: 21300000, guid: 12be0996425204a4188eeffea673d5f9, type: 3}
+  openBook: {fileID: 44339083981112355}
+  closedBook: {fileID: 3206325797807414542}
+  playerCam: {fileID: 0}
+  camPoint: {fileID: 2721658727230520244}
+  shakeDuration: 0.2
+  shakeAmount: 0.04
+  decreaseFactor: 0.25
+  shakeAfterFrames: 10
+--- !u!65 &7096379116352452936
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3206325797807414542}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 3.55, y: 2.25, z: 2.5}
+  m_Center: {x: 0, y: 0, z: 0}
