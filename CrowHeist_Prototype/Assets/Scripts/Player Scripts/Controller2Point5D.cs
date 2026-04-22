@@ -8,7 +8,7 @@ using System;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine.VFX;
-using UnityEditor.Experimental.GraphView;
+//using UnityEditor.Experimental.GraphView;
 using Cinemachine;
 
 namespace KinematicCharacterController.Examples
@@ -166,8 +166,12 @@ namespace KinematicCharacterController.Examples
 
         #region VFX
         private VisualEffect jumpPoof;
-        [SerializeField] private ParticleSystem GlidePS;
+        [SerializeField] private ParticleSystem GlidePSL;
+        [SerializeField] private ParticleSystem GlidePSR;
         private bool glideSpawned = false;
+        private ShakeOnPlayerHit shake = new ShakeOnPlayerHit();
+        private GameObject paperLCorner;
+        private GameObject paperRCorner;
         #endregion
 
         #region  Trinket Guide
@@ -208,6 +212,8 @@ namespace KinematicCharacterController.Examples
 
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
+
+            
         }
 
         void Update()
@@ -252,11 +258,20 @@ namespace KinematicCharacterController.Examples
                     if (glider != null)
                     {
                         glider.HandleGliding();
-                        
-                        GlidePS.Play();
-                        GlidePS.transform.position = transform.position;
 
-                        if (isGrounded) { GlidePS.Stop(); }
+
+                        paperLCorner = GameObject.FindWithTag("PaperLCorner");
+                        paperRCorner = GameObject.FindWithTag("PaperRCorner");
+
+                        GlidePSL.Play();
+                        GlidePSL.transform.position = paperLCorner.transform.position;
+                        GlidePSR.Play();
+                        GlidePSR.transform.position = paperRCorner.transform.position;
+
+                        if (isGrounded) { 
+                            GlidePSL.Stop(); 
+                            GlidePSR.Stop();                        
+                        }
 
                     }
                 }
@@ -303,7 +318,8 @@ namespace KinematicCharacterController.Examples
                 }
                  crowleySFX.SetInstanceLabelParam("Footstep", "Surface", surfaceTag);
                  AudioManager.Instance?.SetInstanceLabelParam("LAND", "Surface", surfaceTag);
-                GlidePS.Stop();
+                GlidePSL.Stop();
+                GlidePSR.Stop();
             }
 
             if(playerCam == null)
@@ -318,7 +334,8 @@ namespace KinematicCharacterController.Examples
             if(!canInput)
             {
                 // 0 the input vector to stop movement
-                input = new Vector2();
+                input = new Vector3();
+                rb.velocity = new Vector3();
                 return;
             }
 
@@ -430,6 +447,8 @@ namespace KinematicCharacterController.Examples
                     //above stopped working?? putting bandaid on it for now 
                     AudioManager.Instance?.PlayOneShot(land);
                     print("LAND");
+                    GlidePSL.Stop();
+                    GlidePSR.Stop();
                     
                 }
 
@@ -513,6 +532,13 @@ namespace KinematicCharacterController.Examples
         private void OnCollisionEnter(Collision collision)
         {
             HandleCollisionLogic(collision);
+
+            if (collision.gameObject.CompareTag("Roomba"))
+            {
+                playerCam.GetComponent<ShakeOnPlayerHit>().Shake();
+                StartCoroutine(flashRed());
+                
+            }
         }
 
         private void OnCollisionStay(Collision collision)
@@ -825,7 +851,7 @@ namespace KinematicCharacterController.Examples
                     // and charge follow position
                     //get inital pos to reset later
                     initalThrowCamTargetPos = transform.position;
-                    playerCam.Follow = transform;
+                    CamFocusOnCrowley(); //refocus the camera
 
                     // targetAssetObject.SetActive(false);
                 }
@@ -862,7 +888,8 @@ namespace KinematicCharacterController.Examples
             // and charge follow position
             //get inital pos to reset later
             initalThrowCamTargetPos = transform.position;
-            playerCam.Follow = transform;
+            
+            CamFocusOnCrowley();
         }
 
         public List<IPickupable> GetHeldItems()
@@ -988,6 +1015,18 @@ namespace KinematicCharacterController.Examples
         public void SetCanInput(bool val)
         {
             canInput = val;
+
+            if(!canInput)
+            {
+                // 0 the input vector to stop movement
+                input = new Vector3();
+                rb.velocity = new Vector3();
+            }
+        }
+
+        public void CamFocusOnCrowley()
+        {
+            playerCam.Follow = transform;
         }
 
         void DrawThrowTrajectory(Vector3 direction)
@@ -1200,6 +1239,12 @@ namespace KinematicCharacterController.Examples
                 trinketGuideLine.SetPosition(0, startPos);
                 trinketGuideLine.SetPosition(1, endPos);
             }
+        }
+        private IEnumerator flashRed()
+        {
+            GetComponentInChildren<SpriteRenderer>().color = Color.red;
+            yield return new WaitForSeconds(.6f);
+            GetComponentInChildren<SpriteRenderer>().color = Color.white;
         }
     }
 }

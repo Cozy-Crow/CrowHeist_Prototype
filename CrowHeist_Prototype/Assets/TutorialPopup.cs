@@ -32,6 +32,13 @@ public class TutorialPopup : MonoBehaviour
         if (closeButton != null)
             closeButton.onClick.AddListener(Hide);
     }
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Escape))
+        {
+            Hide();
+        }
+    }
 
     public void Show()
     {

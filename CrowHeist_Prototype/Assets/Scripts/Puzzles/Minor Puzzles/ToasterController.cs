@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 using FMODUnity;
+using Unity.VisualScripting;
 
 public class ToasterController : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class ToasterController : MonoBehaviour
     [SerializeField] GameObject plugReference;
     [SerializeField] private EventReference coinSparkle;
 
+    // vfx stuff
+    [SerializeField] GameObject toasterExplosion;
     void Awake()
     {
         if(plugReference == null)
@@ -56,7 +59,14 @@ public class ToasterController : MonoBehaviour
         {
             Instantiate(paintTubePrefab, paintTubeSpawnPoint.position, paintTubeSpawnPoint.rotation);
             AudioManager.Instance?.PlayOneShot3D(coinSparkle, transform.position);
-            Destroy(gameObject);
+            toasterExplosion.transform.position = transform.position;
+            ParticleSystem[] particleSystems = toasterExplosion.GetComponentsInChildren<ParticleSystem>(true);
+            
+            foreach (ParticleSystem ps in particleSystems)
+            {
+                ps.Play();
+            }
+            gameObject.SetActive(false);
 
         }
 
@@ -73,6 +83,8 @@ public class ToasterController : MonoBehaviour
         //     }
         // }
     }
+
+   
 
 
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Cinemachine;
 using KinematicCharacterController.Examples;
 using UnityEngine;
 using UnityEngine.AI;
@@ -17,6 +18,7 @@ public class ColoringBookObject : Interactable
     bool isInteractable = true; //tells whether or not the book can be interacted with
     [SerializeField] GameObject coinPrefab;
     [SerializeField] Transform coinSpawnPoint;
+    [SerializeField] Transform crowleyEndPoint;
 
     //animation vars
     float animTime = 0.5f; //holds animation time for the ending animation for the puzzle
@@ -26,12 +28,16 @@ public class ColoringBookObject : Interactable
     [SerializeField] Sprite sprite3;
     [SerializeField] GameObject openBook; //open and closed book models
     [SerializeField] GameObject closedBook;
-
+    [SerializeField] CinemachineVirtualCamera playerCam; //cam to swap for the ending anim
+    [SerializeField] Transform camPoint;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        //Get crowley reference
+        crowley = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Controller2Point5D>();
+
         spriteRenderer.enabled = false; //turn of sprite initally
 
         if(menu == null)
@@ -50,10 +56,10 @@ public class ColoringBookObject : Interactable
 
         // hide UI on start
         menu.gameObject.SetActive(false);
-        Debug.Log("Starting");
+        // Debug.Log("Starting");
 
-        Debug.Log("ClosedBook ref: " + closedBook);
-        Debug.Log("OpenBook ref: " + openBook);
+        // Debug.Log("ClosedBook ref: " + closedBook);
+        // Debug.Log("OpenBook ref: " + openBook);
 
         openBook.SetActive(false);
         closedBook.SetActive(true);
@@ -84,6 +90,7 @@ public class ColoringBookObject : Interactable
     //handles the End of Puzzle Routine (playing the animation/spitting out coin)
     IEnumerator EndPuzzleRoutine()
     {
+        Debug.Log("COLORINGBOOK Starting end Routine");
 
         //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(1);
@@ -92,6 +99,8 @@ public class ColoringBookObject : Interactable
         menu.gameObject.SetActive(false);
         //hide crowley
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = false;
+
+        playerCam.Follow = camPoint; //set camera point for the cutscene
 
         //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
         yield return new WaitForSeconds(animTime); //.25 sec before it starts
@@ -144,9 +153,12 @@ public class ColoringBookObject : Interactable
         //enable movement
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = true;
         crowley.SetCanInput(true);
+        crowley.CamFocusOnCrowley(); //refocus cam onto crowley
         //play animation, pop reward
         //remove interaction capability
         isInteractable = false;
+
+        crowley.transform.position = crowleyEndPoint.position;
     }
 
     //function handling on interaction
@@ -154,13 +166,20 @@ public class ColoringBookObject : Interactable
     {
         if(isInteractable)
         {
+            // Debug.Log("COLORINGBOOK inside trigger");
             //show UI
             menu.gameObject.SetActive(true);
             // //disable player movement
             crowley.SetCanInput(false);
             //start the puzzle
-            puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
+            StartCoroutine(startRoutine());
         }
+    }
+
+    IEnumerator startRoutine()
+    {
+        yield return new WaitForSeconds(.005f);
+        puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
     }
 
     private void OpenBook()
@@ -175,9 +194,10 @@ public class ColoringBookObject : Interactable
         //normal close book sequence
         openBook.gameObject.SetActive(false);
         closedBook.gameObject.SetActive(true);
+        // --- play sfx here probably (book slamming closed + crowley hurt?) ---
+
         closedBook.transform.eulerAngles = new Vector3(0,-180,-90); //rotate so book is on top
 
-        //play sfx here probably (book slamming closed + crowley hurt?)
     }
 
     private void SpawnReward()
