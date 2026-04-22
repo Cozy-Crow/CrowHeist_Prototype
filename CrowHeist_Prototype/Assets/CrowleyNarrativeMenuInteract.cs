@@ -1,45 +1,44 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
-using FMODUnity;
 
 public class ButtonSpriteSwap : MonoBehaviour
 {
-    [Header("Sprites")]
-    [SerializeField] private Sprite clickedSprite;
+    [Header("References")]
+    [SerializeField] private GameObject interactableCrowley;
+    [SerializeField] private GameObject[] funnyCrowleys;
 
     [Header("SFX")]
-    public EventReference clickSFX;
-
-    private Image buttonImage;
-    private Sprite defaultSprite;
-    private Coroutine swapRoutine;
+    public FMODUnity.EventReference clickSFX;
 
     private void Awake()
     {
-        buttonImage = GetComponent<Button>().targetGraphic as Image;
-        defaultSprite = buttonImage.sprite;
         GetComponent<Button>().onClick.AddListener(OnClick);
     }
 
     private void OnClick()
     {
-        if (swapRoutine != null)
-            StopCoroutine(swapRoutine);
-
-        swapRoutine = StartCoroutine(SpriteSwapRoutine());
+        TrinketMenu.instance.StartCoroutine(SwapRoutine());
     }
 
-    private IEnumerator SpriteSwapRoutine()
+    private IEnumerator SwapRoutine()
     {
+        interactableCrowley.SetActive(false);
 
-        buttonImage.sprite = clickedSprite;
+        GameObject randomCrowley = funnyCrowleys[Random.Range(0, funnyCrowleys.Length)];
+        randomCrowley.SetActive(true);
 
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayOneShot(clickSFX);
 
-        yield return new WaitForSeconds(2f);
+        float elapsed = 0f;
+        while (elapsed < 0.5f)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
 
-        buttonImage.sprite = defaultSprite;
+        randomCrowley.SetActive(false);
+        interactableCrowley.SetActive(true);
     }
 }
