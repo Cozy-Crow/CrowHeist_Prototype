@@ -1087,7 +1087,6 @@ namespace KinematicCharacterController.Examples
 
                 //update the position
                 Vector3 throwCamTargetNewPos = new Vector3(throwCamTargetNewX,throwCamTargetNewY,throwCamTargetNewZ);
-                Debug.Log("TCT " + throwCamTargetNewPos);
                 throwCamTarget.transform.position = throwCamTargetNewPos;
 
                 // Debug.Log("camera pos1 " + playerCam.transform.position);                 
