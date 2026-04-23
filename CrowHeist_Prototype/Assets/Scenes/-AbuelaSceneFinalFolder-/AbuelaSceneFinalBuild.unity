@@ -13791,6 +13791,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3937501872163990226, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4165379516815388142, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13868,9 +13872,17 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5064799337657061034, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: holdTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5064799337657061034, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: _maxCoins
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 5064799337657061034, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      propertyPath: localCanvasGroup
+      value: 
+      objectReference: {fileID: 1250845349}
     - target: {fileID: 5374067995212614152, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -14009,6 +14021,9 @@ PrefabInstance:
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3937501872163990226, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1250845349}
     - targetCorrespondingSourceObject: {fileID: 9219792447386494679, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
       insertIndex: -1
       addedObject: {fileID: 976957336}
@@ -20816,6 +20831,23 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1247884536}
   m_Mesh: {fileID: 3390558720134950976, guid: dc391aa8125c6436d822265efc40d1a8, type: 3}
+--- !u!1 &1250845344 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3937501872163990226, guid: 885a5667ffc70e94ca53f47a9c5a094c, type: 3}
+  m_PrefabInstance: {fileID: 867725931}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &1250845349
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250845344}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1253526762
 GameObject:
   m_ObjectHideFlags: 0
@@ -26975,8 +27007,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1653041687}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.30070582, z: 0, w: 0.95371693}
-  m_LocalPosition: {x: 31.191053, y: -17.052584, z: -58.754707}
+  m_LocalRotation: {x: 0.13052616, y: 0, z: 0, w: 0.9914449}
+  m_LocalPosition: {x: 44.981308, y: 1.3965855, z: -40.988678}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
