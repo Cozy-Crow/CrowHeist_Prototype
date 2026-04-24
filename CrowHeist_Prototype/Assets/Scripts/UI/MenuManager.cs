@@ -20,6 +20,9 @@ public class PauseManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private SettingsMenu settingsMenu;
 
+    [Header("Controls")]
+    [SerializeField] private ControlsMenu controlsMenu;
+
     [Header("Buttons")]
     public Button QuitButton;
     public Button ResumeButton;
@@ -29,13 +32,13 @@ public class PauseManager : MonoBehaviour
     public Button BackButton;
     public Button PlayButton;
     public Button SettingsButton;
+    public Button ControlsButton;
     public Button ConfirmRestartYesButton;
     public Button ConfirmRestartNoButton;
 
     private Controller2Point5D player;
 
     [Header("Audio")]
-
     [SerializeField] private EventReference select;
     [SerializeField] private EventReference open;
     [SerializeField] public EventReference close;
@@ -44,7 +47,6 @@ public class PauseManager : MonoBehaviour
     {
         player = FindObjectOfType<Controller2Point5D>();
 
-        // Fall back to finding buttons by name if serialized references are null
         if (ResumeButton == null) ResumeButton = FindButtonInChildren("ResumeButton");
         if (QuitButton == null) QuitButton = FindButtonInChildren("QuitButton");
         if (RestartButton == null) RestartButton = FindButtonInChildren("RestartButton");
@@ -53,6 +55,7 @@ public class PauseManager : MonoBehaviour
         if (BackButton == null) BackButton = FindButtonInChildren("BackButton");
         if (PlayButton == null) PlayButton = FindButtonInChildren("PlayButton");
         if (SettingsButton == null) SettingsButton = FindButtonInChildren("SettingsButton");
+        if (ControlsButton == null) ControlsButton = FindButtonInChildren("ControlsButton");
         if (ConfirmRestartYesButton == null) ConfirmRestartYesButton = FindButtonInChildren("ConfirmYesButton");
         if (ConfirmRestartNoButton == null) ConfirmRestartNoButton = FindButtonInChildren("ConfirmNoButton");
 
@@ -68,12 +71,14 @@ public class PauseManager : MonoBehaviour
             }
         }
 
-        // Auto-find SaveSlotPanel and SettingsMenu if not set in Inspector
         if (saveSlotPanel == null)
             saveSlotPanel = GetComponentInChildren<SaveSlotPanel>(true);
 
         if (settingsMenu == null)
             settingsMenu = GetComponentInChildren<SettingsMenu>(true);
+
+        if (controlsMenu == null)
+            controlsMenu = GetComponentInChildren<ControlsMenu>(true);
 
         // Wire listeners
         if (ResumeButton != null) ResumeButton.onClick.AddListener(ResumeGame);
@@ -84,10 +89,10 @@ public class PauseManager : MonoBehaviour
         if (LoadButton != null) LoadButton.onClick.AddListener(OnLoadButtonClicked);
         if (BackButton != null) BackButton.onClick.AddListener(GoBack);
         if (SettingsButton != null) SettingsButton.onClick.AddListener(OpenSettings);
+        if (ControlsButton != null) ControlsButton.onClick.AddListener(OpenControls);
         if (ConfirmRestartYesButton != null) ConfirmRestartYesButton.onClick.AddListener(RestartGame);
         if (ConfirmRestartNoButton != null) ConfirmRestartNoButton.onClick.AddListener(CancelRestart);
 
-        // Wire slot panel callbacks
         if (saveSlotPanel != null)
         {
             saveSlotPanel.OnBack += OnSlotPanelBack;
@@ -118,6 +123,11 @@ public class PauseManager : MonoBehaviour
                 settingsMenu.CloseSettings();
                 return;
             }
+            if (controlsMenu != null && controlsMenu.IsOpen)
+            {
+                controlsMenu.CloseControls();
+                return;
+            }
             if (RestartConfirmPanel != null && RestartConfirmPanel.activeSelf)
             {
                 CancelRestart();
@@ -135,7 +145,7 @@ public class PauseManager : MonoBehaviour
                 if (NarrativeMenu.Instance != null)
                     NarrativeMenu.Instance.ForceClose();
                 PauseGame();
-                PlayButtonSFX(close);  // ← moved inside else, only plays when pausing
+                PlayButtonSFX(close);
             }
         }
     }
@@ -146,7 +156,6 @@ public class PauseManager : MonoBehaviour
 
     public void PauseGame()
     {
-        // Close any open menus so they can't overlap with the pause menu
         if (TrinketMenu.instance != null)
             TrinketMenu.instance.ForceClose();
         if (NarrativeMenu.Instance != null)
@@ -169,9 +178,9 @@ public class PauseManager : MonoBehaviour
         if (PauseMenu != null)
             PauseMenu.SetActive(false);
 
-        // Also close any sub-panels that may still be open
         if (saveSlotPanel != null) saveSlotPanel.Close();
         if (settingsMenu != null) settingsMenu.CloseSettings();
+        if (controlsMenu != null) controlsMenu.CloseControls();
         if (RestartConfirmPanel != null) RestartConfirmPanel.SetActive(false);
         PlayButtonSFX(open);
     }
@@ -222,16 +231,14 @@ public class PauseManager : MonoBehaviour
     {
         if (RestartConfirmPanel != null)
             RestartConfirmPanel.SetActive(true);
-
-        PlayButtonSFX(select);    
+        PlayButtonSFX(select);
     }
 
     public void CancelRestart()
     {
         if (RestartConfirmPanel != null)
             RestartConfirmPanel.SetActive(false);
-
-        PlayButtonSFX(close);    
+        PlayButtonSFX(close);
     }
 
     // ──────────────────────────────────────────────
@@ -261,7 +268,6 @@ public class PauseManager : MonoBehaviour
     {
         if (saveSlotPanel == null)
         {
-            // Fallback: save/load current slot directly if no slot panel is set up
             if (mode == SaveSlotPanel.Mode.Save)
                 SaveLoadSystem.Instance?.SaveGame();
             else
@@ -300,12 +306,16 @@ public class PauseManager : MonoBehaviour
         Debug.Log($"Game loaded from slot {slot} via UI.");
     }
 
-    // Legacy no-arg version kept for any external callers
     public void LoadGameDirect() => LoadGameDirect(
         SaveLoadSystem.Instance != null ? SaveLoadSystem.Instance.CurrentSlot : 1);
 
     public void GoBack()
     {
+        if (controlsMenu != null && controlsMenu.IsOpen)
+        {
+            controlsMenu.CloseControls();
+            return;
+        }
         if (saveSlotPanel != null && saveSlotPanel.IsOpen)
             saveSlotPanel.Close();
     }
@@ -318,7 +328,18 @@ public class PauseManager : MonoBehaviour
     {
         if (settingsMenu != null)
             settingsMenu.OpenSettings();
-            PlayButtonSFX(open);
+        PlayButtonSFX(open);
+    }
+
+    // ──────────────────────────────────────────────
+    //  Controls
+    // ──────────────────────────────────────────────
+
+    public void OpenControls()
+    {
+        if (controlsMenu != null)
+            controlsMenu.OpenControls();
+        PlayButtonSFX(open);
     }
 
     // ──────────────────────────────────────────────
@@ -332,7 +353,6 @@ public class PauseManager : MonoBehaviour
 
         if (LoadButton != null && SaveLoadSystem.Instance != null)
         {
-            // Enable load button if at least one slot has a save
             bool anySlotExists = false;
             for (int i = 1; i <= SaveLoadSystem.SlotCount; i++)
             {
