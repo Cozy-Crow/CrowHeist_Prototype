@@ -1,0 +1,86 @@
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    env:
+      UNITY_PROJECT_PATH: ''
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [buildalon-windows]
+        include:
+          - os: buildalon-windows
+            build-target: StandaloneWindows64
+            build-args: ''
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          clean: ${{ github.event.inputs.clean == 'true' }}
+          lfs: true
+          submodules: 'recursive'
+      - uses: buildalon/unity-setup@v2
+        with:
+          build-targets: '${{ matrix.build-target }}'
+      - uses: buildalon/activate-unity-license@v2
+        with:
+          license: 'Personal'
+          username: '${{ secrets.UNITY_USERNAME }}'
+          password: '${{ secrets.UNITY_PASSWORD }}'
+      - name: Add Build Pipeline Package
+        working-directory: ${{ env.UNITY_PROJECT_PATH }}
+        run: |
+          npm install -g openupm-cli
+          openupm add com.virtualmaker.buildalon
+      - uses: buildalon/unity-action@v3
+        name: Project Validation
+        with:
+          log-name: 'project-validation'
+          build-target: '${{ matrix.build-target }}'
+          args: '-quit -batchmode -executeMethod Buildalon.Editor.BuildPipeline.UnityPlayerBuildTools.ValidateProject'
+      - uses: buildalon/unity-action@v3
+        name: '${{ matrix.build-target }}-Build'
+        with:
+          log-name: '${{ matrix.build-target }}-Build'
+          build-target: '${{ matrix.build-target }}'
+          args: '-quit -batchmode -executeMethod Buildalon.Editor.BuildPipeline.UnityPlayerBuildTools.StartCommandLineBuild${{ matrix.build-args }}'
+      - uses: actions/upload-artifact@v6
+        id: upload-artifact
+        name: 'Upload ${{ matrix.build-target }} Artifacts'
+        if: success() || failure()
+        with:
+          compression-level: 0
+          retention-days: 1
+          name: '${{ github.run_number }}.${{ github.run_attempt }}-${{ matrix.os }}-${{ matrix.build-target }}-Artifacts'
+          path: |
+            ${{ github.workspace }}/**/*.log
+            ${{ env.UNITY_PROJECT_PATH }}/Builds/StandaloneWindows64/**/*.exe
+            ${{ env.UNITY_PROJECT_PATH }}/Builds/StandaloneWindows64/**/*.dll
+            ${{ env.UNITY_PROJECT_PATH }}/Builds/StandaloneWindows64/**/*_Data
+            ${{ env.UNITY_PROJECT_PATH }}/Builds/StandaloneWindows64/MonoBleedingEdge/
+      - name: Clean Artifacts
+        if: always()
+        shell: pwsh
+        run: |
+          # Clean Logs
+          Get-ChildItem -Path "${{ env.UNITY_PROJECT_PATH }}" -File -Filter "*.log" -Recurse | Remove-Item -Force
+
+          $artifacts = "${{ env.UNITY_PROJECT_PATH }}/Builds"
+          Write-Host "::debug::Build artifacts path: $artifacts"
+
+          if (Test-Path -Path $artifacts) {
+            try {
+              Remove-Item $artifacts -Recurse -Force
+            } catch {
+              Write-Warning "Failed to delete artifacts folder file: $_"
+            }
+          } else {
+            Write-Host "::debug::Artifacts folder not found."
+          }
