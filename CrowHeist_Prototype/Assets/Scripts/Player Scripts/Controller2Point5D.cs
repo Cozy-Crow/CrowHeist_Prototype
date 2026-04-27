@@ -1103,7 +1103,7 @@ namespace KinematicCharacterController.Examples
             targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
-
+        //
         private Vector3 FindThrowCollisionPoint()
         {
             LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");
