@@ -61,7 +61,7 @@ public class AltWinCoins : MonoBehaviour
             //GameManager.AltCoinsScore += altCoinValue;
             //UIManager.Instance.AltWinCoinsUI.UpdateScoreUI();
             GameManager.Score += altCoinValue;
-            UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+            UIManager.Instance.CoinsUI.UpdateCoinsSilent(GameManager.Score);
             Destroy(gameObject);
         }
     }

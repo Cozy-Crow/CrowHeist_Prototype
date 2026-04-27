@@ -55,6 +55,7 @@ public class PickupVisualManager : MonoBehaviour
     public void PlayFirstPickupAnim(GameObject item)
     {
         if (item.GetComponent<Trinket>() != null) return;
+        if (item.GetComponent<Coins>() != null) return;
 
         string key = CleanItemName(item.name);
         if (shownItems.Contains(key)) return;

@@ -5,10 +5,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler
+public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler, IPointerClickHandler
 {
     [SerializeField] public int index;
-
     [SerializeField] private ColoringBookPuzzle puzzleManager;
 
 
@@ -20,23 +19,31 @@ public class ColoringBookAnchor : MonoBehaviour, IPointerEnterHandler
     //function handling if the mouse enters the image
     public void OnPointerEnter(PointerEventData eventData)
     {
+
         if(puzzleManager.isDrawing)
         {
             puzzleManager.HitAnchor(this);
             // Debug.Log("HIT! - " + name);
         }
-
     }
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if(puzzleManager.isDrawing)
+        {
+            puzzleManager.HitAnchor(this);
+            // Debug.Log("HIT! - " + name);
+        }
+    } 
 
     public void triggerAnchor()
     {
         GetComponent<Image>().color = Color.green;
-        //play anchor hit sound here
+        // --- play anchor hit sound here ---
     }
 
     public void disableAnchor()
     {
-        GetComponent<Image>().color = Color.white;
-        //play anchor hit sound here
+        GetComponent<Image>().color = Color.red;
     }
 }

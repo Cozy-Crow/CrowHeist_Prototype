@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
+using Cinemachine;
 using KinematicCharacterController.Examples;
 using UnityEngine;
-using UnityEngine.AI;
 using UnityEngine.UI;
 
 public class ColoringBookObject : Interactable
@@ -17,6 +17,7 @@ public class ColoringBookObject : Interactable
     bool isInteractable = true; //tells whether or not the book can be interacted with
     [SerializeField] GameObject coinPrefab;
     [SerializeField] Transform coinSpawnPoint;
+    [SerializeField] Transform crowleyEndPoint;
 
     //animation vars
     float animTime = 0.5f; //holds animation time for the ending animation for the puzzle
@@ -26,12 +27,31 @@ public class ColoringBookObject : Interactable
     [SerializeField] Sprite sprite3;
     [SerializeField] GameObject openBook; //open and closed book models
     [SerializeField] GameObject closedBook;
+    [SerializeField] CinemachineVirtualCamera playerCam; //cam to swap for the ending anim
+    [SerializeField] Transform camPoint;
 
+    //Camera shake
+	[SerializeField] float shakeDuration = 0f;
+    float shakeDurationInitial; 
+	[SerializeField] float shakeAmount = 0.7f;
+	[SerializeField] float decreaseFactor = 1.0f;
+    Vector3 originalPos;
+    bool isShaking;
+    bool shakeOnThisFrame = true;
+    int shakeFrameCounter; //count the frames
+    [SerializeField] int shakeAfterFrames; //every __ frames the camera should shake
+
+    //other vars
+    Collider[] boxColliders;
+    Collider mainCollider;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        //Get crowley reference
+        crowley = GameObject.FindGameObjectsWithTag("Player")[0].GetComponent<Controller2Point5D>();
+
         spriteRenderer.enabled = false; //turn of sprite initally
 
         if(menu == null)
@@ -50,19 +70,58 @@ public class ColoringBookObject : Interactable
 
         // hide UI on start
         menu.gameObject.SetActive(false);
-        Debug.Log("Starting");
+        // Debug.Log("Starting");
 
-        Debug.Log("ClosedBook ref: " + closedBook);
-        Debug.Log("OpenBook ref: " + openBook);
+        // Debug.Log("ClosedBook ref: " + closedBook);
+        // Debug.Log("OpenBook ref: " + openBook);
 
-        openBook.SetActive(false);
-        closedBook.SetActive(true);
+        // openBook.SetActive(false);
+        // closedBook.SetActive(true);
+        openBook.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        originalPos = camPoint.localPosition;
+
+        boxColliders = GetComponents<BoxCollider>();
+        GetMainCollider();
+
+        shakeDurationInitial = shakeDuration;
+    }
+
+    void GetMainCollider()
+    {
+        foreach (Collider collider in boxColliders)
+        {
+            if(!collider.isTrigger)
+                mainCollider = collider;
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        //if the camera should shake
+        if(isShaking)
+        {
+            //every ___ frames shake the camera
+            if(shakeAfterFrames < shakeFrameCounter)
+            {
+                shakeFrameCounter = 0;
+                StartShake();
+            }
+            else
+                shakeFrameCounter++;
 
+            // //alternate what frames we shake the camera to make it less jarring
+            // if(shakeOnThisFrame)
+            // {
+            //     shakeOnThisFrame = false;
+            //     StartShake();
+            // }
+            // else
+            //     shakeOnThisFrame = true;
+        }
+
+        //make the sprite look at the camera so its easier to see
+        spriteRenderer.gameObject.transform.LookAt(playerCam.transform);
     }
 
     void CloseMenu()
@@ -84,6 +143,9 @@ public class ColoringBookObject : Interactable
     //handles the End of Puzzle Routine (playing the animation/spitting out coin)
     IEnumerator EndPuzzleRoutine()
     {
+        mainCollider.enabled = false;
+        
+        Debug.Log("COLORINGBOOK Starting end Routine");
 
         //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(1);
@@ -92,6 +154,8 @@ public class ColoringBookObject : Interactable
         menu.gameObject.SetActive(false);
         //hide crowley
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = false;
+
+        playerCam.Follow = camPoint; //set camera point for the cutscene
 
         //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
         yield return new WaitForSeconds(animTime); //.25 sec before it starts
@@ -134,7 +198,7 @@ public class ColoringBookObject : Interactable
         //open book final
         yield return new WaitForSeconds(animTime); //.25 before next
         OpenBook();
-        yield return new WaitForSeconds(0.2f); //.2 before shooting our reward
+        yield return new WaitForSeconds(0.3f); //.3 before shooting our reward
 
         //spawn the reward
         SpawnReward();
@@ -144,9 +208,13 @@ public class ColoringBookObject : Interactable
         //enable movement
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = true;
         crowley.SetCanInput(true);
+        crowley.CamFocusOnCrowley(); //refocus cam onto crowley
         //play animation, pop reward
         //remove interaction capability
         isInteractable = false;
+
+        crowley.transform.position = crowleyEndPoint.position;
+        mainCollider.enabled = true;
     }
 
     //function handling on interaction
@@ -154,30 +222,47 @@ public class ColoringBookObject : Interactable
     {
         if(isInteractable)
         {
+            // Debug.Log("COLORINGBOOK inside trigger");
             //show UI
             menu.gameObject.SetActive(true);
             // //disable player movement
             crowley.SetCanInput(false);
             //start the puzzle
-            puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
+            StartCoroutine(startRoutine());
         }
+    }
+
+    IEnumerator startRoutine()
+    {
+        yield return new WaitForSeconds(.005f);
+        puzzleController.GetComponent<ColoringBookPuzzle>().StartPuzzle();
     }
 
     private void OpenBook()
     {
         //normal close book sequence
-        closedBook.gameObject.SetActive(false);
-        openBook.gameObject.SetActive(true);
+        closedBook.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        openBook.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        isShaking = false;
+		camPoint.localPosition = originalPos;
+        // closedBook.gameObject.SetActive(false);
+        // openBook.gameObject.SetActive(true);
     }
 
     private void CloseBook()
     {
         //normal close book sequence
-        openBook.gameObject.SetActive(false);
-        closedBook.gameObject.SetActive(true);
+        closedBook.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        openBook.gameObject.GetComponent<MeshRenderer>().enabled = false;
+        isShaking = true;
+        shakeDuration = shakeDurationInitial;
+        // openBook.gameObject.SetActive(false);
+        // closedBook.gameObject.SetActive(true);
+        
+        // --- play sfx here probably (book slamming closed + crowley hurt?) ---
+
         closedBook.transform.eulerAngles = new Vector3(0,-180,-90); //rotate so book is on top
 
-        //play sfx here probably (book slamming closed + crowley hurt?)
     }
 
     private void SpawnReward()
@@ -187,4 +272,20 @@ public class ColoringBookObject : Interactable
         //shoot it up
         spawnedItem.GetComponent<Rigidbody>().AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }
+
+	void StartShake()
+	{
+		if (shakeDuration > 0)
+		{
+			camPoint.localPosition = originalPos + UnityEngine.Random.insideUnitSphere/2 * shakeAmount;
+			shakeDuration -= Time.deltaTime * decreaseFactor;
+		}
+		else
+		{
+			shakeDuration = 0f;
+			camPoint.localPosition = originalPos;
+		}
+	}
+
+
 }

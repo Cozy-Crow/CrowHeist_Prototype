@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;
 using KinematicCharacterController.Examples;
+using UnityEngine.VFX;
 
 public class Coins : MonoBehaviour
 {
@@ -161,8 +162,10 @@ public class Coins : MonoBehaviour
         // Teleport to start position
         if (_collectParticlePrefab != null)
         {
-            Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            GameObject spawnedEffect = Instantiate(_collectParticlePrefab, transform.position, Quaternion.identity);
+            spawnedEffect.GetComponent<VisualEffect>()?.Play();
             AudioManager.Instance?.PlayOneShot(poofSound);
+
         }
 
         // Briefly hide coin during "teleport"
@@ -177,7 +180,7 @@ public class Coins : MonoBehaviour
         }
 
         // Small delay before reappearing 
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.3f);
 
         if (_collectParticlePrefab != null)
         {
@@ -204,7 +207,7 @@ public class Coins : MonoBehaviour
 
         // Update score
         //GameManager.Score += _coinValue;
-        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+        UIManager.Instance.CoinsUI.UpdateCoinsSilent(GameManager.Score);
 
        //Vertical Adaptive Music, 4 trinkets trigger the parameter
        MusicManager.Instance?.CurrentMusicInstance.setParameterByName("trinketsCollected", Mathf.Clamp(Mathf.Floor(GameManager.Score / 4),0,7)); 
