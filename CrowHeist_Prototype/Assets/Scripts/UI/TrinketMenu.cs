@@ -137,9 +137,10 @@ public class TrinketMenu : MonoBehaviour
         {
             if (i + pageIndex * 8 >= trinketsDataLst.Count)
             {
-                trinketImageArray[i].IconSprite = defaultSprite;
+                trinketImageArray[i].gameObject.SetActive(false);
                 continue;
             }
+            trinketImageArray[i].gameObject.SetActive(true);
             ItemDataSO data = trinketsDataLst[i + pageIndex * 8];
             trinketImageArray[i].IconSprite = data.DisplayIcon;
             trinketImageArray[i].IsUnlocked = data.isPickedUp || data.HasBeenRead;

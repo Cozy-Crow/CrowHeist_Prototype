@@ -207,7 +207,7 @@ public class Coins : MonoBehaviour
 
         // Update score
         //GameManager.Score += _coinValue;
-        UIManager.Instance.CoinsUI.UpdateCoins(GameManager.Score);
+        UIManager.Instance.CoinsUI.UpdateCoinsSilent(GameManager.Score);
 
        //Vertical Adaptive Music, 4 trinkets trigger the parameter
        MusicManager.Instance?.CurrentMusicInstance.setParameterByName("trinketsCollected", Mathf.Clamp(Mathf.Floor(GameManager.Score / 4),0,7)); 
