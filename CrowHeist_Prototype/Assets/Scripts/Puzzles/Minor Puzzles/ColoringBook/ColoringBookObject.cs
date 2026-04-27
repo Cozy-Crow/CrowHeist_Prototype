@@ -220,7 +220,7 @@ public class ColoringBookObject : Interactable
     //function handling on interaction
     public override void TriggerInteraction(Pickable item)
     {
-        if(isInteractable)
+        if(isInteractable && menu.gameObject.activeSelf == false)
         {
             // Debug.Log("COLORINGBOOK inside trigger");
             //show UI
