@@ -209,7 +209,7 @@ public class RoombAi : MonoBehaviour
 
         // Add dirty pickables
         var dirtyPickables = FindObjectsOfType<Pickable>()
-            .Where(obj => obj._isDirty && !obj.transform.IsChildOf(player.transform))
+            .Where(obj => obj._isDirty && !obj.transform.IsChildOf(player.transform) && !obj.CompareTag("Lock"))
             .Select(obj => obj.transform);
 
         allDirtyObjects.AddRange(dirtyPickables);
