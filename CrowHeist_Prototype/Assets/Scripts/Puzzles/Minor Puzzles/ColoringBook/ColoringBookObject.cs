@@ -260,8 +260,8 @@ public class ColoringBookObject : Interactable
         // closedBook.gameObject.SetActive(true);
         
         // --- play sfx here probably (book slamming closed + crowley hurt?) ---
-
-        closedBook.transform.eulerAngles = new Vector3(0,-180,-90); //rotate so book is on top
+        closedBook.transform.eulerAngles = new Vector3(0,180,-90);//rotate so book is on top
+        closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, 0.03f); //move up so it doesnt clip through the floor
 
     }
 
