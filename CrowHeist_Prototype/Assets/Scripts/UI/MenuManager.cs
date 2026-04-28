@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using KinematicCharacterController.Examples;
@@ -167,6 +168,7 @@ public class PauseManager : MonoBehaviour
         if (PauseMenu != null)
             PauseMenu.SetActive(true);
 
+        EventSystem.current?.SetSelectedGameObject(null);
         UpdateButtonStates();
     }
 
@@ -311,6 +313,11 @@ public class PauseManager : MonoBehaviour
 
     public void GoBack()
     {
+        if (settingsMenu != null && settingsMenu.IsOpen)
+        {
+            settingsMenu.CloseSettings();
+            return;
+        }
         if (controlsMenu != null && controlsMenu.IsOpen)
         {
             controlsMenu.CloseControls();
