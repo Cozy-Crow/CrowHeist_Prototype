@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &4303228296242761904
+--- !u!1 &623054514966591417
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,55 +8,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 842993655528313111}
-  - component: {fileID: 1437895021002497849}
-  - component: {fileID: 2545671155465573369}
-  - component: {fileID: 2967801744372156179}
-  - component: {fileID: -3399239698244266477}
-  - component: {fileID: -1948102585755839094}
-  - component: {fileID: 2703735997486179558}
-  - component: {fileID: 7851757670227042760}
-  - component: {fileID: -7774172985403079679}
-  - component: {fileID: 3465872770891274157}
-  - component: {fileID: 920720520383050628}
+  - component: {fileID: 767929424584041173}
+  - component: {fileID: 7449117101198813405}
+  - component: {fileID: 9137239302338767736}
   m_Layer: 0
-  m_Name: Narrative Bowl
+  m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &842993655528313111
+--- !u!4 &767929424584041173
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4303228296242761904}
+  m_GameObject: {fileID: 623054514966591417}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: -0.7071068}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 8.2213, y: 8.2213, z: 8.2213}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0.0024, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8329123840987171611}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 0}
---- !u!33 &1437895021002497849
+  m_Children: []
+  m_Father: {fileID: 842993655528313111}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
+--- !u!33 &7449117101198813405
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4303228296242761904}
+  m_GameObject: {fileID: 623054514966591417}
   m_Mesh: {fileID: 477525350536967170, guid: f287b71c1251e054ea896e4e0c8c9384, type: 3}
---- !u!23 &2545671155465573369
+--- !u!23 &9137239302338767736
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4303228296242761904}
+  m_GameObject: {fileID: 623054514966591417}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -92,6 +83,47 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4303228296242761904
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 842993655528313111}
+  - component: {fileID: 2967801744372156179}
+  - component: {fileID: -3399239698244266477}
+  - component: {fileID: -1948102585755839094}
+  - component: {fileID: 2703735997486179558}
+  - component: {fileID: 7851757670227042760}
+  - component: {fileID: -7774172985403079679}
+  - component: {fileID: 3465872770891274157}
+  - component: {fileID: 920720520383050628}
+  m_Layer: 0
+  m_Name: Narrative Bowl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &842993655528313111
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4303228296242761904}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 8.2213, y: 8.2213, z: 8.2213}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8329123840987171611}
+  - {fileID: 767929424584041173}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2967801744372156179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,8 +289,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.011981266, y: 0.011981266, z: 0.004537906}
-  m_Center: {x: 0, y: 4.6566126e-10, z: -0.0002772129}
+  m_Size: {x: 0.011981266, y: 0.004537906, z: 0.01198127}
+  m_Center: {x: 0, y: 0.0023, z: 0}
 --- !u!114 &920720520383050628
 MonoBehaviour:
   m_ObjectHideFlags: 0

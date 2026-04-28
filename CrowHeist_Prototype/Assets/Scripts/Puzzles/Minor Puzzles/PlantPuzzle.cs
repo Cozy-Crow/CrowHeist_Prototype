@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.VFX;
+using KinematicCharacterController.Examples;
 
 
 public class PlantPuzzle : MonoBehaviour
@@ -49,6 +50,14 @@ public class PlantPuzzle : MonoBehaviour
     {
         if (other.CompareTag("Fertilizer"))
         {
+            Controller2Point5D playerController = GameObject.FindWithTag("Player").GetComponent<Controller2Point5D>();
+            if (playerController.heldObject != null && playerController.heldObject.gameObject == other.gameObject)
+            {
+                playerController.CancelThrow();
+                playerController.Drop();
+                playerController._pickUpsList.Clear();
+            }
+
             StartCoroutine(GrowPlant());
             Destroy(other.gameObject);
         }
