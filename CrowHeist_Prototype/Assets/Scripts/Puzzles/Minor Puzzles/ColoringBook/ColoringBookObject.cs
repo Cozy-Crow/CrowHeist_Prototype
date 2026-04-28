@@ -40,6 +40,13 @@ public class ColoringBookObject : Interactable
     bool shakeOnThisFrame = true;
     int shakeFrameCounter; //count the frames
     [SerializeField] int shakeAfterFrames; //every __ frames the camera should shake
+    [SerializeField] private GameObject smokeEffectPrefab;
+    [SerializeField] private float smokeYOffsetFirst = 0f;
+    [SerializeField] private float smokeYOffsetRest = 0f;
+    [SerializeField] private float smokeXScale = 5f;
+    [SerializeField] private float smokeYScale = 2f;
+    [SerializeField] private float smokeDuration = 1f;
+
 
     //other vars
     Collider[] boxColliders;
@@ -141,42 +148,118 @@ public class ColoringBookObject : Interactable
     }
 
     //handles the End of Puzzle Routine (playing the animation/spitting out coin)
+    // IEnumerator EndPuzzleRoutine()
+    // {
+    //     mainCollider.enabled = false;
+        
+    //     Debug.Log("COLORINGBOOK Starting end Routine");
+
+    //     //stall closing the menu - pause for 2 seconds
+    //     yield return new WaitForSeconds(1);
+
+    //     //close UI
+    //     menu.gameObject.SetActive(false);
+    //     //hide crowley
+    //     crowley.GetComponentInChildren<SpriteRenderer>().enabled = false;
+
+    //     playerCam.Follow = camPoint; //set camera point for the cutscene
+
+    //     //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
+    //     yield return new WaitForSeconds(animTime); //.25 sec before it starts
+
+    //     //open book 1
+    //     OpenBook();
+    //     // yield return new WaitForSeconds(0.05f); //.05 before showing
+    //     spriteRenderer.enabled = true;
+    //     spriteRenderer.sprite = sprite1;
+
+    //     //close book 2
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, closedBook.transform.position.z + 3f); //move up so it doesnt clip through the floor
+
+    //     spriteRenderer.enabled = false;
+    //     CloseBook();
+
+    //     //open book 2
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     OpenBook();
+    //     // yield return new WaitForSeconds(0.05f); //.05 before showing
+    //     spriteRenderer.enabled = true;
+    //     spriteRenderer.sprite = sprite2;
+
+    //     //close book 3
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     spriteRenderer.enabled = false;
+    //     CloseBook();
+
+    //     //open book 3
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     OpenBook();
+    //     // yield return new WaitForSeconds(0.05f); //.05 before showing
+    //     spriteRenderer.enabled = true;
+    //     spriteRenderer.sprite = sprite3;
+
+    //     //close book final
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     spriteRenderer.enabled = false;
+    //     CloseBook();
+
+    //     //open book final
+    //     yield return new WaitForSeconds(animTime); //.25 before next
+    //     OpenBook();
+    //     yield return new WaitForSeconds(0.3f); //.3 before shooting our reward
+
+    //     //spawn the reward
+    //     SpawnReward();
+    //     yield return new WaitForSeconds(0.5f);
+
+    //     ////closing sequence - Enable input, disable ability to interact, show crowley
+    //     //enable movement
+    //     crowley.GetComponentInChildren<SpriteRenderer>().enabled = true;
+    //     crowley.SetCanInput(true);
+    //     crowley.CamFocusOnCrowley(); //refocus cam onto crowley
+    //     //play animation, pop reward
+    //     //remove interaction capability
+    //     isInteractable = false;
+
+    //     crowley.transform.position = crowleyEndPoint.position;
+    //     mainCollider.enabled = true;
+    // }
     IEnumerator EndPuzzleRoutine()
     {
         mainCollider.enabled = false;
         
         Debug.Log("COLORINGBOOK Starting end Routine");
-
         //stall closing the menu - pause for 2 seconds
         yield return new WaitForSeconds(1);
-
         //close UI
         menu.gameObject.SetActive(false);
         //hide crowley
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = false;
-
         playerCam.Follow = camPoint; //set camera point for the cutscene
-
         //run through animation (semi scuffed bc of using enabling/disabling physical objects atm)
         yield return new WaitForSeconds(animTime); //.25 sec before it starts
 
         //open book 1
         OpenBook();
-        // yield return new WaitForSeconds(0.05f); //.05 before showing
+        GameObject smoke1 = Instantiate(smokeEffectPrefab, new Vector3(transform.position.x, transform.position.y + smokeYOffsetFirst, transform.position.z), Quaternion.identity);
+        smoke1.transform.localScale = new Vector3(smokeXScale, smokeYScale, 2f);
+        Destroy(smoke1, smokeDuration);
         spriteRenderer.enabled = true;
         spriteRenderer.sprite = sprite1;
 
         //close book 2
         yield return new WaitForSeconds(animTime); //.25 before next
-        closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, closedBook.transform.position.z + 3f); //move up so it doesnt clip through the floor
-
+        closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, closedBook.transform.position.z + 3f);
         spriteRenderer.enabled = false;
         CloseBook();
 
         //open book 2
         yield return new WaitForSeconds(animTime); //.25 before next
         OpenBook();
-        // yield return new WaitForSeconds(0.05f); //.05 before showing
+        GameObject smoke2 = Instantiate(smokeEffectPrefab, new Vector3(transform.position.x, transform.position.y + smokeYOffsetRest, transform.position.z), Quaternion.identity);
+        smoke2.transform.localScale = new Vector3(smokeXScale, smokeYScale, 2f);
+        Destroy(smoke2, smokeDuration);
         spriteRenderer.enabled = true;
         spriteRenderer.sprite = sprite2;
 
@@ -188,7 +271,9 @@ public class ColoringBookObject : Interactable
         //open book 3
         yield return new WaitForSeconds(animTime); //.25 before next
         OpenBook();
-        // yield return new WaitForSeconds(0.05f); //.05 before showing
+        GameObject smoke3 = Instantiate(smokeEffectPrefab, new Vector3(transform.position.x, transform.position.y + smokeYOffsetRest, transform.position.z), Quaternion.identity);
+        smoke3.transform.localScale = new Vector3(smokeXScale, smokeYScale, 2f);
+        Destroy(smoke3, smokeDuration);
         spriteRenderer.enabled = true;
         spriteRenderer.sprite = sprite3;
 
@@ -200,21 +285,20 @@ public class ColoringBookObject : Interactable
         //open book final
         yield return new WaitForSeconds(animTime); //.25 before next
         OpenBook();
+        GameObject smoke4 = Instantiate(smokeEffectPrefab, new Vector3(transform.position.x, transform.position.y + smokeYOffsetRest, transform.position.z), Quaternion.identity);
+        smoke4.transform.localScale = new Vector3(smokeXScale, smokeYScale, 2f);
+        Destroy(smoke4, smokeDuration);
         yield return new WaitForSeconds(0.3f); //.3 before shooting our reward
 
         //spawn the reward
         SpawnReward();
         yield return new WaitForSeconds(0.5f);
 
-        ////closing sequence - Enable input, disable ability to interact, show crowley
-        //enable movement
+        //closing sequence - Enable input, disable ability to interact, show crowley
         crowley.GetComponentInChildren<SpriteRenderer>().enabled = true;
         crowley.SetCanInput(true);
-        crowley.CamFocusOnCrowley(); //refocus cam onto crowley
-        //play animation, pop reward
-        //remove interaction capability
+        crowley.CamFocusOnCrowley();
         isInteractable = false;
-
         crowley.transform.position = crowleyEndPoint.position;
         mainCollider.enabled = true;
     }

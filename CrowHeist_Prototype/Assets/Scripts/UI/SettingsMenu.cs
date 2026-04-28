@@ -1,6 +1,7 @@
 using FMODUnity;
 using FMOD.Studio;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
@@ -24,6 +25,7 @@ public class SettingsMenu : MonoBehaviour
     [SerializeField] private EventReference close;
 
     private VCA MasterVolumeControl;
+    private bool _openedBeforeStart = false;
 
 
     private void Start()
@@ -40,7 +42,7 @@ public class SettingsMenu : MonoBehaviour
         if (backButton != null)
             backButton.onClick.AddListener(CloseSettings);
 
-        if (settingsPanel != null)
+        if (settingsPanel != null && !_openedBeforeStart)
             settingsPanel.SetActive(false);
 
         MasterVolumeControl = FMODUnity.RuntimeManager.GetVCA("vca:/MasterVolumeControl");
@@ -52,16 +54,18 @@ public class SettingsMenu : MonoBehaviour
 
     public void OpenSettings()
     {
+        _openedBeforeStart = true;
         if (settingsPanel != null)
             settingsPanel.SetActive(true);
         RefreshUI();
+        EventSystem.current?.SetSelectedGameObject(null);
     }
 
     public void CloseSettings()
     {
         if (settingsPanel != null)
             settingsPanel.SetActive(false);
-            AudioManager.Instance?.PlayOneShot(close);
+        AudioManager.Instance?.PlayOneShot(close);
     }
 
     public bool IsOpen => settingsPanel != null && settingsPanel.activeSelf;
