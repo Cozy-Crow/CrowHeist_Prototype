@@ -27,14 +27,14 @@ public class XrayCamera : MonoBehaviour
     //TODO: Remove the time scale changes, they are only for testing purposes.
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            Time.timeScale = 1f;
-        }
-        if(Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            Time.timeScale = 5f;
-        }
+        // if(Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     Time.timeScale = 1f;
+        // }
+        // if(Input.GetKeyDown(KeyCode.Alpha2))
+        // {
+        //     Time.timeScale = 5f;
+        // }
     }
 
     private void FixedUpdate()
