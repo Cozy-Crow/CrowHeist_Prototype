@@ -168,6 +168,8 @@ public class ColoringBookObject : Interactable
 
         //close book 2
         yield return new WaitForSeconds(animTime); //.25 before next
+        closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, closedBook.transform.position.z + 3f); //move up so it doesnt clip through the floor
+
         spriteRenderer.enabled = false;
         CloseBook();
 
@@ -243,6 +245,10 @@ public class ColoringBookObject : Interactable
         //normal close book sequence
         closedBook.gameObject.GetComponent<MeshRenderer>().enabled = false;
         openBook.gameObject.GetComponent<MeshRenderer>().enabled = true;
+        
+        //hide the inital book
+        GetComponent<MeshRenderer>().enabled = false;
+        
         isShaking = false;
 		camPoint.localPosition = originalPos;
         // closedBook.gameObject.SetActive(false);
@@ -260,9 +266,9 @@ public class ColoringBookObject : Interactable
         // closedBook.gameObject.SetActive(true);
         
         // --- play sfx here probably (book slamming closed + crowley hurt?) ---
-        closedBook.transform.eulerAngles = new Vector3(0,180,-90);//rotate so book is on top
-        closedBook.transform.localPosition = new Vector3(closedBook.transform.localPosition.x, closedBook.transform.localPosition.y, 0.03f); //move up so it doesnt clip through the floor
-
+        closedBook.transform.localRotation = Quaternion.Euler(0f,180f,-90f);//rotate so book is on top
+        Debug.Log("rot " + closedBook.transform.rotation);
+        // closedBook.transform.localPosition = new Vector3(closedBook.transform.position.x, closedBook.transform.position.y, closedBook.transform.position.z + 2.5f); //move up so it doesnt clip through the floor
     }
 
     private void SpawnReward()
