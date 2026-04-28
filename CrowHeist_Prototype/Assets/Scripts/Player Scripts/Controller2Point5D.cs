@@ -65,10 +65,10 @@ namespace KinematicCharacterController.Examples
         #endregion
         
         // Soda Variables
-        public bool isSpeedBoosted = false;
-        public float speedBoostDuration = 5f;
-        public float normalMoveSpeed;
-        public float speedBoostMultiplier = 5f;
+        // public bool isSpeedBoosted = false;
+        // public float speedBoostDuration = 5f;
+         public float normalMoveSpeed;
+        // public float speedBoostMultiplier = 5f;
 
         //Falling
         public float fallingTime = 0f;
@@ -239,14 +239,14 @@ namespace KinematicCharacterController.Examples
             // Handle item-specific mechanics
             if (heldObject != null)
             {
-                if (heldObject.CompareTag("Soda"))
-                {
-                    SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
-                    if (sodaDash != null)
-                    {
-                        sodaDash.HandleDash();
-                    }
-                }
+                // if (heldObject.CompareTag("Soda"))
+                // {
+                //     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
+                //     if (sodaDash != null)
+                //     {
+                //         sodaDash.HandleDash();
+                //     }
+                // }
                 // else if (heldObject.CompareTag("Dashable"))
                 // {
                 //     CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
@@ -255,7 +255,7 @@ namespace KinematicCharacterController.Examples
                 //         coffee.TryConsumeCoffee();
                 //     }
                 // }
-                else if (heldObject.CompareTag("Glider"))
+                if (heldObject.CompareTag("Glider"))
                 {
                     PaperGlider glider = heldObject.GetComponent<PaperGlider>();
                     if (glider != null)
@@ -1103,7 +1103,7 @@ namespace KinematicCharacterController.Examples
             targetAssetObject.transform.position = FindThrowCollisionPoint();
 
         }
-
+        //
         private Vector3 FindThrowCollisionPoint()
         {
             LayerMask layerMask = LayerMask.GetMask("Ground", "Wall");

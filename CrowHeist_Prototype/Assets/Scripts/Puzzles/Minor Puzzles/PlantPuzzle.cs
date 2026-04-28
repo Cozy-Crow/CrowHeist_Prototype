@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.VFX;
 
 
 public class PlantPuzzle : MonoBehaviour
@@ -15,6 +16,11 @@ public class PlantPuzzle : MonoBehaviour
     private readonly List<Vector3> branchInitialScales = new List<Vector3>();
     private Vector3 originalPlantPos;
     private float branchDuration;
+
+
+    //VFX 
+    [SerializeField] GameObject plantSmokeEffect;
+    private GameObject plantSmokeEffectTarget;
 
     void Start()
     {
@@ -33,6 +39,10 @@ public class PlantPuzzle : MonoBehaviour
 
         // if (flowerCenter != null)
         //     flowerCenter.transform.localScale = new Vector3(0f, 0f, flowerCenter.transform.localScale.z);
+
+        plantSmokeEffectTarget = GameObject.FindGameObjectWithTag("OriginPointPlant");
+
+        plantSmokeEffect.transform.position = plantSmokeEffectTarget.transform.position;
     }
 
     void OnTriggerEnter(Collider other)
@@ -51,6 +61,8 @@ public class PlantPuzzle : MonoBehaviour
         Vector3 targetPos = originalPlantPos + new Vector3(0, 5.62f, 0);
         int branchIndex = 0;
         float elapsedTime = 0f;
+
+        plantSmokeEffect.GetComponent<VisualEffect>().Play();
 
         while (elapsedTime < timeToGrow)
         {

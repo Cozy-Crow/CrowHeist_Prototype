@@ -277,7 +277,12 @@ public class TrinketMenu : MonoBehaviour
         displayImage.sprite = trinketsDataLst[arrayIndex].DisplayIcon;
         displayName.text = trinketsDataLst[arrayIndex].DisplayName;
         displayDescription.text = trinketsDataLst[arrayIndex].DisplayDescription;
-        locationHint.text = trinketsDataLst[arrayIndex].LocationHint;
+        // locationHint.text = trinketsDataLst[arrayIndex].LocationHint;
+        bool collected = trinketsDataLst[arrayIndex].HasBeenRead;
+        locationHint.gameObject.SetActive(!collected);
+        if (!collected)
+            locationHint.text = trinketsDataLst[arrayIndex].LocationHint;
+
     }
 
     public void PageUp()
