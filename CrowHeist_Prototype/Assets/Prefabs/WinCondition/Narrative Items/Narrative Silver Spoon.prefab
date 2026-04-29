@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   realObject: {fileID: 0}
---- !u!1 &5159558413352696569
+--- !u!1 &4645786936866537978
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -75,55 +75,46 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6639946157402648105}
-  - component: {fileID: 3729728066852783961}
-  - component: {fileID: 529499687323486925}
-  - component: {fileID: 8352647548288355667}
-  - component: {fileID: 2493349622288897438}
-  - component: {fileID: 708123302673284849}
-  - component: {fileID: -5923773817378588029}
-  - component: {fileID: 7016090937971818862}
-  - component: {fileID: -2242810116158332057}
-  - component: {fileID: -7684738198783545868}
-  - component: {fileID: -554935206078889617}
+  - component: {fileID: 3898945070559423101}
+  - component: {fileID: 8358108640295363798}
+  - component: {fileID: 6808949071121094553}
   m_Layer: 0
-  m_Name: Narrative Silver Spoon
+  m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6639946157402648105
+--- !u!4 &3898945070559423101
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159558413352696569}
+  m_GameObject: {fileID: 4645786936866537978}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
-  m_LocalPosition: {x: -23.210966, y: 7.7893624, z: 9.2645645}
-  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -0.02, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 342528545806195037}
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 90}
---- !u!33 &3729728066852783961
+  m_Children: []
+  m_Father: {fileID: 6639946157402648105}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8358108640295363798
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159558413352696569}
+  m_GameObject: {fileID: 4645786936866537978}
   m_Mesh: {fileID: 7891779296415825867, guid: be70cfb4f8dbeaa458daae070812d5f7, type: 3}
---- !u!23 &529499687323486925
+--- !u!23 &6808949071121094553
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5159558413352696569}
+  m_GameObject: {fileID: 4645786936866537978}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -159,6 +150,47 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &5159558413352696569
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6639946157402648105}
+  - component: {fileID: 8352647548288355667}
+  - component: {fileID: 2493349622288897438}
+  - component: {fileID: 708123302673284849}
+  - component: {fileID: -5923773817378588029}
+  - component: {fileID: 7016090937971818862}
+  - component: {fileID: -2242810116158332057}
+  - component: {fileID: -7684738198783545868}
+  - component: {fileID: -554935206078889617}
+  m_Layer: 0
+  m_Name: Narrative Silver Spoon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6639946157402648105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5159558413352696569}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.5, y: -0.5, z: -0.5, w: -0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 10, y: 10, z: 10}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 342528545806195037}
+  - {fileID: 3898945070559423101}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 270, y: 0, z: 90}
 --- !u!65 &8352647548288355667
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -178,8 +210,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.06, y: 0.2, z: 0.02}
-  m_Center: {x: 0, y: 0.08008209, z: 0.00016404384}
+  m_Size: {x: 0.06, y: 0.16162835, z: 0.02}
+  m_Center: {x: 0, y: 0.06, z: 0}
 --- !u!114 &2493349622288897438
 MonoBehaviour:
   m_ObjectHideFlags: 0
