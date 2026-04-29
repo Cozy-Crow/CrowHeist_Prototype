@@ -1,3 +1,4 @@
+using FMODUnity;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,6 +6,7 @@ public class ControlsMenu : MonoBehaviour
 {
     [SerializeField] private GameObject controlsPanel;
     [SerializeField] private Button backButton;
+    [SerializeField] private EventReference close;
 
     private bool _openedBeforeStart = false;
 
@@ -32,5 +34,6 @@ public class ControlsMenu : MonoBehaviour
         if (controlsPanel != null)
             controlsPanel.SetActive(false);
         IsOpen = false;
+        AudioManager.Instance?.PlayOneShot(close);
     }
 }
