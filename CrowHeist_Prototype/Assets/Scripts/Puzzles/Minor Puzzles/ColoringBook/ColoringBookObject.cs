@@ -352,7 +352,7 @@ public class ColoringBookObject : Interactable
         // --- play sfx here probably (book slamming closed + crowley hurt?) ---
         closedBook.transform.localRotation = Quaternion.Euler(0f,180f,-90f);//rotate so book is on top
         Debug.Log("rot " + closedBook.transform.rotation);
-        // closedBook.transform.localPosition = new Vector3(closedBook.transform.position.x, closedBook.transform.position.y, closedBook.transform.position.z + 2.5f); //move up so it doesnt clip through the floor
+        //closedBook.transform.localPosition = new Vector3(closedBook.transform.position.x, closedBook.transform.position.y, closedBook.transform.position.z - 2.5f); //move up so it doesnt clip through the floor
     }
 
     private void SpawnReward()
