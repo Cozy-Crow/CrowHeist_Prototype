@@ -344,6 +344,8 @@ public class PauseManager : MonoBehaviour
 
     public void OpenControls()
     {
+        if (saveSlotPanel != null && saveSlotPanel.IsOpen) saveSlotPanel.Close();
+        if (settingsMenu != null && settingsMenu.IsOpen) settingsMenu.CloseSettings();
         if (controlsMenu != null)
             controlsMenu.OpenControls();
         PlayButtonSFX(open);

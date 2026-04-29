@@ -1,21 +1,39 @@
-using System.Collections;
-using System.Collections.Generic;
+using FMODUnity;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ControlsMenu : MonoBehaviour
 {
+    [SerializeField] private GameObject controlsPanel;
+    [SerializeField] private Button backButton;
+    [SerializeField] private EventReference close;
+
+    private bool _openedBeforeStart = false;
+
     public bool IsOpen { get; private set; }
+
+    private void Start()
+    {
+        if (backButton != null)
+            backButton.onClick.AddListener(CloseControls);
+
+        if (controlsPanel != null && !_openedBeforeStart)
+            controlsPanel.SetActive(false);
+    }
 
     public void OpenControls()
     {
-        gameObject.SetActive(true);
+        _openedBeforeStart = true;
+        if (controlsPanel != null)
+            controlsPanel.SetActive(true);
         IsOpen = true;
     }
 
     public void CloseControls()
     {
-        gameObject.SetActive(false);
+        if (controlsPanel != null)
+            controlsPanel.SetActive(false);
         IsOpen = false;
+        AudioManager.Instance?.PlayOneShot(close);
     }
-
 }
