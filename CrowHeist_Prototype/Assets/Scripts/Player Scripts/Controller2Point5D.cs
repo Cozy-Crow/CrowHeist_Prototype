@@ -734,7 +734,7 @@ namespace KinematicCharacterController.Examples
                                 }
                             }
 
-                            Debug.Log("selcted" + selected.name);
+                            Debug.Log("selected " + selected.transform.parent.name);
                             Pickup(selected, pickUp);
                         }
                         //otherwise interact with it
