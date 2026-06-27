@@ -162,6 +162,10 @@ public class PauseManager : MonoBehaviour
         if (NarrativeMenu.Instance != null)
             NarrativeMenu.Instance.ForceClose();
 
+        Debug.Log("pause1");
+
+        //disable input, setting directly w/o delay since we want immediate stop
+        player.SetCanInput(false); 
         isGamePaused = true;
         Time.timeScale = 0f;
 
@@ -174,6 +178,7 @@ public class PauseManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        StartCoroutine(DelayCanInput(true)); //delay enabling input
         isGamePaused = false;
         Time.timeScale = 1f;
 
@@ -185,7 +190,18 @@ public class PauseManager : MonoBehaviour
         if (controlsMenu != null) controlsMenu.CloseControls();
         if (RestartConfirmPanel != null) RestartConfirmPanel.SetActive(false);
         PlayButtonSFX(open);
+
     }
+
+    //used to stop edge case of throwing an item when clicking a menu item
+    //Issue: using SetCanInput does cause the players momentum to stop
+    IEnumerator DelayCanInput(bool tf)
+    {
+        yield return new WaitForSeconds(.05f); //wait to allow the menus to clear properly
+        player.SetCanInput(tf); //enable/disable input after a delay
+        Debug.Log("pause>?>>");
+    }
+
 
     // ──────────────────────────────────────────────
     //  Scene Transitions
