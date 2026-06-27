@@ -197,7 +197,7 @@ public class Pickable : MonoBehaviour, IPickupable
         if (!other.CompareTag("Player") && rb.velocity.y < -0.5f)
         {
          AudioManager.Instance?.PlayOneShot3D(ObjLandAudio, transform.localPosition);
-         Debug.Log("LandSFXPlayed"); 
+        //  Debug.Log("LandSFXPlayed"); 
         }
     }
     void OnTriggerExit(Collider other)

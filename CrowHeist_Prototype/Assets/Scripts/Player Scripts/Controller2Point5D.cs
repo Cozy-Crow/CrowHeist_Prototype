@@ -726,10 +726,13 @@ namespace KinematicCharacterController.Examples
                             if(Physics.Raycast(transform.position, directionFromItemToPlayer*10f, out hit))
                             {
                                 //check if both items are the same (item hit vs object we are trying to grab)
-                                if(hit.transform.gameObject != selected.realObject)
+                                //but if its a interactable, ignore it (works but may need more testing)
+                                if(hit.transform.gameObject != selected.realObject && !(hit.transform.gameObject.GetComponentInChildren<Interactable>() != null))
                                 {
-                                    // Debug.Log("collider blocking " + hit.transform.name);
+                                    Debug.Log("LOS collider blocking " + hit.transform.name);
+                                    Debug.Log("LOS pickable "+ hit.transform.gameObject.GetComponent<Pickable>());
                                     // Debug.Log("collider on object " + selected.realObject);
+                                    _pickUpsList.Clear();
                                     return;
                                 }
                             }
