@@ -14,6 +14,7 @@ public class ToasterController : MonoBehaviour
     [SerializeField] GameObject interactionTrigger;
     [SerializeField] GameObject plugReference;
     [SerializeField] private EventReference coinSparkle;
+    [SerializeField] GameObject parentObject;
 
     // vfx stuff
     [SerializeField] GameObject toasterExplosion;
@@ -67,6 +68,8 @@ public class ToasterController : MonoBehaviour
                 ps.Play();
             }
             gameObject.SetActive(false);
+            Destroy(this);
+            
 
         }
 
