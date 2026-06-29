@@ -121,7 +121,6 @@
 	<object class="GroupTrack" id="{b06ef795-14ea-4511-a2f2-51b1b45808ed}">
 		<relationship name="modules">
 			<destination>{7042ab58-6c65-4140-a38e-8583de4e2d31}</destination>
-			<destination>{45dce74d-b11b-44b6-a4b4-28528f1bb507}</destination>
 			<destination>{c46a861b-d035-4a65-ac0d-dabd221aac08}</destination>
 			<destination>{6eeb9548-73b9-4018-add6-cee2fe32a1a5}</destination>
 			<destination>{9fa85d6d-7dce-4bb9-b753-e523c83fa36f}</destination>
@@ -148,6 +147,7 @@
 			<destination>{1a4a46c8-938d-4c7a-b632-9d2820fc15ae}</destination>
 			<destination>{cb22120e-fd5d-453e-bab1-49fe83e2620f}</destination>
 			<destination>{6ba5edf0-1cea-45d2-a893-a2497767f8d8}</destination>
+			<destination>{45dce74d-b11b-44b6-a4b4-28528f1bb507}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{fcd4711f-d2eb-4410-83c6-3268fd6128bf}</destination>
@@ -561,6 +561,9 @@
 		<property name="color">
 			<value>Red</value>
 		</property>
+		<property name="start">
+			<value>4.8979591836734695</value>
+		</property>
 		<property name="length">
 			<value>4.4408920985006262e-16</value>
 		</property>
@@ -571,7 +574,7 @@
 			<destination>{b1fb7eae-9026-403a-9776-e07d80cd1f4b}</destination>
 		</relationship>
 		<relationship name="commandTarget">
-			<destination>{a091524e-f204-456b-84ac-34e16d4ad3f4}</destination>
+			<destination>{bfa09284-7d38-4f01-acea-ad3a35949df3}</destination>
 		</relationship>
 	</object>
 	<object class="CommandSound" id="{2d18ee8e-276a-47c7-8b42-7fff4f9b7dc1}">
@@ -711,6 +714,9 @@
 		<property name="color">
 			<value>Blue Light 1</value>
 		</property>
+		<property name="start">
+			<value>4.8979591836734695</value>
+		</property>
 		<property name="length">
 			<value>4.0581296742598507</value>
 		</property>
@@ -727,35 +733,12 @@
 			<destination>{ac2f225b-e340-4b6c-b529-71be12853288}</destination>
 		</relationship>
 	</object>
-	<object class="CommandSound" id="{45dce74d-b11b-44b6-a4b4-28528f1bb507}">
-		<property name="color">
-			<value>Yellow</value>
-		</property>
-		<property name="length">
-			<value>3.6072263771198676</value>
-		</property>
-		<property name="commandType">
-			<value>3</value>
-		</property>
-		<property name="targetValue">
-			<value>0.25499999523162842</value>
-		</property>
-		<relationship name="modulators">
-			<destination>{5c9112de-449a-4e06-a30a-b2679dbb7d71}</destination>
-		</relationship>
-		<relationship name="triggerConditions">
-			<destination>{3d82dad7-6116-4bfc-888b-ed117f3e473f}</destination>
-		</relationship>
-		<relationship name="commandTarget">
-			<destination>{ac2f225b-e340-4b6c-b529-71be12853288}</destination>
-		</relationship>
-	</object>
 	<object class="CommandSound" id="{c46a861b-d035-4a65-ac0d-dabd221aac08}">
 		<property name="start">
-			<value>4.4408920985006262e-16</value>
+			<value>4.8979591836734695</value>
 		</property>
 		<property name="length">
-			<value>3.1563230799798854</value>
+			<value>4.0581296742598498</value>
 		</property>
 		<property name="commandType">
 			<value>3</value>
@@ -778,7 +761,7 @@
 			<value>Green Light 2</value>
 		</property>
 		<property name="start">
-			<value>4.4408920985006262e-16</value>
+			<value>4.8979591836734695</value>
 		</property>
 		<property name="length">
 			<value>4.0581296742598507</value>
@@ -1382,6 +1365,32 @@
 		</relationship>
 		<relationship name="triggerConditions">
 			<destination>{80d5609d-bf60-42e2-9c97-d750abfd69be}</destination>
+		</relationship>
+		<relationship name="commandTarget">
+			<destination>{ac2f225b-e340-4b6c-b529-71be12853288}</destination>
+		</relationship>
+	</object>
+	<object class="CommandSound" id="{45dce74d-b11b-44b6-a4b4-28528f1bb507}">
+		<property name="color">
+			<value>Yellow</value>
+		</property>
+		<property name="start">
+			<value>4.8979591836734695</value>
+		</property>
+		<property name="length">
+			<value>4.0581296742598507</value>
+		</property>
+		<property name="commandType">
+			<value>3</value>
+		</property>
+		<property name="targetValue">
+			<value>0.25499999523162842</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{5c9112de-449a-4e06-a30a-b2679dbb7d71}</destination>
+		</relationship>
+		<relationship name="triggerConditions">
+			<destination>{3d82dad7-6116-4bfc-888b-ed117f3e473f}</destination>
 		</relationship>
 		<relationship name="commandTarget">
 			<destination>{ac2f225b-e340-4b6c-b529-71be12853288}</destination>
@@ -2491,25 +2500,6 @@
 			<destination>{abc3cd3a-ab16-495e-880b-9eeab80b6e7c}</destination>
 		</relationship>
 	</object>
-	<object class="RandomizerModulator" id="{5c9112de-449a-4e06-a30a-b2679dbb7d71}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>targetValue</value>
-		</property>
-		<property name="amount">
-			<value>50</value>
-		</property>
-	</object>
-	<object class="ParameterCondition" id="{3d82dad7-6116-4bfc-888b-ed117f3e473f}">
-		<property name="minimum">
-			<value>1</value>
-		</property>
-		<property name="maximum">
-			<value>2.9000000953674316</value>
-		</property>
-		<relationship name="parameter">
-			<destination>{abc3cd3a-ab16-495e-880b-9eeab80b6e7c}</destination>
-		</relationship>
-	</object>
 	<object class="RandomizerModulator" id="{c68818a0-1d1f-422a-944e-6a1ac2eec557}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>targetValue</value>
@@ -2986,6 +2976,25 @@
 			<destination>{abc3cd3a-ab16-495e-880b-9eeab80b6e7c}</destination>
 		</relationship>
 	</object>
+	<object class="RandomizerModulator" id="{5c9112de-449a-4e06-a30a-b2679dbb7d71}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>targetValue</value>
+		</property>
+		<property name="amount">
+			<value>50</value>
+		</property>
+	</object>
+	<object class="ParameterCondition" id="{3d82dad7-6116-4bfc-888b-ed117f3e473f}">
+		<property name="minimum">
+			<value>1</value>
+		</property>
+		<property name="maximum">
+			<value>2.9000000953674316</value>
+		</property>
+		<relationship name="parameter">
+			<destination>{abc3cd3a-ab16-495e-880b-9eeab80b6e7c}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{42c987c0-d5ba-4bda-8041-e3133c526dd3}">
 		<relationship name="effects">
 			<destination>{3ab6a45d-0625-44f8-9638-f9fcfaf65774}</destination>
@@ -3343,10 +3352,10 @@
 	</object>
 	<object class="ParameterCondition" id="{b6a513a8-8bf7-4c83-a8a0-b36cdd6d8149}">
 		<property name="minimum">
-			<value>1</value>
+			<value>0</value>
 		</property>
 		<property name="maximum">
-			<value>1</value>
+			<value>0</value>
 		</property>
 		<relationship name="parameter">
 			<destination>{bfa09284-7d38-4f01-acea-ad3a35949df3}</destination>
