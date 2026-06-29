@@ -185,6 +185,9 @@ namespace KinematicCharacterController.Examples
         private Transform nearestWindow;
         #endregion
 
+        //reference of pause manager
+        PauseManager pauseManager;
+
         private void Awake()
         {
             normalMoveSpeed = moveSpeed;
@@ -216,86 +219,91 @@ namespace KinematicCharacterController.Examples
             SetupTrinketGuideLine();
             animatorCoder = GetComponentInChildren<AnimatorCoder>();
 
-            
+            pauseManager = FindObjectOfType<PauseManager>();
         }
 
         void Update()
         {
-
-            jumpPoof.SetVector3("TargetPosition", this.transform.position);
-            if (Input.GetKeyDown(KeyCode.M))
+            if(!pauseManager.isGamePaused)
             {
-                TrinketMenu.instance.ToggleMenu();
-                //cancel if the player is throwing
-                CancelThrow();
-            }
-            UpdateCoyoteTime();
-            // Input and state checks in Update
-            if(canInput) //set can input to false if you want input off
-            {
-                HandleInput();
-                HandleMove();
-            }
-            // Handle item-specific mechanics
-            if (heldObject != null)
-            {
-                // if (heldObject.CompareTag("Soda"))
-                // {
-                //     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
-                //     if (sodaDash != null)
-                //     {
-                //         sodaDash.HandleDash();
-                //     }
-                // }
-                // else if (heldObject.CompareTag("Dashable"))
-                // {
-                //     CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
-                //     if (coffee != null)
-                // {
-                //         coffee.TryConsumeCoffee();
-                //     }
-                // }
-                if (heldObject.CompareTag("Glider"))
+                jumpPoof.SetVector3("TargetPosition", this.transform.position);
+                if (Input.GetKeyDown(KeyCode.M))
                 {
-                    PaperGlider glider = heldObject.GetComponent<PaperGlider>();
-                    if (glider != null)
+                    TrinketMenu.instance.ToggleMenu();
+                    //cancel if the player is throwing
+                    CancelThrow();
+                }
+                UpdateCoyoteTime();
+                // Input and state checks in Update
+                if(canInput) //set can input to false if you want input off
+                {
+                    HandleInput();
+                    HandleMove();
+                }
+                // Handle item-specific mechanics
+                if (heldObject != null)
+                {
+                    // if (heldObject.CompareTag("Soda"))
+                    // {
+                    //     SodaCanDash sodaDash = heldObject.GetComponent<SodaCanDash>();
+                    //     if (sodaDash != null)
+                    //     {
+                    //         sodaDash.HandleDash();
+                    //     }
+                    // }
+                    // else if (heldObject.CompareTag("Dashable"))
+                    // {
+                    //     CoffeeConsumption coffee = heldObject.GetComponent<CoffeeConsumption>();
+                    //     if (coffee != null)
+                    // {
+                    //         coffee.TryConsumeCoffee();
+                    //     }
+                    // }
+                    if (heldObject.CompareTag("Glider"))
                     {
-                        glider.HandleGliding();
+                        PaperGlider glider = heldObject.GetComponent<PaperGlider>();
+                        if (glider != null)
+                        {
+                            glider.HandleGliding();
 
 
-                        paperLCorner = GameObject.FindWithTag("PaperLCorner");
-                        paperRCorner = GameObject.FindWithTag("PaperRCorner");
+                            paperLCorner = GameObject.FindWithTag("PaperLCorner");
+                            paperRCorner = GameObject.FindWithTag("PaperRCorner");
 
-                        GlidePSL.Play();
-                        GlidePSL.transform.position = paperLCorner.transform.position;
-                        GlidePSR.Play();
-                        GlidePSR.transform.position = paperRCorner.transform.position;
+                            GlidePSL.Play();
+                            GlidePSL.transform.position = paperLCorner.transform.position;
+                            GlidePSR.Play();
+                            GlidePSR.transform.position = paperRCorner.transform.position;
 
-                        if (isGrounded) { 
-                            GlidePSL.Stop(); 
-                            GlidePSR.Stop();                        
+                            if (isGrounded) { 
+                                GlidePSL.Stop(); 
+                                GlidePSR.Stop();                        
+                            }
+
                         }
-
                     }
                 }
+                HandleRotation();
+                HandlePickUp();
+                HandleBounce();
+                if (hasPickedUpTrinket && trinketGuideLine.enabled)
+                {
+                    UpdateTrinketGuideLine();
+                }
+                RemoveNullItems();
             }
-            HandleRotation();
-            HandlePickUp();
-            HandleBounce();
-            if (hasPickedUpTrinket && trinketGuideLine.enabled)
-            {
-                UpdateTrinketGuideLine();
-            }
-            RemoveNullItems();
         }
 
         void FixedUpdate()
         {
-            // Physics in FixedUpdate
-            CheckGrounded();
-            HandleGravity();
-            HandleExternalForces();
-            HandleKnockback();
+            if(!pauseManager.isGamePaused)
+            {
+                // Physics in FixedUpdate
+                CheckGrounded();
+                HandleGravity();
+                HandleExternalForces();
+                HandleKnockback();    
+            }
         }
     
         private void CheckGrounded()
@@ -688,6 +696,10 @@ namespace KinematicCharacterController.Examples
             //E for left hand on keyboard
             //U for Right hand on keyboard
             //Left click as another option
+            
+            //if you can't input ignore.
+            if(!canInput)
+                return;
 
             bool leftHand = SettingsManager.Instance != null && SettingsManager.Instance.LeftHandMode;
             int primaryMouseBtn = leftHand ? 1 : 0;
@@ -726,15 +738,19 @@ namespace KinematicCharacterController.Examples
                             if(Physics.Raycast(transform.position, directionFromItemToPlayer*10f, out hit))
                             {
                                 //check if both items are the same (item hit vs object we are trying to grab)
-                                if(hit.transform.gameObject != selected.realObject)
+                                //but if its a interactable, ignore it 
+                                // (works but may need more testing, theres a chance that its making interaction/highlighting inconsistent (visual clarity) -Zack)
+                                if(hit.transform.gameObject != selected.realObject && !(hit.transform.gameObject.GetComponentInChildren<Interactable>() != null))
                                 {
-                                    // Debug.Log("collider blocking " + hit.transform.name);
+                                    Debug.Log("LOS collider blocking " + hit.transform.name);
+                                    Debug.Log("LOS pickable "+ hit.transform.gameObject.GetComponent<Pickable>());
                                     // Debug.Log("collider on object " + selected.realObject);
+                                    RemoveNullItems();
                                     return;
                                 }
                             }
 
-                            Debug.Log("selcted" + selected.name);
+                            Debug.Log("selected " + selected.transform.parent.name);
                             Pickup(selected, pickUp);
                         }
                         //otherwise interact with it
